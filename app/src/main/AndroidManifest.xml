@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.signity.shopkeeperapp">
+
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.GET_ACCOUNTS" />
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
+    <uses-permission android:name="com.google.android.c2dm.permission.RECEIVE" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.CALL_PHONE" />
+
+    <permission
+        android:name="com.signity.shopkeeperapp.permission.C2D_MESSAGE"
+        android:protectionLevel="signature" />
+
+    <uses-permission android:name="com.signity.shopkeeperapp.permission.C2D_MESSAGE" />
+    <uses-permission android:name="android.permission.RECEIVE_SMS" />
+    <uses-permission android:name="android.permission.READ_SMS" />
+
+    <application
+        android:name=".app.MyApplication"
+        android:allowBackup="true"
+        android:icon="@mipmap/ic_launcher"
+        android:label="@string/app_name"
+        android:theme="@style/AppTheme">
+        <activity
+            android:name=".SplashActivity"
+            android:label="@string/app_name">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+
+        <receiver
+            android:name="com.google.android.gms.gcm.GcmReceiver"
+            android:exported="true"
+            android:permission="com.google.android.c2dm.permission.SEND">
+            <intent-filter>
+                <action android:name="com.google.android.c2dm.intent.RECEIVE" />
+                <category android:name="com.example.gcm" />
+            </intent-filter>
+        </receiver>
+
+        <service
+            android:name="com.signity.shopkeeperapp.gcm.MyGcmListenerService"
+            android:exported="false">
+            <intent-filter>
+                <action android:name="com.google.android.c2dm.intent.RECEIVE" />
+            </intent-filter>
+        </service>
+        <service
+            android:name="com.signity.shopkeeperapp.gcm.MyInstanceIDListenerService"
+            android:exported="false">
+            <intent-filter>
+                <action android:name="com.google.android.gms.iid.InstanceID" />
+            </intent-filter>
+        </service>
+        <service
+            android:name="com.signity.shopkeeperapp.gcm.RegistrationIntentService"
+            android:exported="false"></service>
+
+        <activity
+            android:name=".view.LoginScreenActivity"
+            android:label="@string/app_name" />
+        <activity
+            android:name=".home.MainActivity"
+            android:label="@string/app_name" />
+
+        <activity
+            android:name=".orders.DueOrderActivity"
+            android:label="@string/app_name" />
+        <activity
+            android:name=".orders.DueOrderActivityWithoutUpdations"
+            android:label="@string/app_name" />
+        <activity
+            android:name=".customer.CustomerActivity"
+            android:label="@string/app_name"></activity>
+        <activity
+            android:name=".rejected_orders.RejectedItemsListActivity"
+            android:label="@string/app_name"></activity>
+
+        <activity
+            android:name=".canceled_orders.CanceledOrdersItemsListActivity"
+            android:label="@string/app_name"></activity>
+
+        <activity
+            android:name=".enquiries.EnquiriesActivity"
+            android:label="@string/app_name"></activity>
+        <activity
+            android:name=".manage_stores.ManageStaffActivity"
+            android:label="@string/app_name"></activity>
+
+    </application>
+
+</manifest>

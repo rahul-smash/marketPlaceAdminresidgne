@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/parent"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/color_white"
+    android:clickable="true"
+    android:padding="10dp">
+
+
+    <TextView
+        android:id="@+id/txtLblCustName"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Name:"
+        android:textColor="@color/color_text"
+        android:textSize="@dimen/text_large" />
+
+    <TextView
+        android:id="@+id/valCustName"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@+id/txtLblCustName"
+        android:layout_alignParentRight="true"
+        android:layout_alignTop="@+id/txtLblCustName"
+        android:layout_marginLeft="10dp"
+        android:layout_toRightOf="@+id/txtLblCustName"
+        android:gravity="right"
+        android:text="John"
+        android:textSize="@dimen/text_normal" />
+
+    <TextView
+        android:id="@+id/txtLblMessage"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/txtLblCustName"
+        android:layout_marginTop="5dp"
+        android:text="Message:"
+        android:textColor="@color/color_text"
+        android:textSize="@dimen/text_large" />
+
+    <TextView
+        android:id="@+id/valMessage"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@+id/txtLblMessage"
+        android:layout_alignParentRight="true"
+        android:layout_alignTop="@+id/txtLblMessage"
+        android:layout_below="@+id/valCustName"
+        android:layout_marginLeft="10dp"
+        android:layout_toRightOf="@+id/txtLblMessage"
+        android:gravity="right"
+        android:text="Hi"
+        android:textSize="@dimen/text_normal" />
+
+    <TextView
+        android:id="@+id/txtLblTime"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/txtLblMessage"
+        android:layout_marginTop="5dp"
+        android:text="Time:"
+        android:textColor="@color/color_text"
+        android:textSize="@dimen/text_large" />
+
+    <TextView
+        android:id="@+id/valTime"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@+id/txtLblTime"
+        android:layout_alignParentRight="true"
+        android:layout_alignTop="@+id/txtLblTime"
+        android:layout_below="@+id/valTotalAmt"
+        android:layout_marginLeft="10dp"
+        android:layout_toRightOf="@+id/txtLblTime"
+        android:gravity="right"
+        android:text="15 June 2015,1:00pm"
+        android:textSize="@dimen/text_normal" />
+
+
+</RelativeLayout>

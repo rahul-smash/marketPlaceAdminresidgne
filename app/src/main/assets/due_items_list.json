@@ -1,0 +1,68 @@
+{
+  "data": [
+    {
+      "id": "1",
+      "name": "Amul Butter",
+      "weight": "500gm",
+      "total_price": "Rs 500",
+      "quantity": "Qtn. 5",
+      "image": "test_1"
+    },
+    {
+      "id": "2",
+      "name": "Safola Fortune oil",
+      "weight": "200ml",
+      "total_price": "Rs 300",
+      "quantity": "Qtn. 3",
+      "image": "test_2"
+    },
+    {
+      "id": "3",
+      "name": "Strawberry jams",
+      "weight": "200gm",
+      "total_price": "Rs 100",
+      "quantity": "Qtn. 2",
+      "image": "test_3"
+    },
+    {
+      "id": "4",
+      "name": "Keylogg Cron flakes",
+      "weight": "500gm",
+      "total_price": "Rs 250",
+      "quantity": "Qtn. 3",
+      "image": "test_4"
+    },
+    {
+      "id": "5",
+      "name": "Sunfest Noodles",
+      "weight": "500gm",
+      "total_price": "Rs 400",
+      "quantity": "Qtn. 6",
+      "image": "test_5"
+    },
+    {
+      "id": "6",
+      "name": "Penuts",
+      "weight": "100gm",
+      "total_price": "Rs 40",
+      "quantity": "Qtn. 5",
+      "image": "test_1"
+    },
+    {
+      "id": "7",
+      "name": "MDH Masala",
+      "weight": "100gm",
+      "total_price": "Rs 40",
+      "quantity": "Qtn. 5",
+      "image": "test_1"
+    },
+    {
+      "id": "8",
+      "name": "Sunslik Shampoo",
+      "weight": "100gm",
+      "total_price": "Rs 40",
+      "quantity": "Qtn. 5",
+      "image": "test_1"
+    }
+  ]
+}

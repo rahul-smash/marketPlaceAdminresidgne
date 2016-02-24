@@ -1,0 +1,326 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <include
+        android:id="@+id/header"
+        layout="@layout/layout_header_activity" />
+
+    <RelativeLayout
+        android:id="@+id/orderDtailsBlock"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/header"
+        android:padding="5dp"
+        android:background="@color/colorGrayForOrderDtail">
+
+        <RelativeLayout
+            android:id="@+id/detailBtnBlock"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+
+            <TextView
+                android:id="@+id/labelDetails"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:layout_centerVertical="true"
+                android:text="Details"
+                android:layout_marginLeft="5dp"
+                android:textColor="@color/color_white"
+                android:textSize="@dimen/text_large"
+                android:textStyle="bold" />
+
+            <ImageButton
+                android:id="@+id/btnOrderDetail"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_toRightOf="@+id/labelDetails"
+                android:layout_marginLeft="10dp"
+                android:background="@drawable/order_detail_selector"
+                android:clickable="false" />
+
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/amountBlock"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:layout_toRightOf="@+id/detailBtnBlock">
+
+            <TextView
+                android:id="@+id/labelTotalAmount"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_toLeftOf="@+id/txtTotalAmount"
+                android:singleLine="true"
+                android:text="Total:"
+                android:textColor="@color/color_white"
+                android:textSize="@dimen/text_large"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/txtTotalAmount"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_marginLeft="5dp"
+                android:singleLine="true"
+                android:text="1000"
+                android:textColor="@color/color_white"
+                android:textSize="@dimen/text_large"
+                android:textStyle="bold" />
+
+        </RelativeLayout>
+    </RelativeLayout>
+
+    <ListView
+        android:id="@+id/listDueOrderItems"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_above="@+id/footer"
+        android:layout_below="@+id/orderDtailsBlock"
+        android:divider="@android:color/transparent"
+        android:dividerHeight="8dp"></ListView>
+
+    <RelativeLayout
+        android:id="@+id/layout_order_detail"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/orderDtailsBlock"
+        android:layout_marginBottom="2dp"
+        android:layout_marginLeft="2dp"
+        android:layout_marginRight="2dp"
+        android:layout_marginTop="2dp"
+        android:paddingBottom="10dp"
+        android:background="@drawable/shape_order_details"
+        android:visibility="gone">
+
+        <RelativeLayout
+            android:id="@+id/sectionAddress"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:layout_marginTop="10dp"
+            android:background="@drawable/shape_order_details"
+            android:paddingBottom="5dp"
+            android:paddingTop="5dp">
+
+            <RelativeLayout
+                android:id="@+id/addressLayout"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content">
+
+                <TextView
+                    android:id="@+id/lblAddress"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentLeft="true"
+                    android:layout_marginLeft="5dp"
+                    android:layout_marginTop="5dp"
+                    android:text="Delivery Address:"
+                    android:textColor="@android:color/black"
+                    android:textSize="18sp" />
+
+                <TextView
+                    android:id="@+id/txtDeliveryAddress"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentLeft="true"
+                    android:layout_below="@+id/lblAddress"
+                    android:layout_marginLeft="5dp"
+                    android:text="House no 328A, chandigarh"
+                    android:textSize="16sp" />
+
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:id="@+id/noteLayout"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/addressLayout">
+
+                <TextView
+                    android:id="@+id/lblNote"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentLeft="true"
+                    android:layout_marginLeft="5dp"
+                    android:layout_marginTop="5dp"
+                    android:text="Note:"
+                    android:textColor="@android:color/black"
+                    android:textSize="18sp" />
+
+                <TextView
+                    android:id="@+id/txtNote"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentLeft="true"
+                    android:layout_below="@+id/lblNote"
+                    android:layout_marginLeft="5dp"
+                    android:maxLines="3"
+
+                    android:text="hi"
+                    android:textSize="16sp" />
+
+            </RelativeLayout>
+
+        </RelativeLayout>
+
+        <!--<View-->
+        <!--android:id="@+id/div1"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="1dp"-->
+        <!--android:layout_below="@+id/sectionAddress"-->
+        <!--android:background="@color/divider"></View>-->
+
+        <RelativeLayout
+            android:id="@+id/sectionAmountDetail"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/sectionAddress"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:layout_marginTop="10dp"
+            android:background="@drawable/shape_order_details"
+            android:paddingBottom="5dp"
+            android:paddingTop="5dp">
+
+            <TextView
+                android:id="@+id/items_price_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:layout_marginLeft="5dp"
+                android:layout_marginTop="5dp"
+                android:ems="7"
+                android:text="Items Price"
+                android:textSize="18sp" />
+
+            <RelativeLayout
+                android:id="@+id/price_layout"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_marginRight="5dp"
+                android:layout_marginTop="5dp"
+                android:layout_toRightOf="@+id/items_price_text"
+                android:gravity="right">
+
+                <TextView
+                    android:id="@+id/items_price"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="234"
+                    android:textSize="18sp" />
+
+
+            </RelativeLayout>
+
+            <TextView
+                android:id="@+id/shipping_charges_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:layout_below="@id/items_price_text"
+                android:layout_marginLeft="5dp"
+                android:layout_marginTop="5dp"
+                android:ems="7"
+                android:text="Shipping Charges"
+                android:textSize="18sp" />
+
+            <RelativeLayout
+                android:id="@+id/shipping_layout"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_below="@+id/price_layout"
+                android:layout_marginRight="5dp"
+                android:layout_marginTop="5dp"
+                android:layout_toRightOf="@+id/shipping_charges_text"
+                android:gravity="right">
+
+                <TextView
+                    android:id="@+id/shipping_charges"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="0.00"
+                    android:textSize="18sp" />
+
+
+            </RelativeLayout>
+
+            <TextView
+                android:id="@+id/discountLblText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:layout_below="@id/shipping_charges_text"
+                android:layout_marginLeft="5dp"
+                android:layout_marginTop="5dp"
+                android:ems="7"
+                android:text="Discount"
+                android:textSize="18sp" />
+
+            <RelativeLayout
+                android:id="@+id/discount_layout"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_below="@+id/shipping_layout"
+                android:layout_marginRight="5dp"
+                android:layout_marginTop="5dp"
+                android:layout_toRightOf="@+id/discountLblText"
+                android:gravity="right">
+
+                <TextView
+                    android:id="@+id/discountVal"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="0.00"
+                    android:textSize="18sp" />
+
+
+            </RelativeLayout>
+        </RelativeLayout>
+    </RelativeLayout>
+
+
+    <LinearLayout
+        android:id="@+id/footer"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:background="@drawable/transparent_bg"
+        android:orientation="horizontal"
+        android:paddingBottom="10dp"
+        android:paddingTop="10dp">
+
+        <Button
+            android:id="@+id/btnApproveOrder"
+            android:layout_width="0dp"
+            android:layout_height="42dp"
+            android:layout_marginLeft="15dp"
+            android:layout_marginRight="15dp"
+            android:layout_weight="50"
+            android:background="@drawable/btn_accept_bg_shape"
+            android:text="Approve Order"
+            android:textColor="@color/color_white" />
+
+        <Button
+            android:id="@+id/btnDeclineOrder"
+            android:layout_width="0dp"
+            android:layout_height="42dp"
+            android:layout_marginLeft="15dp"
+            android:layout_marginRight="15dp"
+            android:layout_weight="50"
+            android:background="@drawable/btn_decline_bg_shape"
+            android:text="Decline Order"
+            android:textColor="@color/color_white" />
+    </LinearLayout>
+</RelativeLayout>

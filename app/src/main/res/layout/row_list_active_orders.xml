@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/parent"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/color_white"
+    android:clickable="true"
+    android:padding="10dp">
+
+
+    <TextView
+        android:id="@+id/txtLblOdrId"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Order ID:"
+        android:textColor="@color/color_text"
+        android:textSize="@dimen/text_large" />
+
+    <TextView
+        android:id="@+id/valOdrId"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@+id/txtLblOdrId"
+        android:layout_alignTop="@+id/txtLblOdrId"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="3dp"
+        android:layout_toLeftOf="@+id/rightLayout"
+        android:layout_toRightOf="@+id/txtLblOdrId"
+        android:gravity="right"
+        android:singleLine="true"
+        android:text="1020102"
+        android:textSize="@dimen/text_normal" />
+
+    <TextView
+        android:id="@+id/txtLblCustName"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/txtLblOdrId"
+        android:layout_marginTop="5dp"
+        android:text="Customer Name:"
+        android:textColor="@color/color_text"
+        android:textSize="@dimen/text_large" />
+
+    <TextView
+        android:id="@+id/valCustName"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@+id/txtLblCustName"
+        android:layout_alignRight="@+id/valOdrId"
+        android:layout_alignTop="@+id/txtLblCustName"
+        android:layout_below="@+id/txtLblOdrId"
+        android:layout_marginLeft="10dp"
+        android:layout_toRightOf="@+id/txtLblCustName"
+        android:gravity="right"
+        android:singleLine="true"
+        android:text="Amit Kumar"
+        android:textSize="@dimen/text_normal" />
+
+    <TextView
+        android:id="@+id/txtLblTotalAmt"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/txtLblCustName"
+        android:layout_marginTop="5dp"
+        android:text="Total Amount:"
+        android:textColor="@color/color_text"
+        android:textSize="@dimen/text_large" />
+
+    <TextView
+        android:id="@+id/valTotalAmt"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@+id/txtLblTotalAmt"
+        android:layout_alignRight="@+id/valOdrId"
+        android:layout_alignTop="@+id/txtLblTotalAmt"
+        android:layout_below="@+id/valCustName"
+        android:layout_marginLeft="10dp"
+        android:layout_toRightOf="@+id/txtLblTotalAmt"
+        android:gravity="right"
+        android:text="23323"
+        android:textSize="@dimen/text_normal" />
+
+    <TextView
+        android:id="@+id/txtLblTime"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/txtLblTotalAmt"
+        android:layout_marginTop="5dp"
+        android:text="Time:"
+        android:textColor="@color/color_text"
+        android:textSize="@dimen/text_large" />
+
+    <TextView
+        android:id="@+id/valTime"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@+id/txtLblTime"
+        android:layout_alignRight="@+id/valOdrId"
+        android:layout_alignTop="@+id/txtLblTime"
+        android:layout_below="@+id/valTotalAmt"
+        android:layout_marginLeft="10dp"
+        android:layout_toRightOf="@+id/txtLblTime"
+        android:gravity="right"
+        android:text="15 June 2015,1:00pm"
+        android:textSize="@dimen/text_normal" />
+
+    <LinearLayout
+        android:id="@+id/rightLayout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@+id/valTime"
+        android:layout_alignParentRight="true"
+        android:layout_alignTop="@+id/valOdrId">
+
+        <CheckBox
+            android:id="@+id/checkbox"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:button="@drawable/agree_checkbox_selector"
+            android:checked="false"
+            android:visibility="visible" />
+
+    </LinearLayout>
+
+
+</RelativeLayout>

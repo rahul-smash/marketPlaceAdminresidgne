@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <RelativeLayout
+        android:id="@+id/header"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/color_header">
+
+        <Button
+            android:id="@+id/backButton"
+            android:layout_width="48dp"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_centerVertical="true"
+            android:layout_marginBottom="5dp"
+            android:layout_marginTop="5dp"
+            android:background="@android:color/transparent"
+            android:contentDescription=""
+            android:drawableLeft="@drawable/ic_back_white"
+            android:visibility="visible" />
+
+        <TextView
+            android:id="@+id/textTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:singleLine="true"
+            android:text="Mobile Verification"
+            android:textColor="@color/color_white"
+            android:textSize="@dimen/text_xlarge"
+            android:visibility="visible" />
+
+
+    </RelativeLayout>
+
+    <TextView
+        android:id="@+id/textLbl"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/header"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="40dp"
+        android:text="Thanks! Please enter the OTP"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:textSize="@dimen/text_xlarge" />
+
+    <EditText
+        android:id="@+id/edtOTp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/textLbl"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="25dp"
+        android:ems="10"
+        android:gravity="center"
+        android:hint="OTP"
+        android:imeOptions="actionDone"
+        android:inputType="phone"
+        android:textColor="@android:color/black" />
+
+    <RelativeLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/edtOTp"
+        android:layout_marginTop="20dp"
+        android:gravity="center_horizontal">
+
+        <Button
+            android:id="@+id/btnResend"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/rectangle_shape_with_header_color"
+            android:text="Resend"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:textColor="@color/color_white"
+            android:padding="5dp"
+            android:textSize="@dimen/text_normal" />
+
+        <Button
+            android:id="@+id/btnDone"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignTop="@+id/btnResend"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="20dp"
+            android:layout_toRightOf="@+id/btnResend"
+            android:background="@drawable/rectangle_shape_with_header_color"
+            android:contentDescription=""
+            android:text="Done"
+            android:padding="5dp"
+            android:textColor="@color/color_white"
+            android:textSize="@dimen/text_normal"
+            android:visibility="visible" />
+
+    </RelativeLayout>
+
+</RelativeLayout>
