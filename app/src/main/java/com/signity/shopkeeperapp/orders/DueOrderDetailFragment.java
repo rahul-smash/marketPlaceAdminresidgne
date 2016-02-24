@@ -4,13 +4,11 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.util.Log;
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -22,7 +20,6 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
-import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.ToggleButton;
 
@@ -36,7 +33,6 @@ import com.signity.shopkeeperapp.util.Constant;
 import com.signity.shopkeeperapp.util.DialogHandler;
 import com.signity.shopkeeperapp.util.DialogUtils;
 import com.signity.shopkeeperapp.util.ProgressDialogUtil;
-import com.signity.shopkeeperapp.util.Util;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
@@ -84,6 +80,7 @@ public class DueOrderDetailFragment extends Fragment implements View.OnClickList
     Animation slideDownAnim;
 
     TextView mTotalAmount;
+
     TextView mDeliveryAddress, mNote, mItemsPrice, mShippingCharges, mDiscountVal;
     RelativeLayout mNoteLayout, mAddressLayout;
 
@@ -127,7 +124,7 @@ public class DueOrderDetailFragment extends Fragment implements View.OnClickList
         mOrderDetailLayout = (RelativeLayout) rootView.findViewById(R.id.layout_order_detail);
 
         mDetailBtnBlock = (RelativeLayout) rootView.findViewById(R.id.detailBtnBlock);
-        mDetailBtnBlock.setOnClickListener(this);
+//        mDetailBtnBlock.setOnClickListener(this);
 
         slideUpAnim = AnimationUtils.loadAnimation(getActivity()
                 .getApplicationContext(), R.anim.slide_up_for_order_detail);
@@ -136,14 +133,7 @@ public class DueOrderDetailFragment extends Fragment implements View.OnClickList
 
         mTotalAmount = (TextView) rootView.findViewById(R.id.txtTotalAmount);
 
-        mDeliveryAddress = (TextView) rootView.findViewById(R.id.txtDeliveryAddress);
-        mNote = (TextView) rootView.findViewById(R.id.txtNote);
-        mItemsPrice = (TextView) rootView.findViewById(R.id.items_price);
-        mShippingCharges = (TextView) rootView.findViewById(R.id.shipping_charges);
-        mDiscountVal = (TextView) rootView.findViewById(R.id.discountVal);
-
-        mNoteLayout = (RelativeLayout) rootView.findViewById(R.id.noteLayout);
-        mAddressLayout = (RelativeLayout) rootView.findViewById(R.id.addressLayout);
+        addHeaderToList();
 
 
         handleBackButton(rootView);
@@ -157,6 +147,20 @@ public class DueOrderDetailFragment extends Fragment implements View.OnClickList
         setOrderDetails();
 
         return rootView;
+    }
+
+    private void addHeaderToList() {
+        View headerView = (View) getActivity().getLayoutInflater().inflate(R.layout.layout_header_order_detail_address, null);
+        mDeliveryAddress = (TextView) headerView.findViewById(R.id.txtDeliveryAddress);
+        mNote = (TextView) headerView.findViewById(R.id.txtNote);
+        mItemsPrice = (TextView) headerView.findViewById(R.id.items_price);
+        mShippingCharges = (TextView) headerView.findViewById(R.id.shipping_charges);
+        mDiscountVal = (TextView) headerView.findViewById(R.id.discountVal);
+
+        mNoteLayout = (RelativeLayout) headerView.findViewById(R.id.noteLayout);
+        mAddressLayout = (RelativeLayout) headerView.findViewById(R.id.addressLayout);
+        listDueOrderItems.addHeaderView(headerView);
+
     }
 
     private void handleCallButton(View rootView) {

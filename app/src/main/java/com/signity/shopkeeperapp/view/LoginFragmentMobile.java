@@ -151,6 +151,7 @@ public class LoginFragmentMobile extends Fragment implements View.OnClickListene
 
 
     private void getAdminStores() {
+
         ProgressDialogUtil.showProgressDialog(getActivity());
 
         String phone = edtPhone.getText().toString();

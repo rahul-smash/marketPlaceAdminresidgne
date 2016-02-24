@@ -57,7 +57,7 @@
             android:background="@color/color_white"
             android:ems="12"
             android:hint="Full Name"
-            android:inputType="phone"
+            android:inputType="text"
             android:paddingBottom="5dp"
             android:paddingLeft="5dp"
             android:paddingRight="5dp"
@@ -74,6 +74,7 @@
             android:background="@color/color_white"
             android:ems="12"
             android:hint="Phone Number"
+            android:imeOptions="actionDone"
             android:inputType="phone"
             android:paddingBottom="5dp"
             android:paddingLeft="5dp"
@@ -81,55 +82,72 @@
             android:paddingTop="5dp"
             android:singleLine="true" />
 
-        <RadioGroup
-            android:id="@+id/radioGroup"
-            android:layout_width="fill_parent"
+        <RelativeLayout
+            android:id="@+id/relativeStatus"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_alignLeft="@+id/editTextNumber"
+            android:layout_alignRight="@+id/editTextNumber"
             android:layout_below="@+id/editTextNumber"
-            android:layout_marginTop="10dp"
-            android:gravity="center"
-            android:orientation="horizontal"
-            android:paddingBottom="10dp"
-            android:paddingTop="10dp">
+            android:layout_marginTop="10dp">
 
-            <RadioButton
-                android:id="@+id/radio_pirates"
+            <TextView
+                android:id="@+id/textViewStatus"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginRight="15dp"
-                android:button="@null"
-                android:checked="true"
-                android:drawableLeft="@drawable/radio_status_check_selector"
-                android:drawablePadding="10dp"
-                android:onClick="onRadioButtonClicked"
-                android:text="Active"
+                android:layout_marginTop="10dp"
+                android:gravity="center"
+                android:singleLine="true"
+                android:text="Status"
                 android:textColor="@color/color_white"
-                android:textSize="25dp" />
+                android:textSize="@dimen/text_xxlarge"
+                android:visibility="visible" />
 
-            <RadioButton
-                android:id="@+id/radio_ninjas"
+            <RadioGroup
+                android:id="@+id/radioGroup"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:button="@null"
-                android:drawableLeft="@drawable/radio_status_check_selector"
-                android:drawablePadding="10dp"
-                android:onClick="onRadioButtonClicked"
-                android:text="InActive"
-                android:textColor="@color/color_white"
-                android:textSize="25dp" />
-        </RadioGroup>
+                android:layout_alignParentRight="true"
+                android:layout_marginTop="10dp"
+                android:orientation="vertical">
+
+                <RadioButton
+                    android:id="@+id/radioActive"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:button="@null"
+                    android:checked="true"
+                    android:drawableLeft="@drawable/radio_status_check_selector"
+                    android:drawablePadding="10dp"
+                    android:text="Active"
+                    android:textColor="@color/color_white"
+                    android:textSize="25dp" />
+
+                <RadioButton
+                    android:id="@+id/radioInActive"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:button="@null"
+                    android:drawableLeft="@drawable/radio_status_check_selector"
+                    android:drawablePadding="10dp"
+                    android:text="InActive"
+                    android:textColor="@color/color_white"
+                    android:textSize="25dp" />
+            </RadioGroup>
+        </RelativeLayout>
 
         <Button
             android:id="@+id/buttonSave"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignLeft="@+id/editTextFullName"
-            android:layout_below="@+id/radioGroup"
+            android:layout_below="@+id/relativeStatus"
             android:layout_marginTop="20dp"
             android:background="@drawable/rectangle_shape"
             android:minHeight="10dp"
-            android:paddingBottom="5dp"
-            android:paddingTop="5dp"
+            android:paddingBottom="10dp"
+            android:paddingTop="10dp"
             android:text="Save"
             android:textColor="@color/color_black" />
 
@@ -138,12 +156,12 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignRight="@+id/editTextFullName"
-            android:layout_below="@+id/radioGroup"
+            android:layout_below="@+id/relativeStatus"
             android:layout_marginTop="20dp"
             android:background="@drawable/rectangle_shape"
             android:minHeight="10dp"
-            android:paddingBottom="5dp"
-            android:paddingTop="5dp"
+            android:paddingBottom="10dp"
+            android:paddingTop="10dp"
             android:text="Delete"
             android:textColor="@color/color_black" />
     </RelativeLayout>

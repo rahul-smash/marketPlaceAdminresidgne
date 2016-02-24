@@ -25,6 +25,7 @@
         android:theme="@style/AppTheme">
         <activity
             android:name=".SplashActivity"
+            android:screenOrientation="portrait"
             android:label="@string/app_name">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -63,6 +64,7 @@
 
         <activity
             android:name=".view.LoginScreenActivity"
+            android:screenOrientation="portrait"
             android:label="@string/app_name" />
         <activity
             android:name=".home.MainActivity"
@@ -70,26 +72,33 @@
 
         <activity
             android:name=".orders.DueOrderActivity"
+            android:screenOrientation="portrait"
             android:label="@string/app_name" />
         <activity
             android:name=".orders.DueOrderActivityWithoutUpdations"
+            android:screenOrientation="portrait"
             android:label="@string/app_name" />
         <activity
             android:name=".customer.CustomerActivity"
+            android:screenOrientation="portrait"
             android:label="@string/app_name"></activity>
         <activity
             android:name=".rejected_orders.RejectedItemsListActivity"
+            android:screenOrientation="portrait"
             android:label="@string/app_name"></activity>
 
         <activity
             android:name=".canceled_orders.CanceledOrdersItemsListActivity"
+            android:screenOrientation="portrait"
             android:label="@string/app_name"></activity>
 
         <activity
             android:name=".enquiries.EnquiriesActivity"
+            android:screenOrientation="portrait"
             android:label="@string/app_name"></activity>
         <activity
             android:name=".manage_stores.ManageStaffActivity"
+            android:screenOrientation="portrait"
             android:label="@string/app_name"></activity>
 
     </application>

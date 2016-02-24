@@ -20,6 +20,7 @@ import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -83,6 +84,7 @@ public class DueOrderDetailFragmentWithoutUpdations extends Fragment implements 
     TextView mTotalAmount;
     TextView mDeliveryAddress, mNote, mItemsPrice, mShippingCharges, mDiscountVal;
     RelativeLayout mNoteLayout, mAddressLayout;
+    private LinearLayout footer;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -112,12 +114,13 @@ public class DueOrderDetailFragmentWithoutUpdations extends Fragment implements 
 
         View rootView = inflater.inflate(R.layout.fragment_due_order_detail, container, false);
         listDueOrderItems = (ListView) rootView.findViewById(R.id.listDueOrderItems);
+        footer = (LinearLayout) rootView.findViewById(R.id.footer);
+
+        footer.setVisibility(View.GONE);
         mApproveOrder = (Button) rootView.findViewById(R.id.btnApproveOrder);
-        mApproveOrder.setOnClickListener(this);
         mApproveOrder.setVisibility(View.GONE);
 
         mDeclineOrder = (Button) rootView.findViewById(R.id.btnDeclineOrder);
-        mDeclineOrder.setOnClickListener(this);
         mDeclineOrder.setVisibility(View.GONE);
 
         mOrderDetailBtn = (ImageButton) rootView.findViewById(R.id.btnOrderDetail);
@@ -126,7 +129,7 @@ public class DueOrderDetailFragmentWithoutUpdations extends Fragment implements 
         mOrderDetailLayout = (RelativeLayout) rootView.findViewById(R.id.layout_order_detail);
 
         mDetailBtnBlock = (RelativeLayout) rootView.findViewById(R.id.detailBtnBlock);
-        mDetailBtnBlock.setOnClickListener(this);
+//        mDetailBtnBlock.setOnClickListener(this);
 
         slideUpAnim = AnimationUtils.loadAnimation(getActivity()
                 .getApplicationContext(), R.anim.slide_up_for_order_detail);
@@ -135,14 +138,7 @@ public class DueOrderDetailFragmentWithoutUpdations extends Fragment implements 
 
         mTotalAmount = (TextView) rootView.findViewById(R.id.txtTotalAmount);
 
-        mDeliveryAddress = (TextView) rootView.findViewById(R.id.txtDeliveryAddress);
-        mNote = (TextView) rootView.findViewById(R.id.txtNote);
-        mItemsPrice = (TextView) rootView.findViewById(R.id.items_price);
-        mShippingCharges = (TextView) rootView.findViewById(R.id.shipping_charges);
-        mDiscountVal = (TextView) rootView.findViewById(R.id.discountVal);
-
-        mNoteLayout = (RelativeLayout) rootView.findViewById(R.id.noteLayout);
-        mAddressLayout = (RelativeLayout) rootView.findViewById(R.id.addressLayout);
+        addHeaderToList();
 
         handleBackButton(rootView);
         handleCallButton(rootView);
@@ -155,6 +151,21 @@ public class DueOrderDetailFragmentWithoutUpdations extends Fragment implements 
         setOrderDetails();
 
         return rootView;
+    }
+
+
+    private void addHeaderToList() {
+        View headerView = (View) getActivity().getLayoutInflater().inflate(R.layout.layout_header_order_detail_address, null);
+        mDeliveryAddress = (TextView) headerView.findViewById(R.id.txtDeliveryAddress);
+        mNote = (TextView) headerView.findViewById(R.id.txtNote);
+        mItemsPrice = (TextView) headerView.findViewById(R.id.items_price);
+        mShippingCharges = (TextView) headerView.findViewById(R.id.shipping_charges);
+        mDiscountVal = (TextView) headerView.findViewById(R.id.discountVal);
+
+        mNoteLayout = (RelativeLayout) headerView.findViewById(R.id.noteLayout);
+        mAddressLayout = (RelativeLayout) headerView.findViewById(R.id.addressLayout);
+        listDueOrderItems.addHeaderView(headerView);
+
     }
 
     private void handleCallButton(View rootView) {

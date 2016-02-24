@@ -240,7 +240,7 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
         TextView mStoreStatus = (TextView) layout.findViewById(R.id.textStoreStatus);
         TextView manageStaff = (TextView) layout.findViewById(R.id.staff);
 
-        if (isAdmin.equalsIgnoreCase("staff")) {
+        if (isAdmin.equalsIgnoreCase("admin")) {
             manageStaff.setVisibility(View.VISIBLE);
         } else if (isAdmin.equalsIgnoreCase("staff")) {
             manageStaff.setVisibility(View.GONE);

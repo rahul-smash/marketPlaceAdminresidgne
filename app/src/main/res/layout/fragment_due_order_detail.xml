@@ -12,8 +12,8 @@
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:layout_below="@+id/header"
-        android:padding="5dp"
-        android:background="@color/colorGrayForOrderDtail">
+        android:background="@color/colorGrayForOrderDtail"
+        android:padding="5dp">
 
         <RelativeLayout
             android:id="@+id/detailBtnBlock"
@@ -26,8 +26,8 @@
                 android:layout_height="wrap_content"
                 android:layout_alignParentLeft="true"
                 android:layout_centerVertical="true"
-                android:text="Details"
                 android:layout_marginLeft="5dp"
+                android:text="Details"
                 android:textColor="@color/color_white"
                 android:textSize="@dimen/text_large"
                 android:textStyle="bold" />
@@ -36,8 +36,9 @@
                 android:id="@+id/btnOrderDetail"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_toRightOf="@+id/labelDetails"
+                android:visibility="gone"
                 android:layout_marginLeft="10dp"
+                android:layout_toRightOf="@+id/labelDetails"
                 android:background="@drawable/order_detail_selector"
                 android:clickable="false" />
 
@@ -96,8 +97,8 @@
         android:layout_marginLeft="2dp"
         android:layout_marginRight="2dp"
         android:layout_marginTop="2dp"
-        android:paddingBottom="10dp"
         android:background="@drawable/shape_order_details"
+        android:paddingBottom="10dp"
         android:visibility="gone">
 
         <RelativeLayout
