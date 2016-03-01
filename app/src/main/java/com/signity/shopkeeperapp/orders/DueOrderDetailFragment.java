@@ -67,6 +67,7 @@ public class DueOrderDetailFragment extends Fragment implements View.OnClickList
     String orderStatus = "";
     String itemAcceptIds = "";
     String itemRejectIds = "";
+    String orderIDS = "";
 
     String note = "";
     String address = "";
@@ -82,7 +83,8 @@ public class DueOrderDetailFragment extends Fragment implements View.OnClickList
     TextView mTotalAmount;
 
     TextView mDeliveryAddress, mNote, mItemsPrice, mShippingCharges, mDiscountVal;
-    RelativeLayout mNoteLayout, mAddressLayout;
+    RelativeLayout mNoteLayout, mAddressLayout,relDeclineOrder;
+    ImageButton btnOrderProceed,btnMoveToShipping,btnMoveToDeliver;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -112,6 +114,15 @@ public class DueOrderDetailFragment extends Fragment implements View.OnClickList
 
         View rootView = inflater.inflate(R.layout.fragment_due_order_detail, container, false);
         listDueOrderItems = (ListView) rootView.findViewById(R.id.listDueOrderItems);
+        relDeclineOrder=(RelativeLayout)rootView.findViewById(R.id.relDeclineOrder);
+        relDeclineOrder.setOnClickListener(this);
+        btnOrderProceed=(ImageButton)rootView.findViewById(R.id.btnOrderProceed);
+        btnOrderProceed.setOnClickListener(this);
+        btnMoveToShipping=(ImageButton)rootView.findViewById(R.id.btnMoveToShipping);
+        btnMoveToShipping.setOnClickListener(this);
+        btnMoveToDeliver=(ImageButton)rootView.findViewById(R.id.btnMoveToDeliver);
+        btnMoveToDeliver.setOnClickListener(this);
+
         mApproveOrder = (Button) rootView.findViewById(R.id.btnApproveOrder);
         mApproveOrder.setOnClickListener(this);
 
@@ -239,7 +250,7 @@ public class DueOrderDetailFragment extends Fragment implements View.OnClickList
 
                 break;
 
-            case R.id.btnDeclineOrder:
+            case R.id.relDeclineOrder:
 
                 alertBoxNew("Are you sure to Decline this order?");
 
@@ -251,9 +262,55 @@ public class DueOrderDetailFragment extends Fragment implements View.OnClickList
 
                 break;
 
+            case R.id.btnOrderProceed:
+                orderStatus = "3";
+//                getOrderIDS();
+
+                break;
+
+            case R.id.btnMoveToShipping:
+
+                orderStatus = "4";
+//                getOrderIDS();
+                break;
+
+            case R.id.btnMoveToDeliver:
+                orderStatus = "5";
+//                getOrderIDS();
+
+                break;
+
         }
 
     }
+
+
+   /* private void getOrderIDS() {
+
+        orderIDS = "";
+        userId = "";
+
+        for (int i = 0; i < listOrderSelected.size(); i++) {
+            if (i == 0) {
+                orderIDS = listOrderSelected.get(i).getOrderId();
+                userId = listOrderSelected.get(i).getUserId();
+            } else {
+                orderIDS = orderIDS + ","
+                        + listOrderSelected.get(i).getOrderId();
+                userId = userId + ","
+                        + listOrderSelected.get(i).getUserId();
+            }
+        }
+
+
+        Log.v("orderStatus : ", "" + orderStatus);
+        Log.v("orderIDS : ", "" + orderIDS);
+        Log.v("userId : ", "" + userId);
+
+        setOrderStatus();
+    }*/
+
+
 
     private void actionForOrderDetailView() {
 
