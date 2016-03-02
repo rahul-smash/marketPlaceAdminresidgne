@@ -332,136 +332,120 @@
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
-        android:visibility="visible"
-        android:weightSum="4">
+        android:visibility="visible">
 
         <RelativeLayout
+            android:id="@+id/relProcess"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_weight="3">
+            android:layout_alignParentLeft="true"
+            android:layout_weight="16"
+            android:padding="2dp">
 
-            <RelativeLayout
-                android:id="@+id/relProcess"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentLeft="true"
-                android:padding="2dp">
-
-                <ImageButton
-                    android:id="@+id/btnOrderProceed"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_centerHorizontal="true"
-                    android:background="@android:color/transparent"
-                    android:padding="5dp"
-                    android:src="@drawable/process_active" />
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_below="@+id/btnOrderProceed"
-                    android:layout_centerHorizontal="true"
-                    android:padding="1dp"
-                    android:text="Process"
-                    android:textSize="@dimen/text_vsmall" />
-
-
-            </RelativeLayout>
-
-            <View
-                android:id="@+id/line1"
-                android:layout_width="wrap_content"
-                android:layout_height="1dp"
-                android:layout_centerVertical="true"
-                android:layout_toLeftOf="@+id/relShipping"
-                android:layout_toRightOf="@+id/relProcess"
-                android:background="@drawable/line" />
-
-            <RelativeLayout
-                android:id="@+id/relShipping"
+            <ImageButton
+                android:id="@+id/btnOrderProceed"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerHorizontal="true"
-                android:padding="2dp">
-
-                <ImageButton
-                    android:id="@+id/btnMoveToShipping"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_centerHorizontal="true"
-                    android:background="@android:color/transparent"
-                    android:padding="5dp"
-                    android:src="@drawable/shipping_deactive" />
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_below="@+id/btnMoveToShipping"
-                    android:layout_centerHorizontal="true"
-                    android:padding="1dp"
-                    android:text="Shipping"
-                    android:textSize="@dimen/text_vsmall" />
-
-
-            </RelativeLayout>
-
-
-            <View
-                android:id="@+id/line2"
-                android:layout_width="50dp"
-                android:layout_height="1dp"
-                android:layout_centerVertical="true"
-                android:layout_toLeftOf="@+id/relDelivery"
-                android:layout_toRightOf="@+id/relShipping"
-                android:background="@drawable/line" />
-
-
-            <RelativeLayout
-                android:id="@+id/relDelivery"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentRight="true"
-                android:padding="2dp">
-
-                <ImageButton
-                    android:id="@+id/btnMoveToDeliver"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_centerHorizontal="true"
-                    android:background="@android:color/transparent"
-                    android:padding="5dp"
-                    android:src="@drawable/delivery_deactive" />
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_below="@+id/btnMoveToDeliver"
-                    android:layout_centerHorizontal="true"
-                    android:padding="1dp"
-                    android:text="Delivery"
-                    android:textSize="@dimen/text_vsmall" />
-
-
-            </RelativeLayout>
-
-
-        </RelativeLayout>
-
-        <RelativeLayout
-            android:id="@+id/relDeclineOrder"
-            android:layout_width="0dp"
-            android:layout_height="62dp"
-            android:layout_weight="1"
-            android:background="@color/color_red"
-            android:gravity="center">
+                android:background="@android:color/transparent"
+                android:padding="5dp"
+                android:src="@drawable/selector_image_proceed_btn" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:padding="5dp"
-                android:text="Reject Order"
-                android:textColor="@android:color/white"
-                android:textSize="@dimen/text_small" />
+                android:layout_below="@+id/btnOrderProceed"
+                android:layout_centerHorizontal="true"
+                android:padding="1dp"
+                android:text="Process"
+                android:textSize="@dimen/text_vsmall" />
+
+
         </RelativeLayout>
+
+        <View
+            android:id="@+id/line1"
+            android:layout_width="0dp"
+            android:layout_height="1dp"
+            android:layout_gravity="center_vertical"
+            android:layout_weight="16"
+            android:background="@drawable/line" />
+
+        <RelativeLayout
+            android:id="@+id/relShipping"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_weight="16"
+            android:padding="2dp">
+
+            <ImageButton
+                android:id="@+id/btnMoveToShipping"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+                android:background="@android:color/transparent"
+                android:padding="5dp"
+                android:src="@drawable/selector_image_shipping_btn" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/btnMoveToShipping"
+                android:layout_centerHorizontal="true"
+                android:padding="1dp"
+                android:text="Shipping"
+                android:textSize="@dimen/text_vsmall" />
+
+
+        </RelativeLayout>
+
+        <View
+            android:id="@+id/line2"
+            android:layout_width="0dp"
+            android:layout_height="1dp"
+            android:layout_gravity="center_vertical"
+            android:layout_weight="16"
+            android:background="@drawable/line" />
+
+        <RelativeLayout
+            android:id="@+id/relDelivery"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_marginRight="5dp"
+            android:layout_weight="16"
+            android:padding="2dp">
+
+            <ImageButton
+                android:id="@+id/btnMoveToDeliver"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+                android:background="@android:color/transparent"
+                android:padding="5dp"
+                android:src="@drawable/selector_image_deliver_btn" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/btnMoveToDeliver"
+                android:layout_centerHorizontal="true"
+                android:padding="1dp"
+                android:text="Delivery"
+                android:textSize="@dimen/text_vsmall" />
+
+
+        </RelativeLayout>
+
+        <Button
+            android:id="@+id/relDeclineOrder"
+            android:layout_width="0dp"
+            android:layout_height="62dp"
+            android:layout_weight="30"
+            android:background="@drawable/selector_button_rejected"
+            android:gravity="center"
+            android:text="Reject Order"
+            android:textColor="@color/color_white"></Button>
     </LinearLayout>
 </RelativeLayout>

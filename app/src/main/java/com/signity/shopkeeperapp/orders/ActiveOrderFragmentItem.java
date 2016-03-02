@@ -98,7 +98,10 @@ public class ActiveOrderFragmentItem extends Fragment implements View.OnClickLis
             }
         } else if (type.equals(Constant.TYPE_PROCESSING)) {
             for (int i = 0; i < listOrderParent.size(); i++) {
-                if (listOrderParent.get(i).getStatus().equalsIgnoreCase("3")) {
+//                if (listOrderParent.get(i).getStatus().equalsIgnoreCase("3")) {
+//                    listOrder.add(listOrderParent.get(i));
+//                }
+                if (listOrderParent.get(i).getStatus().equalsIgnoreCase("1")) {
                     listOrder.add(listOrderParent.get(i));
                 }
             }
@@ -331,7 +334,7 @@ public class ActiveOrderFragmentItem extends Fragment implements View.OnClickLis
                         dueOrderIntent.putExtra("phone", listOrder.get(position).getPhone());
                         dueOrderIntent.putExtra("orderID", listOrder.get(position).getOrderId());
                         dueOrderIntent.putExtra("userID", listOrder.get(position).getUserId());
-                        dueOrderIntent.putExtra("type", "active");
+                        dueOrderIntent.putExtra("type", type);
 
                         dueOrderIntent.putExtra("note", listOrder.get(position).getNote());
                         dueOrderIntent.putExtra("discount", listOrder.get(position).getDiscount());
@@ -350,7 +353,7 @@ public class ActiveOrderFragmentItem extends Fragment implements View.OnClickLis
                         dueOrderIntent.putExtra("phone", listOrder.get(position).getPhone());
                         dueOrderIntent.putExtra("orderID", listOrder.get(position).getOrderId());
                         dueOrderIntent.putExtra("userID", listOrder.get(position).getUserId());
-                        dueOrderIntent.putExtra("type", "active");
+                        dueOrderIntent.putExtra("type", type);
 
                         dueOrderIntent.putExtra("note", listOrder.get(position).getNote());
                         dueOrderIntent.putExtra("discount", listOrder.get(position).getDiscount());
@@ -369,7 +372,7 @@ public class ActiveOrderFragmentItem extends Fragment implements View.OnClickLis
                         dueOrderIntent.putExtra("phone", listOrder.get(position).getPhone());
                         dueOrderIntent.putExtra("orderID", listOrder.get(position).getOrderId());
                         dueOrderIntent.putExtra("userID", listOrder.get(position).getUserId());
-                        dueOrderIntent.putExtra("type", "active");
+                        dueOrderIntent.putExtra("type", type);
 
                         dueOrderIntent.putExtra("note", listOrder.get(position).getNote());
                         dueOrderIntent.putExtra("discount", listOrder.get(position).getDiscount());
@@ -444,21 +447,17 @@ public class ActiveOrderFragmentItem extends Fragment implements View.OnClickLis
                 Log.e("Tab", getValues.toString());
                 if (getValues.getSuccess()) {
                     ProgressDialogUtil.hideProgressDialog();
-
                     if (getValues.getData().getOrders().size() > 0) {
                         listOrderParent = getValues.getData().getOrders();
                         setUpListData();
                     } else {
                         noDataFound.setVisibility(View.VISIBLE);
-
                     }
                 } else {
                     ProgressDialogUtil.hideProgressDialog();
                     DialogUtils.showAlertDialog(getActivity(), Constant.APP_TITLE, getValues.getMessage());
                 }
-
             }
-
             @Override
             public void failure(RetrofitError error) {
                 ProgressDialogUtil.hideProgressDialog();
@@ -474,13 +473,11 @@ public class ActiveOrderFragmentItem extends Fragment implements View.OnClickLis
         switch (view.getId()) {
 
             case R.id.btnOrderProceed:
-
                 orderStatus = "3";
                 getOrderIDS();
                 //   UiDialog.showAlertDialog(getActivity(), "Success", "Successfully Place order for processing", this);
                 break;
             case R.id.btnMoveToShipping:
-
                 orderStatus = "4";
                 getOrderIDS();
                 //    UiDialog.showAlertDialog(getActivity(), "Success", "Successfully place order for Shipping", this);
@@ -647,14 +644,13 @@ public class ActiveOrderFragmentItem extends Fragment implements View.OnClickLis
                         dialogHandler.dismiss();
                         getOrdersMethod();
                         ActiveOrderFragment.api_refreshed = true;
-
-
-                        if (type.equals(Constant.TYPE_APPROVE)) {
+//                        if (type.equals(Constant.TYPE_APPROVE)) {
+//                            ((MainActivity) getActivity()).printNUm(1);
+//                        } else
+                        if (type.equals(Constant.TYPE_PROCESSING)) {
                             ((MainActivity) getActivity()).printNUm(1);
-                        } else if (type.equals(Constant.TYPE_PROCESSING)) {
-                            ((MainActivity) getActivity()).printNUm(2);
                         } else if (type.equals(Constant.TYPE_SHIPPING)) {
-                            ((MainActivity) getActivity()).printNUm(3);
+                            ((MainActivity) getActivity()).printNUm(2);
                         }
                     }
                 });

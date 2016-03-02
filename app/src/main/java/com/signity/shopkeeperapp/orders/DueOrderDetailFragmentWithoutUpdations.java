@@ -84,6 +84,9 @@ public class DueOrderDetailFragmentWithoutUpdations extends Fragment implements 
     TextView mTotalAmount;
     TextView mDeliveryAddress, mNote, mItemsPrice, mShippingCharges, mDiscountVal;
     RelativeLayout mNoteLayout, mAddressLayout;
+    ImageButton btnOrderProceed, btnMoveToShipping, btnMoveToDeliver;
+    Button buttonRejectOrder;
+
     private LinearLayout footer;
 
     @Override
@@ -114,8 +117,14 @@ public class DueOrderDetailFragmentWithoutUpdations extends Fragment implements 
 
         View rootView = inflater.inflate(R.layout.fragment_due_order_detail, container, false);
         listDueOrderItems = (ListView) rootView.findViewById(R.id.listDueOrderItems);
-        footer = (LinearLayout) rootView.findViewById(R.id.footer);
 
+        btnOrderProceed = (ImageButton) rootView.findViewById(R.id.btnOrderProceed);
+        btnMoveToShipping = (ImageButton) rootView.findViewById(R.id.btnMoveToShipping);
+        btnMoveToDeliver = (ImageButton) rootView.findViewById(R.id.btnMoveToDeliver);
+        buttonRejectOrder = (Button) rootView.findViewById(R.id.relDeclineOrder);
+        buttonRejectOrder.setVisibility(View.GONE);
+        setUpButtonStatus();
+        footer = (LinearLayout) rootView.findViewById(R.id.footer);
         footer.setVisibility(View.GONE);
         mApproveOrder = (Button) rootView.findViewById(R.id.btnApproveOrder);
         mApproveOrder.setVisibility(View.GONE);
@@ -151,6 +160,24 @@ public class DueOrderDetailFragmentWithoutUpdations extends Fragment implements 
         setOrderDetails();
 
         return rootView;
+    }
+
+    private void setUpButtonStatus() {
+
+        if (type.equalsIgnoreCase(Constant.TYPE_PROCESSING)) {
+            btnOrderProceed.setSelected(true);
+            btnMoveToShipping.setEnabled(false);
+            btnMoveToDeliver.setEnabled(false);
+        } else if (type.equalsIgnoreCase(Constant.TYPE_SHIPPING)) {
+            btnOrderProceed.setSelected(true);
+            btnMoveToShipping.setSelected(true);
+            btnMoveToDeliver.setEnabled(false);
+
+        } else if (type.equalsIgnoreCase(Constant.TYPE_DELIVERED)) {
+            btnOrderProceed.setSelected(true);
+            btnMoveToShipping.setSelected(true);
+            btnMoveToDeliver.setSelected(true);
+        }
     }
 
 
