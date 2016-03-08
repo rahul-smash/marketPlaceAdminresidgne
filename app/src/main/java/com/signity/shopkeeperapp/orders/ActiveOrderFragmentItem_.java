@@ -53,7 +53,7 @@ import retrofit.client.Response;
 /**
  * Created by Rajinder on 28/9/15.
  */
-public class ActiveOrderFragmentItem extends Fragment implements View.OnClickListener {
+public class ActiveOrderFragmentItem_ extends Fragment implements View.OnClickListener {
 
 
     private ListView listActiveOrdersItems;
@@ -458,7 +458,6 @@ public class ActiveOrderFragmentItem extends Fragment implements View.OnClickLis
                     DialogUtils.showAlertDialog(getActivity(), Constant.APP_TITLE, getValues.getMessage());
                 }
             }
-
             @Override
             public void failure(RetrofitError error) {
                 ProgressDialogUtil.hideProgressDialog();

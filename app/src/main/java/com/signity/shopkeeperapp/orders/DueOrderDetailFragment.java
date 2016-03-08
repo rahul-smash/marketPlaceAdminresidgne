@@ -522,8 +522,9 @@ public class DueOrderDetailFragment extends Fragment implements View.OnClickList
                 if (getValues.getSuccess()) {
                     isAlreadyDelivered = true;
                     btnOrderProceed.setSelected(true);
-                    btnOrderProceed.setSelected(true);
+                    btnMoveToShipping.setSelected(true);
                     btnMoveToDeliver.setSelected(true);
+                    buttonRejectOrder.setEnabled(false);
                     ProgressDialogUtil.hideProgressDialog();
                     showAlertDialog(getActivity(), Constant.APP_TITLE, getValues.getMessage());
                 } else {

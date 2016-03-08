@@ -24,6 +24,7 @@ import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 import android.widget.ToggleButton;
 
 import com.signity.shopkeeperapp.R;
@@ -33,6 +34,7 @@ import com.signity.shopkeeperapp.model.SetOrdersModel;
 import com.signity.shopkeeperapp.network.NetworkAdaper;
 import com.signity.shopkeeperapp.util.AnimUtil;
 import com.signity.shopkeeperapp.util.Constant;
+import com.signity.shopkeeperapp.util.DialogHandler;
 import com.signity.shopkeeperapp.util.DialogUtils;
 import com.signity.shopkeeperapp.util.ProgressDialogUtil;
 import com.squareup.picasso.Picasso;
@@ -86,6 +88,10 @@ public class DueOrderDetailFragmentWithoutUpdations extends Fragment implements 
     RelativeLayout mNoteLayout, mAddressLayout;
     ImageButton btnOrderProceed, btnMoveToShipping, btnMoveToDeliver;
     Button buttonRejectOrder;
+    private boolean isAlreadyShipped = false;
+    private boolean isAlreadyProcess = false;
+    private boolean isAlreadyDelivered = false;
+
 
     private LinearLayout footer;
 
@@ -122,7 +128,9 @@ public class DueOrderDetailFragmentWithoutUpdations extends Fragment implements 
         btnMoveToShipping = (ImageButton) rootView.findViewById(R.id.btnMoveToShipping);
         btnMoveToDeliver = (ImageButton) rootView.findViewById(R.id.btnMoveToDeliver);
         buttonRejectOrder = (Button) rootView.findViewById(R.id.relDeclineOrder);
-        buttonRejectOrder.setVisibility(View.GONE);
+        btnMoveToShipping.setOnClickListener(this);
+        btnMoveToDeliver.setOnClickListener(this);
+        buttonRejectOrder.setOnClickListener(this);
         setUpButtonStatus();
         footer = (LinearLayout) rootView.findViewById(R.id.footer);
         footer.setVisibility(View.GONE);
@@ -165,18 +173,24 @@ public class DueOrderDetailFragmentWithoutUpdations extends Fragment implements 
     private void setUpButtonStatus() {
 
         if (type.equalsIgnoreCase(Constant.TYPE_PROCESSING)) {
+            isAlreadyProcess = true;
             btnOrderProceed.setSelected(true);
-            btnMoveToShipping.setEnabled(false);
+            btnMoveToShipping.setEnabled(true);
             btnMoveToDeliver.setEnabled(false);
+            buttonRejectOrder.setVisibility(View.VISIBLE);
+            buttonRejectOrder.setEnabled(true);
         } else if (type.equalsIgnoreCase(Constant.TYPE_SHIPPING)) {
+            isAlreadyShipped = true;
             btnOrderProceed.setSelected(true);
             btnMoveToShipping.setSelected(true);
-            btnMoveToDeliver.setEnabled(false);
-
+            btnMoveToDeliver.setEnabled(true);
+            buttonRejectOrder.setVisibility(View.GONE);
         } else if (type.equalsIgnoreCase(Constant.TYPE_DELIVERED)) {
+            isAlreadyDelivered = true;
             btnOrderProceed.setSelected(true);
             btnMoveToShipping.setSelected(true);
             btnMoveToDeliver.setSelected(true);
+            buttonRejectOrder.setVisibility(View.GONE);
         }
     }
 
@@ -264,22 +278,44 @@ public class DueOrderDetailFragmentWithoutUpdations extends Fragment implements 
 
         switch (view.getId()) {
             case R.id.btnApproveOrder:
-
                 orderStatus = "1";
                 calculateIDS();
-
                 break;
-
-            case R.id.btnDeclineOrder:
-
-                alertBox("Are you sure to Decline this order?");
-
-                break;
-
+//            case R.id.btnDeclineOrder:
+//                alertBox("Are you sure to Decline this order?");
+//                break;
             case R.id.detailBtnBlock:
-
                 actionForOrderDetailView();
-
+                break;
+            case R.id.relDeclineOrder:
+                if (buttonRejectOrder.isEnabled()) {
+                    alertBox("Are you sure to Decline this order?");
+                } else {
+                    Toast.makeText(getActivity(), "Your order is shipped", Toast.LENGTH_SHORT).show();
+                }
+                break;
+            case R.id.btnMoveToShipping:
+                if (btnMoveToShipping.isEnabled()) {
+                    if (!isAlreadyShipped) {
+                        setOrderForShipping();
+                    } else {
+                        Toast.makeText(getActivity(), "Order already Shipped", Toast.LENGTH_SHORT).show();
+                    }
+                } else {
+                    Toast.makeText(getActivity(), "Please process your order first", Toast.LENGTH_SHORT).show();
+                }
+//                getOrderIDS();
+                break;
+            case R.id.btnMoveToDeliver:
+                if (btnMoveToDeliver.isEnabled()) {
+                    if (!isAlreadyDelivered) {
+                        setOrderForDelivery();
+                    } else {
+                        Toast.makeText(getActivity(), "Order already Delivered", Toast.LENGTH_SHORT).show();
+                    }
+                } else {
+                    Toast.makeText(getActivity(), "Please shipped your order first", Toast.LENGTH_SHORT).show();
+                }
                 break;
 
 
@@ -393,14 +429,7 @@ public class DueOrderDetailFragmentWithoutUpdations extends Fragment implements 
                         + rejectItemList.get(i);
             }
         }
-
-        Log.v("userID : ", "" + userId);
-        Log.v("OrderID : ", "" + orderId);
-        Log.v("OrderStatus : ", "" + orderStatus);
-        Log.v("Accept IDS : ", "" + itemAcceptIds);
-        Log.v("Reject IDS : ", "" + itemRejectIds);
-
-        setOrderStatus();
+        setOrderForReject();
     }
 
     private void setOrderStatus() {
@@ -436,6 +465,125 @@ public class DueOrderDetailFragmentWithoutUpdations extends Fragment implements 
         });
     }
 
+    private void setOrderForShipping() {
+
+        ProgressDialogUtil.showProgressDialog(getActivity());
+
+        Map<String, String> param = new HashMap<String, String>();
+        param.put("user_id", userId);
+//        param.put("api_key", "");
+        param.put("order_status", "4");
+        param.put("order_ids", orderId);
+
+
+        NetworkAdaper.getInstance().getNetworkServices().setOrderStatusForAll(param, new Callback<SetOrdersModel>() {
+            @Override
+            public void success(SetOrdersModel getValues, Response response) {
+                Log.e("Tab", getValues.toString());
+                if (getValues.getSuccess()) {
+                    isAlreadyShipped = true;
+                    btnOrderProceed.setSelected(true);
+                    btnMoveToShipping.setSelected(true);
+                    btnMoveToDeliver.setEnabled(true);
+                    buttonRejectOrder.setEnabled(false);
+                    ProgressDialogUtil.hideProgressDialog();
+                    showAlertDialog(getActivity(), Constant.APP_TITLE, getValues.getMessage());
+                } else {
+                    ProgressDialogUtil.hideProgressDialog();
+                    showAlertDialog(getActivity(), Constant.APP_TITLE, getValues.getMessage());
+                }
+
+            }
+
+            @Override
+            public void failure(RetrofitError error) {
+                ProgressDialogUtil.hideProgressDialog();
+                DialogUtils.showAlertDialog(getActivity(), Constant.APP_TITLE, "Error Occurred, Try again later.");
+            }
+        });
+
+    }
+
+    private void setOrderForDelivery() {
+
+        ProgressDialogUtil.showProgressDialog(getActivity());
+
+        Map<String, String> param = new HashMap<String, String>();
+        param.put("user_id", userId);
+//        param.put("api_key", "");
+        param.put("order_status", "5");
+        param.put("order_ids", orderId);
+
+        NetworkAdaper.getInstance().getNetworkServices().setOrderStatusForAll(param, new Callback<SetOrdersModel>() {
+            @Override
+            public void success(SetOrdersModel getValues, Response response) {
+                Log.e("Tab", getValues.toString());
+                if (getValues.getSuccess()) {
+                    isAlreadyDelivered = true;
+                    btnOrderProceed.setSelected(true);
+                    btnMoveToShipping.setSelected(true);
+                    btnMoveToDeliver.setSelected(true);
+                    buttonRejectOrder.setEnabled(false);
+                    ProgressDialogUtil.hideProgressDialog();
+                    showAlertDialog(getActivity(), Constant.APP_TITLE, getValues.getMessage());
+                } else {
+                    ProgressDialogUtil.hideProgressDialog();
+                    showAlertDialog(getActivity(), Constant.APP_TITLE, getValues.getMessage());
+                }
+
+            }
+
+            @Override
+            public void failure(RetrofitError error) {
+                ProgressDialogUtil.hideProgressDialog();
+                DialogUtils.showAlertDialog(getActivity(), Constant.APP_TITLE, "Error Occurred, Try again later.");
+            }
+        });
+
+    }
+
+    private void setOrderForReject() {
+
+        ProgressDialogUtil.showProgressDialog(getActivity());
+
+        Map<String, String> param = new HashMap<String, String>();
+        param.put("user_id", userId);
+        param.put("order_status", orderStatus);
+        param.put("order_id", orderId);
+        param.put("item_accept_ids", itemAcceptIds);
+        param.put("item_reject_ids", itemRejectIds);
+
+        NetworkAdaper.getInstance().getNetworkServices().setOrderStatus(param, new Callback<SetOrdersModel>() {
+            @Override
+            public void success(SetOrdersModel getValues, Response response) {
+                Log.e("Tab", getValues.toString());
+                if (getValues.getSuccess()) {
+                    ProgressDialogUtil.hideProgressDialog();
+                    final DialogHandler dialogHandler = new DialogHandler(getActivity());
+                    dialogHandler.setDialog(Constant.APP_TITLE, getValues.getMessage());
+                    dialogHandler.setPostiveButton("Ok", true)
+                            .setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View view) {
+                                    dialogHandler.dismiss();
+                                    getActivity().onBackPressed();
+                                }
+                            });
+                } else {
+                    ProgressDialogUtil.hideProgressDialog();
+                    showAlertDialog(getActivity(), Constant.APP_TITLE, getValues.getMessage());
+                }
+
+            }
+
+            @Override
+            public void failure(RetrofitError error) {
+                ProgressDialogUtil.hideProgressDialog();
+                DialogUtils.showAlertDialog(getActivity(), Constant.APP_TITLE, "Error Occurred, Try again later.");
+            }
+        });
+    }
+
     public void showAlertDialog(Context context, String title,
                                 String message) {
         AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(
@@ -451,7 +599,7 @@ public class DueOrderDetailFragmentWithoutUpdations extends Fragment implements 
                         // if this button is clicked, close
                         // current activity
                         dialog.cancel();
-                        getActivity().onBackPressed();
+//                        getActivity().onBackPressed();
                     }
                 });
 
@@ -513,7 +661,6 @@ public class DueOrderDetailFragmentWithoutUpdations extends Fragment implements 
 
         @Override
         public View getView(final int position, View convertView, ViewGroup viewGroup) {
-
 
             if (convertView == null) {
                 holder = new ViewHolder();
