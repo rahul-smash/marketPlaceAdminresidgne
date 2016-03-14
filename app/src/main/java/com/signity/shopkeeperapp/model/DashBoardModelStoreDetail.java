@@ -35,6 +35,9 @@ public class DashBoardModelStoreDetail {
     @SerializedName("store_status")
     @Expose
     private String storeStatus;
+    @SerializedName("store_msg")
+    @Expose
+    private String storeMessage;
     @SerializedName("android_app_share")
     @Expose
     private String androidAppShare;
@@ -171,5 +174,13 @@ public class DashBoardModelStoreDetail {
      */
     public void setAndroidAppShare(String androidAppShare) {
         this.androidAppShare = androidAppShare;
+    }
+
+    public String getStoreMessage() {
+        return storeMessage;
+    }
+
+    public void setStoreMessage(String storeMessage) {
+        this.storeMessage = storeMessage;
     }
 }

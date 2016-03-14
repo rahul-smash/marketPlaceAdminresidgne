@@ -1,5 +1,6 @@
 package com.signity.shopkeeperapp.home;
 
+import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -17,13 +18,17 @@ import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
+import android.view.WindowManager;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.PopupWindow;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
@@ -169,7 +174,8 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
         }
 
         if (storeStatus.equalsIgnoreCase("0")) {
-            storeStatusAlertNew("Do you want to turn the customer app on?", "on");
+            String message = Util.loadPreferenceValue(MainActivity.this, Constant.STORE_STATUS_MESSAGE);
+            storeStatusAlertNew(message + "\n" + "Do you want to turn the customer app on?", "on");
         }
     }
 
@@ -205,7 +211,6 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
                 setStoreDetails();
                 toggleSlidingMenu();
                 break;
-
             case R.id.btnMenuRight:
                 showPopUpMenu();
                 break;
@@ -292,7 +297,8 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
 
                 rightMenuPopUpWindow.dismiss();
                 if (jObject.getStoreStatus().equalsIgnoreCase("1")) {
-                    storeStatusAlertNew("Do you want to turn the customer app off?", "off");
+//                    storeStatusAlertNew("Do you want to turn the customer app off?", "off");
+                    setStoreStatusOn();
                 } else {
                     storeStatusAlertNew("Do you want to turn the customer app on?", "on");
                 }
@@ -574,7 +580,7 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
         adb.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int which) {
 
-                setStoreStatus(storeStatusValue);
+//                setStoreStatus(storeStatusValue);
 
             }
         });
@@ -593,12 +599,11 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
         final DialogHandler dialogHandler = new DialogHandler(MainActivity.this);
 
         dialogHandler.setDialog(Constant.APP_TITLE, msg);
-        dialogHandler.setPostiveButton("Ok", true)
+        dialogHandler.setPostiveButton("yes", true)
                 .setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-
-                        setStoreStatus(storeStatusValue);
+                        setStoreStatus(storeStatusValue, "On");
                         dialogHandler.dismiss();
                     }
                 });
@@ -613,12 +618,54 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
                 });
     }
 
+    private void setStoreStatusOn() {
 
-    private void setStoreStatus(final String storeStatusValue) {
+        final Dialog dialog = new Dialog(MainActivity.this);
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
+        dialog.setContentView(R.layout.custom_dialog_store_status);
+        TextView positveButton = (TextView) dialog.findViewById(R.id.yesBtn);
+        TextView negativeButton = (TextView) dialog.findViewById(R.id.noBtn);
+        final EditText message = (EditText) dialog.findViewById(R.id.message);
+
+        String storeSaveMessage = Util.loadPreferenceValue(MainActivity.this, Constant.STORE_STATUS_MESSAGE);
+        if (!storeSaveMessage.isEmpty()) {
+            message.setText(storeSaveMessage);
+        }
+
+        positveButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                if (message.getText().toString().isEmpty()) {
+                    Toast.makeText(MainActivity.this, "Store message is required", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+                setStoreStatus("off", message.getText().toString());
+                dialog.dismiss();
+            }
+        });
+        negativeButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                dialog.dismiss();
+            }
+        });
+
+        dialog.setCanceledOnTouchOutside(true);
+        dialog.show();
+        dialog.getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE);
+
+
+    }
+
+
+    private void setStoreStatus(final String storeStatusValue, final String storeMessage) {
         ProgressDialogUtil.showProgressDialog(MainActivity.this);
 
         Map<String, String> param = new HashMap<String, String>();
         param.put("store_status", storeStatusValue);
+        param.put("message", storeMessage);
 
         NetworkAdaper.getInstance().getNetworkServices().setStoreStatus(param, new Callback<MobResponse>() {
             @Override

@@ -381,7 +381,6 @@ public class DueOrderDetailFragmentWithoutUpdations extends Fragment implements 
 
         adb.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int id) {
-
                 dialog.cancel();
 
             }
