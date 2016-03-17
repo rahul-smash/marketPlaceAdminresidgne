@@ -548,11 +548,11 @@ public class DueOrderDetailFragmentWithoutUpdations extends Fragment implements 
         Map<String, String> param = new HashMap<String, String>();
         param.put("user_id", userId);
         param.put("order_status", orderStatus);
-        param.put("order_id", orderId);
-        param.put("item_accept_ids", itemAcceptIds);
-        param.put("item_reject_ids", itemRejectIds);
+        param.put("order_ids", orderId);
+//        param.put("item_accept_ids", itemAcceptIds);
+//        param.put("item_reject_ids", itemRejectIds);
 
-        NetworkAdaper.getInstance().getNetworkServices().setOrderStatus(param, new Callback<SetOrdersModel>() {
+        NetworkAdaper.getInstance().getNetworkServices().rejectOrder(param, new Callback<SetOrdersModel>() {
             @Override
             public void success(SetOrdersModel getValues, Response response) {
                 Log.e("Tab", getValues.toString());
