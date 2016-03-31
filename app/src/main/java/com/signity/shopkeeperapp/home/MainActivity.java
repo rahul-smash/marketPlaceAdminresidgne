@@ -32,6 +32,7 @@ import android.widget.Toast;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
+import com.signity.shopkeeperapp.Categories.CategoriesFragment;
 import com.signity.shopkeeperapp.R;
 import com.signity.shopkeeperapp.canceled_orders.CanceledOrdersFragment;
 import com.signity.shopkeeperapp.customer.CustomerFragment;
@@ -67,7 +68,7 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
 
     SlidingPaneLayout mSlidingPanel;
 
-    String[] title = {"Dashboard", "Due Orders", "Active Orders", "Rejected Orders", "Canceled Orders", "Customers", "Enquiries", "Manage Stores"};
+    String[] title = {"Dashboard", "Due Orders", "Active Orders", "Rejected Orders", "Canceled Orders", "Customers", "Enquiries", "Manage Stores","Categories"};
     String shareContent = "";
 
     public static String fragmentName = "";
@@ -420,6 +421,15 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
                 textTitle.setText(title[7]);
                 fragmentName = title[7];
                 replace(ManageStoresFragment.newInstance(this));
+                toggleSlidingMenu();
+
+                break;
+
+            case R.id.btnCategories:
+
+                textTitle.setText(title[8]);
+                fragmentName = title[8];
+                replace(CategoriesFragment.newInstance(this));
                 toggleSlidingMenu();
 
                 break;
