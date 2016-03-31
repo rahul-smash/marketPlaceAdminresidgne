@@ -95,9 +95,7 @@ public class LoginFragmentOtp extends Fragment implements View.OnClickListener {
         switch (view.getId()) {
             case R.id.btnDone:
                 if (vallidOtp()) {
-
                     callNetworkServiceOtpVerify();
-
                 }
                 break;
 
@@ -246,55 +244,33 @@ public class LoginFragmentOtp extends Fragment implements View.OnClickListener {
             final Bundle bundle = intent.getExtras();
 
             try {
-
                 if (bundle != null) {
-
                     final Object[] pdusObj = (Object[]) bundle.get("pdus");
-
                     for (int i = 0; i < pdusObj.length; i++) {
-
                         SmsMessage currentMessage = SmsMessage.createFromPdu((byte[]) pdusObj[i]);
                         String phoneNumber = currentMessage.getDisplayOriginatingAddress();
-
                         String senderNum = phoneNumber;
                         String message = currentMessage.getDisplayMessageBody();
-
-//                        message = message.replaceAll("\\D+", "");
-
-                        try {
-                            message = message.substring(29, 33);
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                        }
-
-                        Log.v("raj : ", "raj : " + message);
-
-                        Log.e("SmsReceiver", "senderNum: " + senderNum + "; message: " + message);
-
-
+                        message = message.replaceAll("[a-z.A-Z]", "").trim();
                         try {
                             verificationCode = Integer.parseInt(message);
                         } catch (NumberFormatException e) {
                             e.printStackTrace();
+                        } catch (Exception e) {
+                            e.printStackTrace();
                         }
                         String msg = "";
-
                         if (senderNum.contains("-")) {
-                            if (verificationCode == -1) {
-                                msg = "Failed verification. Please enter verification code manually.";
-                                actionPerformOnOTPReceived(context, verificationCode, msg);
-
-                            } else {
+                            if (verificationCode != -1) {
                                 msg = "Success! your verification code is:" + verificationCode;
                                 actionPerformOnOTPReceived(context, verificationCode, msg);
+                            } else {
+                                msg = "Failed verification. Please enter verification code manually.";
+                                actionPerformOnOTPReceived(context, verificationCode, msg);
                             }
-
                         } else {
 
                         }
-                        // changeLayoutRegister.doSomething(verificationCode);
-
-
                     } // end for loop
                 } // bundle is null
 

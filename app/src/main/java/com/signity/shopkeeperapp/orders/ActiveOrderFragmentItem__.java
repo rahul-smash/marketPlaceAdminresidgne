@@ -16,16 +16,17 @@ import android.view.animation.AnimationUtils;
 import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.CheckBox;
+import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.signity.shopkeeperapp.R;
 import com.signity.shopkeeperapp.app.DataAdapter;
-import com.signity.shopkeeperapp.home.MainActivity;
 import com.signity.shopkeeperapp.model.GetOrdersModel;
 import com.signity.shopkeeperapp.model.ItemListModel;
 import com.signity.shopkeeperapp.model.Order;
@@ -53,12 +54,13 @@ import retrofit.client.Response;
 /**
  * Created by Rajinder on 28/9/15.
  */
-public class ActiveOrderFragmentItem extends Fragment implements View.OnClickListener {
+public class ActiveOrderFragmentItem__ extends Fragment implements View.OnClickListener {
 
 
     private ListView listActiveOrdersItems;
-    private Button buttonOrderProced, buttonOrderDecline, buttonMoveToShipping, buttonMoveToDelivered;
-    private LinearLayout footer, footer2, footer3;
+    private Button buttonOrderDecline;
+    private ImageButton buttonOrderProced, buttonMoveToShipping, buttonMoveToDelivered;
+    private LinearLayout footer;
     ActiveOrderAdapter adapter;
     List<OrdersListModel> listOrderParent;
     List<OrdersListModel> listOrder;
@@ -72,6 +74,9 @@ public class ActiveOrderFragmentItem extends Fragment implements View.OnClickLis
     String orderIDS = "";
     String orderStatus = "";
     String userId = "3";
+
+    boolean isAlreadyShipped = false;
+    boolean isAlreadyDelivered = false;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -146,7 +151,7 @@ public class ActiveOrderFragmentItem extends Fragment implements View.OnClickLis
 
     public static Fragment newInstance(Context context) {
         return Fragment.instantiate(context,
-                ActiveOrderFragmentItem_.class.getName());
+                ActiveOrderFragmentItem__.class.getName());
     }
 
     @Nullable
@@ -155,29 +160,52 @@ public class ActiveOrderFragmentItem extends Fragment implements View.OnClickLis
 
         View rootView = inflater.inflate(R.layout.fragment_active_order_item, container, false);
         listActiveOrdersItems = (ListView) rootView.findViewById(R.id.listActiveOrdersItems);
-        footer = (LinearLayout) rootView.findViewById(R.id.footer);
-        footer2 = (LinearLayout) rootView.findViewById(R.id.footer2);
-        footer3 = (LinearLayout) rootView.findViewById(R.id.footer3);
+        footer = (LinearLayout) rootView.findViewById(R.id.footerBottom);
         noDataFound = (TextView) rootView.findViewById(R.id.noDataFound);
-        buttonOrderProced = (Button) rootView.findViewById(R.id.btnOrderProceed);
-        buttonOrderDecline = (Button) rootView.findViewById(R.id.btnDeclineOrder);
-        buttonMoveToShipping = (Button) rootView.findViewById(R.id.btnMoveToShipping);
-        buttonMoveToDelivered = (Button) rootView.findViewById(R.id.btnMoveToDeliver);
-
+        buttonOrderProced = (ImageButton) rootView.findViewById(R.id.btnOrderProceed);
+        buttonOrderDecline = (Button) rootView.findViewById(R.id.relDeclineOrder);
+        buttonMoveToShipping = (ImageButton) rootView.findViewById(R.id.btnMoveToShipping);
+        buttonMoveToDelivered = (ImageButton) rootView.findViewById(R.id.btnMoveToDeliver);
 
         slideUpAnim = AnimationUtils.loadAnimation(getActivity()
                 .getApplicationContext(), R.anim.slide_up);
         slideDownAnim = AnimationUtils.loadAnimation(getActivity()
                 .getApplicationContext(), R.anim.slide_down);
 
-        buttonOrderProced.setOnClickListener(this);
-        buttonOrderDecline.setOnClickListener(this);
+//        buttonOrderProced.setOnClickListener(this);
         buttonMoveToShipping.setOnClickListener(this);
         buttonMoveToDelivered.setOnClickListener(this);
+        buttonOrderDecline.setOnClickListener(this);
 
+        setUpFooterView();
         //  getOrdersMethod();
 
         return rootView;
+    }
+
+    private void setUpFooterView() {
+
+        if (type.equals(Constant.TYPE_APPROVE)) {
+            buttonOrderProced.setSelected(true);
+            buttonMoveToShipping.setEnabled(true);
+            buttonMoveToDelivered.setEnabled(false);
+            buttonOrderDecline.setEnabled(true);
+        } else if (type.equals(Constant.TYPE_PROCESSING)) {
+            buttonOrderProced.setSelected(true);
+            buttonMoveToShipping.setEnabled(true);
+            buttonMoveToDelivered.setEnabled(false);
+            buttonOrderDecline.setEnabled(true);
+        } else if (type.equals(Constant.TYPE_SHIPPING)) {
+            buttonOrderProced.setSelected(true);
+            buttonMoveToShipping.setSelected(true);
+            buttonMoveToDelivered.setEnabled(true);
+            buttonOrderDecline.setEnabled(false);
+        } else if (type.equals(Constant.TYPE_DELIVERED)) {
+            buttonOrderProced.setSelected(true);
+            buttonMoveToShipping.setSelected(true);
+            buttonMoveToDelivered.setSelected(true);
+            buttonOrderDecline.setEnabled(false);
+        }
     }
 
     @Override
@@ -290,11 +318,11 @@ public class ActiveOrderFragmentItem extends Fragment implements View.OnClickLis
                                 footer.startAnimation(slideUpAnim);
                                 footer.setVisibility(View.VISIBLE);
                             } else if (type.equals(Constant.TYPE_PROCESSING)) {
-                                footer2.startAnimation(slideUpAnim);
-                                footer2.setVisibility(View.VISIBLE);
+                                footer.startAnimation(slideUpAnim);
+                                footer.setVisibility(View.VISIBLE);
                             } else if (type.equals(Constant.TYPE_SHIPPING)) {
-                                footer3.startAnimation(slideUpAnim);
-                                footer3.setVisibility(View.VISIBLE);
+                                footer.startAnimation(slideUpAnim);
+                                footer.setVisibility(View.VISIBLE);
                             }
                         }
                     } else {
@@ -304,11 +332,11 @@ public class ActiveOrderFragmentItem extends Fragment implements View.OnClickLis
                                 footer.startAnimation(slideDownAnim);
                                 footer.setVisibility(View.GONE);
                             } else if (type.equals(Constant.TYPE_PROCESSING)) {
-                                footer2.startAnimation(slideDownAnim);
-                                footer2.setVisibility(View.GONE);
+                                footer.startAnimation(slideUpAnim);
+                                footer.setVisibility(View.VISIBLE);
                             } else if (type.equals(Constant.TYPE_SHIPPING)) {
-                                footer3.startAnimation(slideDownAnim);
-                                footer3.setVisibility(View.GONE);
+                                footer.startAnimation(slideUpAnim);
+                                footer.setVisibility(View.VISIBLE);
                             }
                         }
                     }
@@ -474,25 +502,42 @@ public class ActiveOrderFragmentItem extends Fragment implements View.OnClickLis
         switch (view.getId()) {
 
             case R.id.btnOrderProceed:
-                orderStatus = "3";
-                getOrderIDS();
-                //   UiDialog.showAlertDialog(getActivity(), "Success", "Successfully Place order for processing", this);
+//                orderStatus = "3";
+//                getOrderIDS();
+                Toast.makeText(getActivity(), "Already Processed", Toast.LENGTH_SHORT).show();
+
                 break;
             case R.id.btnMoveToShipping:
-                orderStatus = "4";
-                getOrderIDS();
-                //    UiDialog.showAlertDialog(getActivity(), "Success", "Successfully place order for Shipping", this);
+                if (buttonMoveToShipping.isEnabled()) {
+                    if (!isAlreadyShipped) {
+                        orderStatus = "4";
+                        getOrderIDS();
+                        setOrderForShipping();
+                    } else {
+                        Toast.makeText(getActivity(), "Order already shipped", Toast.LENGTH_SHORT).show();
+                    }
+                } else {
+                    Toast.makeText(getActivity(), "Please process the order first", Toast.LENGTH_SHORT).show();
+                }
                 break;
             case R.id.btnMoveToDeliver:
-                orderStatus = "5";
-                getOrderIDS();
-                //   UiDialog.showAlertDialog(getActivity(), "Success", "Successfully place order for Delivery", this);
+                if (buttonMoveToDelivered.isEnabled()) {
+                    if (!isAlreadyDelivered) {
+                        orderStatus = "5";
+                        getOrderIDS();
+                        setOrderForDelivery();
+                    } else {
+                        Toast.makeText(getActivity(), "Order already delivered", Toast.LENGTH_SHORT).show();
+                    }
+                } else {
+                    Toast.makeText(getActivity(), "Please shipped the order", Toast.LENGTH_SHORT).show();
+                }
+
                 break;
             case R.id.btnDeclineOrder:
                 orderStatus = "2";
                 alertBoxNew("Are you sure to Decline this order?");
 
-                //   UiDialog.showAlertDialog(getActivity(), "Decline Order", "Are you sure to Decline Order?", this);
                 break;
 
         }
@@ -507,9 +552,9 @@ public class ActiveOrderFragmentItem extends Fragment implements View.OnClickLis
                 .setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-
                         dialogHandler.dismiss();
                         getOrderIDS();
+                        setOrderForReject();
                     }
                 });
 
@@ -517,7 +562,6 @@ public class ActiveOrderFragmentItem extends Fragment implements View.OnClickLis
                 .setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-
                         dialogHandler.dismiss();
                     }
                 });
@@ -545,7 +589,7 @@ public class ActiveOrderFragmentItem extends Fragment implements View.OnClickLis
         Log.v("orderIDS : ", "" + orderIDS);
         Log.v("userId : ", "" + userId);
 
-        setOrderStatus();
+//        setOrderStatus();
     }
 
     private void setOrderStatus() {
@@ -582,55 +626,146 @@ public class ActiveOrderFragmentItem extends Fragment implements View.OnClickLis
         });
     }
 
+
+    private void setOrderForShipping() {
+
+        ProgressDialogUtil.showProgressDialog(getActivity());
+
+        Map<String, String> param = new HashMap<String, String>();
+        param.put("user_id", userId);
+//        param.put("api_key", "");
+        param.put("order_status", orderStatus);
+        param.put("order_ids", orderIDS);
+
+
+        NetworkAdaper.getInstance().getNetworkServices().setOrderStatusForAll(param, new Callback<SetOrdersModel>() {
+            @Override
+            public void success(SetOrdersModel getValues, Response response) {
+                Log.e("Tab", getValues.toString());
+                if (getValues.getSuccess()) {
+                    isAlreadyShipped = true;
+                    buttonOrderProced.setSelected(true);
+                    buttonMoveToShipping.setSelected(true);
+                    buttonMoveToDelivered.setEnabled(true);
+                    buttonOrderDecline.setEnabled(false);
+                    ProgressDialogUtil.hideProgressDialog();
+                    showAlertDialog(getActivity(), Constant.APP_TITLE, getValues.getMessage());
+                } else {
+                    ProgressDialogUtil.hideProgressDialog();
+                    showAlertDialog(getActivity(), Constant.APP_TITLE, getValues.getMessage());
+                }
+
+            }
+
+            @Override
+            public void failure(RetrofitError error) {
+                ProgressDialogUtil.hideProgressDialog();
+                DialogUtils.showAlertDialog(getActivity(), Constant.APP_TITLE, "Error Occurred, Try again later.");
+            }
+        });
+
+    }
+
+    private void setOrderForDelivery() {
+
+        ProgressDialogUtil.showProgressDialog(getActivity());
+
+        Map<String, String> param = new HashMap<String, String>();
+        param.put("user_id", userId);
+//        param.put("api_key", "");
+        param.put("order_status", orderStatus);
+        param.put("order_ids", orderIDS);
+
+
+        NetworkAdaper.getInstance().getNetworkServices().setOrderStatusForAll(param, new Callback<SetOrdersModel>() {
+            @Override
+            public void success(SetOrdersModel getValues, Response response) {
+                Log.e("Tab", getValues.toString());
+                if (getValues.getSuccess()) {
+                    isAlreadyDelivered = true;
+                    buttonOrderProced.setSelected(true);
+                    buttonMoveToShipping.setSelected(true);
+                    buttonMoveToDelivered.setSelected(true);
+                    buttonOrderDecline.setEnabled(false);
+                    ProgressDialogUtil.hideProgressDialog();
+                    showAlertDialog(getActivity(), Constant.APP_TITLE, getValues.getMessage());
+                } else {
+                    ProgressDialogUtil.hideProgressDialog();
+                    showAlertDialog(getActivity(), Constant.APP_TITLE, getValues.getMessage());
+                }
+
+            }
+
+            @Override
+            public void failure(RetrofitError error) {
+                ProgressDialogUtil.hideProgressDialog();
+                DialogUtils.showAlertDialog(getActivity(), Constant.APP_TITLE, "Error Occurred, Try again later.");
+            }
+        });
+
+    }
+
+    private void setOrderForReject() {
+
+        ProgressDialogUtil.showProgressDialog(getActivity());
+
+        Map<String, String> param = new HashMap<String, String>();
+        param.put("user_id", userId);
+//        param.put("api_key", "");
+        param.put("order_status", orderStatus);
+        param.put("order_ids", orderIDS);
+
+//        param.put("order_id", orderId);
+//        param.put("item_accept_ids", itemAcceptIds);
+//        param.put("item_reject_ids", itemRejectIds);
+
+        NetworkAdaper.getInstance().getNetworkServices().setOrderStatus(param, new Callback<SetOrdersModel>() {
+            @Override
+            public void success(SetOrdersModel getValues, Response response) {
+                Log.e("Tab", getValues.toString());
+                if (getValues.getSuccess()) {
+                    ProgressDialogUtil.hideProgressDialog();
+                    final DialogHandler dialogHandler = new DialogHandler(getActivity());
+                    dialogHandler.setDialog(Constant.APP_TITLE, getValues.getMessage());
+                    dialogHandler.setPostiveButton("Ok", true)
+                            .setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View view) {
+                                    dialogHandler.dismiss();
+                                }
+                            });
+                } else {
+                    ProgressDialogUtil.hideProgressDialog();
+                    showAlertDialog(getActivity(), Constant.APP_TITLE, getValues.getMessage());
+                }
+
+            }
+
+            @Override
+            public void failure(RetrofitError error) {
+                ProgressDialogUtil.hideProgressDialog();
+                DialogUtils.showAlertDialog(getActivity(), Constant.APP_TITLE, "Error Occurred, Try again later.");
+            }
+        });
+    }
+
+
     private void footerViewGone() {
 
         if (type.equals(Constant.TYPE_APPROVE)) {
             footer.startAnimation(slideDownAnim);
             footer.setVisibility(View.GONE);
         } else if (type.equals(Constant.TYPE_PROCESSING)) {
-            footer2.startAnimation(slideDownAnim);
-            footer2.setVisibility(View.GONE);
+            footer.startAnimation(slideDownAnim);
+            footer.setVisibility(View.GONE);
         } else if (type.equals(Constant.TYPE_SHIPPING)) {
-            footer3.startAnimation(slideDownAnim);
-            footer3.setVisibility(View.GONE);
+            footer.startAnimation(slideDownAnim);
+            footer.setVisibility(View.GONE);
         }
     }
 
     public void showAlertDialog(Context context, String title,
                                 String message) {
-//        AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(
-//                context);
-//
-//        // set title
-//        alertDialogBuilder.setTitle(title);
-//
-//        // set dialog message
-//        alertDialogBuilder.setMessage(message).setCancelable(false)
-//                .setPositiveButton("Ok", new DialogInterface.OnClickListener() {
-//                    public void onClick(DialogInterface dialog, int id) {
-//                        // if this button is clicked, close
-//                        // current activity
-//                        dialog.cancel();
-//                        getOrdersMethod();
-//                        ActiveOrderFragment.api_refreshed = true;
-//
-//
-//                        if (type.equals(Constant.TYPE_APPROVE)) {
-//                            ((MainActivity) getActivity()).printNUm(1);
-//                        } else if (type.equals(Constant.TYPE_PROCESSING)) {
-//                            ((MainActivity) getActivity()).printNUm(2);
-//                        } else if (type.equals(Constant.TYPE_SHIPPING)) {
-//                            ((MainActivity) getActivity()).printNUm(3);
-//                        }
-//
-//                    }
-//                });
-//
-//        // create alert dialog
-//        AlertDialog alertDialog = alertDialogBuilder.create();
-//
-//        // show it
-//        alertDialog.show();
 
         final DialogHandler dialogHandler = new DialogHandler(getActivity());
 
@@ -639,18 +774,14 @@ public class ActiveOrderFragmentItem extends Fragment implements View.OnClickLis
                 .setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-
                         dialogHandler.dismiss();
                         getOrdersMethod();
-                        ActiveOrderFragment.api_refreshed = true;
-//                        if (type.equals(Constant.TYPE_APPROVE)) {
+//                        ActiveOrderFragment.api_refreshed = true;
+//                        if (type.equals(Constant.TYPE_PROCESSING)) {
 //                            ((MainActivity) getActivity()).printNUm(1);
-//                        } else
-                        if (type.equals(Constant.TYPE_PROCESSING)) {
-                            ((MainActivity) getActivity()).printNUm(1);
-                        } else if (type.equals(Constant.TYPE_SHIPPING)) {
-                            ((MainActivity) getActivity()).printNUm(2);
-                        }
+//                        } else if (type.equals(Constant.TYPE_SHIPPING)) {
+//                            ((MainActivity) getActivity()).printNUm(2);
+//                        }
                     }
                 });
     }

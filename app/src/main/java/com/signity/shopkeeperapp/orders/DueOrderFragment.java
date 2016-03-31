@@ -8,6 +8,8 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -38,6 +40,8 @@ public class DueOrderFragment extends Fragment {
     DueOrderAdapter adapter;
     TextView noDataFound;
 
+    ImageView btnOrderProceed, btnMoveToShipping, btnMoveToDeliver;
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -57,6 +61,7 @@ public class DueOrderFragment extends Fragment {
         View rootView = inflater.inflate(R.layout.fragment_due_order, container, false);
         listDueOrders = (ListView) rootView.findViewById(R.id.listDueOrders);
         noDataFound = (TextView) rootView.findViewById(R.id.noDataFound);
+
         return rootView;
     }
 
@@ -64,18 +69,16 @@ public class DueOrderFragment extends Fragment {
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         // getDueOrdersMethod();
+
     }
 
     @Override
     public void onResume() {
         super.onResume();
         getDueOrdersMethod();
-
-
     }
 
     public void getDueOrdersMethod() {
-
         if (Util.checkIntenetConnection(getActivity())) {
             getDueOrders();
         } else {
@@ -97,11 +100,11 @@ public class DueOrderFragment extends Fragment {
                 Log.e("Tab", getValues.toString());
                 if (getValues.getSuccess()) {
                     ProgressDialogUtil.hideProgressDialog();
-
                     if (getValues.getData().getOrders().size() > 0) {
                         listDueOrders.setVisibility(View.VISIBLE);
                         noDataFound.setVisibility(View.GONE);
-                        adapter = new DueOrderAdapter(getActivity(), getValues.getData().getOrders(), getFragmentManager());
+                        adapter = new DueOrderAdapter(getActivity(), getValues.getData().getOrders(),
+                                getFragmentManager());
                         listDueOrders.setAdapter(adapter);
                     } else {
                         listDueOrders.setVisibility(View.GONE);
@@ -109,10 +112,8 @@ public class DueOrderFragment extends Fragment {
                     }
                 } else {
                     ProgressDialogUtil.hideProgressDialog();
-
                     DialogUtils.showAlertDialog(getActivity(), Constant.APP_TITLE, getValues.getMessage());
                 }
-
             }
 
             @Override

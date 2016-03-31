@@ -27,7 +27,6 @@ public class ActiveOrderFragment extends Fragment {
     public ViewPager viewPager;
     PagerAdapter adapter;
 
-
     public static Fragment newInstance(Context context) {
         return Fragment.instantiate(context,
                 ActiveOrderFragment.class.getName());
@@ -44,54 +43,32 @@ public class ActiveOrderFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_active_order, container, false);
         final TabLayout tabLayout = (TabLayout) rootView.findViewById(R.id.tab_layout);
-        tabLayout.addTab(tabLayout.newTab().setText("Approved"));
+//        tabLayout.addTab(tabLayout.newTab().setText("Approved"));
         tabLayout.addTab(tabLayout.newTab().setText("Processing"));
         tabLayout.addTab(tabLayout.newTab().setText("Shipping"));
         tabLayout.addTab(tabLayout.newTab().setText("Delivered"));
-        tabLayout.setTabMode(TabLayout.MODE_SCROLLABLE);
-        tabLayout.setTabGravity(TabLayout.GRAVITY_CENTER);
+        tabLayout.setTabMode(TabLayout.MODE_FIXED);
+        tabLayout.setTabGravity(TabLayout.GRAVITY_FILL);
 
         viewPager = (ViewPager) rootView.findViewById(R.id.pager);
-        viewPager.setOffscreenPageLimit(4);
+        viewPager.setOffscreenPageLimit(1);
         adapter = new PagerAdapter(getFragmentManager(), tabLayout.getTabCount());
         viewPager.setAdapter(adapter);
 
 
-//        viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
-//            @Override
-//            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-//
-//            }
-//
-//            @Override
-//            public void onPageSelected(int position) {
-//                adapter.notifyDataSetChanged();
-//            }
-//
-//            @Override
-//            public void onPageScrollStateChanged(int state) {
-//
-//            }
-//        });
-
-
         viewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
-//
+
         tabLayout.setOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @Override
             public void onTabSelected(TabLayout.Tab tab) {
                 viewPager.setCurrentItem(tab.getPosition());
 
                 if (api_refreshed) {
-
                     new Handler().postDelayed(new Runnable() {
                         @Override
                         public void run() {
-
-
                             adapter.notifyDataSetChanged();
                             api_refreshed = false;
-
                         }
                     }, 1000);
                 }
@@ -129,23 +106,21 @@ public class ActiveOrderFragment extends Fragment {
 
         @Override
         public Fragment getItem(int position) {
-
-
             Bundle arg = new Bundle();
             arg.putInt("position", position);
             ActiveOrderFragmentItem tab1 = new ActiveOrderFragmentItem();
             tab1.setArguments(arg);
             switch (position) {
+//                case 0:
+//                    arg.putString("type", Constant.TYPE_APPROVE);
+//                    tab1.setArguments(arg);
+//                    try {
+//                        tab1.listOrderSelected.clear();
+//                    } catch (Exception e) {
+//                        e.printStackTrace();
+//                    }
+//                    break;
                 case 0:
-                    arg.putString("type", Constant.TYPE_APPROVE);
-                    tab1.setArguments(arg);
-                    try {
-                        tab1.listOrderSelected.clear();
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
-                    break;
-                case 1:
                     arg.putString("type", Constant.TYPE_PROCESSING);
                     tab1.setArguments(arg);
                     try {
@@ -154,7 +129,7 @@ public class ActiveOrderFragment extends Fragment {
                         e.printStackTrace();
                     }
                     break;
-                case 2:
+                case 1:
                     arg.putString("type", Constant.TYPE_SHIPPING);
                     tab1.setArguments(arg);
                     try {
@@ -163,7 +138,7 @@ public class ActiveOrderFragment extends Fragment {
                         e.printStackTrace();
                     }
                     break;
-                case 3:
+                case 2:
                     arg.putString("type", Constant.TYPE_DELIVERED);
                     tab1.setArguments(arg);
                     try {

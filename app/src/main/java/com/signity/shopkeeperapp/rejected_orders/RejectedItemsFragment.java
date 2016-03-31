@@ -24,6 +24,9 @@ import com.signity.shopkeeperapp.util.Constant;
 import com.signity.shopkeeperapp.util.DialogUtils;
 import com.signity.shopkeeperapp.util.ProgressDialogUtil;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -61,14 +64,14 @@ public class RejectedItemsFragment extends Fragment {
         listRejectedOrder = (ListView) fragmentView.findViewById(R.id.listRejectedOrder);
         noDataFound = (TextView) fragmentView.findViewById(R.id.noDataFound);
         getRejectedOrder();
-
         return fragmentView;
+
     }
+
 
     private void getRejectedOrder() {
 
         ProgressDialogUtil.showProgressDialog(getActivity());
-
         Map<String, String> param = new HashMap<String, String>();
         param.put("api_key", "");
         param.put("order_type", "rejected");
@@ -189,10 +192,14 @@ public class RejectedItemsFragment extends Fragment {
 
                     DataAdapter.getInstance().setListItem(list.get(position).getItems());
                     Intent rejectedOrderIntent = new Intent(getActivity(), RejectedItemsListActivity.class);
+                    String orderItemDetailString = getOrderItemDetail(list.get(position));
+                    rejectedOrderIntent.putExtra("order_detail", orderItemDetailString);
                     rejectedOrderIntent.putExtra("name", list.get(position).getCustomerName());
                     rejectedOrderIntent.putExtra("phone", list.get(position).getPhone());
                     rejectedOrderIntent.putExtra("orderID", list.get(position).getOrderId());
                     rejectedOrderIntent.putExtra("userID", list.get(position).getUserId());
+
+
                     context.startActivity(rejectedOrderIntent);
                     AnimUtil.slideFromRightAnim((Activity) context);
                 }
@@ -201,6 +208,29 @@ public class RejectedItemsFragment extends Fragment {
 
             return convertView;
         }
+
+        private String getOrderItemDetail(OrdersListModel ordersListModel) {
+            JSONObject jsonObjectOrderDetail = null;
+            if (ordersListModel != null) {
+                jsonObjectOrderDetail = new JSONObject();
+                try {
+                    jsonObjectOrderDetail.put("customer_name", ordersListModel.getCustomerName() != null ? ordersListModel.getCustomerName() : "");
+                    jsonObjectOrderDetail.put("phone", ordersListModel.getPhone() != null ? ordersListModel.getPhone() : "");
+                    jsonObjectOrderDetail.put("note", ordersListModel.getNote() != null ? ordersListModel.getNote() : "");
+                    jsonObjectOrderDetail.put("discount", ordersListModel.getDiscount() != null ? ordersListModel.getDiscount() : "");
+                    jsonObjectOrderDetail.put("total", ordersListModel.getTotal() != null ? ordersListModel.getTotal() : "");
+                    jsonObjectOrderDetail.put("checkout", ordersListModel.getCheckout() != null ? ordersListModel.getCheckout() : "");
+                    jsonObjectOrderDetail.put("shipping_charges", ordersListModel.getShippingCharges() != null ? ordersListModel.getShippingCharges() : "");
+                    jsonObjectOrderDetail.put("coupon_code", ordersListModel.getCouponCode() != null ? ordersListModel.getCouponCode() : "");
+                    jsonObjectOrderDetail.put("address", ordersListModel.getAddress() != null ? ordersListModel.getAddress() : "");
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+
+            }
+            return jsonObjectOrderDetail != null ? jsonObjectOrderDetail.toString() : "";
+        }
+
 
         public class ViewHolder {
             TextView valOdrId, valCustName, valTotalAmt, valTime;

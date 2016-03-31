@@ -43,6 +43,9 @@ public interface ApiService {
     @FormUrlEncoded
     @POST("/setDueOrderStatus")
     void setOrderStatus(@FieldMap Map<String, String> parameters, Callback<SetOrdersModel> response);
+    @FormUrlEncoded
+    @POST("/setOrderStatus")
+    void rejectOrder(@FieldMap Map<String, String> parameters, Callback<SetOrdersModel> response);
 
 
     @FormUrlEncoded

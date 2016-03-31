@@ -177,20 +177,11 @@ public class LoginFragmentStoresListing extends Fragment implements View.OnClick
         Util.savePreferenceValue(getActivity(), Constant.STORE_ID, id);
         String url = NetworkConstant.BASE + "/" + id + NetworkConstant.APISTORE;
         NetworkAdaper.setupRetrofitClient(url);
-
         callNetworkServiceForOtp();
-//        saveUserIdToPref();
-//        Intent intent_home = new Intent(getActivity(), MainActivity.class);
-//        intent_home.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-//        startActivity(intent_home);
-//
-//        getActivity().finish();
-//        AnimUtil.slideFromRightAnim(getActivity());
     }
 
     private void callNetworkServiceForOtp() {
         ProgressDialogUtil.showProgressDialog(getActivity());
-
         String deviceId = Settings.Secure.getString(getActivity().getApplicationContext().getContentResolver(), Settings.Secure.ANDROID_ID);
         //String deviceToken = pushClientManager.getRegistrationId(getActivity());
         String deviceToken = Util.loadPreferenceValue(getActivity(), Constant.DEVICE_TOKEN);
@@ -204,15 +195,18 @@ public class LoginFragmentStoresListing extends Fragment implements View.OnClick
             public void success(MobResponseLogin mobResponse, Response response) {
                 ProgressDialogUtil.hideProgressDialog();
                 if (mobResponse.getSuccess()) {
-//                    checkUserExistModule(mobResponse);
-                    MobResponseDetails details = mobResponse.getData();
-                    Util.savePreferenceValue(getActivity(), Constant.IS_ADMIN, details.getRole());
-                    saveUserIdToPref();
-                    Intent intent_home = new Intent(getActivity(), MainActivity.class);
-                    intent_home.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                    startActivity(intent_home);
-                    getActivity().finish();
-                    AnimUtil.slideFromRightAnim(getActivity());
+                    checkUserExistModule(mobResponse);
+
+                    // Comment Updated on March 17 to open login otp services
+
+//                    MobResponseDetails details = mobResponse.getData();
+//                    Util.savePreferenceValue(getActivity(), Constant.IS_ADMIN, details.getRole());
+//                    saveUserIdToPref();
+//                    Intent intent_home = new Intent(getActivity(), MainActivity.class);
+//                    intent_home.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+//                    startActivity(intent_home);
+//                    getActivity().finish();
+//                    AnimUtil.slideFromRightAnim(getActivity());
                 } else {
                     Toast.makeText(getActivity(), "" + mobResponse.getMessage(), Toast.LENGTH_SHORT).show();
                 }

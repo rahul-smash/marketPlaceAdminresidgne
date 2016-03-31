@@ -4,7 +4,6 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 
-import com.signity.shopkeeperapp.home.MainActivity;
 import com.signity.shopkeeperapp.R;
 import com.signity.shopkeeperapp.util.AnimUtil;
 
@@ -58,6 +57,5 @@ public class DueOrderActivity extends FragmentActivity {
         super.onBackPressed();
         AnimUtil.slideFromLeftAnim(DueOrderActivity.this);
     }
-
 
 }

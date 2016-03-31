@@ -17,9 +17,9 @@ public class Constant {
     public static final String STORE_DETAILS = "store_details";
     public static final String STORE_ID = "store_id";
     public static final String LOGIN_USER_MOBILE_NUMBER = "mobile_number";
-
     public static final String LOGIN_CHECK = "com.signity.shopkeeperapp.LOGIN_CHECK";
     public static final String IS_ADMIN = "com.signity.shopkeeperapp.ADMIN";
-
     public static final String DEVICE_TOKEN = "device_token";
+    public static final String STORE_STATUS_MESSAGE = "com.signity.shopkeeperapp.STORE_STATUS_MESSAGE";
+
 }

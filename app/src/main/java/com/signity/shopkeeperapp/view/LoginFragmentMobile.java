@@ -30,6 +30,7 @@ import com.signity.shopkeeperapp.R;
 import com.signity.shopkeeperapp.gcm.QuickstartPreferences;
 import com.signity.shopkeeperapp.gcm.RegistrationIntentService;
 import com.signity.shopkeeperapp.model.MobResponseDetails;
+import com.signity.shopkeeperapp.model.MobResponseLogin;
 import com.signity.shopkeeperapp.model.StoresModel;
 import com.signity.shopkeeperapp.network.NetworkAdaper;
 import com.signity.shopkeeperapp.util.Constant;
@@ -64,8 +65,6 @@ public class LoginFragmentMobile extends Fragment implements View.OnClickListene
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         //     pushClientManager = new GCMClientManager(getActivity(), Constant.PROJECT_NUMBER);
-
-
     }
 
     @Override
@@ -135,20 +134,49 @@ public class LoginFragmentMobile extends Fragment implements View.OnClickListene
     }
 
     private void processStart() {
-
         if (vallidPhone()) {
             if (Util.checkIntenetConnection(getActivity())) {
-                // callNetworkServiceForOtp();
+//                callNetworkServiceForOtp();
                 String phone = edtPhone.getText().toString();
                 Util.savePreferenceValue(getActivity(), Constant.LOGIN_USER_MOBILE_NUMBER, phone);
                 getAdminStores();
             } else {
                 DialogUtils.showAlertDialog(getActivity(), "Internet", "Please check your Internet Connection.");
             }
-
         }
     }
+    private void callNetworkServiceForOtp() {
+        ProgressDialogUtil.showProgressDialog(getActivity());
 
+        String phone = edtPhone.getText().toString();
+        String deviceId = Settings.Secure.getString(getActivity().getApplicationContext().getContentResolver(), Settings.Secure.ANDROID_ID);
+        //String deviceToken = pushClientManager.getRegistrationId(getActivity());
+        String deviceToken = Util.loadPreferenceValue(getActivity(), Constant.DEVICE_TOKEN);
+        Map<String, String> param = new HashMap<String, String>();
+        param.put("phone", phone);
+        param.put("device_id", deviceId);
+        param.put("device_token", deviceToken);
+        param.put("platform", Constant.PLATFORM);
+        NetworkAdaper.getInstance().getNetworkServices().moblieVerification(param, new Callback<MobResponseLogin>() {
+            @Override
+            public void success(MobResponseLogin mobResponse, Response response) {
+                ProgressDialogUtil.hideProgressDialog();
+                if (mobResponse.getSuccess()) {
+                    MobResponseDetails data = mobResponse.getData();
+                    proceedToMobileOtpGeneration(data);
+                } else {
+                    Toast.makeText(getActivity(), "" + mobResponse.getMessage(), Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void failure(RetrofitError error) {
+                ProgressDialogUtil.hideProgressDialog();
+                Toast.makeText(getActivity(), "Error!", Toast.LENGTH_SHORT).show();
+            }
+        });
+
+    }
 
     private void getAdminStores() {
 

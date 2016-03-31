@@ -25,6 +25,9 @@ import com.signity.shopkeeperapp.util.Constant;
 import com.signity.shopkeeperapp.util.DialogUtils;
 import com.squareup.picasso.Picasso;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.util.List;
 
 public class RejectedItemsListActivity extends Activity implements View.OnClickListener {
@@ -34,24 +37,36 @@ public class RejectedItemsListActivity extends Activity implements View.OnClickL
     TextView textTitle;
     Button backButton, btnCall;
 
+    TextView mTotalAmount;
+    TextView mDeliveryAddress, mNote, mItemsPrice, mShippingCharges, mDiscountVal;
+    RelativeLayout mNoteLayout, mAddressLayout;
+
+
     String name;
     String phoneNumber;
     List<ItemListModel> listItem;
     RejectedOrderItemsAdapter adapter;
     String userId = "";
     String orderId = "";
+    String orderDetail = "";
+
+    String note, discount, total, shippingCharge, address;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.rejected_items_list_activity);
+        orderDetail = getIntent().getStringExtra("order_detail");
+
+        getOrderDetail();
+
         name = getIntent().getStringExtra("name");
         phoneNumber = getIntent().getStringExtra("phone");
         orderId = getIntent().getStringExtra("orderID");
         userId = getIntent().getStringExtra("userID");
 
         initialize();
-
+        addHeaderToList();
 
         backButton.setOnClickListener(this);
         btnCall.setOnClickListener(this);
@@ -64,9 +79,91 @@ public class RejectedItemsListActivity extends Activity implements View.OnClickL
             }
         }
 
-
         adapter = new RejectedOrderItemsAdapter(RejectedItemsListActivity.this);
         listRejectedItems.setAdapter(adapter);
+    }
+
+    private void getOrderDetail() {
+
+        JSONObject jsonObject = null;
+        try {
+            jsonObject = new JSONObject(orderDetail);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        if (jsonObject.has("note")) {
+
+            try {
+                note = jsonObject.getString("note");
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+
+        }
+        if (jsonObject.has("total")) {
+            try {
+                total = jsonObject.getString("total");
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+
+        }
+        if (jsonObject.has("shipping_charges")) {
+            try {
+                shippingCharge = jsonObject.getString("shipping_charges");
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+
+        }
+        if (jsonObject.has("address")) {
+            try {
+                address = jsonObject.getString("address");
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }
+        if (jsonObject.has("discount")) {
+            try {
+                discount = jsonObject.getString("discount");
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+
+        }
+
+
+    }
+
+    private void addHeaderToList() {
+        View headerView = getLayoutInflater().inflate(R.layout.layout_header_order_detail_address, null);
+        mDeliveryAddress = (TextView) headerView.findViewById(R.id.txtDeliveryAddress);
+        mNote = (TextView) headerView.findViewById(R.id.txtNote);
+        mShippingCharges = (TextView) headerView.findViewById(R.id.shipping_charges);
+        mDiscountVal = (TextView) headerView.findViewById(R.id.discountVal);
+        mNoteLayout = (RelativeLayout) headerView.findViewById(R.id.noteLayout);
+
+        if (note != null && !note.isEmpty()) {
+            mNote.setText(note);
+        } else {
+            mNoteLayout.setVisibility(View.GONE);
+        }
+
+        mAddressLayout = (RelativeLayout) headerView.findViewById(R.id.addressLayout);
+        if (address != null && !address.isEmpty()) {
+            mDeliveryAddress.setText(address);
+        } else {
+            mAddressLayout.setVisibility(View.GONE);
+        }
+        mItemsPrice = (TextView) headerView.findViewById(R.id.items_price);
+        mItemsPrice.setText(total);
+        mShippingCharges = (TextView) headerView.findViewById(R.id.shipping_charges);
+        mShippingCharges.setText(shippingCharge);
+        mDiscountVal = (TextView) headerView.findViewById(R.id.discountVal);
+        mDiscountVal.setText(discount);
+        listRejectedItems.addHeaderView(headerView);
+
     }
 
     private void initialize() {
@@ -76,6 +173,8 @@ public class RejectedItemsListActivity extends Activity implements View.OnClickL
         textTitle.setText(name);
         backButton = (Button) findViewById(R.id.backButton);
         btnCall = (Button) findViewById(R.id.btnCall);
+        mTotalAmount = (TextView) findViewById(R.id.txtTotalAmount);
+        mTotalAmount.setText((total != null && !total.isEmpty() ? total : ""));
 
     }
 

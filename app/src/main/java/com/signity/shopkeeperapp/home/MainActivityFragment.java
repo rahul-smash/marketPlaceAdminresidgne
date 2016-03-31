@@ -8,12 +8,11 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
-import com.signity.shopkeeperapp.*;
+import com.signity.shopkeeperapp.R;
 import com.signity.shopkeeperapp.customer.CustomerFragment;
 import com.signity.shopkeeperapp.model.DashBoardModel;
 import com.signity.shopkeeperapp.model.DashBoardModelDetail;
@@ -26,9 +25,6 @@ import com.signity.shopkeeperapp.util.DialogUtils;
 import com.signity.shopkeeperapp.util.FontUtil;
 import com.signity.shopkeeperapp.util.ProgressDialogUtil;
 import com.signity.shopkeeperapp.util.Util;
-
-import org.json.JSONException;
-import org.json.JSONObject;
 
 import java.lang.reflect.Type;
 import java.util.HashMap;
@@ -122,7 +118,6 @@ public class MainActivityFragment extends Fragment implements View.OnClickListen
                 Log.e("Tab", getDashBoard.toString());
                 if (getDashBoard.getSuccess()) {
                     ProgressDialogUtil.hideProgressDialog();
-
                     saveStoreDetails(getDashBoard.getData().getStore());
                     setDashBoardValues(getDashBoard.getData());
 
@@ -145,9 +140,9 @@ public class MainActivityFragment extends Fragment implements View.OnClickListen
 
     private void saveStoreDetails(DashBoardModelStoreDetail store) {
 
-
         try {
             Util.savePreferenceValue(getActivity(), Constant.STORE_DETAILS, getStoreDataAsString(store));
+            Util.savePreferenceValue(getActivity(), Constant.STORE_STATUS_MESSAGE, store.getStoreMessage());
         } catch (Exception e) {
             e.printStackTrace();
         }

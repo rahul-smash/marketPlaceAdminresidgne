@@ -18,14 +18,6 @@ public class OrdersListModel {
     @Expose
     private String userId;
 
-    public String getStatus() {
-        return status;
-    }
-
-    public void setStatus(String status) {
-        this.status = status;
-    }
-
     @SerializedName("status")
     @Expose
     private String status;
@@ -92,6 +84,15 @@ public class OrdersListModel {
      */
     public void setUserId(String userId) {
         this.userId = userId;
+    }
+
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
     }
 
     /**
