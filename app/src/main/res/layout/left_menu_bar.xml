@@ -428,6 +428,41 @@
                 android:layout_height="1dp"
                 android:background="@color/divider"
                 android:visibility="gone" />
+            <LinearLayout
+                android:id="@+id/btnCategories"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical"
+                android:onClick="onMenuButtonClick"
+                android:orientation="horizontal"
+                android:padding="10dp"
+                android:visibility="visible">
+
+                <ImageView
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:layout_gravity="center_vertical"
+                    android:adjustViewBounds="true"
+                    android:clickable="false"
+                    android:focusable="false"
+                    android:src="@drawable/ic_dash_bord" />
+
+                <TextView
+                    android:id="@+id/txtCategories"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="10dp"
+                    android:background="@android:color/transparent"
+                    android:clickable="false"
+                    android:focusable="false"
+                    android:gravity="center_vertical"
+                    android:text="Categories"
+                    android:textColor="@color/color_white"
+                    android:textSize="15sp"
+                    android:visibility="visible" />
+
+            </LinearLayout>
+
 
         </LinearLayout>
     </ScrollView>
