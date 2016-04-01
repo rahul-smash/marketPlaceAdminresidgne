@@ -756,7 +756,6 @@ public class DueOrderDetailFragment extends Fragment implements View.OnClickList
         mDeliveryAddress.setText(address);
 
         if (note.equalsIgnoreCase("") || note.equalsIgnoreCase(null)) {
-
             mNoteLayout.setVisibility(View.GONE);
         } else {
             mNote.setText(note);
