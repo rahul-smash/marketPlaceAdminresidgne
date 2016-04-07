@@ -8,6 +8,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.google.gson.Gson;
@@ -44,6 +45,7 @@ public class MainActivityFragment extends Fragment implements View.OnClickListen
     TextView labelOutstandingPayment, labelDueOrders, labelActiveOrders, labelAllCutomers;
     ImageView imageDueOrders, imageActiveOrders, customerImageView;
     String[] titleText = {"Due Orders", "Active Orders", "Customers"};
+
 
     public MainActivityFragment() {
     }

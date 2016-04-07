@@ -7,5 +7,6 @@
     <string name="title_activity_rejected_items_list">RejectedItemsListActivity</string>
     <string name="gcm_defaultSenderId">453682303477</string>
     <string name="text_rs">\u20B9</string>
+    <string name="title_activity_manage_volume">ManageVolumeActivity</string>
 
 </resources>

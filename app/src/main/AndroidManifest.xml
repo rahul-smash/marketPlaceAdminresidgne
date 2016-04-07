@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.signity.shopkeeperapp">
+    package="com.signity.shopkeeperapp" >
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.GET_ACCOUNTS" />
@@ -22,11 +22,11 @@
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
-        android:theme="@style/AppTheme">
+        android:theme="@style/AppTheme" >
         <activity
             android:name=".SplashActivity"
-            android:screenOrientation="portrait"
-            android:label="@string/app_name">
+            android:label="@string/app_name"
+            android:screenOrientation="portrait" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -37,70 +37,71 @@
         <receiver
             android:name="com.google.android.gms.gcm.GcmReceiver"
             android:exported="true"
-            android:permission="com.google.android.c2dm.permission.SEND">
+            android:permission="com.google.android.c2dm.permission.SEND" >
             <intent-filter>
                 <action android:name="com.google.android.c2dm.intent.RECEIVE" />
+
                 <category android:name="com.example.gcm" />
             </intent-filter>
         </receiver>
 
         <service
-            android:name="com.signity.shopkeeperapp.gcm.MyGcmListenerService"
-            android:exported="false">
+            android:name=".gcm.MyGcmListenerService"
+            android:exported="false" >
             <intent-filter>
                 <action android:name="com.google.android.c2dm.intent.RECEIVE" />
             </intent-filter>
         </service>
         <service
-            android:name="com.signity.shopkeeperapp.gcm.MyInstanceIDListenerService"
-            android:exported="false">
+            android:name=".gcm.MyInstanceIDListenerService"
+            android:exported="false" >
             <intent-filter>
                 <action android:name="com.google.android.gms.iid.InstanceID" />
             </intent-filter>
         </service>
         <service
-            android:name="com.signity.shopkeeperapp.gcm.RegistrationIntentService"
-            android:exported="false"></service>
+            android:name=".gcm.RegistrationIntentService"
+            android:exported="false" />
 
         <activity
             android:name=".view.LoginScreenActivity"
-            android:screenOrientation="portrait"
-            android:label="@string/app_name" />
+            android:label="@string/app_name"
+            android:screenOrientation="portrait" />
         <activity
             android:name=".home.MainActivity"
             android:label="@string/app_name" />
-
         <activity
             android:name=".orders.DueOrderActivity"
-            android:screenOrientation="portrait"
-            android:label="@string/app_name" />
+            android:label="@string/app_name"
+            android:screenOrientation="portrait" />
         <activity
             android:name=".orders.DueOrderActivityWithoutUpdations"
-            android:screenOrientation="portrait"
-            android:label="@string/app_name" />
+            android:label="@string/app_name"
+            android:screenOrientation="portrait" />
         <activity
             android:name=".customer.CustomerActivity"
-            android:screenOrientation="portrait"
-            android:label="@string/app_name"></activity>
+            android:label="@string/app_name"
+            android:screenOrientation="portrait" />
         <activity
             android:name=".rejected_orders.RejectedItemsListActivity"
-            android:screenOrientation="portrait"
-            android:label="@string/app_name"></activity>
-
+            android:label="@string/app_name"
+            android:screenOrientation="portrait" />
         <activity
             android:name=".canceled_orders.CanceledOrdersItemsListActivity"
-            android:screenOrientation="portrait"
-            android:label="@string/app_name"></activity>
-
+            android:label="@string/app_name"
+            android:screenOrientation="portrait" />
         <activity
             android:name=".enquiries.EnquiriesActivity"
-            android:screenOrientation="portrait"
-            android:label="@string/app_name"></activity>
+            android:label="@string/app_name"
+            android:screenOrientation="portrait" />
         <activity
             android:name=".manage_stores.ManageStaffActivity"
-            android:screenOrientation="portrait"
-            android:label="@string/app_name"></activity>
-
+            android:label="@string/app_name"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".ManageVolume.ManageVolumeActivity"
+            android:label="@string/title_activity_manage_volume" >
+        </activity>
     </application>
 
 </manifest>

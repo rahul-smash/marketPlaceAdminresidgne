@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.drawable.ColorDrawable;
+import android.media.AudioManager;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.Fragment;
@@ -24,15 +25,18 @@ import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.PopupWindow;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.signity.shopkeeperapp.Categories.CategoriesFragment;
+import com.signity.shopkeeperapp.ManageVolume.ManageVolumeActivity;
 import com.signity.shopkeeperapp.R;
 import com.signity.shopkeeperapp.canceled_orders.CanceledOrdersFragment;
 import com.signity.shopkeeperapp.customer.CustomerFragment;
@@ -50,6 +54,7 @@ import com.signity.shopkeeperapp.util.Constant;
 import com.signity.shopkeeperapp.util.DialogHandler;
 import com.signity.shopkeeperapp.util.DialogUtils;
 import com.signity.shopkeeperapp.util.FontUtil;
+import com.signity.shopkeeperapp.util.PrefManager;
 import com.signity.shopkeeperapp.util.ProgressDialogUtil;
 import com.signity.shopkeeperapp.util.Util;
 import com.signity.shopkeeperapp.view.LoginScreenActivity;
@@ -86,10 +91,23 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
     Animation slideUpAnim;
     Animation slideDownAnim;
 
+    RelativeLayout warningLayout;
+    ImageButton btnVolInfo;
+
+    PrefManager prefManager;
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        prefManager=new PrefManager(MainActivity.this);
+
+        warningLayout=(RelativeLayout)findViewById(R.id.warningLayout);
+        warningLayout.setOnClickListener(this);
+        btnVolInfo=(ImageButton)findViewById(R.id.btnVolInfo);
+        btnVolInfo.setOnClickListener(this);
+
         mSlidingPanel = (SlidingPaneLayout) findViewById(R.id.SlidingPanel);
         mSlidingPanel.setShadowResourceRight(R.drawable.transparent_bg);
         mSlidingPanel.setParallaxDistance(300);
@@ -214,6 +232,15 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
                 break;
             case R.id.btnMenuRight:
                 showPopUpMenu();
+                break;
+            case R.id.warningLayout:
+                warningLayout.setVisibility(View.GONE);
+                break;
+
+            case R.id.btnVolInfo:
+                Intent intent=new Intent(MainActivity.this, ManageVolumeActivity.class);
+                startActivity(intent);
+                AnimUtil.slideFromRightAnim(MainActivity.this);
                 break;
 
         }
@@ -442,7 +469,6 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
         if (mOrderDetailBtn.isSelected()) {
             orderDetailViewGone();
         } else {
-
             orderDetailViewVisible();
         }
 
@@ -749,5 +775,36 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
         }
 
     }
+
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        checkVolume();
+    }
+
+    public void checkVolume() {
+        AudioManager am = (AudioManager)getSystemService(Context.AUDIO_SERVICE);
+        switch (am.getRingerMode()) {
+            case AudioManager.RINGER_MODE_SILENT:
+                Log.i("MyApp","Silent mode");
+                prefManager.storeSharedValue(Constant.VOLUME_STATUS,"silent");
+                warningLayout.setVisibility(View.VISIBLE);
+                btnVolInfo.setImageResource(R.drawable.soundno_header);
+                break;
+            /*case AudioManager.RINGER_MODE_VIBRATE:
+                Log.i("MyApp","Vibrate mode");
+                warningLayout.setVisibility(View.GONE);
+                break;*/
+            case AudioManager.RINGER_MODE_NORMAL:
+                Log.i("MyApp","Normal mode");
+                prefManager.storeSharedValue(Constant.VOLUME_STATUS, "ring");
+                warningLayout.setVisibility(View.GONE);
+                btnVolInfo.setImageResource(R.drawable.soundok_header);
+                break;
+        }
+    }
+
+
 
 }
