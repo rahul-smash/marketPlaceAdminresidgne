@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.drawable.ColorDrawable;
+import android.media.AudioManager;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.Fragment;
@@ -12,6 +13,7 @@ import android.support.v4.app.FragmentActivity;
 import android.support.v4.widget.SlidingPaneLayout;
 import android.support.v7.app.AlertDialog;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -24,15 +26,18 @@ import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.PopupWindow;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.signity.shopkeeperapp.Categories.CategoriesFragment;
+import com.signity.shopkeeperapp.ManageVolume.ManageVolumeActivity;
 import com.signity.shopkeeperapp.R;
 import com.signity.shopkeeperapp.canceled_orders.CanceledOrdersFragment;
 import com.signity.shopkeeperapp.customer.CustomerFragment;
@@ -50,6 +55,7 @@ import com.signity.shopkeeperapp.util.Constant;
 import com.signity.shopkeeperapp.util.DialogHandler;
 import com.signity.shopkeeperapp.util.DialogUtils;
 import com.signity.shopkeeperapp.util.FontUtil;
+import com.signity.shopkeeperapp.util.PrefManager;
 import com.signity.shopkeeperapp.util.ProgressDialogUtil;
 import com.signity.shopkeeperapp.util.Util;
 import com.signity.shopkeeperapp.view.LoginScreenActivity;
@@ -65,9 +71,10 @@ import retrofit.client.Response;
 
 public class MainActivity extends FragmentActivity implements View.OnClickListener {
 
+
     SlidingPaneLayout mSlidingPanel;
 
-    String[] title = {"Dashboard", "Due Orders", "Active Orders", "Rejected Orders", "Canceled Orders", "Customers", "Enquiries", "Manage Stores", "Categories"};
+    String[] title = {"Dashboard", "Due Orders", "Active Orders", "Rejected Orders", "Canceled Orders", "Customers", "Enquiries", "Manage Stores","Categories"};
     String shareContent = "";
 
     public static String fragmentName = "";
@@ -85,10 +92,25 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
     Animation slideUpAnim;
     Animation slideDownAnim;
 
+    RelativeLayout warningLayout;
+    ImageButton btnVolInfo;
+
+    PrefManager prefManager;
+
+    AudioManager am;
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        prefManager=new PrefManager(MainActivity.this);
+        am = (AudioManager)getSystemService(Context.AUDIO_SERVICE);
+        warningLayout=(RelativeLayout)findViewById(R.id.warningLayout);
+        warningLayout.setOnClickListener(this);
+        btnVolInfo=(ImageButton)findViewById(R.id.btnVolInfo);
+        btnVolInfo.setOnClickListener(this);
+
         mSlidingPanel = (SlidingPaneLayout) findViewById(R.id.SlidingPanel);
         mSlidingPanel.setShadowResourceRight(R.drawable.transparent_bg);
         mSlidingPanel.setParallaxDistance(300);
@@ -177,7 +199,6 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
             String message = Util.loadPreferenceValue(MainActivity.this, Constant.STORE_STATUS_MESSAGE);
             storeStatusAlertNew(message + "\n" + "Do you want to turn the customer app on?", "on");
         }
-
     }
 
 
@@ -214,6 +235,15 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
                 break;
             case R.id.btnMenuRight:
                 showPopUpMenu();
+                break;
+            case R.id.warningLayout:
+                warningLayout.setVisibility(View.GONE);
+                break;
+
+            case R.id.btnVolInfo:
+                Intent intent=new Intent(MainActivity.this, ManageVolumeActivity.class);
+                startActivity(intent);
+                AnimUtil.slideFromRightAnim(MainActivity.this);
                 break;
 
         }
@@ -442,7 +472,6 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
         if (mOrderDetailBtn.isSelected()) {
             orderDetailViewGone();
         } else {
-
             orderDetailViewVisible();
         }
 
@@ -750,32 +779,57 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
 
     }
 
-//    private void sendNotification(String title, String message) {
-//        Intent intent = new Intent(this, MainActivity.class);
-//        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
-//        PendingIntent pendingIntent = PendingIntent.getActivity(this, 0 /* Request code */, intent,
-//                PendingIntent.FLAG_ONE_SHOT);
-//
-//
-//        int icon = R.mipmap.ic_launcher;
-//        Uri defaultSoundUri=Uri.parse(ContentResolver.SCHEME_ANDROID_RESOURCE+ "://com.signity.valueappz/raw/notificationrecieved");
-////        Uri defaultSoundUri = Uri.parse("android.resource://com.signity.valueappz/" + R.raw.notificationrecieved);
-//        NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(this)
-//                .setContentTitle(title)
-//                .setContentText(message)
-//                .setTicker(title)
-//                .setSmallIcon(icon)
-//                .setAutoCancel(true)
-//                .setSound(defaultSoundUri)
-//                .setLargeIcon(BitmapFactory.decodeResource(getResources(), R.mipmap.ic_launcher))
-//                .setStyle(new NotificationCompat.BigTextStyle().bigText(message))
-//                .setContentIntent(pendingIntent);
-//
-//        NotificationManager notificationManager =
-//                (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
-//
-//        notificationManager.notify(1 /* ID of notification */, notificationBuilder.build());
-//    }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        checkVolume();
+    }
+
+    public void checkVolume() {
+
+        switch (am.getRingerMode()) {
+            case AudioManager.RINGER_MODE_SILENT:
+                Log.i("MyApp","Silent mode");
+                warningLayout.setVisibility(View.VISIBLE);
+                btnVolInfo.setImageResource(R.drawable.soundno_header);
+                break;
+            case AudioManager.RINGER_MODE_VIBRATE:
+                Log.i("MyApp","Vibrate mode");
+                warningLayout.setVisibility(View.VISIBLE);
+                btnVolInfo.setImageResource(R.drawable.soundno_header);
+                break;
+            case AudioManager.RINGER_MODE_NORMAL:
+                Log.i("MyApp","Normal mode");
+                warningLayout.setVisibility(View.GONE);
+                btnVolInfo.setImageResource(R.drawable.soundok_header);
+                break;
+        }
+    }
+
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event){
+
+        if (keyCode == KeyEvent.KEYCODE_VOLUME_UP){
+            int currentVolume = am.getStreamVolume(AudioManager.STREAM_RING);
+            if(currentVolume>=1){
+                warningLayout.setVisibility(View.GONE);
+                btnVolInfo.setImageResource(R.drawable.soundok_header);
+            }
+            return false;
+        }
+
+        if (keyCode == KeyEvent.KEYCODE_VOLUME_DOWN){
+            int currentVolume = am.getStreamVolume(AudioManager.STREAM_RING);
+            if(currentVolume==0){
+                warningLayout.setVisibility(View.VISIBLE);
+                btnVolInfo.setImageResource(R.drawable.soundno_header);
+            }
+
+            return false;
+        }
+
+        return false;
+    }
 
 }

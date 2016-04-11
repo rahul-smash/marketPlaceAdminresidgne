@@ -24,6 +24,33 @@
             android:id="@+id/header"
             layout="@layout/layout_header" />
 
+        <RelativeLayout
+            android:id="@+id/warningLayout"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@drawable/transparent_bg"
+            android:visibility="gone">
+
+            <ImageView
+                android:id="@+id/arrow"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/arrow"
+                android:layout_alignParentRight="true"
+                android:layout_margin="20dp"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+                android:text="Please Unmute your phone to receive Order notifications."
+                android:padding="10dp"
+                android:textColor="@android:color/white"
+                android:textSize="@dimen/text_large"
+                android:layout_below="@+id/arrow"
+                android:gravity="center"/>
+        </RelativeLayout>
+
         <FrameLayout
             android:id="@+id/container"
             android:layout_width="match_parent"

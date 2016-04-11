@@ -103,6 +103,10 @@
 
         <receiver android:name=".receiver.LocalNotifyReceiver" >
         </receiver>
+        <activity
+            android:name=".ManageVolume.ManageVolumeActivity"
+            android:label="@string/title_activity_manage_volume" >
+        </activity>
     </application>
 
 </manifest>

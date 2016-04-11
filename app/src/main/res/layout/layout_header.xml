@@ -29,6 +29,17 @@
         android:textSize="@dimen/text_xxlarge"
         android:visibility="visible" />
 
+
+    <ImageButton
+        android:id="@+id/btnVolInfo"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@android:color/transparent"
+        android:src="@drawable/soundno_header"
+        android:layout_toLeftOf="@+id/btnMenuRight"
+        android:layout_centerVertical="true"
+        android:padding="5dp"/>
+
     <Button
         android:id="@+id/btnMenuRight"
         android:layout_width="48dp"

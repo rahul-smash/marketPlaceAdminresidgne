@@ -21,5 +21,6 @@ public class Constant {
     public static final String IS_ADMIN = "com.signity.shopkeeperapp.ADMIN";
     public static final String DEVICE_TOKEN = "device_token";
     public static final String STORE_STATUS_MESSAGE = "com.signity.shopkeeperapp.STORE_STATUS_MESSAGE";
+    public static final String VOLUME_STATUS = "com.signity.shopkeeperapp.VOLUME_STATUS";
 
 }
