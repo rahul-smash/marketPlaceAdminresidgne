@@ -11,10 +11,10 @@
         android:layout_height="wrap_content"
         android:background="@color/color_header"
         android:elevation="6dp"
-        app:tabSelectedTextColor="@color/color_white"
         android:minHeight="?attr/actionBarSize"
         android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
         app:tabIndicatorColor="@color/colorWhite"
+        app:tabSelectedTextColor="@color/color_white"
         app:tabTextColor="@color/color_white" />
 
     <android.support.v4.view.ViewPager

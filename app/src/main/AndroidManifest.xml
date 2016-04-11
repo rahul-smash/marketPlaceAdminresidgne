@@ -101,6 +101,8 @@
             android:screenOrientation="portrait"
             android:label="@string/app_name"></activity>
 
+        <receiver android:name=".receiver.LocalNotifyReceiver" >
+        </receiver>
     </application>
 
 </manifest>

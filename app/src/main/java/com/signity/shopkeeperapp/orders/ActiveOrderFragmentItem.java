@@ -6,7 +6,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -21,14 +20,11 @@ import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
 import com.signity.shopkeeperapp.R;
 import com.signity.shopkeeperapp.app.DataAdapter;
 import com.signity.shopkeeperapp.home.MainActivity;
 import com.signity.shopkeeperapp.model.GetOrdersModel;
 import com.signity.shopkeeperapp.model.ItemListModel;
-import com.signity.shopkeeperapp.model.Order;
 import com.signity.shopkeeperapp.model.OrdersListModel;
 import com.signity.shopkeeperapp.model.SetOrdersModel;
 import com.signity.shopkeeperapp.network.NetworkAdaper;
@@ -40,7 +36,6 @@ import com.signity.shopkeeperapp.util.PrefManager;
 import com.signity.shopkeeperapp.util.ProgressDialogUtil;
 import com.signity.shopkeeperapp.util.Util;
 
-import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -55,6 +50,11 @@ import retrofit.client.Response;
  */
 public class ActiveOrderFragmentItem extends Fragment implements View.OnClickListener {
 
+
+    private static final String ACTIVE = "active";
+    private static final String REJECT = "reject";
+    private static final String SHIPPED = "shipped";
+    private static final String DELIVERED = "delivered";
 
     private ListView listActiveOrdersItems;
     private Button buttonOrderProced, buttonOrderDecline, buttonMoveToShipping, buttonMoveToDelivered;
@@ -85,12 +85,8 @@ public class ActiveOrderFragmentItem extends Fragment implements View.OnClickLis
 
     // Setup List Element on the basis of mode Approve,Proccesing, shipping
     public void setUpListData() {
-
         listOrder.clear();
-
-
         if (type.equals(Constant.TYPE_APPROVE)) {
-
             for (int i = 0; i < listOrderParent.size(); i++) {
                 if (listOrderParent.get(i).getStatus().equalsIgnoreCase("1")) {
                     listOrder.add(listOrderParent.get(i));
@@ -131,28 +127,15 @@ public class ActiveOrderFragmentItem extends Fragment implements View.OnClickLis
     }
 
 
-    public void updateList() {
-        Gson gson = new Gson();
-        Type type = new TypeToken<List<Order>>() {
-        }.getType();
-        String json = prefManager.getSharedValue(PrefManager.PREF_PROCESSING);
-        if (!TextUtils.isEmpty(json)) {
-            listOrder = gson.fromJson(json, type);
-        } else {
-            listOrder = new ArrayList<>();
-        }
-        adapter.notifyDataSetChanged();
-    }
-
     public static Fragment newInstance(Context context) {
         return Fragment.instantiate(context,
-                ActiveOrderFragmentItem_.class.getName());
+                ActiveOrderFragmentItem.class.getName());
     }
+
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-
         View rootView = inflater.inflate(R.layout.fragment_active_order_item, container, false);
         listActiveOrdersItems = (ListView) rootView.findViewById(R.id.listActiveOrdersItems);
         footer = (LinearLayout) rootView.findViewById(R.id.footer);
@@ -163,7 +146,6 @@ public class ActiveOrderFragmentItem extends Fragment implements View.OnClickLis
         buttonOrderDecline = (Button) rootView.findViewById(R.id.btnDeclineOrder);
         buttonMoveToShipping = (Button) rootView.findViewById(R.id.btnMoveToShipping);
         buttonMoveToDelivered = (Button) rootView.findViewById(R.id.btnMoveToDeliver);
-
 
         slideUpAnim = AnimationUtils.loadAnimation(getActivity()
                 .getApplicationContext(), R.anim.slide_up);
@@ -183,20 +165,16 @@ public class ActiveOrderFragmentItem extends Fragment implements View.OnClickLis
     @Override
     public void onResume() {
         super.onResume();
-
         listOrderSelected.clear();
         footer.startAnimation(slideDownAnim);
         footer.setVisibility(View.GONE);
         getOrdersMethod();
-
     }
 
     class ActiveOrderAdapter extends BaseAdapter {
 
         Context context;
-
         List<OrdersListModel> listOrder;
-
 
         public ActiveOrderAdapter() {
             super();
@@ -425,20 +403,26 @@ public class ActiveOrderFragmentItem extends Fragment implements View.OnClickLis
     }
 
     public void getOrdersMethod() {
-
         if (Util.checkIntenetConnection(getActivity())) {
-            getOrders();
+            if (type.equalsIgnoreCase(Constant.TYPE_PROCESSING)) {
+                getOrders(ACTIVE);
+            } else if (type.equalsIgnoreCase(Constant.TYPE_SHIPPING)) {
+                getOrders(SHIPPED);
+            } else if (type.equalsIgnoreCase(Constant.TYPE_DELIVERED)) {
+                getOrders(DELIVERED);
+            }
         } else {
             DialogUtils.showAlertDialog(getActivity(), "Internet", "Please check your Internet Connection.");
         }
     }
 
-    public void getOrders() {
+
+    public void getOrders(String orderType) {
 
         ProgressDialogUtil.showProgressDialog(getActivity());
 
         Map<String, String> param = new HashMap<String, String>();
-        param.put("order_type", "all");
+        param.put("order_type", orderType);
         param.put("api_key", "");
 
         NetworkAdaper.getInstance().getNetworkServices().getStoreOrders(param, new Callback<GetOrdersModel>() {

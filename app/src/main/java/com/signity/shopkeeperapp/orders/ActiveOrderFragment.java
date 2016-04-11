@@ -43,7 +43,7 @@ public class ActiveOrderFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_active_order, container, false);
         final TabLayout tabLayout = (TabLayout) rootView.findViewById(R.id.tab_layout);
-//        tabLayout.addTab(tabLayout.newTab().setText("Approved"));
+//      tabLayout.addTab(tabLayout.newTab().setText("Approved"));
         tabLayout.addTab(tabLayout.newTab().setText("Processing"));
         tabLayout.addTab(tabLayout.newTab().setText("Shipping"));
         tabLayout.addTab(tabLayout.newTab().setText("Delivered"));
@@ -54,10 +54,7 @@ public class ActiveOrderFragment extends Fragment {
         viewPager.setOffscreenPageLimit(1);
         adapter = new PagerAdapter(getFragmentManager(), tabLayout.getTabCount());
         viewPager.setAdapter(adapter);
-
-
         viewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
-
         tabLayout.setOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @Override
             public void onTabSelected(TabLayout.Tab tab) {
@@ -72,8 +69,6 @@ public class ActiveOrderFragment extends Fragment {
                         }
                     }, 1000);
                 }
-
-
             }
 
             @Override

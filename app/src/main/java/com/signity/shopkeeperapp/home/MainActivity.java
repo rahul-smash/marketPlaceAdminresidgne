@@ -65,10 +65,9 @@ import retrofit.client.Response;
 
 public class MainActivity extends FragmentActivity implements View.OnClickListener {
 
-
     SlidingPaneLayout mSlidingPanel;
 
-    String[] title = {"Dashboard", "Due Orders", "Active Orders", "Rejected Orders", "Canceled Orders", "Customers", "Enquiries", "Manage Stores","Categories"};
+    String[] title = {"Dashboard", "Due Orders", "Active Orders", "Rejected Orders", "Canceled Orders", "Customers", "Enquiries", "Manage Stores", "Categories"};
     String shareContent = "";
 
     public static String fragmentName = "";
@@ -178,6 +177,7 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
             String message = Util.loadPreferenceValue(MainActivity.this, Constant.STORE_STATUS_MESSAGE);
             storeStatusAlertNew(message + "\n" + "Do you want to turn the customer app on?", "on");
         }
+
     }
 
 
@@ -749,5 +749,33 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
         }
 
     }
+
+//    private void sendNotification(String title, String message) {
+//        Intent intent = new Intent(this, MainActivity.class);
+//        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
+//        PendingIntent pendingIntent = PendingIntent.getActivity(this, 0 /* Request code */, intent,
+//                PendingIntent.FLAG_ONE_SHOT);
+//
+//
+//        int icon = R.mipmap.ic_launcher;
+//        Uri defaultSoundUri=Uri.parse(ContentResolver.SCHEME_ANDROID_RESOURCE+ "://com.signity.valueappz/raw/notificationrecieved");
+////        Uri defaultSoundUri = Uri.parse("android.resource://com.signity.valueappz/" + R.raw.notificationrecieved);
+//        NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(this)
+//                .setContentTitle(title)
+//                .setContentText(message)
+//                .setTicker(title)
+//                .setSmallIcon(icon)
+//                .setAutoCancel(true)
+//                .setSound(defaultSoundUri)
+//                .setLargeIcon(BitmapFactory.decodeResource(getResources(), R.mipmap.ic_launcher))
+//                .setStyle(new NotificationCompat.BigTextStyle().bigText(message))
+//                .setContentIntent(pendingIntent);
+//
+//        NotificationManager notificationManager =
+//                (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+//
+//        notificationManager.notify(1 /* ID of notification */, notificationBuilder.build());
+//    }
+
 
 }
