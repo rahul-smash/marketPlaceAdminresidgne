@@ -74,7 +74,7 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
 
     SlidingPaneLayout mSlidingPanel;
 
-    String[] title = {"Dashboard", "Due Orders", "Active Orders", "Rejected Orders", "Canceled Orders", "Customers", "Enquiries", "Manage Stores","Categories"};
+    String[] title = {"Dashboard", "Due Orders", "Active Orders", "Rejected Orders", "Canceled Orders", "Customers", "Enquiries", "Manage Stores", "Categories"};
     String shareContent = "";
 
     public static String fragmentName = "";
@@ -104,11 +104,11 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        prefManager=new PrefManager(MainActivity.this);
-        am = (AudioManager)getSystemService(Context.AUDIO_SERVICE);
-        warningLayout=(RelativeLayout)findViewById(R.id.warningLayout);
+        prefManager = new PrefManager(MainActivity.this);
+        am = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
+        warningLayout = (RelativeLayout) findViewById(R.id.warningLayout);
         warningLayout.setOnClickListener(this);
-        btnVolInfo=(ImageButton)findViewById(R.id.btnVolInfo);
+        btnVolInfo = (ImageButton) findViewById(R.id.btnVolInfo);
         btnVolInfo.setOnClickListener(this);
 
         mSlidingPanel = (SlidingPaneLayout) findViewById(R.id.SlidingPanel);
@@ -241,7 +241,7 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
                 break;
 
             case R.id.btnVolInfo:
-                Intent intent=new Intent(MainActivity.this, ManageVolumeActivity.class);
+                Intent intent = new Intent(MainActivity.this, ManageVolumeActivity.class);
                 startActivity(intent);
                 AnimUtil.slideFromRightAnim(MainActivity.this);
                 break;
@@ -790,17 +790,17 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
 
         switch (am.getRingerMode()) {
             case AudioManager.RINGER_MODE_SILENT:
-                Log.i("MyApp","Silent mode");
+                Log.i("MyApp", "Silent mode");
                 warningLayout.setVisibility(View.VISIBLE);
                 btnVolInfo.setImageResource(R.drawable.soundno_header);
                 break;
             case AudioManager.RINGER_MODE_VIBRATE:
-                Log.i("MyApp","Vibrate mode");
+                Log.i("MyApp", "Vibrate mode");
                 warningLayout.setVisibility(View.VISIBLE);
                 btnVolInfo.setImageResource(R.drawable.soundno_header);
                 break;
             case AudioManager.RINGER_MODE_NORMAL:
-                Log.i("MyApp","Normal mode");
+                Log.i("MyApp", "Normal mode");
                 warningLayout.setVisibility(View.GONE);
                 btnVolInfo.setImageResource(R.drawable.soundok_header);
                 break;
@@ -808,25 +808,30 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
     }
 
     @Override
-    public boolean onKeyDown(int keyCode, KeyEvent event){
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
 
-        if (keyCode == KeyEvent.KEYCODE_VOLUME_UP){
+        if (keyCode == KeyEvent.KEYCODE_VOLUME_UP) {
             int currentVolume = am.getStreamVolume(AudioManager.STREAM_RING);
-            if(currentVolume>=1){
+            if (currentVolume >= 1) {
                 warningLayout.setVisibility(View.GONE);
                 btnVolInfo.setImageResource(R.drawable.soundok_header);
             }
             return false;
         }
 
-        if (keyCode == KeyEvent.KEYCODE_VOLUME_DOWN){
+        if (keyCode == KeyEvent.KEYCODE_VOLUME_DOWN) {
             int currentVolume = am.getStreamVolume(AudioManager.STREAM_RING);
-            if(currentVolume==0){
+            if (currentVolume == 0) {
                 warningLayout.setVisibility(View.VISIBLE);
                 btnVolInfo.setImageResource(R.drawable.soundno_header);
             }
 
             return false;
+        }
+
+        if (keyCode == KeyEvent.KEYCODE_BACK) {
+            onBackPressed();
+            return true;
         }
 
         return false;

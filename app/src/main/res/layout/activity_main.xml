@@ -1,5 +1,4 @@
-<com.signity.shopkeeperapp.view.PagerEnabledSlidingPaneLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<com.signity.shopkeeperapp.view.PagerEnabledSlidingPaneLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/SlidingPanel"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
@@ -35,20 +34,20 @@
                 android:id="@+id/arrow"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:src="@drawable/arrow"
                 android:layout_alignParentRight="true"
-                android:layout_margin="20dp"/>
+                android:layout_margin="20dp"
+                android:src="@drawable/arrow" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_centerHorizontal="true"
-                android:text="Please Unmute your phone to receive Order notifications."
-                android:padding="10dp"
-                android:textColor="@android:color/white"
-                android:textSize="@dimen/text_large"
                 android:layout_below="@+id/arrow"
-                android:gravity="center"/>
+                android:layout_centerHorizontal="true"
+                android:gravity="center"
+                android:padding="10dp"
+                android:text="Please Unmute your phone to receive Order notifications."
+                android:textColor="@android:color/white"
+                android:textSize="@dimen/text_large" />
         </RelativeLayout>
 
         <FrameLayout
