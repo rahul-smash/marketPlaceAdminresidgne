@@ -13,6 +13,7 @@ import android.support.v4.app.FragmentActivity;
 import android.support.v4.widget.SlidingPaneLayout;
 import android.support.v7.app.AlertDialog;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -96,13 +97,15 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
 
     PrefManager prefManager;
 
+    AudioManager am;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         prefManager=new PrefManager(MainActivity.this);
-
+        am = (AudioManager)getSystemService(Context.AUDIO_SERVICE);
         warningLayout=(RelativeLayout)findViewById(R.id.warningLayout);
         warningLayout.setOnClickListener(this);
         btnVolInfo=(ImageButton)findViewById(R.id.btnVolInfo);
@@ -784,27 +787,49 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
     }
 
     public void checkVolume() {
-        AudioManager am = (AudioManager)getSystemService(Context.AUDIO_SERVICE);
+
         switch (am.getRingerMode()) {
             case AudioManager.RINGER_MODE_SILENT:
                 Log.i("MyApp","Silent mode");
-                prefManager.storeSharedValue(Constant.VOLUME_STATUS,"silent");
                 warningLayout.setVisibility(View.VISIBLE);
                 btnVolInfo.setImageResource(R.drawable.soundno_header);
                 break;
-            /*case AudioManager.RINGER_MODE_VIBRATE:
+            case AudioManager.RINGER_MODE_VIBRATE:
                 Log.i("MyApp","Vibrate mode");
-                warningLayout.setVisibility(View.GONE);
-                break;*/
+                warningLayout.setVisibility(View.VISIBLE);
+                btnVolInfo.setImageResource(R.drawable.soundno_header);
+                break;
             case AudioManager.RINGER_MODE_NORMAL:
                 Log.i("MyApp","Normal mode");
-                prefManager.storeSharedValue(Constant.VOLUME_STATUS, "ring");
                 warningLayout.setVisibility(View.GONE);
                 btnVolInfo.setImageResource(R.drawable.soundok_header);
                 break;
         }
     }
 
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event){
 
+        if (keyCode == KeyEvent.KEYCODE_VOLUME_UP){
+            int currentVolume = am.getStreamVolume(AudioManager.STREAM_RING);
+            if(currentVolume>=1){
+                warningLayout.setVisibility(View.GONE);
+                btnVolInfo.setImageResource(R.drawable.soundok_header);
+            }
+            return false;
+        }
+
+        if (keyCode == KeyEvent.KEYCODE_VOLUME_DOWN){
+            int currentVolume = am.getStreamVolume(AudioManager.STREAM_RING);
+            if(currentVolume==0){
+                warningLayout.setVisibility(View.VISIBLE);
+                btnVolInfo.setImageResource(R.drawable.soundno_header);
+            }
+
+            return false;
+        }
+
+        return false;
+    }
 
 }

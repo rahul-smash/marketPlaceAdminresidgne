@@ -36,6 +36,7 @@
 
 
     <RelativeLayout
+        android:id="@+id/layout1"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:background="@drawable/background"
@@ -43,14 +44,63 @@
         android:layout_below="@+id/header"
         android:layout_centerHorizontal="true">
 
-        <ImageView
-            android:id="@+id/volStatus"
-            android:layout_width="wrap_content"
+        <RelativeLayout
+            android:id="@+id/layout2"
+            android:layout_width="150dp"
+            android:layout_height="150dp"
+            android:layout_centerHorizontal="true"
+            android:layout_alignParentTop="true"
+            android:layout_margin="20dp"
+            android:gravity="center"
+            >
+
+            <ImageView
+                android:id="@+id/volStatus"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/no_sound"/>
+
+        </RelativeLayout>
+
+
+        <SeekBar
+            android:id="@+id/seekBar"
+            android:layout_below="@+id/layout2"
+            android:layout_width="300dp"
             android:layout_height="wrap_content"
-            android:background="@drawable/no_sound"
-            android:layout_centerInParent="true"
-            android:scaleType="centerCrop"/>
+            android:indeterminate="false"
+            android:max="15"
+            android:progressDrawable="@drawable/custom_seekbar"
+            android:thumb="@drawable/thumb"
+            android:thumbOffset="0dp"
+            android:visibility="visible"
+            android:splitTrack="false"
+            android:layout_centerHorizontal="true" />
 
     </RelativeLayout>
+
+
+
+    <TextView
+        android:id="@+id/msgTxt"
+        android:layout_below="@+id/layout1"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:textSize="@dimen/text_large"
+        android:padding="20dp"
+        android:text="great"
+        />
+
+    <Button
+        android:id="@+id/okBtn"
+        android:layout_below="@+id/msgTxt"
+        android:layout_width="150dp"
+        android:layout_height="40dp"
+        android:text="OK, GOT IT"
+        android:background="@drawable/buttom_background"
+        android:textColor="@android:color/white"
+        android:layout_centerHorizontal="true"
+        />
 
 </RelativeLayout>
