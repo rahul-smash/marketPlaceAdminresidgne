@@ -194,11 +194,11 @@ public class SplashActivity extends Activity {
     }
 
 
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        AlarmManager am = (AlarmManager) getSystemService(ALARM_SERVICE);
-        am.cancel(sender);
-    }
+//    @Override
+//    protected void onDestroy() {
+//        super.onDestroy();
+//        AlarmManager am = (AlarmManager) getSystemService(ALARM_SERVICE);
+//        am.cancel(sender);
+//    }
 }
 
