@@ -20,6 +20,12 @@ public class ItemListModel {
     @SerializedName("quantity")
     @Expose
     private String quantity;
+    @SerializedName("weight")
+    @Expose
+    private String weight;
+    @SerializedName("unit_type")
+    @Expose
+    private String unitType;
     @SerializedName("status")
     @Expose
     private String status;
@@ -166,4 +172,20 @@ public class ItemListModel {
         this.price = price;
     }
 
+
+    public String getWeight() {
+        return weight;
+    }
+
+    public void setWeight(String weight) {
+        this.weight = weight;
+    }
+
+    public String getUnitType() {
+        return unitType;
+    }
+
+    public void setUnitType(String unitType) {
+        this.unitType = unitType;
+    }
 }

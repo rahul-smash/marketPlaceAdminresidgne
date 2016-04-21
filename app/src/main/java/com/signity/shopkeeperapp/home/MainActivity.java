@@ -585,7 +585,7 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
         final DialogHandler dialogHandler = new DialogHandler(MainActivity.this);
 
         dialogHandler.setDialog(Constant.APP_TITLE, msg);
-        dialogHandler.setPostiveButton("Ok", true)
+        dialogHandler.setPostiveButton("Yes", true)
                 .setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
@@ -694,7 +694,6 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
         dialog.setCanceledOnTouchOutside(true);
         dialog.show();
         dialog.getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE);
-
 
     }
 

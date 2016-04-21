@@ -23,4 +23,10 @@ public class Constant {
     public static final String STORE_STATUS_MESSAGE = "com.signity.shopkeeperapp.STORE_STATUS_MESSAGE";
     public static final String VOLUME_STATUS = "com.signity.shopkeeperapp.VOLUME_STATUS";
 
+
+    public static final int LOCAL_NOTIFY_FOR_DUE_ORDER = 328328;
+
+
+
+
 }
