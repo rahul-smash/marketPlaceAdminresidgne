@@ -6,6 +6,7 @@ import com.signity.shopkeeperapp.model.EnquiriesModel;
 import com.signity.shopkeeperapp.model.GetCustomerDetailModel;
 import com.signity.shopkeeperapp.model.GetOrdersModel;
 import com.signity.shopkeeperapp.model.GetStaffResponse;
+import com.signity.shopkeeperapp.model.LoginModel;
 import com.signity.shopkeeperapp.model.MobResponse;
 import com.signity.shopkeeperapp.model.MobResponseLogin;
 import com.signity.shopkeeperapp.model.OtpVerifyModel;
@@ -76,5 +77,8 @@ public interface ApiService {
     @POST("/storeStaff")
     void getstoreStaff(@FieldMap Map<String, String> parameters, Callback<GetStaffResponse> response);
 
+    @FormUrlEncoded
+    @POST("/userLogin")
+    void loginVerification(@FieldMap Map<String, String> parameters, Callback<LoginModel> response);
 
 }

@@ -15,6 +15,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.NotificationCompat;
 
+import com.signity.shopkeeperapp.LogInModule.LogInOptionsActivity;
 import com.signity.shopkeeperapp.gcm.GCMClientManager;
 import com.signity.shopkeeperapp.home.MainActivity;
 import com.signity.shopkeeperapp.receiver.LocalNotifyReceiver;
@@ -91,11 +92,11 @@ public class SplashActivity extends Activity {
 
 
     void moveNext() {
-        new Handler().postDelayed(new Runnable() {
-            /*
+     /*   new Handler().postDelayed(new Runnable() {
+            *//*
              * Showing splash screen with a timer. This will be useful when you
              * want to show case your app logo / company
-             */
+             *//*
             @Override
             public void run() {
                 // This method will be executed once the timer is over
@@ -123,7 +124,31 @@ public class SplashActivity extends Activity {
 
             }
 
-        }, SPLASH_TIME_OUT);
+        }, SPLASH_TIME_OUT);*/
+
+        String loginCheck = Util.loadPreferenceValue(SplashActivity.this, Constant.LOGIN_CHECK);
+        if (loginCheck.equalsIgnoreCase("0")) {
+            Intent intent_home = new Intent(SplashActivity.this,
+                    LogInOptionsActivity.class);
+            startActivity(intent_home);
+            AnimUtil.slideFromRightAnim(SplashActivity.this);
+            finish();
+        } else if (loginCheck.equalsIgnoreCase("1")) {
+            Intent intent_home = new Intent(SplashActivity.this,
+                    MainActivity.class);
+            startActivity(intent_home);
+            AnimUtil.slideFromRightAnim(SplashActivity.this);
+            finish();
+        } else {
+            Intent intent_home = new Intent(SplashActivity.this,
+                    LogInOptionsActivity.class);
+            startActivity(intent_home);
+            AnimUtil.slideFromRightAnim(SplashActivity.this);
+            finish();
+        }
+
+
+
     }
 
 
