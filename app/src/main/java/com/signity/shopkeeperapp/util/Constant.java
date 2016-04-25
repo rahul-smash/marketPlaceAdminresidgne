@@ -25,6 +25,15 @@ public class Constant {
 
 
     public static final int LOCAL_NOTIFY_FOR_DUE_ORDER = 328328;
+    public static final int LOCAL_NOTIFY_FOR_8_PM = 328329;
+    public static final int LOCAL_NOTIFY_FOR_10_AM = 328330;
+
+
+    public static final String LOCAL_TYPE_ONE = "type_one";
+    public static final String LOCAL_TYPE_TWO = "type_two";
+
+
+
 
 
 

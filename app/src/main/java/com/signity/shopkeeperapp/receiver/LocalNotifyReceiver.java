@@ -12,7 +12,7 @@ import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.NotificationCompat;
-import android.widget.Toast;
+import android.util.Log;
 
 import com.signity.shopkeeperapp.R;
 import com.signity.shopkeeperapp.home.MainActivity;
@@ -21,6 +21,7 @@ import com.signity.shopkeeperapp.model.OrdersModel;
 import com.signity.shopkeeperapp.network.NetworkAdaper;
 import com.signity.shopkeeperapp.util.Constant;
 import com.signity.shopkeeperapp.util.PrefManager;
+import com.signity.shopkeeperapp.util.Util;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -36,32 +37,87 @@ public class LocalNotifyReceiver extends BroadcastReceiver {
     int dueOrderNotificaionCount;
     PrefManager prefManager;
 
+    int dueOrderCount = 0;
+    int activeOrderCount = 0;
+
+    int notificationId;
+
+    Context mContext;
+
     @Override
     public void onReceive(Context context, Intent intent) {
         try {
+
+            mContext = context;
             Bundle bundle = intent.getExtras();
+            String type = bundle.getString("type");
 
-            prefManager = new PrefManager(context);
+            if (type.equalsIgnoreCase(Constant.LOCAL_TYPE_ONE)) {
+                notificationId = Constant.LOCAL_NOTIFY_FOR_DUE_ORDER;
 
-            dueOrderNotificaionCount = prefManager.getDueOrderLocalNotiCount();
-
-            if (dueOrderNotificaionCount < 2) {
+                prefManager = new PrefManager(context);
+                dueOrderNotificaionCount = prefManager.getDueOrderLocalNotiCount();
+                if (dueOrderNotificaionCount < 2) {
+                    checkDueOrderStatus(context);
+                } else {
+                    cancelAlaramManagerTask(context);
+                }
+            } else if (type.equalsIgnoreCase(Constant.LOCAL_TYPE_TWO)) {
+                notificationId = Constant.LOCAL_NOTIFY_FOR_8_PM;
                 checkDueOrderStatus(context);
-            } else {
-               cancelAlaramManagerTask(context);
             }
 
 
+//
+
+
         } catch (Exception e) {
-            Toast.makeText(context, "There was an error somewhere, but we still received an alarm", Toast.LENGTH_SHORT).show();
             e.printStackTrace();
         }
     }
 
     private void checkDueOrderStatus(final Context context) {
 
+
+        if (!Util.checkIntenetConnection(context)) {
+            return;
+        }
+
         Map<String, String> param = new HashMap<String, String>();
         param.put("order_type", "pending");
+        param.put("api_key", "");
+
+
+        NetworkAdaper.getInstance().getNetworkServices().getStoreOrders(param, new Callback<GetOrdersModel>() {
+            @Override
+            public void success(GetOrdersModel getOrdersModel, Response response) {
+
+                OrdersModel ordersModel = getOrdersModel.getData();
+                if (ordersModel.getOrders() != null && ordersModel.getOrders().size() != 0) {
+                    dueOrderCount = ordersModel.getOrders().size();
+                    checkActiveOrderStatus(context);
+                } else {
+                    checkActiveOrderStatus(context);
+                }
+
+            }
+
+            @Override
+            public void failure(RetrofitError error) {
+                Log.e("Error", error.getMessage());
+            }
+        });
+
+    }
+
+    private void checkActiveOrderStatus(Context context) {
+        if (!Util.checkIntenetConnection(context)) {
+            return;
+        }
+
+
+        Map<String, String> param = new HashMap<String, String>();
+        param.put("order_type", "active");
         param.put("api_key", "");
 
         NetworkAdaper.getInstance().getNetworkServices().getStoreOrders(param, new Callback<GetOrdersModel>() {
@@ -70,12 +126,10 @@ public class LocalNotifyReceiver extends BroadcastReceiver {
 
                 OrdersModel ordersModel = getOrdersModel.getData();
                 if (ordersModel.getOrders() != null && ordersModel.getOrders().size() != 0) {
-                    dueOrderNotificaionCount = dueOrderNotificaionCount + 1;
-                    prefManager.setDueOrderLocalNotiCount(dueOrderNotificaionCount);
-                    sendNotification(context,
-                            "Order Confirmation", "You have some due order to process. Please proceed to deliver");
+                    activeOrderCount = ordersModel.getOrders().size();
+                    setUpNotification();
                 } else {
-                    cancelAlaramManagerTask(context);
+                    setUpNotification();
                 }
 
             }
@@ -83,9 +137,28 @@ public class LocalNotifyReceiver extends BroadcastReceiver {
             @Override
             public void failure(RetrofitError error) {
 
+                Log.e("Error", error.getMessage());
+
             }
         });
 
+    }
+
+    private void setUpNotification() {
+        String message = "";
+        if (dueOrderCount != 0 & activeOrderCount != 0) {
+            message = "You have " + (dueOrderCount > 1 ? dueOrderCount + " orders" : dueOrderCount + " order") +
+                    " due and " + (activeOrderCount > 1 ? activeOrderCount + " orders" : activeOrderCount + " order") + " active. Kindly process the same.";
+        } else if (dueOrderCount != 0) {
+            message = "You have " + (dueOrderCount > 1 ? dueOrderCount + " orders" : dueOrderCount + " order") + " due. " +
+                    "Kindly process the same.";
+        } else if (activeOrderCount != 0) {
+            message = "You have " + (activeOrderCount > 1 ? activeOrderCount + " orders" : activeOrderCount + " order") + " active. " +
+                    "Kindly process the same.";
+        } else {
+            return;
+        }
+        sendNotification(mContext, "Order Notification", message, notificationId);
     }
 
     private void cancelAlaramManagerTask(Context context) {
@@ -97,7 +170,7 @@ public class LocalNotifyReceiver extends BroadcastReceiver {
     }
 
 
-    private void sendNotification(Context context, String title, String message) {
+    private void sendNotification(Context context, String title, String message, int notificationId) {
 
 
         Intent intent = new Intent(context, MainActivity.class);
@@ -112,8 +185,8 @@ public class LocalNotifyReceiver extends BroadcastReceiver {
                 .setContentText(message)
                 .setTicker(title)
                 .setSmallIcon(icon)
-                .setAutoCancel(true)
                 .setSound(defaultSoundUri)
+                .setAutoCancel(true)
                 .setLargeIcon(BitmapFactory.decodeResource(context.getResources(), R.mipmap.ic_launcher))
                 .setStyle(new NotificationCompat.BigTextStyle().bigText(message))
                 .setContentIntent(pendingIntent);
@@ -121,7 +194,7 @@ public class LocalNotifyReceiver extends BroadcastReceiver {
         NotificationManager notificationManager =
                 (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
 
-        notificationManager.notify(1 /* ID of notification */, notificationBuilder.build());
+        notificationManager.notify(notificationId/* ID of notification */, notificationBuilder.build());
 
 
     }

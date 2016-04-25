@@ -58,26 +58,14 @@ public class MyGcmListenerService extends GcmListenerService {
             // normal downstream message.
         }
 
-        // [START_EXCLUDE]
-        /**
-         * Production applications would usually process the message here.
-         * Eg: - Syncing with server.
-         *     - Store message in local database.
-         *     - Update UI.
-         */
-
-        /**
-         * In some cases it may be useful to show a notification indicating to the user
-         * that a message was received.
-         */
 
         String type = "due_order";
 
         sendNotification(title, message);
 
-        if (type != null && type.equalsIgnoreCase("due_order")) {
-            setupLocalNotificationDueOrder();
-        }
+//        if (type != null && type.equalsIgnoreCase("due_order")) {
+//            setupLocalNotificationDueOrder();
+//        }
         // [END_EXCLUDE]
     }
 

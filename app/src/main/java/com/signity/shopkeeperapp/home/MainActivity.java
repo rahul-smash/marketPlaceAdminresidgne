@@ -1,6 +1,8 @@
 package com.signity.shopkeeperapp.home;
 
+import android.app.AlarmManager;
 import android.app.Dialog;
+import android.app.PendingIntent;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -49,6 +51,7 @@ import com.signity.shopkeeperapp.model.MobResponse;
 import com.signity.shopkeeperapp.network.NetworkAdaper;
 import com.signity.shopkeeperapp.orders.ActiveOrderFragment;
 import com.signity.shopkeeperapp.orders.DueOrderFragment;
+import com.signity.shopkeeperapp.receiver.LocalNotifyReceiver;
 import com.signity.shopkeeperapp.rejected_orders.RejectedItemsFragment;
 import com.signity.shopkeeperapp.util.AnimUtil;
 import com.signity.shopkeeperapp.util.Constant;
@@ -61,6 +64,7 @@ import com.signity.shopkeeperapp.util.Util;
 import com.signity.shopkeeperapp.view.LoginScreenActivity;
 
 import java.lang.reflect.Type;
+import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -199,6 +203,8 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
             String message = Util.loadPreferenceValue(MainActivity.this, Constant.STORE_STATUS_MESSAGE);
             storeStatusAlertNew(message + "\n" + "Do you want to turn the customer app on?", "on");
         }
+
+        setupLocalNotification();
     }
 
 
@@ -834,6 +840,46 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
         }
 
         return false;
+    }
+
+
+    private void setupLocalNotification() {
+
+        Calendar calendar = Calendar.getInstance();
+        calendar.set(Calendar.HOUR_OF_DAY, 20);
+        calendar.set(Calendar.MINUTE, 00);
+        calendar.set(Calendar.SECOND, 00);
+
+        if (calendar.before(Calendar.getInstance())) { // if it's in the past, increment
+            calendar.add(Calendar.DATE, 1);
+        }
+        Intent intent = new Intent(this, LocalNotifyReceiver.class);
+        intent.putExtra("type", Constant.LOCAL_TYPE_TWO);
+        PendingIntent pendingIntent;
+        pendingIntent = PendingIntent.getBroadcast(this, Constant.LOCAL_NOTIFY_FOR_8_PM, intent, 0);
+        // In reality, you would want to have a static variable for the request code instead of 192837
+        // Get the AlarmManager service
+        AlarmManager am = (AlarmManager) getSystemService(ALARM_SERVICE);
+
+//        am.setExact(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), pendingIntent);
+        am.setRepeating(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), AlarmManager.INTERVAL_DAY, pendingIntent);
+
+        Calendar calendar2 = Calendar.getInstance();
+        calendar2.set(Calendar.HOUR_OF_DAY, 10);
+        calendar2.set(Calendar.MINUTE, 00);
+        calendar2.set(Calendar.SECOND, 00);
+        if (calendar2.before(Calendar.getInstance())) { // if it's in the past, increment
+            calendar2.add(Calendar.DATE, 1);
+        }
+
+        Intent intent2 = new Intent(this, LocalNotifyReceiver.class);
+        intent2.putExtra("type", Constant.LOCAL_TYPE_TWO);
+        PendingIntent pendingIntent2;
+        pendingIntent2 = PendingIntent.getBroadcast(this, Constant.LOCAL_NOTIFY_FOR_10_AM, intent2, 0);
+
+        am.setRepeating(AlarmManager.RTC_WAKEUP, calendar2.getTimeInMillis(), AlarmManager.INTERVAL_DAY, pendingIntent2);
+
+
     }
 
 }
