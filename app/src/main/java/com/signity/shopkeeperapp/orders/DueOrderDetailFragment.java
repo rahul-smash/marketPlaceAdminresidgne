@@ -644,9 +644,7 @@ public class DueOrderDetailFragment extends Fragment implements View.OnClickList
             if (type.equalsIgnoreCase("due")) {
 
                 for (int i = 0; i < listItem.size(); i++) {
-
                     listItem.get(i).isChecked = true;
-
                 }
 
             } else {
@@ -658,7 +656,6 @@ public class DueOrderDetailFragment extends Fragment implements View.OnClickList
                     }
                 }
             }
-
         }
 
         @Override
@@ -680,7 +677,6 @@ public class DueOrderDetailFragment extends Fragment implements View.OnClickList
         @Override
         public View getView(final int position, View convertView, ViewGroup viewGroup) {
 
-
             if (convertView == null) {
                 holder = new ViewHolder();
                 convertView = inflater
@@ -689,6 +685,7 @@ public class DueOrderDetailFragment extends Fragment implements View.OnClickList
                 holder.itemName = (TextView) convertView.findViewById(R.id.txtItemName);
                 holder.itemPrice = (TextView) convertView.findViewById(R.id.txtPrice);
                 holder.itemQuantiy = (TextView) convertView.findViewById(R.id.txtLblQuantity);
+                holder.txtWeight = (TextView) convertView.findViewById(R.id.txtWeight);
                 holder.itemsTotal = (TextView) convertView.findViewById(R.id.txtLblTotal);
                 holder.toggle = (ToggleButton) convertView.findViewById(R.id.toggle);
                 holder.parent = (RelativeLayout) convertView.findViewById(R.id.parent);
@@ -697,9 +694,20 @@ public class DueOrderDetailFragment extends Fragment implements View.OnClickList
                 holder = (ViewHolder) convertView.getTag();
             }
 
+
+            ItemListModel data = listItem.get(position);
+
             holder.itemName.setText(listItem.get(position).getName());
             holder.itemPrice.setText("Price: " + getActivity().getResources().getString(R.string.text_rs) + " " + listItem.get(position).getPrice());
             holder.itemQuantiy.setText("Qty: " + listItem.get(position).getQuantity());
+
+            if ((data.getWeight() != null && !(data.getWeight().isEmpty())) && (data.getUnitType() != null && !(data.getUnitType()
+                    .isEmpty()))) {
+                holder.txtWeight.setText(data.getWeight() + " " + data.getUnitType());
+                holder.txtWeight.setVisibility(View.VISIBLE);
+            } else {
+                holder.txtWeight.setVisibility(View.GONE);
+            }
 
             if (listItem.get(position).getImageMedium() != null && !listItem.get(position).getImageMedium().isEmpty()) {
                 Picasso.with(getActivity()).load(listItem.get(position).getImageMedium()).error(R.drawable.no_image).into(holder.itemImage);
@@ -742,6 +750,7 @@ public class DueOrderDetailFragment extends Fragment implements View.OnClickList
             TextView itemName;
 
             TextView itemPrice;
+            TextView txtWeight;
             TextView itemQuantiy;
             TextView itemsTotal;
             ToggleButton toggle;

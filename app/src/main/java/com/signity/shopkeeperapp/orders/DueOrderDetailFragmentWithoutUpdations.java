@@ -626,9 +626,7 @@ public class DueOrderDetailFragmentWithoutUpdations extends Fragment implements 
             if (type.equalsIgnoreCase("due")) {
 
                 for (int i = 0; i < listItem.size(); i++) {
-
                     listItem.get(i).isChecked = true;
-
                 }
 
             } else {
@@ -668,6 +666,7 @@ public class DueOrderDetailFragmentWithoutUpdations extends Fragment implements 
                 holder.itemImage = (ImageView) convertView.findViewById(R.id.itemImage);
                 holder.itemName = (TextView) convertView.findViewById(R.id.txtItemName);
                 holder.itemPrice = (TextView) convertView.findViewById(R.id.txtPrice);
+                holder.txtWeight = (TextView) convertView.findViewById(R.id.txtWeight);
                 holder.itemQuantiy = (TextView) convertView.findViewById(R.id.txtLblQuantity);
                 holder.itemsTotal = (TextView) convertView.findViewById(R.id.txtLblTotal);
                 holder.toggle = (ToggleButton) convertView.findViewById(R.id.toggle);
@@ -677,9 +676,19 @@ public class DueOrderDetailFragmentWithoutUpdations extends Fragment implements 
                 holder = (ViewHolder) convertView.getTag();
             }
 
+            ItemListModel data = listItem.get(position);
             holder.itemName.setText(listItem.get(position).getName());
             holder.itemPrice.setText("Price: " + getActivity().getResources().getString(R.string.text_rs) + " " + listItem.get(position).getPrice());
             holder.itemQuantiy.setText("Qty: " + listItem.get(position).getQuantity());
+
+            if ((data.getWeight() != null && !(data.getWeight().isEmpty())) && (data.getUnitType() != null && !(data.getUnitType()
+                    .isEmpty()))) {
+                holder.txtWeight.setText(data.getWeight() + " " + data.getUnitType());
+                holder.txtWeight.setVisibility(View.VISIBLE);
+            } else {
+                holder.txtWeight.setVisibility(View.GONE);
+            }
+
 
             if (listItem.get(position).getImageMedium() != null && !listItem.get(position).getImageMedium().isEmpty()) {
                 Picasso.with(getActivity()).load(listItem.get(position).getImageMedium()).error(R.drawable.no_image).into(holder.itemImage);
@@ -718,6 +727,7 @@ public class DueOrderDetailFragmentWithoutUpdations extends Fragment implements 
             ImageView itemImage;
             TextView itemName;
             TextView itemPrice;
+            TextView txtWeight;
             TextView itemQuantiy;
             TextView itemsTotal;
             ToggleButton toggle;
