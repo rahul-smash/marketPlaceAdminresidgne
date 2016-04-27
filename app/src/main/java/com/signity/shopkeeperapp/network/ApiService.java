@@ -81,4 +81,12 @@ public interface ApiService {
     @POST("/userLogin")
     void loginVerification(@FieldMap Map<String, String> parameters, Callback<LoginModel> response);
 
+    @FormUrlEncoded
+    @POST("/changePassword")
+    void changePassword(@FieldMap Map<String, String> parameters, Callback<LoginModel> response);
+
+    @FormUrlEncoded
+    @POST("/forgetPassword")
+    void forgetPassword(@FieldMap Map<String, String> parameters, Callback<LoginModel> response);
+
 }

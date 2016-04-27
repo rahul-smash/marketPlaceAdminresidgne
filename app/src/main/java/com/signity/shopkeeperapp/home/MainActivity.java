@@ -39,6 +39,8 @@ import android.widget.Toast;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.signity.shopkeeperapp.Categories.CategoriesFragment;
+import com.signity.shopkeeperapp.LogInModule.ChangePasswordActivity;
+import com.signity.shopkeeperapp.LogInModule.LogInOptionsActivity;
 import com.signity.shopkeeperapp.ManageVolume.ManageVolumeActivity;
 import com.signity.shopkeeperapp.R;
 import com.signity.shopkeeperapp.canceled_orders.CanceledOrdersFragment;
@@ -100,6 +102,7 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
     ImageButton btnVolInfo;
 
     PrefManager prefManager;
+    String logIn_type;
 
     AudioManager am;
 
@@ -269,6 +272,7 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
     private void showPopUpMenu() {
 
         String storeStatus = "";
+        logIn_type=prefManager.getSharedValue(Constant.LOG_IN_TYPE);
 
         LayoutInflater inflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         View layout = inflater.inflate(R.layout.right_menu_view,
@@ -292,6 +296,16 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
         ImageView mStoreStatusImage = (ImageView) layout.findViewById(R.id.storeStatus);
         TextView mShare = (TextView) layout.findViewById(R.id.share);
         TextView mLogOut = (TextView) layout.findViewById(R.id.logOut);
+        TextView mChangePass = (TextView) layout.findViewById(R.id.changePass);
+
+        if(logIn_type.equalsIgnoreCase("mobile")){
+            mChangePass.setVisibility(View.GONE);
+        }else if(logIn_type.equalsIgnoreCase("email")){
+            mChangePass.setVisibility(View.VISIBLE);
+        }else {
+            mChangePass.setVisibility(View.GONE);
+        }
+
 
         final DashBoardModelStoreDetail jObject = getStoreDataAsObject(Util.loadPreferenceValue(MainActivity.this, Constant.STORE_DETAILS));
 
@@ -373,6 +387,16 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
                 Intent intent = new Intent(MainActivity.this, ManageStaffActivity.class);
                 startActivity(intent);
 
+            }
+        });
+
+        mChangePass.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                rightMenuPopUpWindow.dismiss();
+
+                Intent intent = new Intent(MainActivity.this, ChangePasswordActivity.class);
+                startActivity(intent);
             }
         });
 
@@ -546,8 +570,8 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
         Util.savePreferenceValue(com.signity.shopkeeperapp.home.MainActivity.this, Constant.LOGIN_CHECK, "0");
         Util.savePreferenceValue(this, Constant.DEVICE_TOKEN, "");
         Util.savePreferenceValue(this, Constant.STORE_ID, "");
-        Intent intent_home = new Intent(com.signity.shopkeeperapp.home.MainActivity.this,
-                LoginScreenActivity.class);
+//        Intent intent_home = new Intent(com.signity.shopkeeperapp.home.MainActivity.this,LoginScreenActivity.class);
+        Intent intent_home = new Intent(com.signity.shopkeeperapp.home.MainActivity.this,LogInOptionsActivity.class);
         startActivity(intent_home);
         AnimUtil.slideFromRightAnim(com.signity.shopkeeperapp.home.MainActivity.this);
         finish();

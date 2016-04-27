@@ -12,9 +12,15 @@ public class LoginData {
     @SerializedName("id")
     @Expose
     private String id;
+
+    @SerializedName("store_id")
+    @Expose
+    private String storeId;
+
     @SerializedName("full_name")
     @Expose
     private String fullName;
+
     @SerializedName("fb_id")
     @Expose
     private String fbId;
@@ -45,6 +51,17 @@ public class LoginData {
     @SerializedName("platform")
     @Expose
     private String platform;
+
+
+
+
+    public String getStoreId() {
+        return storeId;
+    }
+
+    public void setStoreId(String storeId) {
+        this.storeId = storeId;
+    }
 
     /**
      *

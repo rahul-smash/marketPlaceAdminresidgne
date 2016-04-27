@@ -112,6 +112,10 @@
             android:name=".LogInModule.LogInWithEmailActivity"
             android:label="@string/title_activity_log_in_with_email" >
         </activity>
+        <activity
+            android:name=".LogInModule.ChangePasswordActivity"
+            android:label="@string/title_activity_change_password" >
+        </activity>
     </application>
 
 </manifest>

@@ -1,6 +1,7 @@
 package com.signity.shopkeeperapp.LogInModule;
 
 import android.app.Dialog;
+import android.content.Intent;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.provider.Settings;
@@ -16,11 +17,16 @@ import android.widget.Toast;
 
 import com.signity.shopkeeperapp.R;
 import com.signity.shopkeeperapp.gcm.GCMClientManager;
+import com.signity.shopkeeperapp.home.MainActivity;
 import com.signity.shopkeeperapp.model.LoginModel;
 import com.signity.shopkeeperapp.network.NetworkAdaper;
+import com.signity.shopkeeperapp.network.NetworkConstant;
+import com.signity.shopkeeperapp.util.AnimUtil;
+import com.signity.shopkeeperapp.util.Constant;
 import com.signity.shopkeeperapp.util.DialogHandler;
 import com.signity.shopkeeperapp.util.PrefManager;
 import com.signity.shopkeeperapp.util.ProgressDialogUtil;
+import com.signity.shopkeeperapp.util.Util;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -47,6 +53,7 @@ public class LogInWithEmailActivity extends AppCompatActivity implements View.On
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_log_in_with_email);
+        prefManager = new PrefManager(LogInWithEmailActivity.this);
         btnNext = (Button) findViewById(R.id.btnNext);
         signUpBtn=(Button)findViewById(R.id.signUpBtn);
         forgotPassBtn=(Button)findViewById(R.id.forgotPassBtn);
@@ -134,7 +141,7 @@ public class LogInWithEmailActivity extends AppCompatActivity implements View.On
                         if(getEmail.getText().toString().trim().isEmpty()){
                             Toast.makeText(LogInWithEmailActivity.this, "Please enter an email id.", Toast.LENGTH_SHORT).show();
                         }else if(checkValidEmail(getEmail.getText().toString().trim())){
-//                            callNetworkForForgotPassword(getEmail.getText().toString().trim());
+                            callNetworkForForgotPassword(getEmail.getText().toString().trim());
                         }else {
                             Toast.makeText(LogInWithEmailActivity.this,"Please enter valid email id.",Toast.LENGTH_SHORT).show();
                         }
@@ -167,6 +174,10 @@ public class LogInWithEmailActivity extends AppCompatActivity implements View.On
                 if (loginModel.getSuccess()) {
                     ProgressDialogUtil.hideProgressDialog();
                     if(loginModel.getData()!=null){
+                        String storeId=loginModel.getData().getStoreId();
+                        String userId=loginModel.getData().getId();
+                        prefManager.storeSharedValue(Constant.USER_ID,userId);
+                        setStoreId(storeId);
                     }
 
 
@@ -185,37 +196,65 @@ public class LogInWithEmailActivity extends AppCompatActivity implements View.On
         });
     }
 
-//    private void callNetworkForForgotPassword(String email) {
-//
-//        ProgressDialogUtil.showProgressDialog(LogInWithEmailActivity.this);
-//
-//        Map<String, String> param = new HashMap<String, String>();
-//        param.put("email_id", email);
-//        NetworkAdaper.getInstance().getNetworkServices().forgetPassword(param, new Callback<LoginModel>() {
-//
-//
-//            @Override
-//            public void success(LoginModel loginModel, Response response) {
-//
-//                if (loginModel.getSuccess()) {
-//                    ProgressDialogUtil.hideProgressDialog();
-//                    DialogHandler dialogHandler = new DialogHandler(LogInWithEmailActivity.this);
-//                    dialogHandler.setdialogForFinish("Success", "" + loginModel.getMessage(), false);
-//                } else {
-//                    ProgressDialogUtil.hideProgressDialog();
-//                    DialogHandler dialogHandler = new DialogHandler(LogInWithEmailActivity.this);
-//                    dialogHandler.setdialogForFinish("Error", "" + loginModel.getMessage(), false);
-//                }
-//
-//            }
-//
-//            @Override
-//            public void failure(RetrofitError error) {
-//                ProgressDialogUtil.hideProgressDialog();
-//            }
-//        });
-//
-//    }
+
+    private void setStoreId(String id) {
+
+        Util.savePreferenceValue(LogInWithEmailActivity.this, Constant.STORE_ID, id);
+        String url = NetworkConstant.BASE + "/" + id + NetworkConstant.APISTORE;
+        NetworkAdaper.setupRetrofitClient(url);
+
+        proceedFutherForHomeScreen();
+    }
+
+
+    private void proceedFutherForHomeScreen() {
+
+        saveUserIdToPref();
+
+        Intent intent_home = new Intent(LogInWithEmailActivity.this, MainActivity.class);
+        intent_home.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        startActivity(intent_home);
+
+        this.finish();
+        AnimUtil.slideFromRightAnim(LogInWithEmailActivity.this);
+    }
+
+    private void saveUserIdToPref() {
+
+        Util.savePreferenceValue(LogInWithEmailActivity.this, Constant.LOGIN_CHECK, "1");
+    }
+
+    private void callNetworkForForgotPassword(String email) {
+
+        ProgressDialogUtil.showProgressDialog(LogInWithEmailActivity.this);
+
+        Map<String, String> param = new HashMap<String, String>();
+        param.put("email_id", email);
+        NetworkAdaper.getInstance().getNetworkServices().forgetPassword(param, new Callback<LoginModel>() {
+
+
+            @Override
+            public void success(LoginModel loginModel, Response response) {
+
+                if (loginModel.getSuccess()) {
+                    ProgressDialogUtil.hideProgressDialog();
+                    DialogHandler dialogHandler = new DialogHandler(LogInWithEmailActivity.this);
+                    dialogHandler.setdialogForFinish("Success", "" + loginModel.getMessage(), false);
+                } else {
+                    ProgressDialogUtil.hideProgressDialog();
+                    DialogHandler dialogHandler = new DialogHandler(LogInWithEmailActivity.this);
+                    dialogHandler.setdialogForFinish("Error", "" + loginModel.getMessage(), false);
+                }
+
+            }
+
+            @Override
+            public void failure(RetrofitError error) {
+                ProgressDialogUtil.hideProgressDialog();
+            }
+        });
+
+    }
 
     public boolean checkValidEmail(String email) {
         boolean isValid = false;
@@ -224,5 +263,12 @@ public class LogInWithEmailActivity extends AppCompatActivity implements View.On
         Matcher matcher = pattern.matcher(email);
         isValid = matcher.matches();
         return isValid;
+    }
+
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        AnimUtil.slideFromLeftAnim(LogInWithEmailActivity.this);
     }
 }

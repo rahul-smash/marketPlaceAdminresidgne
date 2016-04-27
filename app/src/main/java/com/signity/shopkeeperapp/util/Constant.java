@@ -31,6 +31,9 @@ public class Constant {
 
     public static final String LOCAL_TYPE_ONE = "type_one";
     public static final String LOCAL_TYPE_TWO = "type_two";
+    public static final String LOG_IN_TYPE = "LOG_IN_TYPE";
+    public static final String USER_ID = "USER_ID";
+
 
 
 

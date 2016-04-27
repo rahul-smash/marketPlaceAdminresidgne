@@ -15,6 +15,8 @@ import android.widget.TextView;
 
 import com.signity.shopkeeperapp.R;
 import com.signity.shopkeeperapp.util.AnimUtil;
+import com.signity.shopkeeperapp.util.Constant;
+import com.signity.shopkeeperapp.util.PrefManager;
 import com.signity.shopkeeperapp.view.LoginScreenActivity;
 
 /**
@@ -23,7 +25,7 @@ import com.signity.shopkeeperapp.view.LoginScreenActivity;
 public class LogInOptionsFragment extends Fragment implements View.OnClickListener {
 
     Button numberBtn,emailBtn;
-
+    PrefManager prefManager;
 
     public static Fragment newInstance(Context context) {
         return Fragment.instantiate(context,
@@ -33,6 +35,7 @@ public class LogInOptionsFragment extends Fragment implements View.OnClickListen
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        prefManager = new PrefManager(getActivity());
         //     pushClientManager = new GCMClientManager(getActivity(), Constant.PROJECT_NUMBER);
     }
 
@@ -53,20 +56,21 @@ public class LogInOptionsFragment extends Fragment implements View.OnClickListen
     public void onClick(View v) {
         switch (v.getId()){
             case R.id.numberBtn:
+                prefManager.storeSharedValue(Constant.LOG_IN_TYPE,"mobile");
                 Intent intent_home = new Intent(getActivity(),
                         LoginScreenActivity.class);
                 startActivity(intent_home);
                 AnimUtil.slideFromRightAnim(getActivity());
-                getActivity().finish();
+//                getActivity().finish();
                 break;
 
             case R.id.emailBtn:
-
+                prefManager.storeSharedValue(Constant.LOG_IN_TYPE,"email");
                 Intent intent = new Intent(getActivity(),
                         LogInWithEmailActivity.class);
                 startActivity(intent);
                 AnimUtil.slideFromRightAnim(getActivity());
-                getActivity().finish();
+//                getActivity().finish();
 
                 break;
 

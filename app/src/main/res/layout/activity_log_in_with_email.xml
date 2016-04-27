@@ -182,6 +182,6 @@
         android:text="Forgot Password?"
         android:textColor="@color/ColorPrimaryDark"
         android:textSize="@dimen/text_small"
-        android:visibility="gone"/>
+        android:visibility="visible"/>
 
 </RelativeLayout>

@@ -3,21 +3,38 @@
     android:layout_height="match_parent"
     android:background="@drawable/verification_background">
 
-    <Button
-        android:id="@+id/numberBtn"
-        android:layout_width="fill_parent"
+    <RelativeLayout
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_centerInParent="true"
-        android:layout_margin="10dp"
-        android:text="LogIn with number" />
+        android:layout_centerInParent="true">
 
-    <Button
-        android:id="@+id/emailBtn"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/numberBtn"
-        android:layout_centerHorizontal="true"
-        android:layout_margin="10dp"
-        android:text="LogIn with email" />
+        <Button
+            android:id="@+id/numberBtn"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_margin="10dp"
+            android:text="Login with number"
+            android:textColor="@android:color/white" />
 
+        <TextView
+            android:id="@+id/orTxt"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/numberBtn"
+            android:text="----------OR----------"
+            android:textColor="@android:color/black"
+            android:textSize="@dimen/text_normal"
+            android:layout_centerHorizontal="true"/>
+
+        <Button
+            android:id="@+id/emailBtn"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/orTxt"
+            android:layout_centerHorizontal="true"
+            android:layout_margin="10dp"
+            android:text="Login with email"
+            android:textColor="@android:color/white" />
+    </RelativeLayout>
 </RelativeLayout>

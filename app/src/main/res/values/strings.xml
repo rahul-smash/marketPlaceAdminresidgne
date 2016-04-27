@@ -10,5 +10,6 @@
     <string name="title_activity_manage_volume">ManageVolumeActivity</string>
     <string name="title_activity_log_in_options">LogInOptionsActivity</string>
     <string name="title_activity_log_in_with_email">LogInWithEmailActivity</string>
+    <string name="title_activity_change_password">ChangePasswordActivity</string>
 
 </resources>
