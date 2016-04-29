@@ -23,7 +23,6 @@ import com.signity.shopkeeperapp.util.AnimUtil;
 import com.signity.shopkeeperapp.util.Constant;
 import com.signity.shopkeeperapp.util.DialogHandler;
 import com.signity.shopkeeperapp.util.Util;
-import com.signity.shopkeeperapp.view.LoginScreenActivity;
 
 import java.util.Calendar;
 
@@ -128,6 +127,7 @@ public class SplashActivity extends Activity {
         if (loginCheck.equalsIgnoreCase("0")) {
             Intent intent_home = new Intent(SplashActivity.this,
                     LogInOptionsActivity.class);
+            intent_home.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
             startActivity(intent_home);
             AnimUtil.slideFromRightAnim(SplashActivity.this);
             finish();
@@ -140,6 +140,7 @@ public class SplashActivity extends Activity {
         } else {
             Intent intent_home = new Intent(SplashActivity.this,
                     LogInOptionsActivity.class);
+            intent_home.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
             startActivity(intent_home);
             AnimUtil.slideFromRightAnim(SplashActivity.this);
             finish();

@@ -99,49 +99,45 @@
         android:id="@+id/edtEmail"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@android:color/white"
-        android:hint="Login Email"
-        android:inputType="textEmailAddress"
-        android:padding="8dp"
-        android:singleLine="true"
-        android:textColor="@android:color/black"
         android:layout_above="@+id/edtPass"
         android:layout_centerHorizontal="true"
         android:layout_marginLeft="10dp"
         android:layout_marginRight="10dp"
         android:layout_marginTop="25dp"
-        android:elevation="3dp"/>
-
-
-
-
+        android:background="@android:color/white"
+        android:elevation="3dp"
+        android:hint="Login Email"
+        android:inputType="textEmailAddress"
+        android:padding="8dp"
+        android:singleLine="true"
+        android:textColor="@android:color/black" />
 
 
     <EditText
         android:id="@+id/edtPass"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:background="@android:color/white"
-        android:hint="Password"
-        android:inputType="textPassword"
-        android:padding="8dp"
-        android:singleLine="true"
-        android:textColor="@android:color/black"
         android:layout_centerHorizontal="true"
         android:layout_centerVertical="true"
         android:layout_marginLeft="10dp"
         android:layout_marginRight="10dp"
         android:layout_marginTop="25dp"
-        android:elevation="3dp"/>
+        android:background="@android:color/white"
+        android:elevation="3dp"
+        android:hint="Password"
+        android:inputType="textPassword"
+        android:padding="8dp"
+        android:singleLine="true"
+        android:textColor="@android:color/black" />
 
 
     <Button
         android:id="@+id/btnNext"
         android:layout_width="100dp"
         android:layout_height="35dp"
-        android:layout_below="@+id/edtPass"
+        android:layout_below="@+id/forgotPassBtn"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="25dp"
+        android:layout_marginTop="30dp"
         android:background="@drawable/round_corner_login"
         android:paddingLeft="8dp"
         android:paddingRight="8dp"
@@ -154,7 +150,6 @@
         android:id="@+id/signUpBtn"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
         android:layout_alignParentRight="true"
         android:layout_marginBottom="10dp"
         android:layout_marginRight="10dp"
@@ -165,23 +160,25 @@
         android:text="New User? Sign up"
         android:textColor="@color/ColorPrimaryDark"
         android:textSize="@dimen/text_small"
-        android:visibility="gone"/>
+        android:visibility="gone" />
 
     <Button
         android:id="@+id/forgotPassBtn"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentLeft="true"
+        android:layout_alignParentRight="true"
+        android:layout_below="@+id/edtPass"
         android:layout_marginBottom="10dp"
-        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:layout_marginTop="10dp"
         android:background="@android:color/transparent"
         android:clickable="true"
         android:focusable="true"
+        android:minHeight="5dp"
         android:padding="10dp"
         android:text="Forgot Password?"
         android:textColor="@color/ColorPrimaryDark"
         android:textSize="@dimen/text_small"
-        android:visibility="visible"/>
+        android:visibility="visible" />
 
 </RelativeLayout>

@@ -63,7 +63,6 @@ import com.signity.shopkeeperapp.util.FontUtil;
 import com.signity.shopkeeperapp.util.PrefManager;
 import com.signity.shopkeeperapp.util.ProgressDialogUtil;
 import com.signity.shopkeeperapp.util.Util;
-import com.signity.shopkeeperapp.view.LoginScreenActivity;
 
 import java.lang.reflect.Type;
 import java.util.Calendar;
@@ -211,24 +210,6 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
         }
 
         setupLocalNotification();
-        setupIntervalNotification();
-    }
-
-
-    private void setupIntervalNotification() {
-
-        Calendar calendar = Calendar.getInstance();
-        Intent intent = new Intent(this, LocalNotifyReceiver.class);
-        intent.putExtra("type", Constant.LOCAL_NOTIFY_FOR_DUE_ORDER);
-        PendingIntent pendingIntent;
-        pendingIntent = PendingIntent.getBroadcast(this, Constant.LOCAL_NOTIFY_FOR_DUE_ORDER, intent, 0);
-        // In reality, you would want to have a static variable for the request code instead of 192837
-        // Get the AlarmManager service
-        AlarmManager am = (AlarmManager) getSystemService(ALARM_SERVICE);
-
-//        am.setExact(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), pendingIntent);
-        am.setRepeating(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), AlarmManager.INTERVAL_HALF_HOUR, pendingIntent);
-
     }
 
 
@@ -593,6 +574,7 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
         Util.savePreferenceValue(this, Constant.STORE_ID, "");
 //        Intent intent_home = new Intent(com.signity.shopkeeperapp.home.MainActivity.this,LoginScreenActivity.class);
         Intent intent_home = new Intent(com.signity.shopkeeperapp.home.MainActivity.this,LogInOptionsActivity.class);
+        intent_home.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         startActivity(intent_home);
         AnimUtil.slideFromRightAnim(com.signity.shopkeeperapp.home.MainActivity.this);
         finish();

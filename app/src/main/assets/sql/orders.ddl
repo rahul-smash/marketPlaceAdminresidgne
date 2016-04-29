@@ -13,6 +13,5 @@ shipping_charges TEXT,
 coupon_code TEXT,
 address TEXT,
 total_amount TEXT,
-items TEXT,
-total_amount INTEGER DEFAULT (0)
+items TEXT
 );

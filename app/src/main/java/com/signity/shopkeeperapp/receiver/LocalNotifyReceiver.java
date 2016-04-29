@@ -169,7 +169,6 @@ public class LocalNotifyReceiver extends BroadcastReceiver {
         prefManager.setDueOrderLocalNotiCount(0);
     }
 
-
     private void sendNotification(Context context, String title, String message, int notificationId) {
 
         if (notificationId == Constant.LOCAL_NOTIFY_FOR_DUE_ORDER) {

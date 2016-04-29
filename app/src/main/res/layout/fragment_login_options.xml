@@ -14,18 +14,19 @@
             android:layout_height="wrap_content"
             android:layout_centerHorizontal="true"
             android:layout_margin="10dp"
+            android:background="@color/color_white"
             android:text="Login with number"
-            android:textColor="@android:color/white" />
+            android:textColor="@color/color_black" />
 
         <TextView
             android:id="@+id/orTxt"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@+id/numberBtn"
+            android:layout_centerHorizontal="true"
             android:text="----------OR----------"
             android:textColor="@android:color/black"
-            android:textSize="@dimen/text_normal"
-            android:layout_centerHorizontal="true"/>
+            android:textSize="@dimen/text_normal" />
 
         <Button
             android:id="@+id/emailBtn"
@@ -34,7 +35,8 @@
             android:layout_below="@+id/orTxt"
             android:layout_centerHorizontal="true"
             android:layout_margin="10dp"
+            android:background="@color/color_white"
             android:text="Login with email"
-            android:textColor="@android:color/white" />
+            android:textColor="@color/color_black" />
     </RelativeLayout>
 </RelativeLayout>

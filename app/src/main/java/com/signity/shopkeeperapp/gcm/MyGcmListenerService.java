@@ -32,6 +32,7 @@ import com.signity.shopkeeperapp.R;
 import com.signity.shopkeeperapp.SplashActivity;
 import com.signity.shopkeeperapp.receiver.LocalNotifyReceiver;
 import com.signity.shopkeeperapp.util.Constant;
+import com.signity.shopkeeperapp.util.PrefManager;
 
 import java.util.Calendar;
 
@@ -63,12 +64,7 @@ public class MyGcmListenerService extends GcmListenerService {
 
         sendNotification(title, message);
 
-//        if (type != null && type.equalsIgnoreCase("due_order")) {
-//            setupLocalNotificationDueOrder();
-//        }
-        // [END_EXCLUDE]
-
-
+        setupLocalNotificationDueOrder();
 
     }
 
@@ -110,14 +106,17 @@ public class MyGcmListenerService extends GcmListenerService {
     private void setupLocalNotificationDueOrder() {
         Calendar cal = Calendar.getInstance();
         // add 5 minutes to the calendar object
-        cal.add(Calendar.MINUTE, 15);
+        cal.add(Calendar.MINUTE, 1);
         Intent intent = new Intent(this, LocalNotifyReceiver.class);
+        intent.putExtra("type", Constant.LOCAL_NOTIFY_FOR_DUE_ORDER);
         PendingIntent pendingIntent;
         pendingIntent = PendingIntent.getBroadcast(this, Constant.LOCAL_NOTIFY_FOR_DUE_ORDER, intent, 0);
         // In reality, you would want to have a static variable for the request code instead of 192837
         // Get the AlarmManager service
         AlarmManager am = (AlarmManager) getSystemService(ALARM_SERVICE);
-//        am.set(AlarmManager.RTC_WAKEUP, cal.getTimeInMillis(), sender);
-        am.setRepeating(AlarmManager.RTC_WAKEUP, cal.getTimeInMillis(), 150000, pendingIntent);
+//        am.setExact(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), pendingIntent);
+        am.setRepeating(AlarmManager.RTC_WAKEUP, cal.getTimeInMillis(), 30000, pendingIntent);
+        PrefManager prefManager = new PrefManager(this);
+        prefManager.setDueOrderLocalNotiCount(0);
     }
 }
