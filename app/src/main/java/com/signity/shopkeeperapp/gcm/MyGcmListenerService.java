@@ -106,16 +106,16 @@ public class MyGcmListenerService extends GcmListenerService {
     private void setupLocalNotificationDueOrder() {
         Calendar cal = Calendar.getInstance();
         // add 5 minutes to the calendar object
-        cal.add(Calendar.MINUTE, 1);
+        cal.add(Calendar.MINUTE, 30);
         Intent intent = new Intent(this, LocalNotifyReceiver.class);
-        intent.putExtra("type", Constant.LOCAL_NOTIFY_FOR_DUE_ORDER);
+        intent.putExtra("type", Constant.LOCAL_TYPE_ONE);
         PendingIntent pendingIntent;
         pendingIntent = PendingIntent.getBroadcast(this, Constant.LOCAL_NOTIFY_FOR_DUE_ORDER, intent, 0);
         // In reality, you would want to have a static variable for the request code instead of 192837
         // Get the AlarmManager service
         AlarmManager am = (AlarmManager) getSystemService(ALARM_SERVICE);
 //        am.setExact(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), pendingIntent);
-        am.setRepeating(AlarmManager.RTC_WAKEUP, cal.getTimeInMillis(), 30000, pendingIntent);
+        am.setRepeating(AlarmManager.RTC_WAKEUP, cal.getTimeInMillis(), AlarmManager.INTERVAL_HALF_HOUR, pendingIntent);
         PrefManager prefManager = new PrefManager(this);
         prefManager.setDueOrderLocalNotiCount(0);
     }

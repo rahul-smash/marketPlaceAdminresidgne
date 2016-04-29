@@ -210,8 +210,8 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
         }
 
         setupLocalNotification();
-    }
 
+    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -274,7 +274,7 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
     private void showPopUpMenu() {
 
         String storeStatus = "";
-        logIn_type=prefManager.getSharedValue(Constant.LOG_IN_TYPE);
+        logIn_type = prefManager.getSharedValue(Constant.LOG_IN_TYPE);
 
         LayoutInflater inflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         View layout = inflater.inflate(R.layout.right_menu_view,
@@ -300,11 +300,11 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
         TextView mLogOut = (TextView) layout.findViewById(R.id.logOut);
         TextView mChangePass = (TextView) layout.findViewById(R.id.changePass);
 
-        if(logIn_type.equalsIgnoreCase("mobile")){
+        if (logIn_type.equalsIgnoreCase("mobile")) {
             mChangePass.setVisibility(View.GONE);
-        }else if(logIn_type.equalsIgnoreCase("email")){
+        } else if (logIn_type.equalsIgnoreCase("email")) {
             mChangePass.setVisibility(View.VISIBLE);
-        }else {
+        } else {
             mChangePass.setVisibility(View.GONE);
         }
 
@@ -573,7 +573,7 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
         Util.savePreferenceValue(this, Constant.DEVICE_TOKEN, "");
         Util.savePreferenceValue(this, Constant.STORE_ID, "");
 //        Intent intent_home = new Intent(com.signity.shopkeeperapp.home.MainActivity.this,LoginScreenActivity.class);
-        Intent intent_home = new Intent(com.signity.shopkeeperapp.home.MainActivity.this,LogInOptionsActivity.class);
+        Intent intent_home = new Intent(com.signity.shopkeeperapp.home.MainActivity.this, LogInOptionsActivity.class);
         intent_home.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         startActivity(intent_home);
         AnimUtil.slideFromRightAnim(com.signity.shopkeeperapp.home.MainActivity.this);
@@ -588,41 +588,28 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
     private void logoutAlert(String title) {
 
         AlertDialog.Builder adb = new AlertDialog.Builder(this);
-
-
         adb.setTitle(title);
-
-
         adb.setIcon(R.drawable.ic_launcher);
-
-
         adb.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int which) {
-
                 clearSharedPref();
-
             }
         });
 
-
         adb.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int which) {
-
             }
         });
         adb.show();
     }
 
     private void logoutAlertNew(String msg) {
-
         final DialogHandler dialogHandler = new DialogHandler(MainActivity.this);
-
         dialogHandler.setDialog(Constant.APP_TITLE, msg);
         dialogHandler.setPostiveButton("Yes", true)
                 .setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-
                         clearSharedPref();
                         dialogHandler.dismiss();
                     }

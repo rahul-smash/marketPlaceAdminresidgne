@@ -50,7 +50,8 @@ public class LocalNotifyReceiver extends BroadcastReceiver {
 
             mContext = context;
             Bundle bundle = intent.getExtras();
-            String type = bundle.getString("type");
+
+            String type = intent.getStringExtra("type");
 
             if (type.equalsIgnoreCase(Constant.LOCAL_TYPE_ONE)) {
                 notificationId = Constant.LOCAL_NOTIFY_FOR_DUE_ORDER;
@@ -65,11 +66,6 @@ public class LocalNotifyReceiver extends BroadcastReceiver {
                 notificationId = Constant.LOCAL_NOTIFY_FOR_8_PM;
                 checkDueOrderStatus(context);
             }
-
-
-//
-
-
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -157,6 +153,12 @@ public class LocalNotifyReceiver extends BroadcastReceiver {
         } else {
             return;
         }
+
+        if (notificationId == Constant.LOCAL_NOTIFY_FOR_DUE_ORDER) {
+            int currentCount = prefManager.getDueOrderLocalNotiCount();
+            prefManager.setDueOrderLocalNotiCount(currentCount++);
+        }
+
         sendNotification(mContext, "Order Notification", message, notificationId);
     }
 

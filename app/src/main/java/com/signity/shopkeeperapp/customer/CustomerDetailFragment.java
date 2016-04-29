@@ -14,8 +14,8 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
 
-import com.signity.shopkeeperapp.home.MainActivity;
 import com.signity.shopkeeperapp.R;
+import com.signity.shopkeeperapp.home.MainActivity;
 import com.signity.shopkeeperapp.model.CustomerDetailModel;
 import com.signity.shopkeeperapp.model.GetCustomerDetailModel;
 import com.signity.shopkeeperapp.network.NetworkAdaper;
@@ -197,6 +197,7 @@ public class CustomerDetailFragment extends Fragment {
             @Override
             public void failure(RetrofitError error) {
                 ProgressDialogUtil.hideProgressDialog();
+                Log.e("Retrofit-Error", error.getMessage());
                 DialogUtils.showAlertDialog(getActivity(), Constant.APP_TITLE, "Error Occurred, Try again later.");
             }
         });
@@ -204,7 +205,6 @@ public class CustomerDetailFragment extends Fragment {
     }
 
     public void setCutomerDetailValues(CustomerDetailModel cutomerDetailValues) {
-
         mTotalOrderValue.setText("" + cutomerDetailValues.getTotalOrders());
         mAmountPaidValue.setText(getActivity().getString(R.string.text_rs) + " " + cutomerDetailValues.getPaidAmount());
         mActiveOrderValue.setText(getActivity().getString(R.string.text_rs) + " " + cutomerDetailValues.getActiveOrders());

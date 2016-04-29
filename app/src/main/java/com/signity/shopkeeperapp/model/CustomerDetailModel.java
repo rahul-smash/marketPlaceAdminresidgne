@@ -19,10 +19,10 @@ public class CustomerDetailModel {
     private Integer activeOrders;
     @SerializedName("due_amount")
     @Expose
-    private Integer dueAmount;
+    private String dueAmount;
     @SerializedName("paid_amount")
     @Expose
-    private Integer paidAmount;
+    private String paidAmount;
     @SerializedName("customers")
     @Expose
     private List<UserModel> customers = new ArrayList<UserModel>();
@@ -55,31 +55,20 @@ public class CustomerDetailModel {
         this.activeOrders = activeOrders;
     }
 
-    /**
-     * @return The dueAmount
-     */
-    public Integer getDueAmount() {
+
+    public String getDueAmount() {
         return dueAmount;
     }
 
-    /**
-     * @param dueAmount The due_amount
-     */
-    public void setDueAmount(Integer dueAmount) {
+    public void setDueAmount(String dueAmount) {
         this.dueAmount = dueAmount;
     }
 
-    /**
-     * @return The paidAmount
-     */
-    public Integer getPaidAmount() {
+    public String getPaidAmount() {
         return paidAmount;
     }
 
-    /**
-     * @param paidAmount The paid_amount
-     */
-    public void setPaidAmount(Integer paidAmount) {
+    public void setPaidAmount(String paidAmount) {
         this.paidAmount = paidAmount;
     }
 
