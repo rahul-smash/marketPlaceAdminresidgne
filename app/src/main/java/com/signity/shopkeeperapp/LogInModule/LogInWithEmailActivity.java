@@ -187,6 +187,7 @@ public class LogInWithEmailActivity extends AppCompatActivity implements View.On
                     dialogHandler.setdialogForFinish("Error",""+loginModel.getMessage(),false);
                 }
 
+
             }
 
             @Override
