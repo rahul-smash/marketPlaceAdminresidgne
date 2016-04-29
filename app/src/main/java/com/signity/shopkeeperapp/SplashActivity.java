@@ -50,8 +50,6 @@ public class SplashActivity extends Activity {
 
 //        sendNotification("Local", "First Notification");
 
-
-
        /* pushClientManager = new GCMClientManager(this, Constant.PROJECT_NUMBER);
 
         String deviceToken = pushClientManager.getRegistrationId(SplashActivity.this);

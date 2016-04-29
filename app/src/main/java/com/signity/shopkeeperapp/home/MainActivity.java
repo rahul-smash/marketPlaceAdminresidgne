@@ -106,6 +106,9 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
 
     AudioManager am;
 
+    int dueOrderCount = 0;
+    int activeOrderCount = 0;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -208,6 +211,24 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
         }
 
         setupLocalNotification();
+        setupIntervalNotification();
+    }
+
+
+    private void setupIntervalNotification() {
+
+        Calendar calendar = Calendar.getInstance();
+        Intent intent = new Intent(this, LocalNotifyReceiver.class);
+        intent.putExtra("type", Constant.LOCAL_NOTIFY_FOR_DUE_ORDER);
+        PendingIntent pendingIntent;
+        pendingIntent = PendingIntent.getBroadcast(this, Constant.LOCAL_NOTIFY_FOR_DUE_ORDER, intent, 0);
+        // In reality, you would want to have a static variable for the request code instead of 192837
+        // Get the AlarmManager service
+        AlarmManager am = (AlarmManager) getSystemService(ALARM_SERVICE);
+
+//        am.setExact(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), pendingIntent);
+        am.setRepeating(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), AlarmManager.INTERVAL_HALF_HOUR, pendingIntent);
+
     }
 
 
@@ -902,8 +923,6 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
         pendingIntent2 = PendingIntent.getBroadcast(this, Constant.LOCAL_NOTIFY_FOR_10_AM, intent2, 0);
 
         am.setRepeating(AlarmManager.RTC_WAKEUP, calendar2.getTimeInMillis(), AlarmManager.INTERVAL_DAY, pendingIntent2);
-
-
     }
 
 }

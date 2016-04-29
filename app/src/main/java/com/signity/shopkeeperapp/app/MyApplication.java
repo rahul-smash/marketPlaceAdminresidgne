@@ -19,6 +19,7 @@ public class MyApplication extends Application {
     protected void initSingletons() {
         NetworkAdaper.initInstance(getApplicationContext());
         DataAdapter.initInstance();
+        DbAdapter.initInstance(this);
     }
 
 }

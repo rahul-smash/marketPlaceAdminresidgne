@@ -54,7 +54,6 @@ public class LocalNotifyReceiver extends BroadcastReceiver {
 
             if (type.equalsIgnoreCase(Constant.LOCAL_TYPE_ONE)) {
                 notificationId = Constant.LOCAL_NOTIFY_FOR_DUE_ORDER;
-
                 prefManager = new PrefManager(context);
                 dueOrderNotificaionCount = prefManager.getDueOrderLocalNotiCount();
                 if (dueOrderNotificaionCount < 2) {
@@ -167,10 +166,16 @@ public class LocalNotifyReceiver extends BroadcastReceiver {
         PendingIntent pendingIntent;
         pendingIntent = PendingIntent.getBroadcast(context, Constant.LOCAL_NOTIFY_FOR_DUE_ORDER, intents, 0);
         am.cancel(pendingIntent);
+        prefManager.setDueOrderLocalNotiCount(0);
     }
 
 
     private void sendNotification(Context context, String title, String message, int notificationId) {
+
+        if (notificationId == Constant.LOCAL_NOTIFY_FOR_DUE_ORDER) {
+            int currentCount = prefManager.getDueOrderLocalNotiCount();
+            prefManager.setDueOrderLocalNotiCount(currentCount++);
+        }
 
 
         Intent intent = new Intent(context, MainActivity.class);

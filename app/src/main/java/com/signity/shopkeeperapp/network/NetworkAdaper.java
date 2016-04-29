@@ -59,7 +59,6 @@ public class NetworkAdaper {
             url = NetworkConstant.BASE + "/" + store_id + NetworkConstant.APISTORE;
         }
 
-
         return url;
     }
 
