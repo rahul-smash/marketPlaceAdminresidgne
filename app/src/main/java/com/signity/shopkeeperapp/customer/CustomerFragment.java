@@ -14,7 +14,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.BaseAdapter;
 import android.widget.EditText;
 import android.widget.Filter;
@@ -24,9 +23,9 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.signity.shopkeeperapp.R;
-import com.signity.shopkeeperapp.adapter.CustomerAdapter;
+import com.signity.shopkeeperapp.app.DbAdapter;
+import com.signity.shopkeeperapp.db.AppDatabase;
 import com.signity.shopkeeperapp.model.CustomersModel;
-import com.signity.shopkeeperapp.model.DashBoardModel;
 import com.signity.shopkeeperapp.model.UserModel;
 import com.signity.shopkeeperapp.network.NetworkAdaper;
 import com.signity.shopkeeperapp.util.AnimUtil;
@@ -36,7 +35,6 @@ import com.signity.shopkeeperapp.util.ProgressDialogUtil;
 import com.signity.shopkeeperapp.util.Util;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
@@ -58,8 +56,16 @@ public class CustomerFragment extends Fragment {
     EditText searchEdit;
     CustomerAdapter adapter;
 
-    TextView noDataFound, txtAreaa,txtName;
-    public boolean filterStatusArea=false,isFilterStatusName=false;
+    AppDatabase appDatabase;
+
+    TextView noDataFound, txtAreaa, txtName;
+    public boolean filterStatusArea = false, isFilterStatusName = false;
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        appDatabase = DbAdapter.getInstance().getDb();
+    }
 
     public static Fragment newInstance(Context context) {
         Bundle args = new Bundle();
@@ -78,12 +84,6 @@ public class CustomerFragment extends Fragment {
         getActivity().getWindow().setSoftInputMode(
                 WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN
         );
-
-
-
-
-
-
         return rootView;
     }
 
@@ -94,7 +94,7 @@ public class CustomerFragment extends Fragment {
         noDataFound = (TextView) rootView.findViewById(R.id.noDataFound);
         searchEdit = (EditText) rootView.findViewById(R.id.searchEdit);
         txtAreaa = (TextView) rootView.findViewById(R.id.txtAreaa);
-        txtName=(TextView)rootView.findViewById(R.id.txtName);
+        txtName = (TextView) rootView.findViewById(R.id.txtName);
 
 
     }
@@ -106,14 +106,20 @@ public class CustomerFragment extends Fragment {
         if (Util.checkIntenetConnection(getActivity())) {
             getCustomers();
         } else {
-            DialogUtils.showAlertDialog(getActivity(), "Internet", "Please check your Internet Connection.");
+            List<UserModel> listCustomers = appDatabase.getAllCustomer();
+            if (listCustomers != null && listCustomers.size() != 0) {
+                adapter = new CustomerAdapter(getActivity(), listCustomers);
+                listCustomer.setAdapter(adapter);
+            } else {
+                DialogUtils.showAlertDialog(getActivity(), "Internet", "Please check your Internet Connection.");
+                listCustomer.setVisibility(View.GONE);
+                noDataFound.setVisibility(View.VISIBLE);
+            }
         }
     }
 
     public void getCustomers() {
-
         ProgressDialogUtil.showProgressDialog(getActivity());
-
         Map<String, String> param = new HashMap<String, String>();
         param.put("api_key", "123");
 
@@ -125,6 +131,7 @@ public class CustomerFragment extends Fragment {
                     ProgressDialogUtil.hideProgressDialog();
                     if (getCustomers != null) {
                         if (getCustomers.getData().getCustomers().size() > 0) {
+                            appDatabase.setAllCustomers(getCustomers.getData().getCustomers());
                             listCustomer.setVisibility(View.VISIBLE);
                             noDataFound.setVisibility(View.GONE);
                             adapter = new CustomerAdapter(getActivity(), getCustomers.getData().getCustomers());
@@ -315,8 +322,6 @@ public class CustomerFragment extends Fragment {
                     }
                 }
             });
-            
-
 
 
             return convertView;

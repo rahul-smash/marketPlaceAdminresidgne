@@ -15,6 +15,8 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import com.signity.shopkeeperapp.R;
+import com.signity.shopkeeperapp.app.DbAdapter;
+import com.signity.shopkeeperapp.db.AppDatabase;
 import com.signity.shopkeeperapp.home.MainActivity;
 import com.signity.shopkeeperapp.model.CustomerDetailModel;
 import com.signity.shopkeeperapp.model.GetCustomerDetailModel;
@@ -47,6 +49,8 @@ public class CustomerDetailFragment extends Fragment {
     TextView mTotalOrderValue, mAmountPaidValue, mActiveOrderValue, mAmountDueValue;
     TextView mCustomerFullName, mCustomerAddress, mCustomerEmail, mCustomerContact;
 
+    AppDatabase appDatabase;
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -55,6 +59,7 @@ public class CustomerDetailFragment extends Fragment {
         address = getArguments().getString("address");
         email = getArguments().getString("email");
         phoneNumber = getArguments().getString("phone");
+        appDatabase = DbAdapter.getInstance().getDb();
     }
 
     public static Fragment newInstance(Context context) {
@@ -167,7 +172,13 @@ public class CustomerDetailFragment extends Fragment {
         if (Util.checkIntenetConnection(getActivity())) {
             getCutomerDetails();
         } else {
-            DialogUtils.showAlertDialog(getActivity(), "Internet", "Please check your Internet Connection.");
+            CustomerDetailModel customerDetailModel = appDatabase.getCustomerDetailModel(id);
+            if (customerDetailModel != null && customerDetailModel.getPaidAmount() != null && customerDetailModel.getDueAmount() != null) {
+                setCutomerDetailValues(customerDetailModel);
+            } else {
+                DialogUtils.showAlertDialog(getActivity(), "Internet", "Please check your Internet Connection.");
+            }
+            Log.e("TAG", "No internet option");
         }
     }
 
@@ -184,11 +195,10 @@ public class CustomerDetailFragment extends Fragment {
                 Log.e("Tab", getValues.toString());
                 if (getValues.getSuccess()) {
                     ProgressDialogUtil.hideProgressDialog();
-
+                    appDatabase.updateCustomer(getValues.getData());
                     setCutomerDetailValues(getValues.getData());
                 } else {
                     ProgressDialogUtil.hideProgressDialog();
-
                     DialogUtils.showAlertDialog(getActivity(), Constant.APP_TITLE, getValues.getMessage());
                 }
 

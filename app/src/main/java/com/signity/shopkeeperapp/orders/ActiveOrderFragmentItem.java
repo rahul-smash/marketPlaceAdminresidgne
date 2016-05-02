@@ -22,6 +22,8 @@ import android.widget.TextView;
 
 import com.signity.shopkeeperapp.R;
 import com.signity.shopkeeperapp.app.DataAdapter;
+import com.signity.shopkeeperapp.app.DbAdapter;
+import com.signity.shopkeeperapp.db.AppDatabase;
 import com.signity.shopkeeperapp.home.MainActivity;
 import com.signity.shopkeeperapp.model.GetOrdersModel;
 import com.signity.shopkeeperapp.model.ItemListModel;
@@ -73,6 +75,8 @@ public class ActiveOrderFragmentItem extends Fragment implements View.OnClickLis
     String orderStatus = "";
     String userId = "3";
 
+    AppDatabase appDatabase;
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -80,6 +84,8 @@ public class ActiveOrderFragmentItem extends Fragment implements View.OnClickLis
         type = getArguments().getString("type");
         listOrder = new ArrayList<>();
         listOrderSelected = new ArrayList<>();
+        appDatabase = DbAdapter.getInstance().getDb();
+
     }
 
 
@@ -412,7 +418,22 @@ public class ActiveOrderFragmentItem extends Fragment implements View.OnClickLis
                 getOrders(DELIVERED);
             }
         } else {
-            DialogUtils.showAlertDialog(getActivity(), "Internet", "Please check your Internet Connection.");
+
+            List<OrdersListModel> list = null;
+            if (type.equalsIgnoreCase(Constant.TYPE_PROCESSING)) {
+                list = appDatabase.getProcessingOrders();
+            } else if (type.equalsIgnoreCase(Constant.TYPE_SHIPPING)) {
+                list = appDatabase.getShippingOrders();
+            } else if (type.equalsIgnoreCase(Constant.TYPE_DELIVERED)) {
+                list = appDatabase.getDeliverOrders();
+            }
+
+            if (list != null) {
+                listOrderParent = list;
+                setUpListData();
+            } else {
+                DialogUtils.showAlertDialog(getActivity(), "Internet", "Please check your Internet Connection.");
+            }
         }
     }
 
@@ -432,6 +453,7 @@ public class ActiveOrderFragmentItem extends Fragment implements View.OnClickLis
                 if (getValues.getSuccess()) {
                     ProgressDialogUtil.hideProgressDialog();
                     if (getValues.getData().getOrders().size() > 0) {
+                        appDatabase.setListOrders(getValues.getData().getOrders());
                         listOrderParent = getValues.getData().getOrders();
                         setUpListData();
                     } else {
@@ -454,6 +476,11 @@ public class ActiveOrderFragmentItem extends Fragment implements View.OnClickLis
 
     @Override
     public void onClick(View view) {
+
+        if (!Util.checkIntenetConnection(getActivity())) {
+            DialogUtils.showAlertDialog(getActivity(), "Internet", "Please check your Internet Connection.");
+            return;
+        }
 
         switch (view.getId()) {
 

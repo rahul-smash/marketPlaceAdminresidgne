@@ -16,6 +16,8 @@ import android.os.Handler;
 import android.support.v4.app.NotificationCompat;
 
 import com.signity.shopkeeperapp.LogInModule.LogInOptionsActivity;
+import com.signity.shopkeeperapp.app.DbAdapter;
+import com.signity.shopkeeperapp.db.AppDatabase;
 import com.signity.shopkeeperapp.gcm.GCMClientManager;
 import com.signity.shopkeeperapp.home.MainActivity;
 import com.signity.shopkeeperapp.receiver.LocalNotifyReceiver;
@@ -41,11 +43,13 @@ public class SplashActivity extends Activity {
     private int SPLASH_TIME_OUT = 1000;
     private GCMClientManager pushClientManager;
 
+    AppDatabase appDatabase;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash);
-
+        appDatabase = DbAdapter.getInstance().getDb();
 
 //        sendNotification("Local", "First Notification");
 
@@ -71,13 +75,23 @@ public class SplashActivity extends Activity {
 
         removeNotificationsFromStatusBar();
 
-        if (Util.checkIntenetConnection(SplashActivity.this)) {
-            moveNext();
-        } else {
-            final DialogHandler dialogHandler = new DialogHandler(SplashActivity.this);
-            dialogHandler.setdialogForFinish("Internet", "Please check your Internet Connection.", true);
-        }
 
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                String storeId = Util.loadPreferenceValue(SplashActivity.this, Constant.STORE_ID);
+                if (storeId != null && !(storeId.isEmpty())) {
+                    moveNext();
+                } else {
+                    if (Util.checkIntenetConnection(SplashActivity.this)) {
+                        moveNext();
+                    } else {
+                        final DialogHandler dialogHandler = new DialogHandler(SplashActivity.this);
+                        dialogHandler.setdialogForFinish("Internet", "Please check your Internet Connection.", true);
+                    }
+                }
+            }
+        }, 2000);
 
     }
 
@@ -89,39 +103,6 @@ public class SplashActivity extends Activity {
 
 
     void moveNext() {
-     /*   new Handler().postDelayed(new Runnable() {
-            *//*
-             * Showing splash screen with a timer. This will be useful when you
-             * want to show case your app logo / company
-             *//*
-            @Override
-            public void run() {
-                // This method will be executed once the timer is over
-                // Start your app main activity
-                String loginCheck = Util.loadPreferenceValue(SplashActivity.this, Constant.LOGIN_CHECK);
-                if (loginCheck.equalsIgnoreCase("0")) {
-                    Intent intent_home = new Intent(SplashActivity.this,
-                            LoginScreenActivity.class);
-                    startActivity(intent_home);
-                    AnimUtil.slideFromRightAnim(SplashActivity.this);
-                    finish();
-                } else if (loginCheck.equalsIgnoreCase("1")) {
-                    Intent intent_home = new Intent(SplashActivity.this,
-                            MainActivity.class);
-                    startActivity(intent_home);
-                    AnimUtil.slideFromRightAnim(SplashActivity.this);
-                    finish();
-                } else {
-                    Intent intent_home = new Intent(SplashActivity.this,
-                            LoginScreenActivity.class);
-                    startActivity(intent_home);
-                    AnimUtil.slideFromRightAnim(SplashActivity.this);
-                    finish();
-                }
-
-            }
-
-        }, SPLASH_TIME_OUT);*/
 
         String loginCheck = Util.loadPreferenceValue(SplashActivity.this, Constant.LOGIN_CHECK);
         if (loginCheck.equalsIgnoreCase("0")) {
@@ -145,7 +126,6 @@ public class SplashActivity extends Activity {
             AnimUtil.slideFromRightAnim(SplashActivity.this);
             finish();
         }
-
 
 
     }

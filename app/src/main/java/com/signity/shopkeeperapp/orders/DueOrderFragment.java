@@ -8,14 +8,16 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 
 import com.signity.shopkeeperapp.R;
 import com.signity.shopkeeperapp.adapter.DueOrderAdapter;
+import com.signity.shopkeeperapp.app.DbAdapter;
+import com.signity.shopkeeperapp.db.AppDatabase;
 import com.signity.shopkeeperapp.model.GetOrdersModel;
+import com.signity.shopkeeperapp.model.OrdersListModel;
 import com.signity.shopkeeperapp.network.NetworkAdaper;
 import com.signity.shopkeeperapp.util.Constant;
 import com.signity.shopkeeperapp.util.DialogUtils;
@@ -23,6 +25,7 @@ import com.signity.shopkeeperapp.util.ProgressDialogUtil;
 import com.signity.shopkeeperapp.util.Util;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import retrofit.Callback;
@@ -40,11 +43,15 @@ public class DueOrderFragment extends Fragment {
     DueOrderAdapter adapter;
     TextView noDataFound;
 
+    AppDatabase appDatabase;
+
     ImageView btnOrderProceed, btnMoveToShipping, btnMoveToDeliver;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        appDatabase = DbAdapter.getInstance().getDb();
 
     }
 
@@ -82,7 +89,14 @@ public class DueOrderFragment extends Fragment {
         if (Util.checkIntenetConnection(getActivity())) {
             getDueOrders();
         } else {
-            DialogUtils.showAlertDialog(getActivity(), "Internet", "Please check your Internet Connection.");
+            List<OrdersListModel> dueOrders = appDatabase.getDueOrders();
+            if (dueOrders != null) {
+                adapter = new DueOrderAdapter(getActivity(), dueOrders,
+                        getFragmentManager());
+                listDueOrders.setAdapter(adapter);
+            } else {
+                DialogUtils.showAlertDialog(getActivity(), "Internet", "Please check your Internet Connection.");
+            }
         }
     }
 
@@ -101,6 +115,7 @@ public class DueOrderFragment extends Fragment {
                 if (getValues.getSuccess()) {
                     ProgressDialogUtil.hideProgressDialog();
                     if (getValues.getData().getOrders().size() > 0) {
+                        appDatabase.setListOrders(getValues.getData().getOrders());
                         listDueOrders.setVisibility(View.VISIBLE);
                         noDataFound.setVisibility(View.GONE);
                         adapter = new DueOrderAdapter(getActivity(), getValues.getData().getOrders(),

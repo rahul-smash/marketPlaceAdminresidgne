@@ -34,6 +34,7 @@ import com.signity.shopkeeperapp.util.Constant;
 import com.signity.shopkeeperapp.util.DialogHandler;
 import com.signity.shopkeeperapp.util.DialogUtils;
 import com.signity.shopkeeperapp.util.ProgressDialogUtil;
+import com.signity.shopkeeperapp.util.Util;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
@@ -254,6 +255,10 @@ public class DueOrderDetailFragment extends Fragment implements View.OnClickList
 
         switch (view.getId()) {
             case R.id.btnOrderProceed:
+                if (!Util.checkIntenetConnection(getActivity())) {
+                    DialogUtils.showAlertDialog(getActivity(), "Internet", "Please check your Internet Connection.");
+                    return;
+                }
                 if (btnOrderProceed.isEnabled()) {
                     if (!isAlreadyProcess) {
                         orderStatus = "1";
@@ -264,6 +269,10 @@ public class DueOrderDetailFragment extends Fragment implements View.OnClickList
                 }
                 break;
             case R.id.relDeclineOrder:
+                if (!Util.checkIntenetConnection(getActivity())) {
+                    DialogUtils.showAlertDialog(getActivity(), "Internet", "Please check your Internet Connection.");
+                    return;
+                }
                 if (buttonRejectOrder.isEnabled()) {
                     alertBoxNew("Are you sure to Decline this order?");
                 } else {
@@ -271,6 +280,10 @@ public class DueOrderDetailFragment extends Fragment implements View.OnClickList
                 }
                 break;
             case R.id.btnMoveToShipping:
+                if (!Util.checkIntenetConnection(getActivity())) {
+                    DialogUtils.showAlertDialog(getActivity(), "Internet", "Please check your Internet Connection.");
+                    return;
+                }
                 if (btnMoveToShipping.isEnabled()) {
                     if (!isAlreadyShipped) {
                         setOrderForShipping();
@@ -283,6 +296,10 @@ public class DueOrderDetailFragment extends Fragment implements View.OnClickList
 //                getOrderIDS();
                 break;
             case R.id.btnMoveToDeliver:
+                if (!Util.checkIntenetConnection(getActivity())) {
+                    DialogUtils.showAlertDialog(getActivity(), "Internet", "Please check your Internet Connection.");
+                    return;
+                }
                 if (btnMoveToDeliver.isEnabled()) {
                     if (!isAlreadyDelivered) {
                         setOrderForDelivery();

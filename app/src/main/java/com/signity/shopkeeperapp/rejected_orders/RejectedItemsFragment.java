@@ -16,6 +16,8 @@ import android.widget.TextView;
 
 import com.signity.shopkeeperapp.R;
 import com.signity.shopkeeperapp.app.DataAdapter;
+import com.signity.shopkeeperapp.app.DbAdapter;
+import com.signity.shopkeeperapp.db.AppDatabase;
 import com.signity.shopkeeperapp.model.GetOrdersModel;
 import com.signity.shopkeeperapp.model.OrdersListModel;
 import com.signity.shopkeeperapp.network.NetworkAdaper;
@@ -23,6 +25,7 @@ import com.signity.shopkeeperapp.util.AnimUtil;
 import com.signity.shopkeeperapp.util.Constant;
 import com.signity.shopkeeperapp.util.DialogUtils;
 import com.signity.shopkeeperapp.util.ProgressDialogUtil;
+import com.signity.shopkeeperapp.util.Util;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -44,11 +47,12 @@ public class RejectedItemsFragment extends Fragment {
     ListView listRejectedOrder;
     CustomerAdapter adapter;
     TextView noDataFound;
+    private AppDatabase appDatabase;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
+        appDatabase = DbAdapter.getInstance().getDb();
 
     }
 
@@ -59,13 +63,24 @@ public class RejectedItemsFragment extends Fragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-
         fragmentView = inflater.inflate(R.layout.rejected_order_fragment, container, false);
         listRejectedOrder = (ListView) fragmentView.findViewById(R.id.listRejectedOrder);
         noDataFound = (TextView) fragmentView.findViewById(R.id.noDataFound);
-        getRejectedOrder();
-        return fragmentView;
 
+        if (Util.checkIntenetConnection(getActivity())) {
+            getRejectedOrder();
+        } else {
+            List<OrdersListModel> rejctedOrders = appDatabase.getRejctedOrders();
+            if (rejctedOrders != null) {
+                adapter = new CustomerAdapter(getActivity(), rejctedOrders);
+                listRejectedOrder.setAdapter(adapter);
+            } else {
+                DialogUtils.showAlertDialog(getActivity(), "Internet", "Please check your Internet Connection.");
+            }
+        }
+
+
+        return fragmentView;
     }
 
 
@@ -85,6 +100,7 @@ public class RejectedItemsFragment extends Fragment {
                     ProgressDialogUtil.hideProgressDialog();
                     if (getOrdersModel != null) {
                         if (getOrdersModel.getData().getOrders().size() > 0) {
+                            appDatabase.setListOrders(getOrdersModel.getData().getOrders());
                             listRejectedOrder.setVisibility(View.VISIBLE);
                             noDataFound.setVisibility(View.GONE);
                             adapter = new CustomerAdapter(getActivity(), getOrdersModel.getData().getOrders());

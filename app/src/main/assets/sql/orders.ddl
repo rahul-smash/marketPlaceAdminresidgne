@@ -1,5 +1,6 @@
 CREATE TABLE IF NOT EXISTS orders (
 order_id TEXT UNIQUE PRIMARY KEY NOT NULL,
+store_id TEXT,
 user_id TEXT,
 status TEXT,
 customer_name TEXT,

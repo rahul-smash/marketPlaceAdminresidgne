@@ -8,13 +8,14 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.signity.shopkeeperapp.R;
+import com.signity.shopkeeperapp.app.DbAdapter;
 import com.signity.shopkeeperapp.customer.CustomerFragment;
+import com.signity.shopkeeperapp.db.AppDatabase;
 import com.signity.shopkeeperapp.model.DashBoardModel;
 import com.signity.shopkeeperapp.model.DashBoardModelDetail;
 import com.signity.shopkeeperapp.model.DashBoardModelStoreDetail;
@@ -46,6 +47,14 @@ public class MainActivityFragment extends Fragment implements View.OnClickListen
     ImageView imageDueOrders, imageActiveOrders, customerImageView;
     String[] titleText = {"Due Orders", "Active Orders", "Customers"};
 
+    AppDatabase appDatabase;
+
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        appDatabase = DbAdapter.getInstance().getDb();
+    }
 
     public MainActivityFragment() {
     }
@@ -77,7 +86,6 @@ public class MainActivityFragment extends Fragment implements View.OnClickListen
         mAllCustomers = (TextView) fragmentView.findViewById(R.id.allCustomers);
         mAllCustomers.setTypeface(FontUtil.getTypeface(getActivity(), FontUtil.FONT_ROBOTO_THIN));
 
-
         labelOutstandingPayment = (TextView) fragmentView.findViewById(R.id.labelOutStanding);
         labelOutstandingPayment.setTypeface(FontUtil.getTypeface(getActivity(), FontUtil.FONT_ROBOTO_REGULAR));
         labelDueOrders = (TextView) fragmentView.findViewById(R.id.labelDueOrder);
@@ -103,7 +111,9 @@ public class MainActivityFragment extends Fragment implements View.OnClickListen
         if (Util.checkIntenetConnection(getActivity())) {
             getDashBoardValues();
         } else {
-            DialogUtils.showAlertDialog(getActivity(), "Internet", "Please check your Internet Connection.");
+            DashBoardModelDetail dashBoardModelDetail = appDatabase.getDashBoard();
+//            DialogUtils.showAlertDialog(getActivity(), "Internet", "Please check your Internet Connection.");
+            setDashBoardValues(dashBoardModelDetail);
         }
     }
 
@@ -120,12 +130,11 @@ public class MainActivityFragment extends Fragment implements View.OnClickListen
                 Log.e("Tab", getDashBoard.toString());
                 if (getDashBoard.getSuccess()) {
                     ProgressDialogUtil.hideProgressDialog();
+                    appDatabase.setDashBoard(getDashBoard.getData());
                     saveStoreDetails(getDashBoard.getData().getStore());
                     setDashBoardValues(getDashBoard.getData());
-
                 } else {
                     ProgressDialogUtil.hideProgressDialog();
-
                     DialogUtils.showAlertDialog(getActivity(), Constant.APP_TITLE, getDashBoard.getMessage());
                 }
 

@@ -24,73 +24,58 @@ public class DashBoardModelDetail {
     @SerializedName("store")
     @Expose
     private DashBoardModelStoreDetail store;
+
     /**
-     *
-     * @return
-     * The dueOrders
+     * @return The dueOrders
      */
     public Integer getDueOrders() {
         return dueOrders;
     }
 
     /**
-     *
-     * @param dueOrders
-     * The due_orders
+     * @param dueOrders The due_orders
      */
     public void setDueOrders(Integer dueOrders) {
         this.dueOrders = dueOrders;
     }
 
     /**
-     *
-     * @return
-     * The activeOrders
+     * @return The activeOrders
      */
     public Integer getActiveOrders() {
         return activeOrders;
     }
 
     /**
-     *
-     * @param activeOrders
-     * The active_orders
+     * @param activeOrders The active_orders
      */
     public void setActiveOrders(Integer activeOrders) {
         this.activeOrders = activeOrders;
     }
 
     /**
-     *
-     * @return
-     * The customers
+     * @return The customers
      */
     public Integer getCustomers() {
         return customers;
     }
 
     /**
-     *
-     * @param customers
-     * The customers
+     * @param customers The customers
      */
     public void setCustomers(Integer customers) {
         this.customers = customers;
     }
 
     /**
-     *
-     * @return
-     * The outstanding
+     * @return The outstanding
      */
     public Double getOutstanding() {
         return outstanding;
     }
 
     /**
-     *
-     * @param outstanding
-     * The outstanding
+     * @param outstanding The outstanding
      */
     public void setOutstanding(Double outstanding) {
         this.outstanding = outstanding;
@@ -98,21 +83,29 @@ public class DashBoardModelDetail {
 
 
     /**
-     *
-     * @return
-     * The store
+     * @return The store
      */
     public DashBoardModelStoreDetail getStore() {
         return store;
     }
 
     /**
-     *
-     * @param store
-     * The store
+     * @param store The store
      */
     public void setStore(DashBoardModelStoreDetail store) {
         this.store = store;
+    }
+
+
+    @Override
+    public String toString() {
+        return "DashBoardModelDetail{" +
+                "store=" + store +
+                ", outstanding=" + outstanding +
+                ", customers=" + customers +
+                ", activeOrders=" + activeOrders +
+                ", dueOrders=" + dueOrders +
+                '}';
     }
 }
 

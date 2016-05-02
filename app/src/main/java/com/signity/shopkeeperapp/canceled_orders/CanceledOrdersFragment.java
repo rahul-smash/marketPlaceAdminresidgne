@@ -16,14 +16,16 @@ import android.widget.TextView;
 
 import com.signity.shopkeeperapp.R;
 import com.signity.shopkeeperapp.app.DataAdapter;
+import com.signity.shopkeeperapp.app.DbAdapter;
+import com.signity.shopkeeperapp.db.AppDatabase;
 import com.signity.shopkeeperapp.model.GetOrdersModel;
 import com.signity.shopkeeperapp.model.OrdersListModel;
 import com.signity.shopkeeperapp.network.NetworkAdaper;
-import com.signity.shopkeeperapp.rejected_orders.RejectedItemsListActivity;
 import com.signity.shopkeeperapp.util.AnimUtil;
 import com.signity.shopkeeperapp.util.Constant;
 import com.signity.shopkeeperapp.util.DialogUtils;
 import com.signity.shopkeeperapp.util.ProgressDialogUtil;
+import com.signity.shopkeeperapp.util.Util;
 
 import java.util.HashMap;
 import java.util.List;
@@ -42,11 +44,12 @@ public class CanceledOrdersFragment extends Fragment {
     ListView listCanceledOrders;
     CanceledOrdersAdapter adapter;
     TextView noDataFound;
+    private AppDatabase appDatabase;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
+        appDatabase = DbAdapter.getInstance().getDb();
 
     }
 
@@ -61,7 +64,18 @@ public class CanceledOrdersFragment extends Fragment {
         fragmentView = inflater.inflate(R.layout.fragment_canceled_orders, container, false);
         listCanceledOrders = (ListView) fragmentView.findViewById(R.id.listCanceledOrder);
         noDataFound = (TextView) fragmentView.findViewById(R.id.noDataFound);
-        getCanceledOrder();
+        if (Util.checkIntenetConnection(getActivity())) {
+            getCanceledOrder();
+        } else {
+            List<OrdersListModel> cancelOrders = appDatabase.getCancelOrders();
+            if (cancelOrders != null) {
+                adapter = new CanceledOrdersAdapter(getActivity(), cancelOrders);
+                listCanceledOrders.setAdapter(adapter);
+            } else {
+                DialogUtils.showAlertDialog(getActivity(), "Internet", "Please check your Internet Connection.");
+            }
+        }
+
 
         return fragmentView;
     }
@@ -83,6 +97,7 @@ public class CanceledOrdersFragment extends Fragment {
                     ProgressDialogUtil.hideProgressDialog();
                     if (getOrdersModel != null) {
                         if (getOrdersModel.getData().getOrders().size() > 0) {
+                            appDatabase.setListOrders(getOrdersModel.getData().getOrders());
                             listCanceledOrders.setVisibility(View.VISIBLE);
                             noDataFound.setVisibility(View.GONE);
                             adapter = new CanceledOrdersAdapter(getActivity(), getOrdersModel.getData().getOrders());

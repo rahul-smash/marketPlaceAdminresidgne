@@ -183,4 +183,21 @@ public class DashBoardModelStoreDetail {
     public void setStoreMessage(String storeMessage) {
         this.storeMessage = storeMessage;
     }
+
+    @Override
+    public String toString() {
+        return "DashBoardModelStoreDetail{" +
+                "storeName='" + storeName + '\'' +
+                ", city='" + city + '\'' +
+                ", contactNumber='" + contactNumber + '\'' +
+                ", paid='" + paid + '\'' +
+                ", subscribedPlan='" + subscribedPlan + '\'' +
+                ", nextSubscribtionDate='" + nextSubscribtionDate + '\'' +
+                ", banner='" + banner + '\'' +
+                ", aboutUs='" + aboutUs + '\'' +
+                ", storeStatus='" + storeStatus + '\'' +
+                ", storeMessage='" + storeMessage + '\'' +
+                ", androidAppShare='" + androidAppShare + '\'' +
+                '}';
+    }
 }
