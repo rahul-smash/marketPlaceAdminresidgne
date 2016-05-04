@@ -3,6 +3,7 @@ package com.signity.shopkeeperapp.home;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.text.Html;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -154,6 +155,15 @@ public class MainActivityFragment extends Fragment implements View.OnClickListen
         try {
             Util.savePreferenceValue(getActivity(), Constant.STORE_DETAILS, getStoreDataAsString(store));
             Util.savePreferenceValue(getActivity(), Constant.STORE_STATUS_MESSAGE, store.getStoreMessage());
+
+
+            String cur = store.getCurrency();
+            if (cur.contains("\\")) {
+                Util.saveCurrency(getActivity(), Util.unescapeJavaString(cur));
+            } else {
+                Util.saveCurrency(getActivity(), String.valueOf(Html.fromHtml(store.getCurrency())));
+            }
+
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -163,7 +173,9 @@ public class MainActivityFragment extends Fragment implements View.OnClickListen
 
     public void setDashBoardValues(DashBoardModelDetail dashBoardValues) {
 
-        mOutstandingPayment.setText(getActivity().getString(R.string.text_rs) + " " + dashBoardValues.getOutstanding());
+        String currency = Util.getCurrency(getActivity());
+
+        mOutstandingPayment.setText(currency + " " + dashBoardValues.getOutstanding());
         mDueOrders.setText("" + dashBoardValues.getDueOrders());
         mActiveOrders.setText("" + dashBoardValues.getActiveOrders());
         mAllCustomers.setText("" + dashBoardValues.getCustomers());

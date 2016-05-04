@@ -42,6 +42,11 @@ public class DashBoardModelStoreDetail {
     @Expose
     private String androidAppShare;
 
+    @SerializedName("currency")
+    @Expose
+    private String currency;
+
+
     public String getStoreStatus() {
         return storeStatus;
     }
@@ -182,6 +187,14 @@ public class DashBoardModelStoreDetail {
 
     public void setStoreMessage(String storeMessage) {
         this.storeMessage = storeMessage;
+    }
+
+    public String getCurrency() {
+        return currency;
+    }
+
+    public void setCurrency(String currency) {
+        this.currency = currency;
     }
 
     @Override

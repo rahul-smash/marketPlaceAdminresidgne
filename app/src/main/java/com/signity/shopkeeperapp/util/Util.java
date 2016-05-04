@@ -4,6 +4,9 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.util.Log;
+
+import com.signity.shopkeeperapp.R;
 
 import java.io.BufferedReader;
 import java.io.InputStream;
@@ -82,5 +85,101 @@ public class Util {
     public static String loadPreferenceValue(Context context, String key) {
         SharedPreferences sharedPreferences = context.getSharedPreferences(Constant.SHARED_PREF, context.MODE_PRIVATE);
         return sharedPreferences.getString(key, "");
+    }
+
+    public static void saveCurrency(Context context, String value) {
+        SharedPreferences sharedPreferences = context.getSharedPreferences(Constant.SHARED_PREF, context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        if (value != null && !(value.isEmpty())) {
+            editor.putString(Constant.STORE_CURRENCY, value);
+        } else {
+            editor.putString(Constant.STORE_CURRENCY, context.getString(R.string.text_rs));
+        }
+        editor.commit();
+    }
+
+    public static String getCurrency(Context context) {
+        SharedPreferences sharedPreferences = context.getSharedPreferences(Constant.SHARED_PREF, context.MODE_PRIVATE);
+        return sharedPreferences.getString(Constant.STORE_CURRENCY, "");
+    }
+
+
+    public static String unescapeJavaString(String currency) {
+        StringBuilder sb = null;
+        try {
+            sb = new StringBuilder(currency.length());
+            for (int i = 0; i < currency.length(); i++) {
+                char ch = currency.charAt(i);
+                if (ch == '\\') {
+                    char nextChar = (i == currency.length() - 1) ? '\\' : currency
+                            .charAt(i + 1);
+// Octal escape?
+                    if (nextChar >= '0' && nextChar <= '7') {
+                        String code = "" + nextChar;
+                        i++;
+                        if ((i < currency.length() - 1) && currency.charAt(i + 1) >= '0'
+                                && currency.charAt(i + 1) <= '7') {
+                            code += currency.charAt(i + 1);
+                            i++;
+                            if ((i < currency.length() - 1) && currency.charAt(i + 1) >= '0'
+                                    && currency.charAt(i + 1) <= '7') {
+                                code += currency.charAt(i + 1);
+                                i++;
+                            }
+                        }
+                        sb.append((char) Integer.parseInt(code, 8));
+                        continue;
+                    }
+                    switch (nextChar) {
+                        case '\\':
+                            ch = '\\';
+                            break;
+                        case 'b':
+                            ch = '\b';
+                            break;
+                        case 'f':
+                            ch = '\f';
+                            break;
+                        case 'n':
+                            ch = '\n';
+                            break;
+                        case 'r':
+                            ch = '\r';
+                            break;
+                        case 't':
+                            ch = '\t';
+                            break;
+                        case '\"':
+                            ch = '\"';
+                            break;
+                        case '\'':
+                            ch = '\'';
+                            break;
+// Hex Unicode: u????
+                        case 'u':
+                            if (i >= currency.length() - 5) {
+                                ch = 'u';
+                                break;
+                            }
+                            int code = Integer.parseInt(
+                                    "" + currency.charAt(i + 2) + currency.charAt(i + 3)
+                                            + currency.charAt(i + 4) + currency.charAt(i + 5), 16);
+                            sb.append(Character.toChars(code));
+                            i += 5;
+                            continue;
+                    }
+                    i++;
+                }
+                sb.append(ch);
+            }
+        } catch (Exception e) {
+            Log.e("Exception", e.getMessage());
+        }
+        if (sb != null) {
+            return sb.toString();
+        } else {
+            return "";
+        }
+
     }
 }

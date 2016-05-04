@@ -76,7 +76,6 @@ import retrofit.client.Response;
 
 public class MainActivity extends FragmentActivity implements View.OnClickListener {
 
-
     SlidingPaneLayout mSlidingPanel;
 
     String[] title = {"Dashboard", "Due Orders", "Active Orders", "Rejected Orders", "Canceled Orders", "Customers", "Enquiries", "Manage Stores", "Categories"};

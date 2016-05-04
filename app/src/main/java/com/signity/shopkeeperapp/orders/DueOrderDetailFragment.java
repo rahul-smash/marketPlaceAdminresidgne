@@ -715,7 +715,7 @@ public class DueOrderDetailFragment extends Fragment implements View.OnClickList
             ItemListModel data = listItem.get(position);
 
             holder.itemName.setText(listItem.get(position).getName());
-            holder.itemPrice.setText("Price: " + getActivity().getResources().getString(R.string.text_rs) + " " + listItem.get(position).getPrice());
+            holder.itemPrice.setText("Price: " + Util.getCurrency(context) + " " + listItem.get(position).getPrice());
             holder.itemQuantiy.setText("Qty: " + listItem.get(position).getQuantity());
 
             if ((data.getWeight() != null && !(data.getWeight().isEmpty())) && (data.getUnitType() != null && !(data.getUnitType()
@@ -741,7 +741,7 @@ public class DueOrderDetailFragment extends Fragment implements View.OnClickList
 
             Double itemsTotal = 0.00;
             itemsTotal = listItem.get(position).getPrice() * Integer.parseInt(listItem.get(position).getQuantity());
-            holder.itemsTotal.setText("Total: " + getActivity().getResources().getString(R.string.text_rs) + " " + itemsTotal);
+            holder.itemsTotal.setText("Total: " + Util.getCurrency(context) + " " + itemsTotal);
 
             holder.toggle.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -800,10 +800,10 @@ public class DueOrderDetailFragment extends Fragment implements View.OnClickList
         Double totalAmount = 0.00;
         totalAmount = (itemsAmount + shipping_charges) - discount;
 
-        mTotalAmount.setText(getActivity().getResources().getString(R.string.text_rs) + " " + totalAmount);
-        mItemsPrice.setText(getActivity().getResources().getString(R.string.text_rs) + " " + itemsAmount);
-        mShippingCharges.setText(getActivity().getResources().getString(R.string.text_rs) + " " + shipping_charges);
-        mDiscountVal.setText(getActivity().getResources().getString(R.string.text_rs) + " " + discount);
+        mTotalAmount.setText(Util.getCurrency(getActivity()) + " " + totalAmount);
+        mItemsPrice.setText(Util.getCurrency(getActivity()) + " " + itemsAmount);
+        mShippingCharges.setText(Util.getCurrency(getActivity()) + " " + shipping_charges);
+        mDiscountVal.setText(Util.getCurrency(getActivity()) + " " + discount);
 
 
     }

@@ -18,6 +18,7 @@ import com.signity.shopkeeperapp.model.OrdersListModel;
 import com.signity.shopkeeperapp.orders.DueOrderActivity;
 import com.signity.shopkeeperapp.util.AnimUtil;
 import com.signity.shopkeeperapp.util.FontUtil;
+import com.signity.shopkeeperapp.util.Util;
 
 import java.text.DecimalFormat;
 import java.util.List;
@@ -100,7 +101,7 @@ public class DueOrderAdapter extends BaseAdapter {
         }
 
         holder.txtCustOrderId.setText("" + list.get(position).getOrderId());
-        holder.txtCustTotalAmt.setText(((Activity) context).getString(R.string.text_rs) + " " + Double.parseDouble(new DecimalFormat(
+        holder.txtCustTotalAmt.setText(Util.getCurrency(context) + " " + Double.parseDouble(new DecimalFormat(
                 "#####.##").format(list.get(position).getTotal())));
         holder.txtCustTime.setText("" + list.get(position).getTime());
 
