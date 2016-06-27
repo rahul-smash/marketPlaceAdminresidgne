@@ -42,7 +42,8 @@
                     android:layout_alignTop="@+id/txtName"
                     android:layout_marginLeft="6dp"
                     android:layout_marginRight="10dp"
-                    android:src="@drawable/ic_edit_profile" />
+                    android:src="@drawable/ic_edit_profile"
+                    android:visibility="gone"/>
 
                 <RelativeLayout
                     android:id="@+id/addressBlock"
@@ -51,7 +52,8 @@
                     android:layout_marginLeft="10dp"
                     android:layout_toLeftOf="@+id/imgEditProfile"
                     android:layout_below="@+id/txtName"
-                    android:layout_marginTop="10dp">
+                    android:layout_marginTop="10dp"
+                    android:visibility="gone">
 
                     <TextView
                         android:id="@+id/txtLblAddress"
