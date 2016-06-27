@@ -30,6 +30,7 @@
                     android:layout_marginLeft="10dp"
                     android:layout_marginTop="10dp"
                     android:text="Amit Kumar"
+                    android:visibility="gone"
                     android:textColor="@color/color_text"
                     android:textSize="@dimen/text_large" />
 
@@ -39,7 +40,7 @@
                     android:layout_height="wrap_content"
                     android:layout_alignParentRight="true"
                     android:layout_alignTop="@+id/txtName"
-                    android:layout_marginLeft="10dp"
+                    android:layout_marginLeft="6dp"
                     android:layout_marginRight="10dp"
                     android:src="@drawable/ic_edit_profile" />
 
@@ -47,7 +48,8 @@
                     android:id="@+id/addressBlock"
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
-                    android:layout_alignLeft="@+id/txtName"
+                    android:layout_marginLeft="10dp"
+                    android:layout_toLeftOf="@+id/imgEditProfile"
                     android:layout_below="@+id/txtName"
                     android:layout_marginTop="10dp">
 
@@ -77,7 +79,7 @@
                     android:id="@+id/txtLblEmail"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_alignLeft="@+id/txtName"
+                    android:layout_alignLeft="@+id/addressBlock"
                     android:layout_below="@+id/addressBlock"
                     android:layout_marginTop="5dp"
                     android:ems="4"
@@ -101,7 +103,7 @@
                     android:id="@+id/txtLblContact"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_alignLeft="@+id/txtName"
+                    android:layout_alignLeft="@+id/addressBlock"
                     android:layout_below="@+id/txtLblEmail"
                     android:layout_marginTop="5dp"
                     android:ems="4"
@@ -309,7 +311,6 @@
         android:layout_width="match_parent"
         android:layout_height="60dp"
         android:layout_alignParentBottom="true"
-        android:background="@drawable/transparent_bg"
         android:orientation="horizontal">
 
         <Button

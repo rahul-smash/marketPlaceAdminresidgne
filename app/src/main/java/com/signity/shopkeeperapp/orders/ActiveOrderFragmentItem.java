@@ -52,7 +52,6 @@ import retrofit.client.Response;
  */
 public class ActiveOrderFragmentItem extends Fragment implements View.OnClickListener {
 
-
     private static final String ACTIVE = "active";
     private static final String REJECT = "reject";
     private static final String SHIPPED = "shipped";
@@ -85,7 +84,6 @@ public class ActiveOrderFragmentItem extends Fragment implements View.OnClickLis
         listOrder = new ArrayList<>();
         listOrderSelected = new ArrayList<>();
         appDatabase = DbAdapter.getInstance().getDb();
-
     }
 
 
@@ -120,7 +118,6 @@ public class ActiveOrderFragmentItem extends Fragment implements View.OnClickLis
                 }
             }
         }
-
 
         adapter = new ActiveOrderAdapter(getActivity(), listOrder);
         listActiveOrdersItems.setAdapter(adapter);
@@ -246,7 +243,7 @@ public class ActiveOrderFragmentItem extends Fragment implements View.OnClickLis
                 }
             }
 
-            totalPrice = ((itemsPrice + order.getShippingCharges()) - order.getDiscount());
+            totalPrice = ((itemsPrice + order.getShippingCharges()) - order.getDiscount()) + order.getTax();
 
             holder.txtTotalAmount.setText(Util.getCurrency(context) + " " + totalPrice);
             holder.txtTime.setText(order.getTime());
@@ -323,6 +320,7 @@ public class ActiveOrderFragmentItem extends Fragment implements View.OnClickLis
                         dueOrderIntent.putExtra("note", listOrder.get(position).getNote());
                         dueOrderIntent.putExtra("discount", listOrder.get(position).getDiscount());
                         dueOrderIntent.putExtra("total", listOrder.get(position).getTotal());
+                        dueOrderIntent.putExtra("tax", listOrder.get(position).getTax());
                         dueOrderIntent.putExtra("shipping_charges", listOrder.get(position).getShippingCharges());
                         dueOrderIntent.putExtra("address", listOrder.get(position).getAddress());
 
@@ -418,7 +416,6 @@ public class ActiveOrderFragmentItem extends Fragment implements View.OnClickLis
                 getOrders(DELIVERED);
             }
         } else {
-
             List<OrdersListModel> list = null;
             if (type.equalsIgnoreCase(Constant.TYPE_PROCESSING)) {
                 list = appDatabase.getProcessingOrders();
@@ -441,7 +438,6 @@ public class ActiveOrderFragmentItem extends Fragment implements View.OnClickLis
     public void getOrders(String orderType) {
 
         ProgressDialogUtil.showProgressDialog(getActivity());
-
         Map<String, String> param = new HashMap<String, String>();
         param.put("order_type", orderType);
         param.put("api_key", "");
@@ -550,12 +546,6 @@ public class ActiveOrderFragmentItem extends Fragment implements View.OnClickLis
                         + listOrderSelected.get(i).getUserId();
             }
         }
-
-
-        Log.v("orderStatus : ", "" + orderStatus);
-        Log.v("orderIDS : ", "" + orderIDS);
-        Log.v("userId : ", "" + userId);
-
         setOrderStatus();
     }
 
@@ -653,7 +643,6 @@ public class ActiveOrderFragmentItem extends Fragment implements View.OnClickLis
 
                         dialogHandler.dismiss();
                         getOrdersMethod();
-                        ActiveOrderFragment.api_refreshed = true;
 //                        if (type.equals(Constant.TYPE_APPROVE)) {
 //                            ((MainActivity) getActivity()).printNUm(1);
 //                        } else

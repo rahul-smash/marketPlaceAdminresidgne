@@ -10,7 +10,6 @@
     <color name="divider">#919191</color>
     <color name="color_text_dashboar_lbl2">#373737</color>
 
-
     <color name="ColorPrimary">#607d8b</color>
     <color name="ColorPrimaryDark">#455a64</color>
 
@@ -24,5 +23,9 @@
 
     <color name="colorGrayForOrderDtail">#ff616161</color>
 
+    <!--Color for active shipped - delivered-->
+    <color name="color_active_green">#00A65A</color>
+    <color name="color_shipped_blue">#00C0EF</color>
+    <color name="color_delivered_orange">#F39C12</color>
 
 </resources>

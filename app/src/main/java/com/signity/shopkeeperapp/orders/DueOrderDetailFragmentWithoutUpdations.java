@@ -77,6 +77,7 @@ public class DueOrderDetailFragmentWithoutUpdations extends Fragment implements 
     String address = "";
     Double total = 0.00;
     Double discount = 0.00;
+    Double tax = 0.00;
     Double shipping_charges = 0.00;
 
     RelativeLayout mOrderDetailLayout, mDetailBtnBlock;
@@ -85,7 +86,7 @@ public class DueOrderDetailFragmentWithoutUpdations extends Fragment implements 
     Animation slideDownAnim;
 
     TextView mTotalAmount;
-    TextView mDeliveryAddress, mNote, mItemsPrice, mShippingCharges, mDiscountVal;
+    TextView mDeliveryAddress, mNote, mItemsPrice, mShippingCharges, mDiscountVal, mTaxVal;
     RelativeLayout mNoteLayout, mAddressLayout;
     ImageButton btnOrderProceed, btnMoveToShipping, btnMoveToDeliver;
     Button buttonRejectOrder;
@@ -109,6 +110,7 @@ public class DueOrderDetailFragmentWithoutUpdations extends Fragment implements 
         note = getArguments().getString("note");
         address = getArguments().getString("address");
         total = getArguments().getDouble("total");
+        tax = getArguments().getDouble("tax");
         discount = getArguments().getDouble("discount");
         shipping_charges = getArguments().getDouble("shipping_charges");
     }
@@ -202,6 +204,7 @@ public class DueOrderDetailFragmentWithoutUpdations extends Fragment implements 
         mNote = (TextView) headerView.findViewById(R.id.txtNote);
         mItemsPrice = (TextView) headerView.findViewById(R.id.items_price);
         mShippingCharges = (TextView) headerView.findViewById(R.id.shipping_charges);
+        mTaxVal = (TextView) headerView.findViewById(R.id.taxVal);
         mDiscountVal = (TextView) headerView.findViewById(R.id.discountVal);
 
         mNoteLayout = (RelativeLayout) headerView.findViewById(R.id.noteLayout);
@@ -695,7 +698,7 @@ public class DueOrderDetailFragmentWithoutUpdations extends Fragment implements 
 
             ItemListModel data = listItem.get(position);
             holder.itemName.setText(listItem.get(position).getName());
-            holder.itemPrice.setText("Price: " +Util.getCurrency(context) + " " + listItem.get(position).getPrice());
+            holder.itemPrice.setText("Price: " + Util.getCurrency(context) + " " + listItem.get(position).getPrice());
             holder.itemQuantiy.setText("Qty: " + listItem.get(position).getQuantity());
 
             if ((data.getWeight() != null && !(data.getWeight().isEmpty())) && (data.getUnitType() != null && !(data.getUnitType()
@@ -777,11 +780,12 @@ public class DueOrderDetailFragmentWithoutUpdations extends Fragment implements 
         }
 
         Double totalAmount = 0.00;
-        totalAmount = (itemsAmount + shipping_charges) - discount;
+        totalAmount = (itemsAmount + shipping_charges) - discount + tax;
 
         mTotalAmount.setText(Util.getCurrency(getActivity()) + " " + totalAmount);
         mItemsPrice.setText(Util.getCurrency(getActivity()) + " " + itemsAmount);
         mShippingCharges.setText(Util.getCurrency(getActivity()) + " " + shipping_charges);
+        mTaxVal.setText(Util.getCurrency(getActivity()) + " " + tax);
         mDiscountVal.setText(Util.getCurrency(getActivity()) + " " + discount);
 
 

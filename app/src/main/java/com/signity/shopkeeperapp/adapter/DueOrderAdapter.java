@@ -111,7 +111,8 @@ public class DueOrderAdapter extends BaseAdapter {
                 onButtonClick(view, list.get(position).getItems(), list.get(position).getCustomerName(),
                         list.get(position).getPhone(), list.get(position).getOrderId(),
                         list.get(position).getUserId(), list.get(position).getNote(), list.get(position).getDiscount()
-                        , list.get(position).getTotal(), list.get(position).getShippingCharges(), list.get(position).getAddress());
+                        , list.get(position).getTotal(), list.get(position).getShippingCharges(), list.get(position).getAddress(),
+                        list.get(position).getTax());
             }
         });
 
@@ -120,7 +121,7 @@ public class DueOrderAdapter extends BaseAdapter {
 
     public void onButtonClick(View view, List<ItemListModel> list, String name, String phone,
                               String orderID, String userID, String note, Double discount,
-                              Double total, Double shipping_charges, String address) {
+                              Double total, Double shipping_charges, String address, Double tax) {
 
 
         DataAdapter.getInstance().setListItem(list);
@@ -134,6 +135,7 @@ public class DueOrderAdapter extends BaseAdapter {
         dueOrderIntent.putExtra("note", note);
         dueOrderIntent.putExtra("discount", discount);
         dueOrderIntent.putExtra("total", total);
+        dueOrderIntent.putExtra("tax", tax);
         dueOrderIntent.putExtra("shipping_charges", shipping_charges);
         dueOrderIntent.putExtra("address", address);
 

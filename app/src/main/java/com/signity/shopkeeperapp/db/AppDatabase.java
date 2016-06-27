@@ -3,6 +3,7 @@ package com.signity.shopkeeperapp.db;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
+import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
@@ -28,7 +29,7 @@ import java.util.Locale;
 public class AppDatabase {
 
     private final String DB_VALUEZ_NAME = "dbValuezAdmin";
-    private final int DB_VERSION = 1;
+    private final int DB_VERSION = 3;
 
     private DBHelper opener;
     private SQLiteDatabase db;
@@ -46,8 +47,6 @@ public class AppDatabase {
 
 
     /*Set Dashboard data*/
-
-
     /*
     CREATE TABLE IF NOT EXISTS dashboard (
     store_id TEXT UNIQUE PRIMARY KEY NOT NULL,
@@ -352,6 +351,7 @@ public class AppDatabase {
                 values.put("note", order.getNote());
                 values.put("discount", order.getDiscount());
                 values.put("total", order.getTotal());
+                values.put("tax", order.getTax());
                 values.put("checkout", String.valueOf(order.getCheckout()));
                 values.put("shipping_charges", String.valueOf(order.getShippingCharges()));
                 values.put("address", order.getAddress());
@@ -388,6 +388,25 @@ public class AppDatabase {
         }
         return orderList;
     }
+
+    public List<OrdersListModel> getOrders() {
+        String storeId = Util.loadPreferenceValue(context, Constant.STORE_ID);
+        List<OrdersListModel> orderList = new ArrayList<>();
+        Cursor cursor = null;
+        try {
+            String sql = String.format(Locale.US, "SELECT * FROM orders where store_id=%s AND status=%s OR" +
+                    " status=%s OR status=%s", storeId, "1","4","5");
+            cursor = db.rawQuery(sql, null);
+            orderList = getOrders(cursor);
+            if (cursor != null)
+                cursor.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+            if (cursor != null) cursor.close();
+        }
+        return orderList;
+    }
+
     public List<OrdersListModel> getProcessingOrders() {
         String storeId = Util.loadPreferenceValue(context, Constant.STORE_ID);
         List<OrdersListModel> orderList = new ArrayList<>();
@@ -404,6 +423,7 @@ public class AppDatabase {
         }
         return orderList;
     }
+
     public List<OrdersListModel> getRejctedOrders() {
         String storeId = Util.loadPreferenceValue(context, Constant.STORE_ID);
         List<OrdersListModel> orderList = new ArrayList<>();
@@ -420,6 +440,7 @@ public class AppDatabase {
         }
         return orderList;
     }
+
     public List<OrdersListModel> getShippingOrders() {
         String storeId = Util.loadPreferenceValue(context, Constant.STORE_ID);
         List<OrdersListModel> orderList = new ArrayList<>();
@@ -436,6 +457,7 @@ public class AppDatabase {
         }
         return orderList;
     }
+
     public List<OrdersListModel> getDeliverOrders() {
         String storeId = Util.loadPreferenceValue(context, Constant.STORE_ID);
         List<OrdersListModel> orderList = new ArrayList<>();
@@ -452,6 +474,7 @@ public class AppDatabase {
         }
         return orderList;
     }
+
     public List<OrdersListModel> getCancelOrders() {
         String storeId = Util.loadPreferenceValue(context, Constant.STORE_ID);
         List<OrdersListModel> orderList = new ArrayList<>();
@@ -509,6 +532,7 @@ public class AppDatabase {
                 order.setAddress(cursor.getString(13));
                 order.setTotalAmount(Double.parseDouble(cursor.getString(14)));
                 order.setItems(gsonHelper.getItems(cursor.getString(15)));
+                order.setTax(Double.parseDouble(cursor.getString(16)));
                 listOrders.add(order);
                 cursor.moveToNext();
             }
@@ -562,6 +586,22 @@ public class AppDatabase {
             Log.i("Grocers", "------Database Version : Old Version:" + oldVersion
                     + "  New Version:" + newVersion + "------------");
             // some of the store element are added so better to drop the store table and  recreate this
+            if (newVersion != oldVersion) {
+
+                String script = this.stringFromAssets("sql/drop_all.ddl");
+                String[] queriesForProduct = script.split(";");
+                for (String query : queriesForProduct) {
+                    try {
+                        db.execSQL(query);
+                    } catch (SQLException e) {
+                        Log.e("Sqlite Error", e.getMessage());
+                    } catch (Exception e) {
+                        Log.e("Sqlite Error", e.getMessage());
+                    }
+                }
+                onCreate(db);
+            }
+
 
         }
 

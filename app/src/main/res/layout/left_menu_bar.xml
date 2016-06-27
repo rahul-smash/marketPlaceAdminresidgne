@@ -428,6 +428,7 @@
                 android:layout_height="1dp"
                 android:background="@color/divider"
                 android:visibility="gone" />
+
             <LinearLayout
                 android:id="@+id/btnCategories"
                 android:layout_width="fill_parent"
@@ -436,7 +437,7 @@
                 android:onClick="onMenuButtonClick"
                 android:orientation="horizontal"
                 android:padding="10dp"
-                android:visibility="visible">
+                android:visibility="gone">
 
                 <ImageView
                     android:layout_width="30dp"

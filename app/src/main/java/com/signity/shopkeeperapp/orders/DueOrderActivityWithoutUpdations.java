@@ -27,6 +27,7 @@ public class DueOrderActivityWithoutUpdations extends FragmentActivity {
         String note = getIntent().getStringExtra("note");
         Double discount = getIntent().getDoubleExtra("discount", 0.00);
         Double total = getIntent().getDoubleExtra("total", 0.00);
+        Double tax = getIntent().getDoubleExtra("tax", 0.00);
         Double shipping_charges = getIntent().getDoubleExtra("shipping_charges", 0.00);
         String address = getIntent().getStringExtra("address");
 
@@ -40,6 +41,7 @@ public class DueOrderActivityWithoutUpdations extends FragmentActivity {
         bundle.putString("note", note);
         bundle.putDouble("discount", discount);
         bundle.putDouble("total", total);
+        bundle.putDouble("tax", tax);
         bundle.putDouble("shipping_charges", shipping_charges);
         bundle.putString("address", address);
 

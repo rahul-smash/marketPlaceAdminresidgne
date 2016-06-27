@@ -227,9 +227,8 @@ public class LoginFragmentStoresListing extends Fragment implements View.OnClick
 
             saveUserIdToPref();
             Intent intent_home = new Intent(getActivity(), MainActivity.class);
-            intent_home.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+            intent_home.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
             startActivity(intent_home);
-
             getActivity().finish();
             AnimUtil.slideFromRightAnim(getActivity());
 

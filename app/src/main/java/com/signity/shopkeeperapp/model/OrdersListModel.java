@@ -45,6 +45,9 @@ public class OrdersListModel {
     @SerializedName("checkout")
     @Expose
     private Double checkout;
+    @SerializedName("tax")
+    @Expose
+    private Double tax;
     @SerializedName("shipping_charges")
     @Expose
     private Double shippingCharges;
@@ -265,4 +268,11 @@ public class OrdersListModel {
         this.items = items;
     }
 
+    public Double getTax() {
+        return tax;
+    }
+
+    public void setTax(Double tax) {
+        this.tax = tax;
+    }
 }

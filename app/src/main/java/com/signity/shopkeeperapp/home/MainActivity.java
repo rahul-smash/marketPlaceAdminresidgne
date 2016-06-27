@@ -193,7 +193,6 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
                     .replace(R.id.container, MainActivityFragment.newInstance(this)).commit();
         }
 
-
         DashBoardModelStoreDetail jObject = getStoreDataAsObject(Util.loadPreferenceValue(MainActivity.this, Constant.STORE_DETAILS));
 
         String storeStatus = "";
@@ -771,11 +770,8 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
     }
 
     public void printNUm(int num) {
-
         List<Fragment> list = getSupportFragmentManager().getFragments();
         ActiveOrderFragment fragment = ((ActiveOrderFragment) list.get(0));
-        fragment.viewPager.setCurrentItem(num);
-        Log.e("Tag", num + "");
     }
 
     @Override
@@ -892,5 +888,4 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
 
         am.setRepeating(AlarmManager.RTC_WAKEUP, calendar2.getTimeInMillis(), AlarmManager.INTERVAL_DAY, pendingIntent2);
     }
-
 }

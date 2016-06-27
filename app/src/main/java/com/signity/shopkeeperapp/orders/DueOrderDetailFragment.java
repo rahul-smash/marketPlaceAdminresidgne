@@ -72,6 +72,7 @@ public class DueOrderDetailFragment extends Fragment implements View.OnClickList
     String note = "";
     String address = "";
     Double total = 0.00;
+    Double tax = 0.00;
     Double discount = 0.00;
     Double shipping_charges = 0.00;
 
@@ -82,7 +83,7 @@ public class DueOrderDetailFragment extends Fragment implements View.OnClickList
 
     TextView mTotalAmount;
 
-    TextView mDeliveryAddress, mNote, mItemsPrice, mShippingCharges, mDiscountVal;
+    TextView mDeliveryAddress, mNote, mItemsPrice, mShippingCharges, mDiscountVal, taxVal;
     RelativeLayout mNoteLayout, mAddressLayout;
     ImageButton btnOrderProceed, btnMoveToShipping, btnMoveToDeliver;
     Button buttonRejectOrder;
@@ -104,6 +105,7 @@ public class DueOrderDetailFragment extends Fragment implements View.OnClickList
         note = getArguments().getString("note");
         address = getArguments().getString("address");
         total = getArguments().getDouble("total");
+        tax = getArguments().getDouble("tax");
         discount = getArguments().getDouble("discount");
         shipping_charges = getArguments().getDouble("shipping_charges");
     }
@@ -157,11 +159,9 @@ public class DueOrderDetailFragment extends Fragment implements View.OnClickList
 
         addHeaderToList();
 
-
         handleBackButton(rootView);
         handleCallButton(rootView);
         setHeader(rootView);
-
 
         adapter = new DueOrderItemsAdapter(getActivity());
         listDueOrderItems.setAdapter(adapter);
@@ -178,6 +178,7 @@ public class DueOrderDetailFragment extends Fragment implements View.OnClickList
         mItemsPrice = (TextView) headerView.findViewById(R.id.items_price);
         mShippingCharges = (TextView) headerView.findViewById(R.id.shipping_charges);
         mDiscountVal = (TextView) headerView.findViewById(R.id.discountVal);
+        taxVal = (TextView) headerView.findViewById(R.id.taxVal);
 
         mNoteLayout = (RelativeLayout) headerView.findViewById(R.id.noteLayout);
         mAddressLayout = (RelativeLayout) headerView.findViewById(R.id.addressLayout);
@@ -785,7 +786,6 @@ public class DueOrderDetailFragment extends Fragment implements View.OnClickList
             mNoteLayout.setVisibility(View.GONE);
         } else {
             mNote.setText(note);
-
         }
 
         Double itemsAmount = 0.00;
@@ -798,14 +798,12 @@ public class DueOrderDetailFragment extends Fragment implements View.OnClickList
         }
 
         Double totalAmount = 0.00;
-        totalAmount = (itemsAmount + shipping_charges) - discount;
-
+        totalAmount = (itemsAmount + shipping_charges) - discount + tax;
         mTotalAmount.setText(Util.getCurrency(getActivity()) + " " + totalAmount);
         mItemsPrice.setText(Util.getCurrency(getActivity()) + " " + itemsAmount);
         mShippingCharges.setText(Util.getCurrency(getActivity()) + " " + shipping_charges);
         mDiscountVal.setText(Util.getCurrency(getActivity()) + " " + discount);
-
-
+        taxVal.setText(String.valueOf(tax));
     }
 
 }

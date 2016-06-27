@@ -51,14 +51,12 @@ public class NetworkAdaper {
     }
 
     public static String setBaseUrl(String store_id) {
-
         String url = "";
         if (store_id.equalsIgnoreCase("")) {
             url = NetworkConstant.BASE + NetworkConstant.STORE_ID + NetworkConstant.APISTORE;
         } else {
             url = NetworkConstant.BASE + "/" + store_id + NetworkConstant.APISTORE;
         }
-
         return url;
     }
 

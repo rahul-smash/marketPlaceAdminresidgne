@@ -35,7 +35,7 @@ import retrofit.client.Response;
 /**
  * Created by Rajinder on 28/9/15.
  */
-public class DueOrderFragment extends Fragment {
+public class DueOrderFragment_ extends Fragment {
 
     ListView listDueOrders;
     DueOrderAdapter adapter;
@@ -55,7 +55,7 @@ public class DueOrderFragment extends Fragment {
     public static Fragment newInstance(Context context) {
         Bundle args = new Bundle();
         return Fragment.instantiate(context,
-                DueOrderFragment.class.getName(), args);
+                DueOrderFragment_.class.getName(), args);
     }
 
     @Nullable

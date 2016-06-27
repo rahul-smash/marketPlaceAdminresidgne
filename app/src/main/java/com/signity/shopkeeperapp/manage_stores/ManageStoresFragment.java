@@ -102,13 +102,19 @@ public class ManageStoresFragment extends Fragment {
 
         String phone = phone_number;
         String deviceId = Settings.Secure.getString(getActivity().getApplicationContext().getContentResolver(), Settings.Secure.ANDROID_ID);
-        //String deviceToken = pushClientManager.getRegistrationId(getActivity());
+//        String deviceToken = pushClientManager.getRegistrationId(getActivity());
         String deviceToken = Util.loadPreferenceValue(getActivity(), Constant.DEVICE_TOKEN);
         Map<String, String> param = new HashMap<String, String>();
-        param.put("mobile", phone);
         param.put("device_id", deviceId);
         param.put("device_token", deviceToken);
         param.put("platform", Constant.PLATFORM);
+        if (Util.loadPreferenceValue(getActivity(), Constant.LOGIN_TYPE).equalsIgnoreCase("email")) {
+            param.put("type", "email");
+            param.put("mobile", Util.loadPreferenceValue(getActivity(), Constant.EMAIL));
+        } else {
+            param.put("mobile", phone);
+        }
+
         NetworkAdaper.getInstance().getNetworkServices().getAdminStores(param, new Callback<StoresModel>() {
             @Override
             public void success(StoresModel mobResponse, Response response) {
@@ -213,9 +219,13 @@ public class ManageStoresFragment extends Fragment {
                 @Override
                 public void onClick(View view) {
 
+                    String currentStoreId = Util.loadPreferenceValue(getActivity(), Constant.STORE_ID);
 
-                    setStoreId(list.get(position).getId());
-                    storeSwitchAlert(Constant.APP_TITLE, list.get(position).getStoreName());
+                    if (currentStoreId.equalsIgnoreCase(list.get(position).getId())) {
+                        showAlertForCurrentStore(Constant.APP_TITLE, "You already in " + list.get(position).getStoreName() + ". Please select different store");
+                    } else {
+                        storeSwitchAlert(Constant.APP_TITLE, list.get(position).getId(), list.get(position).getStoreName());
+                    }
 
                 }
             });
@@ -238,7 +248,7 @@ public class ManageStoresFragment extends Fragment {
 
     }
 
-    private void storeSwitchAlert(String title, final String storeName) {
+    private void storeSwitchAlert(String title, final String id, final String storeName) {
 
         AlertDialog.Builder adb = new AlertDialog.Builder(getActivity());
 
@@ -250,22 +260,21 @@ public class ManageStoresFragment extends Fragment {
 
         adb.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int which) {
-                storeSwitch(Constant.APP_TITLE, "You are successfully switch to " + storeName + ".");
-
+                storeSwitch(Constant.APP_TITLE, id, "You are successfully switch to " + storeName + ".");
             }
         });
 
 
         adb.setNegativeButton("No", new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int which) {
-
+                dialog.dismiss();
             }
         });
         adb.show();
     }
 
 
-    private void storeSwitch(String title, String msg) {
+    private void storeSwitch(String title, final String storeId, String msg) {
 
         AlertDialog.Builder adb = new AlertDialog.Builder(getActivity());
 
@@ -277,12 +286,32 @@ public class ManageStoresFragment extends Fragment {
 
         adb.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int which) {
-
+                setStoreId(storeId);
                 Intent intent_home = new Intent(getActivity(),
                         MainActivity.class);
                 startActivity(intent_home);
                 AnimUtil.slideFromRightAnim(getActivity());
                 getActivity().finish();
+
+            }
+        });
+
+        adb.show();
+    }
+
+    private void showAlertForCurrentStore(String title, String msg) {
+
+        AlertDialog.Builder adb = new AlertDialog.Builder(getActivity());
+
+        adb.setCancelable(false);
+        adb.setTitle(title);
+        adb.setMessage(msg);
+        adb.setIcon(R.drawable.ic_launcher);
+
+
+        adb.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.dismiss();
 
             }
         });

@@ -217,7 +217,7 @@ public class CustomerDetailFragment extends Fragment {
     public void setCutomerDetailValues(CustomerDetailModel cutomerDetailValues) {
         mTotalOrderValue.setText("" + cutomerDetailValues.getTotalOrders());
         mAmountPaidValue.setText(Util.getCurrency(getActivity()) + " " + cutomerDetailValues.getPaidAmount());
-        mActiveOrderValue.setText(Util.getCurrency(getActivity()) + " " + cutomerDetailValues.getActiveOrders());
+        mActiveOrderValue.setText(""+cutomerDetailValues.getActiveOrders());
         mAmountDueValue.setText(Util.getCurrency(getActivity()) + " " + cutomerDetailValues.getDueAmount());
     }
 
@@ -244,7 +244,7 @@ public class CustomerDetailFragment extends Fragment {
 
         adb.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int which) {
-
+                dialog.dismiss();
             }
         });
         adb.show();

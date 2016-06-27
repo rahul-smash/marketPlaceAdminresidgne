@@ -198,13 +198,11 @@ public class LoginFragmentOtp extends Fragment implements View.OnClickListener {
     }
 
     private void proceedFutherForHomeScreen() {
-
         saveUserIdToPref();
-
         Intent intent_home = new Intent(getActivity(), MainActivity.class);
-        intent_home.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+//        intent_home.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP|Intent.FLAG_ACTIVITY_NEW_TASK);
+        intent_home.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
         startActivity(intent_home);
-
         getActivity().finish();
         AnimUtil.slideFromRightAnim(getActivity());
     }

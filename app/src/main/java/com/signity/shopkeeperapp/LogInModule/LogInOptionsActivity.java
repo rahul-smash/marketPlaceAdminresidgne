@@ -42,6 +42,4 @@ public class LogInOptionsActivity extends FragmentActivity {
         super.onBackPressed();
         AnimUtil.slidDownAnim(LogInOptionsActivity.this);
     }
-
-
 }

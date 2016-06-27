@@ -59,7 +59,6 @@ public class MyGcmListenerService extends GcmListenerService {
             // normal downstream message.
         }
 
-
         String type = "due_order";
 
         sendNotification(title, message);

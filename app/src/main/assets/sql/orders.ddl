@@ -14,5 +14,6 @@ shipping_charges TEXT,
 coupon_code TEXT,
 address TEXT,
 total_amount TEXT,
-items TEXT
+items TEXT,
+tax TEXT
 );

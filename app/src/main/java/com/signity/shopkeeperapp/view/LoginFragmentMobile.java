@@ -145,6 +145,7 @@ public class LoginFragmentMobile extends Fragment implements View.OnClickListene
             }
         }
     }
+
     private void callNetworkServiceForOtp() {
         ProgressDialogUtil.showProgressDialog(getActivity());
 
@@ -191,6 +192,8 @@ public class LoginFragmentMobile extends Fragment implements View.OnClickListene
         param.put("device_id", deviceId);
         param.put("device_token", deviceToken);
         param.put("platform", Constant.PLATFORM);
+
+
         NetworkAdaper.getInstance().getNetworkServices().getAdminStores(param, new Callback<StoresModel>() {
             @Override
             public void success(StoresModel mobResponse, Response response) {
@@ -239,9 +242,7 @@ public class LoginFragmentMobile extends Fragment implements View.OnClickListene
     private void proceedToStoresListing(StoresModel data) {
 
         Fragment fragment = LoginFragmentStoresListing.newInstance(getActivity());
-
         LoginFragmentStoresListing.mStoresList = data.getStoresList();
-
         String phone = edtPhone.getText().toString();
         Bundle bundle = new Bundle();
         bundle.putString("phone", phone);
