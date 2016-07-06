@@ -47,9 +47,7 @@ public class DueOrderFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         appDatabase = DbAdapter.getInstance().getDb();
-
     }
 
     public static Fragment newInstance(Context context) {
@@ -62,7 +60,7 @@ public class DueOrderFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
-        View rootView = inflater.inflate(R.layout.fragment_due_order, container, false);
+        View rootView = inflater.inflate(R.layout.fragment_layout_order_list, container, false);
         listDueOrders = (ListView) rootView.findViewById(R.id.listDueOrders);
         noDataFound = (TextView) rootView.findViewById(R.id.noDataFound);
 

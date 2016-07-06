@@ -41,7 +41,7 @@ public class ActiveOrderFragment_ extends Fragment {
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View rootView = inflater.inflate(R.layout.fragment_active_order, container, false);
+        View rootView = inflater.inflate(R.layout.fragment_layout_order_list, container, false);
         final TabLayout tabLayout = (TabLayout) rootView.findViewById(R.id.tab_layout);
 //      tabLayout.addTab(tabLayout.newTab().setText("Approved"));
         tabLayout.addTab(tabLayout.newTab().setText("Processing"));

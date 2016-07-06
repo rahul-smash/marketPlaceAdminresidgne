@@ -202,7 +202,6 @@ public class CanceledOrdersFragment extends Fragment {
             holder.parent.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-
                     DataAdapter.getInstance().setListItem(list.get(position).getItems());
                     Intent rejectedOrderIntent = new Intent(getActivity(), CanceledOrdersItemsListActivity.class);
                     rejectedOrderIntent.putExtra("name", list.get(position).getCustomerName());

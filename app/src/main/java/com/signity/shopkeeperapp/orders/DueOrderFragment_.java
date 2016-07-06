@@ -47,7 +47,6 @@ public class DueOrderFragment_ extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         appDatabase = DbAdapter.getInstance().getDb();
 
     }

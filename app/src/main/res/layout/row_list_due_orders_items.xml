@@ -38,6 +38,7 @@
         android:gravity="center"
         android:text=""
         android:textSize="@dimen/text_small" />
+
     <TextView
         android:id="@+id/txtPrice"
         android:layout_width="wrap_content"
@@ -74,15 +75,12 @@
         android:textSize="@dimen/text_small" />
 
 
-    <ToggleButton
+    <ImageButton
         android:id="@+id/toggle"
         android:layout_width="60dp"
         android:layout_height="40dp"
         android:layout_alignParentRight="true"
         android:layout_centerVertical="true"
-        android:background="@drawable/on_off_selector"
-        android:checked="true"
-        android:textOff=""
-        android:textOn="" />
+        android:background="@drawable/on_off_selector" />
 
 </RelativeLayout>

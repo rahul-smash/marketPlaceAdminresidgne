@@ -153,46 +153,7 @@
                 android:onClick="onMenuButtonClick"
                 android:orientation="vertical"
                 android:paddingLeft="40dp"
-                android:visibility="gone">
-
-                <LinearLayout
-                    android:id="@+id/btnDueOrders"
-                    android:layout_width="fill_parent"
-                    android:layout_height="wrap_content"
-                    android:gravity="center_vertical"
-                    android:onClick="onMenuButtonClick"
-                    android:orientation="horizontal"
-                    android:padding="10dp">
-
-                    <ImageView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center_vertical"
-                        android:adjustViewBounds="true"
-                        android:clickable="false"
-                        android:focusable="false"
-                        android:src="@drawable/list_icon" />
-
-                    <TextView
-                        android:id="@+id/txtDueOrders"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginLeft="10dp"
-                        android:background="@android:color/transparent"
-                        android:clickable="false"
-                        android:focusable="false"
-                        android:gravity="center_vertical"
-                        android:text="Due Order"
-                        android:textColor="@color/color_white"
-                        android:textSize="@dimen/text_normal" />
-                </LinearLayout>
-
-                <View
-                    android:layout_width="match_parent"
-                    android:layout_height="1dp"
-                    android:background="@color/divider"
-                    android:visibility="gone" />
-
+                android:visibility="visible">
                 <LinearLayout
                     android:id="@+id/btnActiveOrder"
                     android:layout_width="fill_parent"
@@ -225,11 +186,38 @@
                         android:textSize="@dimen/text_normal" />
                 </LinearLayout>
 
-                <View
-                    android:layout_width="match_parent"
-                    android:layout_height="1dp"
-                    android:background="@color/divider"
-                    android:visibility="gone" />
+                <LinearLayout
+                    android:id="@+id/btnDueOrders"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_vertical"
+                    android:onClick="onMenuButtonClick"
+                    android:orientation="horizontal"
+                    android:padding="10dp"
+                    android:visibility="visible">
+
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical"
+                        android:adjustViewBounds="true"
+                        android:clickable="false"
+                        android:focusable="false"
+                        android:src="@drawable/list_icon" />
+
+                    <TextView
+                        android:id="@+id/txtDueOrders"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="10dp"
+                        android:background="@android:color/transparent"
+                        android:clickable="false"
+                        android:focusable="false"
+                        android:gravity="center_vertical"
+                        android:text="Delivered Order"
+                        android:textColor="@color/color_white"
+                        android:textSize="@dimen/text_normal" />
+                </LinearLayout>
 
                 <LinearLayout
                     android:id="@+id/btnRejectedOrder"

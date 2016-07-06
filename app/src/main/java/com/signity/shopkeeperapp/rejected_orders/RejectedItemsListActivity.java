@@ -18,15 +18,12 @@ import android.widget.TextView;
 import android.widget.ToggleButton;
 
 import com.signity.shopkeeperapp.R;
-import com.signity.shopkeeperapp.app.DataAdapter;
 import com.signity.shopkeeperapp.model.ItemListModel;
+import com.signity.shopkeeperapp.model.OrdersListModel;
 import com.signity.shopkeeperapp.util.AnimUtil;
 import com.signity.shopkeeperapp.util.Constant;
 import com.signity.shopkeeperapp.util.DialogUtils;
 import com.squareup.picasso.Picasso;
-
-import org.json.JSONException;
-import org.json.JSONObject;
 
 import java.util.List;
 
@@ -52,19 +49,24 @@ public class RejectedItemsListActivity extends Activity implements View.OnClickL
 
     String note, discount, total, shippingCharge, address;
 
+    OrdersListModel ordersListModel;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.rejected_items_list_activity);
+        ordersListModel = (OrdersListModel) getIntent().getSerializableExtra("object");
         orderDetail = getIntent().getStringExtra("order_detail");
-
-        getOrderDetail();
-
-        name = getIntent().getStringExtra("name");
-        phoneNumber = getIntent().getStringExtra("phone");
-        orderId = getIntent().getStringExtra("orderID");
-        userId = getIntent().getStringExtra("userID");
-
+        name = ordersListModel.getCustomerName();
+        phoneNumber = ordersListModel.getPhone();
+        orderId = ordersListModel.getOrderId();
+        userId = ordersListModel.getUserId();
+        note = ordersListModel.getNote();
+        total = String.format("%.2f", ordersListModel.getTotal());
+        shippingCharge = String.format("%.2f", ordersListModel.getShippingCharges());
+        discount = String.format("%.2f", ordersListModel.getDiscount());
+        address = ordersListModel.getAddress();
+        listItem = ordersListModel.getItems();
         initialize();
         addHeaderToList();
 
@@ -83,58 +85,6 @@ public class RejectedItemsListActivity extends Activity implements View.OnClickL
         listRejectedItems.setAdapter(adapter);
     }
 
-    private void getOrderDetail() {
-
-        JSONObject jsonObject = null;
-        try {
-            jsonObject = new JSONObject(orderDetail);
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-
-        if (jsonObject.has("note")) {
-
-            try {
-                note = jsonObject.getString("note");
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
-
-        }
-        if (jsonObject.has("total")) {
-            try {
-                total = jsonObject.getString("total");
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
-
-        }
-        if (jsonObject.has("shipping_charges")) {
-            try {
-                shippingCharge = jsonObject.getString("shipping_charges");
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
-
-        }
-        if (jsonObject.has("address")) {
-            try {
-                address = jsonObject.getString("address");
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
-        }
-        if (jsonObject.has("discount")) {
-            try {
-                discount = jsonObject.getString("discount");
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
-
-        }
-
-
-    }
 
     private void addHeaderToList() {
         View headerView = getLayoutInflater().inflate(R.layout.layout_header_order_detail_address, null);
@@ -167,7 +117,6 @@ public class RejectedItemsListActivity extends Activity implements View.OnClickL
     }
 
     private void initialize() {
-        listItem = DataAdapter.getInstance().getListItem();
         listRejectedItems = (ListView) findViewById(R.id.listRejectedItems);
         textTitle = (TextView) findViewById(R.id.textTitle);
         textTitle.setText(name);

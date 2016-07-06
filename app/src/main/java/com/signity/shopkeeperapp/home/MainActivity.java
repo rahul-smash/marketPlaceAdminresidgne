@@ -43,7 +43,6 @@ import com.signity.shopkeeperapp.LogInModule.ChangePasswordActivity;
 import com.signity.shopkeeperapp.LogInModule.LogInOptionsActivity;
 import com.signity.shopkeeperapp.ManageVolume.ManageVolumeActivity;
 import com.signity.shopkeeperapp.R;
-import com.signity.shopkeeperapp.canceled_orders.CanceledOrdersFragment;
 import com.signity.shopkeeperapp.customer.CustomerFragment;
 import com.signity.shopkeeperapp.enquiries.EnquiriesFragment;
 import com.signity.shopkeeperapp.manage_stores.ManageStaffActivity;
@@ -52,9 +51,8 @@ import com.signity.shopkeeperapp.model.DashBoardModelStoreDetail;
 import com.signity.shopkeeperapp.model.MobResponse;
 import com.signity.shopkeeperapp.network.NetworkAdaper;
 import com.signity.shopkeeperapp.orders.ActiveOrderFragment;
-import com.signity.shopkeeperapp.orders.DueOrderFragment;
+import com.signity.shopkeeperapp.orders.AllOrderFragment;
 import com.signity.shopkeeperapp.receiver.LocalNotifyReceiver;
-import com.signity.shopkeeperapp.rejected_orders.RejectedItemsFragment;
 import com.signity.shopkeeperapp.util.AnimUtil;
 import com.signity.shopkeeperapp.util.Constant;
 import com.signity.shopkeeperapp.util.DialogHandler;
@@ -78,7 +76,7 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
 
     SlidingPaneLayout mSlidingPanel;
 
-    String[] title = {"Dashboard", "Due Orders", "Active Orders", "Rejected Orders", "Canceled Orders", "Customers", "Enquiries", "Manage Stores", "Categories"};
+    String[] title = {"Dashboard", "Due Orders", "Active Orders", "Rejected Orders", "Cancelled Orders", "Customers", "Enquiries", "Manage Stores", "Categories"};
     String shareContent = "";
 
     public static String fragmentName = "";
@@ -185,8 +183,13 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
         if (intentValue.equalsIgnoreCase("1")) {
             textTitle.setText(title[2]);
             fragmentName = title[2];
+            Fragment fragment = ActiveOrderFragment.newInstance(this);
+            Bundle bundle;
+            bundle = new Bundle();
+            bundle.putString("type", Constant.TYPE_ACTIVE_ORDER);
+            fragment.setArguments(bundle);
             getSupportFragmentManager().beginTransaction()
-                    .replace(R.id.container, ActiveOrderFragment.newInstance(this), ActiveOrderFragment.class.getSimpleName()).commit();
+                    .replace(R.id.container, fragment, ActiveOrderFragment.class.getSimpleName()).commit();
         } else {
             fragmentName = title[0];
             getSupportFragmentManager().beginTransaction()
@@ -202,7 +205,7 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
             e.printStackTrace();
         }
 
-        if (storeStatus.equalsIgnoreCase("0")) {
+        if (storeStatus != null && storeStatus.equalsIgnoreCase("0")) {
             String message = Util.loadPreferenceValue(MainActivity.this, Constant.STORE_STATUS_MESSAGE);
             storeStatusAlertNew(message + "\n" + "Do you want to turn the customer app on?", "on");
         }
@@ -256,9 +259,7 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
                 break;
 
         }
-
     }
-
 
     public DashBoardModelStoreDetail getStoreDataAsObject(String store) {
         DashBoardModelStoreDetail object;
@@ -311,7 +312,7 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
 
         storeStatus = jObject.getStoreStatus();
 
-        if (storeStatus.equalsIgnoreCase("1")) {
+        if (storeStatus != null && storeStatus.equalsIgnoreCase("1")) {
             mStoreStatusImage.setBackgroundResource(R.drawable.greeen_circle_bg);
         } else {
             mStoreStatusImage.setBackgroundResource(R.drawable.red_circle_bg);
@@ -411,8 +412,6 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
             e.printStackTrace();
             txtShopName.setText("Store Name");
         }
-
-
     }
 
     public void toggleSlidingMenu() {
@@ -424,7 +423,8 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
     }
 
     public void onMenuButtonClick(View view) {
-
+        Fragment fragment = null;
+        Bundle bundle = null;
         switch (view.getId()) {
             case R.id.btnDashBoard:
                 textTitle.setText(title[0]);
@@ -435,30 +435,48 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
             case R.id.btnOrders:
                 actionForOrdersDetailView();
                 break;
+            /*This module is working as a due orders display in version one as on later due order is merge with
+            active order and this id is used for  delivered module */
             case R.id.btnDueOrders:
                 textTitle.setText(title[1]);
                 fragmentName = title[1];
-                replace(DueOrderFragment.newInstance(this));
+                fragment = ActiveOrderFragment.newInstance(this);
+                bundle = new Bundle();
+                bundle.putString("type", Constant.TYPE_DELIVERED);
+                fragment.setArguments(bundle);
+                replace(fragment);
                 toggleSlidingMenu();
                 break;
             case R.id.btnActiveOrder:
                 textTitle.setText(title[2]);
                 fragmentName = title[2];
-                replace(ActiveOrderFragment.newInstance(this));
+                fragment = AllOrderFragment.newInstance(this);
+                bundle = new Bundle();
+                bundle.putString("type", Constant.TYPE_ALL_ORDER);
+                fragment.setArguments(bundle);
+                replace(fragment);
                 toggleSlidingMenu();
                 break;
 
             case R.id.btnRejectedOrder:
                 textTitle.setText(title[3]);
                 fragmentName = title[3];
-                replace(RejectedItemsFragment.newInstance(this));
+                fragment = ActiveOrderFragment.newInstance(this);
+                bundle = new Bundle();
+                bundle.putString("type", Constant.TYPE_REJECTED);
+                fragment.setArguments(bundle);
+                replace(fragment);
                 toggleSlidingMenu();
                 break;
 
             case R.id.btnCanceledOrder:
                 textTitle.setText(title[4]);
                 fragmentName = title[4];
-                replace(CanceledOrdersFragment.newInstance(this));
+                fragment = ActiveOrderFragment.newInstance(this);
+                bundle = new Bundle();
+                bundle.putString("type", Constant.TYPE_CANCELLED);
+                fragment.setArguments(bundle);
+                replace(fragment);
                 toggleSlidingMenu();
                 break;
 
@@ -477,12 +495,10 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
                 break;
 
             case R.id.btnManageStores:
-
                 textTitle.setText(title[7]);
                 fragmentName = title[7];
                 replace(ManageStoresFragment.newInstance(this));
                 toggleSlidingMenu();
-
                 break;
 
             case R.id.btnCategories:

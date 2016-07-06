@@ -337,7 +337,6 @@ public class AppDatabase {
 
     public void setListOrders(List<OrdersListModel> orders) {
         String storeId = Util.loadPreferenceValue(context, Constant.STORE_ID);
-
         for (OrdersListModel order : orders) {
             try {
                 ContentValues values = new ContentValues();
@@ -354,17 +353,25 @@ public class AppDatabase {
                 values.put("tax", order.getTax());
                 values.put("checkout", String.valueOf(order.getCheckout()));
                 values.put("shipping_charges", String.valueOf(order.getShippingCharges()));
+                values.put("coupon_code", order.getCouponCode());
                 values.put("address", order.getAddress());
                 values.put("total_amount", String.valueOf(order.getTotalAmount()));
                 values.put("items", gsonHelper.getItems(order.getItems()));
-
-                if (isOrderExist(order.getOrderId())) {
+                OrdersListModel orderDb = getOrderFromDB(order.getOrderId());
+                if (orderDb != null) {
                     long l = db.update("orders", values, "order_id=? AND store_id=?", new String[]{order.getOrderId(), storeId});
                     Log.i(TAG, "--------Order " + order.getOrderId() + "--------UPDATED------------");
                 } else {
                     long l = db.insert("orders", null, values);
                     Log.i(TAG, "--------Order " + order.getOrderId() + "--------Created------------");
                 }
+//                if (isOrderExist(order.getOrderId())) {
+//                    long l = db.update("orders", values, "order_id=? AND store_id=?", new String[]{order.getOrderId(), storeId});
+//                    Log.i(TAG, "--------Order " + order.getOrderId() + "--------UPDATED------------");
+//                } else {
+//                    long l = db.insert("orders", null, values);
+//                    Log.i(TAG, "--------Order " + order.getOrderId() + "--------Created------------");
+//                }
 
             } catch (Exception e) {
                 e.printStackTrace();
@@ -394,8 +401,8 @@ public class AppDatabase {
         List<OrdersListModel> orderList = new ArrayList<>();
         Cursor cursor = null;
         try {
-            String sql = String.format(Locale.US, "SELECT * FROM orders where store_id=%s AND status=%s OR" +
-                    " status=%s OR status=%s", storeId, "1","4","5");
+            String sql = String.format(Locale.US, "SELECT * FROM orders where store_id=%s AND  status=%s OR status=%s OR " +
+                    " status=%s ", storeId, "0", "1", "4");
             cursor = db.rawQuery(sql, null);
             orderList = getOrders(cursor);
             if (cursor != null)
@@ -515,24 +522,25 @@ public class AppDatabase {
         List<OrdersListModel> listOrders = new ArrayList<>();
         try {
             cursor.moveToFirst();
+
             while (cursor.isAfterLast() == false) {
                 OrdersListModel order = new OrdersListModel();
-                order.setOrderId(cursor.getString(0));
-                order.setUserId(cursor.getString(2));
-                order.setStatus(cursor.getString(3));
-                order.setCustomerName(cursor.getString(4));
-                order.setPhone(cursor.getString(5));
-                order.setTime(cursor.getString(6));
-                order.setNote(cursor.getString(7));
-                order.setDiscount(Double.parseDouble(cursor.getString(8)));
-                order.setTotal(Double.parseDouble(cursor.getString(9)));
-                order.setCheckout(Double.parseDouble(cursor.getString(10)));
-                order.setShippingCharges(Double.parseDouble(cursor.getString(11)));
-                order.setCouponCode(cursor.getString(12));
-                order.setAddress(cursor.getString(13));
-                order.setTotalAmount(Double.parseDouble(cursor.getString(14)));
-                order.setItems(gsonHelper.getItems(cursor.getString(15)));
-                order.setTax(Double.parseDouble(cursor.getString(16)));
+                order.setOrderId(cursor.getString(cursor.getColumnIndex("order_id")));
+                order.setUserId(cursor.getString(cursor.getColumnIndex("user_id")));
+                order.setStatus(cursor.getString(cursor.getColumnIndex("status")));
+                order.setCustomerName(cursor.getString(cursor.getColumnIndex("customer_name")));
+                order.setPhone(cursor.getString(cursor.getColumnIndex("phone")));
+                order.setTime(cursor.getString(cursor.getColumnIndex("time")));
+                order.setNote(cursor.getString(cursor.getColumnIndex("note")));
+                order.setDiscount(Double.parseDouble(cursor.getString(cursor.getColumnIndex("discount"))));
+                order.setTotal(Double.parseDouble(cursor.getString(cursor.getColumnIndex("total"))));
+                order.setCheckout(Double.parseDouble(cursor.getString(cursor.getColumnIndex("checkout"))));
+                order.setShippingCharges(Double.parseDouble(cursor.getString(cursor.getColumnIndex("shipping_charges"))));
+                order.setCouponCode(cursor.getString(cursor.getColumnIndex("coupon_code")));
+                order.setAddress(cursor.getString(cursor.getColumnIndex("address")));
+                order.setTotalAmount(Double.parseDouble(cursor.getString(cursor.getColumnIndex("total_amount"))));
+                order.setItems(gsonHelper.getItems(cursor.getString(cursor.getColumnIndex("items"))));
+                order.setTax(Double.parseDouble(cursor.getString(cursor.getColumnIndex("tax"))));
                 listOrders.add(order);
                 cursor.moveToNext();
             }
@@ -563,6 +571,43 @@ public class AppDatabase {
                 cursor.close();
         }
         return false;
+    }
+
+    public OrdersListModel getOrderFromDB(String id) {
+        String storeId = Util.loadPreferenceValue(context, Constant.STORE_ID);
+        Cursor cursor = null;
+        OrdersListModel order = null;
+        try {
+            String sql = String.format(Locale.US,
+                    "SELECT * FROM orders where store_id=%s AND order_id=%s", storeId, id);
+            cursor = db.rawQuery(sql, null);
+            if (cursor.moveToFirst()) {
+                order = new OrdersListModel();
+                order.setOrderId(cursor.getString(cursor.getColumnIndex("order_id")));
+                order.setUserId(cursor.getString(cursor.getColumnIndex("user_id")));
+                order.setStatus(cursor.getString(cursor.getColumnIndex("status")));
+                order.setCustomerName(cursor.getString(cursor.getColumnIndex("customer_name")));
+                order.setPhone(cursor.getString(cursor.getColumnIndex("phone")));
+                order.setTime(cursor.getString(cursor.getColumnIndex("time")));
+                order.setNote(cursor.getString(cursor.getColumnIndex("note")));
+                order.setDiscount(Double.parseDouble(cursor.getString(cursor.getColumnIndex("discount"))));
+                order.setTotal(Double.parseDouble(cursor.getString(cursor.getColumnIndex("total"))));
+                order.setCheckout(Double.parseDouble(cursor.getString(cursor.getColumnIndex("checkout"))));
+                order.setShippingCharges(Double.parseDouble(cursor.getString(cursor.getColumnIndex("shipping_charges"))));
+                order.setCouponCode(cursor.getString(cursor.getColumnIndex("coupon_code")));
+                order.setAddress(cursor.getString(cursor.getColumnIndex("address")));
+                order.setTotalAmount(Double.parseDouble(cursor.getString(cursor.getColumnIndex("total_amount"))));
+                order.setItems(gsonHelper.getItems(cursor.getString(cursor.getColumnIndex("items"))));
+                order.setTax(Double.parseDouble(cursor.getString(cursor.getColumnIndex("tax"))));
+                cursor.moveToNext();
+            }
+            cursor.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+            if (cursor != null)
+                cursor.close();
+        }
+        return order;
     }
 
 

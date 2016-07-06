@@ -19,26 +19,26 @@ import android.view.animation.AnimationUtils;
 import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.ImageButton;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
-import android.widget.ToggleButton;
 
 import com.signity.shopkeeperapp.R;
-import com.signity.shopkeeperapp.app.DataAdapter;
 import com.signity.shopkeeperapp.model.ItemListModel;
+import com.signity.shopkeeperapp.model.OrderTaxModel;
+import com.signity.shopkeeperapp.model.OrdersListModel;
 import com.signity.shopkeeperapp.model.SetOrdersModel;
+import com.signity.shopkeeperapp.model.StoreTaxModel;
 import com.signity.shopkeeperapp.network.NetworkAdaper;
 import com.signity.shopkeeperapp.util.AnimUtil;
 import com.signity.shopkeeperapp.util.Constant;
 import com.signity.shopkeeperapp.util.DialogHandler;
 import com.signity.shopkeeperapp.util.DialogUtils;
+import com.signity.shopkeeperapp.util.PrefManager;
 import com.signity.shopkeeperapp.util.ProgressDialogUtil;
 import com.signity.shopkeeperapp.util.Util;
-import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -58,7 +58,6 @@ public class DueOrderDetailFragmentWithoutUpdations extends Fragment implements 
     ListView listDueOrderItems;
 
     ImageButton mOrderDetailBtn;
-    Button mApproveOrder, mDeclineOrder;
     DueOrderItemsAdapterWithoutUpdations adapter;
     String name;
     String phoneNumber;
@@ -95,24 +94,30 @@ public class DueOrderDetailFragmentWithoutUpdations extends Fragment implements 
     private boolean isAlreadyDelivered = false;
 
 
-    private LinearLayout footer;
+    private OrdersListModel ordersListModel;
+    private PrefManager prefManager;
+    private LinearLayout linearDynamicTaxBlock;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        name = getArguments().getString("name");
-        phoneNumber = getArguments().getString("phone");
-        orderId = getArguments().getString("orderID");
-        userId = getArguments().getString("userID");
-        type = getArguments().getString("type");
-        listItem = DataAdapter.getInstance().getListItem();
+        prefManager = new PrefManager(getActivity());
+        ordersListModel = (OrdersListModel) getArguments().getSerializable("object");
+        setUiData();
+    }
 
-        note = getArguments().getString("note");
-        address = getArguments().getString("address");
-        total = getArguments().getDouble("total");
-        tax = getArguments().getDouble("tax");
-        discount = getArguments().getDouble("discount");
-        shipping_charges = getArguments().getDouble("shipping_charges");
+    public void setUiData() {
+        name = ordersListModel.getCustomerName();
+        phoneNumber = ordersListModel.getPhone();
+        orderId = ordersListModel.getOrderId();
+        userId = ordersListModel.getUserId();
+        note = ordersListModel.getNote();
+        total = ordersListModel.getTotal();
+        shipping_charges = ordersListModel.getShippingCharges();
+        discount = ordersListModel.getDiscount();
+        address = ordersListModel.getAddress();
+        listItem = ordersListModel.getItems();
+        tax = ordersListModel.getTax();
     }
 
     public static Fragment newInstance(Context context) {
@@ -135,21 +140,9 @@ public class DueOrderDetailFragmentWithoutUpdations extends Fragment implements 
         btnMoveToDeliver.setOnClickListener(this);
         buttonRejectOrder.setOnClickListener(this);
         setUpButtonStatus();
-        footer = (LinearLayout) rootView.findViewById(R.id.footer);
-        footer.setVisibility(View.GONE);
-        mApproveOrder = (Button) rootView.findViewById(R.id.btnApproveOrder);
-        mApproveOrder.setVisibility(View.GONE);
-
-        mDeclineOrder = (Button) rootView.findViewById(R.id.btnDeclineOrder);
-        mDeclineOrder.setVisibility(View.GONE);
-
         mOrderDetailBtn = (ImageButton) rootView.findViewById(R.id.btnOrderDetail);
-
-
         mOrderDetailLayout = (RelativeLayout) rootView.findViewById(R.id.layout_order_detail);
 
-        mDetailBtnBlock = (RelativeLayout) rootView.findViewById(R.id.detailBtnBlock);
-//        mDetailBtnBlock.setOnClickListener(this);
 
         slideUpAnim = AnimationUtils.loadAnimation(getActivity()
                 .getApplicationContext(), R.anim.slide_up_for_order_detail);
@@ -164,8 +157,7 @@ public class DueOrderDetailFragmentWithoutUpdations extends Fragment implements 
         handleCallButton(rootView);
         setHeader(rootView);
 
-
-        adapter = new DueOrderItemsAdapterWithoutUpdations(getActivity());
+        adapter = new DueOrderItemsAdapterWithoutUpdations(getActivity(), listItem);
         listDueOrderItems.setAdapter(adapter);
 
         setOrderDetails();
@@ -175,20 +167,20 @@ public class DueOrderDetailFragmentWithoutUpdations extends Fragment implements 
 
     private void setUpButtonStatus() {
 
-        if (type.equalsIgnoreCase(Constant.TYPE_PROCESSING)) {
+        if (ordersListModel.getStatus().equalsIgnoreCase("1")) {
             isAlreadyProcess = true;
             btnOrderProceed.setSelected(true);
             btnMoveToShipping.setEnabled(true);
             btnMoveToDeliver.setEnabled(false);
             buttonRejectOrder.setVisibility(View.VISIBLE);
             buttonRejectOrder.setEnabled(true);
-        } else if (type.equalsIgnoreCase(Constant.TYPE_SHIPPING)) {
+        } else if (ordersListModel.getStatus().equalsIgnoreCase("4")) {
             isAlreadyShipped = true;
             btnOrderProceed.setSelected(true);
             btnMoveToShipping.setSelected(true);
             btnMoveToDeliver.setEnabled(true);
             buttonRejectOrder.setVisibility(View.GONE);
-        } else if (type.equalsIgnoreCase(Constant.TYPE_DELIVERED)) {
+        } else if (ordersListModel.getStatus().equalsIgnoreCase("5")) {
             isAlreadyDelivered = true;
             btnOrderProceed.setSelected(true);
             btnMoveToShipping.setSelected(true);
@@ -204,9 +196,8 @@ public class DueOrderDetailFragmentWithoutUpdations extends Fragment implements 
         mNote = (TextView) headerView.findViewById(R.id.txtNote);
         mItemsPrice = (TextView) headerView.findViewById(R.id.items_price);
         mShippingCharges = (TextView) headerView.findViewById(R.id.shipping_charges);
-        mTaxVal = (TextView) headerView.findViewById(R.id.taxVal);
         mDiscountVal = (TextView) headerView.findViewById(R.id.discountVal);
-
+        linearDynamicTaxBlock = (LinearLayout) headerView.findViewById(R.id.dynamicTaxBlock);
         mNoteLayout = (RelativeLayout) headerView.findViewById(R.id.noteLayout);
         mAddressLayout = (RelativeLayout) headerView.findViewById(R.id.addressLayout);
         listDueOrderItems.addHeaderView(headerView);
@@ -281,20 +272,6 @@ public class DueOrderDetailFragmentWithoutUpdations extends Fragment implements 
     public void onClick(View view) {
 
         switch (view.getId()) {
-            case R.id.btnApproveOrder:
-                if (!Util.checkIntenetConnection(getActivity())) {
-                    DialogUtils.showAlertDialog(getActivity(), "Internet", "Please check your Internet Connection.");
-                    return;
-                }
-                orderStatus = "1";
-                calculateIDS();
-                break;
-//            case R.id.btnDeclineOrder:
-//                alertBox("Are you sure to Decline this order?");
-//                break;
-            case R.id.detailBtnBlock:
-                actionForOrderDetailView();
-                break;
             case R.id.relDeclineOrder:
                 if (!Util.checkIntenetConnection(getActivity())) {
                     DialogUtils.showAlertDialog(getActivity(), "Internet", "Please check your Internet Connection.");
@@ -337,8 +314,6 @@ public class DueOrderDetailFragmentWithoutUpdations extends Fragment implements 
                     Toast.makeText(getActivity(), "Please shipped your order first", Toast.LENGTH_SHORT).show();
                 }
                 break;
-
-
         }
 
     }
@@ -395,7 +370,7 @@ public class DueOrderDetailFragmentWithoutUpdations extends Fragment implements 
 
                 dialog.cancel();
                 orderStatus = "2";
-                calculateIDS();
+                setOrderForReject();
             }
         });
 
@@ -410,79 +385,6 @@ public class DueOrderDetailFragmentWithoutUpdations extends Fragment implements 
         alert.show();
     }
 
-    private void calculateIDS() {
-
-        acceptItemList.clear();
-        rejectItemList.clear();
-
-        for (int i = 0; i < listItem.size(); i++) {
-            if (listItem.get(i).isChecked) {
-                acceptItemList.add(listItem.get(i).getCid());
-            } else {
-                rejectItemList.add(listItem.get(i).getCid());
-            }
-        }
-
-        getItemIDS();
-    }
-
-    private void getItemIDS() {
-
-        itemAcceptIds = "";
-        itemRejectIds = "";
-
-        for (int i = 0; i < acceptItemList.size(); i++) {
-            if (i == 0) {
-                itemAcceptIds = acceptItemList.get(i);
-            } else {
-                itemAcceptIds = itemAcceptIds + ","
-                        + acceptItemList.get(i);
-            }
-        }
-
-        for (int i = 0; i < rejectItemList.size(); i++) {
-            if (i == 0) {
-                itemRejectIds = rejectItemList.get(i);
-            } else {
-                itemRejectIds = itemRejectIds + ","
-                        + rejectItemList.get(i);
-            }
-        }
-        setOrderForReject();
-    }
-
-    private void setOrderStatus() {
-
-        ProgressDialogUtil.showProgressDialog(getActivity());
-
-        Map<String, String> param = new HashMap<String, String>();
-        param.put("user_id", userId);
-        param.put("order_status", orderStatus);
-        param.put("order_id", orderId);
-        param.put("item_accept_ids", itemAcceptIds);
-        param.put("item_reject_ids", itemRejectIds);
-
-        NetworkAdaper.getInstance().getNetworkServices().setOrderStatus(param, new Callback<SetOrdersModel>() {
-            @Override
-            public void success(SetOrdersModel getValues, Response response) {
-                Log.e("Tab", getValues.toString());
-                if (getValues.getSuccess()) {
-                    ProgressDialogUtil.hideProgressDialog();
-                    showAlertDialog(getActivity(), Constant.APP_TITLE, getValues.getMessage());
-                } else {
-                    ProgressDialogUtil.hideProgressDialog();
-                    showAlertDialog(getActivity(), Constant.APP_TITLE, getValues.getMessage());
-                }
-
-            }
-
-            @Override
-            public void failure(RetrofitError error) {
-                ProgressDialogUtil.hideProgressDialog();
-                DialogUtils.showAlertDialog(getActivity(), Constant.APP_TITLE, "Error Occurred, Try again later.");
-            }
-        });
-    }
 
     private void setOrderForShipping() {
 
@@ -500,6 +402,7 @@ public class DueOrderDetailFragmentWithoutUpdations extends Fragment implements 
             public void success(SetOrdersModel getValues, Response response) {
                 Log.e("Tab", getValues.toString());
                 if (getValues.getSuccess()) {
+                    prefManager.storeSharedValue(Constant.REFERESH_DATA_REQURIED, "1");
                     isAlreadyShipped = true;
                     btnOrderProceed.setSelected(true);
                     btnMoveToShipping.setSelected(true);
@@ -538,6 +441,7 @@ public class DueOrderDetailFragmentWithoutUpdations extends Fragment implements 
             public void success(SetOrdersModel getValues, Response response) {
                 Log.e("Tab", getValues.toString());
                 if (getValues.getSuccess()) {
+                    prefManager.storeSharedValue(Constant.REFERESH_DATA_REQURIED, "1");
                     isAlreadyDelivered = true;
                     btnOrderProceed.setSelected(true);
                     btnMoveToShipping.setSelected(true);
@@ -577,6 +481,7 @@ public class DueOrderDetailFragmentWithoutUpdations extends Fragment implements 
             public void success(SetOrdersModel getValues, Response response) {
                 Log.e("Tab", getValues.toString());
                 if (getValues.getSuccess()) {
+                    prefManager.storeSharedValue(Constant.REFERESH_DATA_REQURIED, "1");
                     ProgressDialogUtil.hideProgressDialog();
                     final DialogHandler dialogHandler = new DialogHandler(getActivity());
                     dialogHandler.setDialog(Constant.APP_TITLE, getValues.getMessage());
@@ -636,28 +541,12 @@ public class DueOrderDetailFragmentWithoutUpdations extends Fragment implements 
         LayoutInflater inflater;
         ViewHolder holder = null;
 
-        public DueOrderItemsAdapterWithoutUpdations(Context context) {
-            this.context = context;
+        List<ItemListModel> listItem;
+
+        public DueOrderItemsAdapterWithoutUpdations(Context context, List<ItemListModel> listItem) {
             this.inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-
-            rejectItemList.clear();
-            acceptItemList.clear();
-
-            if (type.equalsIgnoreCase("due")) {
-
-                for (int i = 0; i < listItem.size(); i++) {
-                    listItem.get(i).isChecked = true;
-                }
-
-            } else {
-                for (int i = 0; i < listItem.size(); i++) {
-                    if (listItem.get(i).getStatus().equalsIgnoreCase("1")) {
-                        listItem.get(i).isChecked = true;
-                    } else {
-                        listItem.get(i).isChecked = false;
-                    }
-                }
-            }
+            this.context = context;
+            this.listItem = listItem;
         }
 
         @Override
@@ -683,60 +572,41 @@ public class DueOrderDetailFragmentWithoutUpdations extends Fragment implements 
                 holder = new ViewHolder();
                 convertView = inflater
                         .inflate(R.layout.row_list_due_orders_items, null);
-                holder.itemImage = (ImageView) convertView.findViewById(R.id.itemImage);
                 holder.itemName = (TextView) convertView.findViewById(R.id.txtItemName);
                 holder.itemPrice = (TextView) convertView.findViewById(R.id.txtPrice);
                 holder.txtWeight = (TextView) convertView.findViewById(R.id.txtWeight);
                 holder.itemQuantiy = (TextView) convertView.findViewById(R.id.txtLblQuantity);
                 holder.itemsTotal = (TextView) convertView.findViewById(R.id.txtLblTotal);
-                holder.toggle = (ToggleButton) convertView.findViewById(R.id.toggle);
+                holder.toggle = (ImageButton) convertView.findViewById(R.id.toggle);
                 holder.parent = (RelativeLayout) convertView.findViewById(R.id.parent);
                 convertView.setTag(holder);
             } else {
                 holder = (ViewHolder) convertView.getTag();
             }
 
-            ItemListModel data = listItem.get(position);
-            holder.itemName.setText(listItem.get(position).getName());
-            holder.itemPrice.setText("Price: " + Util.getCurrency(context) + " " + listItem.get(position).getPrice());
+            ItemListModel itemListModel = listItem.get(position);
+            holder.itemName.setText(itemListModel.getName());
+            holder.itemPrice.setText("Price: " + Util.getCurrency(context) + " " + itemListModel.getPrice());
             holder.itemQuantiy.setText("Qty: " + listItem.get(position).getQuantity());
 
-            if ((data.getWeight() != null && !(data.getWeight().isEmpty())) && (data.getUnitType() != null && !(data.getUnitType()
+            if ((itemListModel.getWeight() != null && !(itemListModel.getWeight().isEmpty())) && (itemListModel.getUnitType() != null && !(itemListModel.getUnitType()
                     .isEmpty()))) {
-                holder.txtWeight.setText(data.getWeight() + " " + data.getUnitType());
+                holder.txtWeight.setText(itemListModel.getWeight() + " " + itemListModel.getUnitType());
                 holder.txtWeight.setVisibility(View.VISIBLE);
             } else {
                 holder.txtWeight.setVisibility(View.GONE);
             }
 
 
-            if (listItem.get(position).getImageMedium() != null && !listItem.get(position).getImageMedium().isEmpty()) {
-                Picasso.with(getActivity()).load(listItem.get(position).getImageMedium()).error(R.drawable.no_image).into(holder.itemImage);
+            if (itemListModel.getStatus().equalsIgnoreCase("2")) {
+                holder.toggle.setSelected(false);
             } else {
-                holder.itemImage.setImageResource(R.drawable.no_image);
-            }
-
-            if (listItem.get(position).isChecked) {
-                holder.toggle.setChecked(true);
-            } else {
-                holder.toggle.setChecked(false);
+                holder.toggle.setSelected(true);
             }
 
             Double itemsTotal = 0.00;
             itemsTotal = listItem.get(position).getPrice() * Integer.parseInt(listItem.get(position).getQuantity());
             holder.itemsTotal.setText("Total: " + Util.getCurrency(context) + " " + itemsTotal);
-
-
-            holder.toggle.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-
-                    listItem.get(position).isChecked = !listItem.get(position).isChecked;
-
-                    notifyDataSetChanged();
-
-                }
-            });
 
             holder.toggle.setEnabled(false);
 
@@ -744,19 +614,15 @@ public class DueOrderDetailFragmentWithoutUpdations extends Fragment implements 
         }
 
         class ViewHolder {
-            ImageView itemImage;
             TextView itemName;
             TextView itemPrice;
             TextView txtWeight;
             TextView itemQuantiy;
             TextView itemsTotal;
-            ToggleButton toggle;
+            ImageButton toggle;
             RelativeLayout parent;
         }
-
-
     }
-
 
     public void setOrderDetails() {
 
@@ -767,13 +633,11 @@ public class DueOrderDetailFragmentWithoutUpdations extends Fragment implements 
             mNoteLayout.setVisibility(View.GONE);
         } else {
             mNote.setText(note);
-
         }
 
         Double itemsAmount = 0.00;
 
         for (int i = 0; i < listItem.size(); i++) {
-
             if (listItem.get(i).isChecked) {
                 itemsAmount = itemsAmount + (listItem.get(i).getPrice() * Integer.parseInt(listItem.get(i).getQuantity()));
             }
@@ -782,12 +646,154 @@ public class DueOrderDetailFragmentWithoutUpdations extends Fragment implements 
         Double totalAmount = 0.00;
         totalAmount = (itemsAmount + shipping_charges) - discount + tax;
 
-        mTotalAmount.setText(Util.getCurrency(getActivity()) + " " + totalAmount);
-        mItemsPrice.setText(Util.getCurrency(getActivity()) + " " + itemsAmount);
-        mShippingCharges.setText(Util.getCurrency(getActivity()) + " " + shipping_charges);
-        mTaxVal.setText(Util.getCurrency(getActivity()) + " " + tax);
-        mDiscountVal.setText(Util.getCurrency(getActivity()) + " " + discount);
-
-
+        mTotalAmount.setText(Util.getCurrency(getActivity()) + " " + Util.getDoubleValue(totalAmount));
+        mItemsPrice.setText(Util.getCurrency(getActivity()) + " " + Util.getDoubleValue(itemsAmount));
+        mShippingCharges.setText(Util.getCurrency(getActivity()) + " " + Util.getDoubleValue(shipping_charges));
+        mDiscountVal.setText(Util.getCurrency(getActivity()) + " " + Util.getDoubleValue(discount));
+        setupTaxModule();
     }
+
+    private void setupTaxModule() {
+        List<StoreTaxModel> fixedStoreTaxes = ordersListModel.getStoreTaxes();
+        List<OrderTaxModel> taxes = ordersListModel.getTaxes();
+        if (fixedStoreTaxes != null && fixedStoreTaxes.size() > 0) {
+            for (StoreTaxModel storeTaxModel : fixedStoreTaxes) {
+                View child = getActivity().getLayoutInflater().inflate(R.layout.tax_row_layout, null);
+                TextView tax_label = (TextView) child.findViewById(R.id.tax_label);
+                TextView tax_value = (TextView) child.findViewById(R.id.tax_value);
+                TextView rs5 = (TextView) child.findViewById(R.id.rs5);
+
+                String currency = Util.getCurrency(getActivity());
+                if (currency.contains("\\")) {
+                    rs5.setText(unescapeJavaString(currency));
+                } else {
+                    rs5.setText(currency);
+                }
+                tax_label.setText("" + storeTaxModel.getFixedTaxLabel());
+                tax_value.setText("" + Util.getDoubleValue(storeTaxModel.getFixedTaxAmount()));
+                if (storeTaxModel.getIsTaxEnable() != null && storeTaxModel.getIsTaxEnable().equalsIgnoreCase("1")) {
+                    linearDynamicTaxBlock.addView(child);
+                }
+            }
+        }
+        if (taxes != null && taxes.size() > 0) {
+            for (OrderTaxModel taxModel : taxes) {
+                View child = getActivity().getLayoutInflater().inflate(R.layout.tax_row_layout, null);
+                TextView tax_label = (TextView) child.findViewById(R.id.tax_label);
+                TextView tax_value = (TextView) child.findViewById(R.id.tax_value);
+                TextView rs5 = (TextView) child.findViewById(R.id.rs5);
+
+                String currency = Util.getCurrency(getActivity());
+                if (currency.contains("\\")) {
+                    rs5.setText(unescapeJavaString(currency));
+                } else {
+                    rs5.setText(currency);
+                }
+                tax_label.setText("" + taxModel.getLabel() + "(" + taxModel.getRate() + "%)");
+                tax_value.setText("" + Util.getDoubleValue(taxModel.getTax()));
+                Double taxValue = null;
+                try {
+                    taxValue = Double.parseDouble(taxModel.getTax());
+                } catch (NumberFormatException e) {
+                    e.printStackTrace();
+                }
+                if (taxValue != null && taxValue != 0.0) {
+                    linearDynamicTaxBlock.addView(child);
+                }
+
+            }
+        }
+        if (fixedStoreTaxes != null && fixedStoreTaxes.size() > 0) {
+            for (StoreTaxModel storeTaxModel : fixedStoreTaxes) {
+                View child = getActivity().getLayoutInflater().inflate(R.layout.tax_row_layout, null);
+                TextView tax_label = (TextView) child.findViewById(R.id.tax_label);
+                TextView tax_value = (TextView) child.findViewById(R.id.tax_value);
+                TextView rs5 = (TextView) child.findViewById(R.id.rs5);
+
+                String currency = Util.getCurrency(getActivity());
+                if (currency.contains("\\")) {
+                    rs5.setText(unescapeJavaString(currency));
+                } else {
+                    rs5.setText(currency);
+                }
+                tax_label.setText("" + storeTaxModel.getFixedTaxLabel());
+                tax_value.setText("" + Util.getDoubleValue(storeTaxModel.getFixedTaxAmount()));
+                if (storeTaxModel.getIsTaxEnable() != null && storeTaxModel.getIsTaxEnable().equalsIgnoreCase("0")) {
+                    linearDynamicTaxBlock.addView(child);
+                }
+            }
+        }
+    }
+
+    public String unescapeJavaString(String st) {
+
+        StringBuilder sb = new StringBuilder(st.length());
+
+        for (int i = 0; i < st.length(); i++) {
+            char ch = st.charAt(i);
+            if (ch == '\\') {
+                char nextChar = (i == st.length() - 1) ? '\\' : st
+                        .charAt(i + 1);
+// Octal escape?
+                if (nextChar >= '0' && nextChar <= '7') {
+                    String code = "" + nextChar;
+                    i++;
+                    if ((i < st.length() - 1) && st.charAt(i + 1) >= '0'
+                            && st.charAt(i + 1) <= '7') {
+                        code += st.charAt(i + 1);
+                        i++;
+                        if ((i < st.length() - 1) && st.charAt(i + 1) >= '0'
+                                && st.charAt(i + 1) <= '7') {
+                            code += st.charAt(i + 1);
+                            i++;
+                        }
+                    }
+                    sb.append((char) Integer.parseInt(code, 8));
+                    continue;
+                }
+                switch (nextChar) {
+                    case '\\':
+                        ch = '\\';
+                        break;
+                    case 'b':
+                        ch = '\b';
+                        break;
+                    case 'f':
+                        ch = '\f';
+                        break;
+                    case 'n':
+                        ch = '\n';
+                        break;
+                    case 'r':
+                        ch = '\r';
+                        break;
+                    case 't':
+                        ch = '\t';
+                        break;
+                    case '\"':
+                        ch = '\"';
+                        break;
+                    case '\'':
+                        ch = '\'';
+                        break;
+// Hex Unicode: u????
+                    case 'u':
+                        if (i >= st.length() - 5) {
+                            ch = 'u';
+                            break;
+                        }
+                        int code = Integer.parseInt(
+                                "" + st.charAt(i + 2) + st.charAt(i + 3)
+                                        + st.charAt(i + 4) + st.charAt(i + 5), 16);
+                        sb.append(Character.toChars(code));
+                        i += 5;
+                        continue;
+                }
+                i++;
+            }
+            sb.append(ch);
+        }
+        return sb.toString();
+    }
+
 }

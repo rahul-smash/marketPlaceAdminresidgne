@@ -3,11 +3,16 @@ package com.signity.shopkeeperapp.model;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
+import java.io.Serializable;
+
 /**
  * Created by rajesh on 16/10/15.
  */
-public class ItemListModel {
+public class ItemListModel implements Serializable {
 
+    @SerializedName("cart_id")
+    @Expose
+    private String itemId;
     @SerializedName("pid")
     @Expose
     private String pid;
@@ -46,6 +51,17 @@ public class ItemListModel {
     @Expose
     private Double price;
 
+
+
+    /*Getter setter start here*/
+
+    public String getItemId() {
+        return itemId;
+    }
+
+    public void setItemId(String itemId) {
+        this.itemId = itemId;
+    }
 
     public boolean isChecked = true;
 

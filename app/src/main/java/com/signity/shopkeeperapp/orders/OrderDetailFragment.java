@@ -1,5 +1,6 @@
 package com.signity.shopkeeperapp.orders;
 
+import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -16,28 +17,27 @@ import android.view.animation.AnimationUtils;
 import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.ImageButton;
-import android.widget.LinearLayout;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
+import android.widget.ToggleButton;
 
 import com.signity.shopkeeperapp.R;
+import com.signity.shopkeeperapp.app.DataAdapter;
 import com.signity.shopkeeperapp.model.ItemListModel;
-import com.signity.shopkeeperapp.model.OrderItemResponseModel;
-import com.signity.shopkeeperapp.model.OrderTaxModel;
-import com.signity.shopkeeperapp.model.OrdersListModel;
 import com.signity.shopkeeperapp.model.SetOrdersModel;
-import com.signity.shopkeeperapp.model.StoreTaxModel;
 import com.signity.shopkeeperapp.network.NetworkAdaper;
 import com.signity.shopkeeperapp.util.AnimUtil;
 import com.signity.shopkeeperapp.util.Constant;
 import com.signity.shopkeeperapp.util.DialogHandler;
 import com.signity.shopkeeperapp.util.DialogUtils;
-import com.signity.shopkeeperapp.util.PrefManager;
 import com.signity.shopkeeperapp.util.ProgressDialogUtil;
 import com.signity.shopkeeperapp.util.Util;
+import com.squareup.picasso.Picasso;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -49,7 +49,7 @@ import retrofit.client.Response;
 /**
  * Created by Rajinder on 28/9/15.
  */
-public class DueOrderDetailFragment extends Fragment implements View.OnClickListener {
+public class OrderDetailFragment extends Fragment implements View.OnClickListener {
 
     ListView listDueOrderItems;
     ImageButton mOrderDetailBtn;
@@ -59,6 +59,8 @@ public class DueOrderDetailFragment extends Fragment implements View.OnClickList
     String phoneNumber;
     String type = "";
     List<ItemListModel> listItem;
+    ArrayList<String> acceptItemList = new ArrayList<String>();
+    ArrayList<String> rejectItemList = new ArrayList<String>();
 
     String userId = "";
     String orderId = "";
@@ -83,42 +85,34 @@ public class DueOrderDetailFragment extends Fragment implements View.OnClickList
 
     TextView mDeliveryAddress, mNote, mItemsPrice, mShippingCharges, mDiscountVal, taxVal;
     RelativeLayout mNoteLayout, mAddressLayout;
-    LinearLayout linearDynamicTaxBlock;
     ImageButton btnOrderProceed, btnMoveToShipping, btnMoveToDeliver;
     Button buttonRejectOrder;
     private boolean isAlreadyShipped = false;
     private boolean isAlreadyProcess = false;
     private boolean isAlreadyDelivered = false;
-    private OrdersListModel ordersListModel;
-    private PrefManager prefManager;
 
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        prefManager = new PrefManager(getActivity());
-        ordersListModel = (OrdersListModel) getArguments().getSerializable("object");
-        setUiData();
+        name = getArguments().getString("name");
+        phoneNumber = getArguments().getString("phone");
+        orderId = getArguments().getString("orderID");
+        userId = getArguments().getString("userID");
+        type = getArguments().getString("type");
+        listItem = DataAdapter.getInstance().getListItem();
 
-    }
-
-    public void setUiData() {
-        name = ordersListModel.getCustomerName();
-        phoneNumber = ordersListModel.getPhone();
-        orderId = ordersListModel.getOrderId();
-        userId = ordersListModel.getUserId();
-        note = ordersListModel.getNote();
-        total = ordersListModel.getTotal();
-        shipping_charges = ordersListModel.getShippingCharges();
-        discount = ordersListModel.getDiscount();
-        address = ordersListModel.getAddress();
-        listItem = ordersListModel.getItems();
-        tax = ordersListModel.getTax();
+        note = getArguments().getString("note");
+        address = getArguments().getString("address");
+        total = getArguments().getDouble("total");
+        tax = getArguments().getDouble("tax");
+        discount = getArguments().getDouble("discount");
+        shipping_charges = getArguments().getDouble("shipping_charges");
     }
 
     public static Fragment newInstance(Context context) {
         return Fragment.instantiate(context,
-                DueOrderDetailFragment.class.getName());
+                OrderDetailFragment.class.getName());
     }
 
     @Nullable
@@ -168,7 +162,7 @@ public class DueOrderDetailFragment extends Fragment implements View.OnClickList
         handleCallButton(rootView);
         setHeader(rootView);
 
-        adapter = new DueOrderItemsAdapter(getActivity(), listItem);
+        adapter = new DueOrderItemsAdapter(getActivity());
         listDueOrderItems.setAdapter(adapter);
 
         setOrderDetails();
@@ -183,10 +177,11 @@ public class DueOrderDetailFragment extends Fragment implements View.OnClickList
         mItemsPrice = (TextView) headerView.findViewById(R.id.items_price);
         mShippingCharges = (TextView) headerView.findViewById(R.id.shipping_charges);
         mDiscountVal = (TextView) headerView.findViewById(R.id.discountVal);
-        linearDynamicTaxBlock = (LinearLayout) headerView.findViewById(R.id.dynamicTaxBlock);
+
         mNoteLayout = (RelativeLayout) headerView.findViewById(R.id.noteLayout);
         mAddressLayout = (RelativeLayout) headerView.findViewById(R.id.addressLayout);
         listDueOrderItems.addHeaderView(headerView);
+
     }
 
     private void handleCallButton(View rootView) {
@@ -266,7 +261,7 @@ public class DueOrderDetailFragment extends Fragment implements View.OnClickList
                 if (btnOrderProceed.isEnabled()) {
                     if (!isAlreadyProcess) {
                         orderStatus = "1";
-                        setOrderForProcessing();
+                        calculateIDS();
                     } else {
                         Toast.makeText(getActivity(), "Order already processed", Toast.LENGTH_SHORT).show();
                     }
@@ -319,6 +314,54 @@ public class DueOrderDetailFragment extends Fragment implements View.OnClickList
 
     }
 
+    private void actionForOrderDetailView() {
+        if (mOrderDetailBtn.isSelected()) {
+            orderDetailViewGone();
+        } else {
+            orderDetailViewVisible();
+        }
+
+    }
+
+    private void orderDetailViewGone() {
+        mOrderDetailBtn.setSelected(false);
+        mOrderDetailLayout.startAnimation(slideUpAnim);
+        mOrderDetailLayout.setVisibility(View.GONE);
+    }
+
+    private void orderDetailViewVisible() {
+        mOrderDetailBtn.setSelected(true);
+        mOrderDetailLayout.startAnimation(slideDownAnim);
+        mOrderDetailLayout.setVisibility(View.VISIBLE);
+    }
+
+    void alertBox(String message) {
+        AlertDialog.Builder adb = new AlertDialog.Builder(getActivity());
+        adb.setCancelable(false);
+        adb.setTitle(Constant.APP_TITLE);
+        adb.setMessage(message);
+
+        adb.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
+
+                dialog.cancel();
+                orderStatus = "2";
+                calculateIDS();
+            }
+        });
+
+        adb.setNegativeButton("No", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
+
+                dialog.cancel();
+
+            }
+        });
+
+        AlertDialog alert = adb.create();
+        alert.show();
+    }
+
 
     void alertBoxNew(String message) {
         final DialogHandler dialogHandler = new DialogHandler(getActivity());
@@ -331,7 +374,7 @@ public class DueOrderDetailFragment extends Fragment implements View.OnClickList
 
                         dialogHandler.dismiss();
                         orderStatus = "2";
-                        setOrderForReject();
+                        calculateIDS();
                     }
                 });
         dialogHandler.setNegativeButton("No", true)
@@ -344,8 +387,61 @@ public class DueOrderDetailFragment extends Fragment implements View.OnClickList
                 });
     }
 
+    private void calculateIDS() {
 
-    /*Api Calling for all order processing module working here below */
+        acceptItemList.clear();
+        rejectItemList.clear();
+
+        for (int i = 0; i < listItem.size(); i++) {
+            if (listItem.get(i).isChecked) {
+                acceptItemList.add(listItem.get(i).getCid());
+            } else {
+                rejectItemList.add(listItem.get(i).getCid());
+            }
+        }
+        if (acceptItemList.size() > 0) {
+            getItemIDS();
+        } else {
+            DialogUtils.showAlertDialog(getActivity(), Constant.APP_TITLE, "Accept atleast one item.");
+        }
+
+    }
+
+    private void getItemIDS() {
+
+        itemAcceptIds = "";
+        itemRejectIds = "";
+
+        for (int i = 0; i < acceptItemList.size(); i++) {
+            if (i == 0) {
+                itemAcceptIds = acceptItemList.get(i);
+            } else {
+                itemAcceptIds = itemAcceptIds + ","
+                        + acceptItemList.get(i);
+            }
+        }
+
+        for (int i = 0; i < rejectItemList.size(); i++) {
+            if (i == 0) {
+                itemRejectIds = rejectItemList.get(i);
+            } else {
+                itemRejectIds = itemRejectIds + ","
+                        + rejectItemList.get(i);
+            }
+        }
+
+        Log.v("userID : ", "" + userId);
+        Log.v("OrderID : ", "" + orderId);
+        Log.v("OrderStatus : ", "" + orderStatus);
+        Log.v("Accept IDS : ", "" + itemAcceptIds);
+        Log.v("Reject IDS : ", "" + itemRejectIds);
+
+        if (orderStatus.equalsIgnoreCase("2")) {
+            setOrderForReject();
+        } else {
+            setOrderForProcessing();
+        }
+    }
 
     private void setOrderForProcessing() {
 
@@ -354,14 +450,15 @@ public class DueOrderDetailFragment extends Fragment implements View.OnClickList
         Map<String, String> param = new HashMap<String, String>();
         param.put("user_id", userId);
         param.put("order_status", orderStatus);
-        param.put("order_ids", orderId);
+        param.put("order_id", orderId);
+        param.put("item_accept_ids", itemAcceptIds);
+        param.put("item_reject_ids", itemRejectIds);
 
         NetworkAdaper.getInstance().getNetworkServices().setOrderStatus(param, new Callback<SetOrdersModel>() {
             @Override
             public void success(SetOrdersModel getValues, Response response) {
                 Log.e("Tab", getValues.toString());
                 if (getValues.getSuccess()) {
-                    prefManager.storeSharedValue(Constant.REFERESH_DATA_REQURIED, "1");
                     isAlreadyProcess = true;
                     btnOrderProceed.setSelected(true);
                     btnMoveToShipping.setEnabled(true);
@@ -383,6 +480,7 @@ public class DueOrderDetailFragment extends Fragment implements View.OnClickList
         });
     }
 
+
     private void setOrderForShipping() {
 
         ProgressDialogUtil.showProgressDialog(getActivity());
@@ -394,12 +492,11 @@ public class DueOrderDetailFragment extends Fragment implements View.OnClickList
         param.put("order_ids", orderId);
 
 
-        NetworkAdaper.getInstance().getNetworkServices().setOrderStatus(param, new Callback<SetOrdersModel>() {
+        NetworkAdaper.getInstance().getNetworkServices().setOrderStatusForAll(param, new Callback<SetOrdersModel>() {
             @Override
             public void success(SetOrdersModel getValues, Response response) {
                 Log.e("Tab", getValues.toString());
                 if (getValues.getSuccess()) {
-                    prefManager.storeSharedValue(Constant.REFERESH_DATA_REQURIED, "1");
                     isAlreadyShipped = true;
                     btnOrderProceed.setSelected(true);
                     btnMoveToShipping.setSelected(true);
@@ -424,7 +521,9 @@ public class DueOrderDetailFragment extends Fragment implements View.OnClickList
     }
 
     private void setOrderForDelivery() {
+
         ProgressDialogUtil.showProgressDialog(getActivity());
+
         Map<String, String> param = new HashMap<String, String>();
         param.put("user_id", userId);
 //        param.put("api_key", "");
@@ -432,12 +531,11 @@ public class DueOrderDetailFragment extends Fragment implements View.OnClickList
         param.put("order_ids", orderId);
 
 
-        NetworkAdaper.getInstance().getNetworkServices().setOrderStatus(param, new Callback<SetOrdersModel>() {
+        NetworkAdaper.getInstance().getNetworkServices().setOrderStatusForAll(param, new Callback<SetOrdersModel>() {
             @Override
             public void success(SetOrdersModel getValues, Response response) {
                 Log.e("Tab", getValues.toString());
                 if (getValues.getSuccess()) {
-                    prefManager.storeSharedValue(Constant.REFERESH_DATA_REQURIED, "1");
                     isAlreadyDelivered = true;
                     btnOrderProceed.setSelected(true);
                     btnMoveToShipping.setSelected(true);
@@ -469,13 +567,14 @@ public class DueOrderDetailFragment extends Fragment implements View.OnClickList
         param.put("user_id", userId);
         param.put("order_status", orderStatus);
         param.put("order_ids", orderId);
+//        param.put("item_accept_ids", itemAcceptIds);
+//        param.put("item_reject_ids", itemRejectIds);
 
-        NetworkAdaper.getInstance().getNetworkServices().setOrderStatus(param, new Callback<SetOrdersModel>() {
+        NetworkAdaper.getInstance().getNetworkServices().rejectOrder(param, new Callback<SetOrdersModel>() {
             @Override
             public void success(SetOrdersModel getValues, Response response) {
                 Log.e("Tab", getValues.toString());
                 if (getValues.getSuccess()) {
-                    prefManager.storeSharedValue(Constant.REFERESH_DATA_REQURIED, "1");
                     ProgressDialogUtil.hideProgressDialog();
                     final DialogHandler dialogHandler = new DialogHandler(getActivity());
                     dialogHandler.setDialog(Constant.APP_TITLE, getValues.getMessage());
@@ -501,44 +600,32 @@ public class DueOrderDetailFragment extends Fragment implements View.OnClickList
         });
     }
 
-    private void callOrderItemStatus(String itemID, String status) {
-
-        ProgressDialogUtil.showProgressDialog(getActivity());
-        Map<String, String> param = new HashMap<String, String>();
-        param.put("user_id", ordersListModel.getUserId());
-        param.put("order_id", ordersListModel.getOrderId());
-        param.put("item_ids", itemID);
-        param.put("item_status", status);
-
-        NetworkAdaper.getInstance().getNetworkServices().setOrderItemStatus(param, new Callback<OrderItemResponseModel>() {
-            @Override
-            public void success(OrderItemResponseModel orderItemResponseModel, Response response) {
-                ProgressDialogUtil.hideProgressDialog();
-                if (orderItemResponseModel.getSuccess() != null ? orderItemResponseModel.getSuccess() : false) {
-                    prefManager.storeSharedValue(Constant.REFERESH_DATA_REQURIED, "1");
-                    OrdersListModel ordersListModelTemp = orderItemResponseModel.getOrdersListModel();
-                    if (ordersListModelTemp != null) {
-                        ordersListModel = ordersListModelTemp;
-                        updateView(ordersListModel);
-                    }
-                }
-            }
-
-            @Override
-            public void failure(RetrofitError error) {
-                ProgressDialogUtil.hideProgressDialog();
-                DialogUtils.showAlertDialog(getActivity(),
-                        Constant.APP_TITLE, "Error Occurred, Try again later.");
-            }
-        });
-
-    }
-
-
-    /*Api works ends here*/
-
     public void showAlertDialog(Context context, String title,
                                 String message) {
+//        AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(
+//                context);
+//
+//        // set title
+//        alertDialogBuilder.setTitle(title);
+//
+//        // set dialog message
+//        alertDialogBuilder.setMessage(message).setCancelable(false)
+//                .setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+//                    public void onClick(DialogInterface dialog, int id) {
+//                        // if this button is clicked, close
+//                        // current activity
+//                        dialog.cancel();
+//                        getActivity().onBackPressed();
+//                    }
+//                })
+//        ;
+//
+//
+//        // create alert dialog
+//        AlertDialog alertDialog = alertDialogBuilder.create();
+//
+//        // show it
+//        alertDialog.show();
 
         final DialogHandler dialogHandler = new DialogHandler(getActivity());
 
@@ -550,6 +637,8 @@ public class DueOrderDetailFragment extends Fragment implements View.OnClickList
                         dialogHandler.dismiss();
                     }
                 });
+
+
     }
 
 
@@ -559,31 +648,30 @@ public class DueOrderDetailFragment extends Fragment implements View.OnClickList
         Context context;
         LayoutInflater inflater;
         ViewHolder holder = null;
-        List<ItemListModel> listItem;
 
-        public DueOrderItemsAdapter(Context context, List<ItemListModel> listItem) {
-            this.inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+
+        public DueOrderItemsAdapter(Context context) {
             this.context = context;
-            this.listItem = listItem;
+            this.inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 
-//            rejectItemList.clear();
-//            acceptItemList.clear();
-//
-//            if (type.equalsIgnoreCase("due")) {
-//
-//                for (int i = 0; i < listItem.size(); i++) {
-//                    listItem.get(i).isChecked = true;
-//                }
-//
-//            } else {
-//                for (int i = 0; i < listItem.size(); i++) {
-//                    if (listItem.get(i).getStatus().equalsIgnoreCase("1")) {
-//                        listItem.get(i).isChecked = true;
-//                    } else {
-//                        listItem.get(i).isChecked = false;
-//                    }
-//                }
-//            }
+            rejectItemList.clear();
+            acceptItemList.clear();
+
+            if (type.equalsIgnoreCase("due")) {
+
+                for (int i = 0; i < listItem.size(); i++) {
+                    listItem.get(i).isChecked = true;
+                }
+
+            } else {
+                for (int i = 0; i < listItem.size(); i++) {
+                    if (listItem.get(i).getStatus().equalsIgnoreCase("1")) {
+                        listItem.get(i).isChecked = true;
+                    } else {
+                        listItem.get(i).isChecked = false;
+                    }
+                }
+            }
         }
 
         @Override
@@ -609,12 +697,13 @@ public class DueOrderDetailFragment extends Fragment implements View.OnClickList
                 holder = new ViewHolder();
                 convertView = inflater
                         .inflate(R.layout.row_list_due_orders_items, null);
+                holder.itemImage = (ImageView) convertView.findViewById(R.id.itemImage);
                 holder.itemName = (TextView) convertView.findViewById(R.id.txtItemName);
                 holder.itemPrice = (TextView) convertView.findViewById(R.id.txtPrice);
                 holder.itemQuantiy = (TextView) convertView.findViewById(R.id.txtLblQuantity);
                 holder.txtWeight = (TextView) convertView.findViewById(R.id.txtWeight);
                 holder.itemsTotal = (TextView) convertView.findViewById(R.id.txtLblTotal);
-                holder.toggle = (ImageButton) convertView.findViewById(R.id.toggle);
+                holder.toggle = (ToggleButton) convertView.findViewById(R.id.toggle);
                 holder.parent = (RelativeLayout) convertView.findViewById(R.id.parent);
                 convertView.setTag(holder);
             } else {
@@ -622,24 +711,31 @@ public class DueOrderDetailFragment extends Fragment implements View.OnClickList
             }
 
 
-            final ItemListModel item = listItem.get(position);
+            ItemListModel data = listItem.get(position);
 
-            holder.itemName.setText(item.getName());
-            holder.itemPrice.setText("Price: " + Util.getCurrency(context) + " " + item.getPrice());
-            holder.itemQuantiy.setText("Qty: " + item.getQuantity());
+            holder.itemName.setText(listItem.get(position).getName());
+            holder.itemPrice.setText("Price: " + Util.getCurrency(context) + " " + listItem.get(position).getPrice());
+            holder.itemQuantiy.setText("Qty: " + listItem.get(position).getQuantity());
 
-            if ((item.getWeight() != null && !(item.getWeight().isEmpty())) && (item.getUnitType() != null && !(item.getUnitType()
+            if ((data.getWeight() != null && !(data.getWeight().isEmpty())) && (data.getUnitType() != null && !(data.getUnitType()
                     .isEmpty()))) {
-                holder.txtWeight.setText(item.getWeight() + " " + item.getUnitType());
+                holder.txtWeight.setText(data.getWeight() + " " + data.getUnitType());
                 holder.txtWeight.setVisibility(View.VISIBLE);
             } else {
                 holder.txtWeight.setVisibility(View.GONE);
             }
 
-            if (item.getStatus().equalsIgnoreCase("2")) {
-                holder.toggle.setSelected(false);
+            if (listItem.get(position).getImageMedium() != null && !listItem.get(position).getImageMedium().isEmpty()) {
+                Picasso.with(getActivity()).load(listItem.get(position).getImageMedium()).error(R.drawable.no_image).into(holder.itemImage);
             } else {
-                holder.toggle.setSelected(true);
+                holder.itemImage.setImageResource(R.drawable.no_image);
+            }
+
+
+            if (listItem.get(position).isChecked) {
+                holder.toggle.setChecked(true);
+            } else {
+                holder.toggle.setChecked(false);
             }
 
             Double itemsTotal = 0.00;
@@ -649,11 +745,15 @@ public class DueOrderDetailFragment extends Fragment implements View.OnClickList
             holder.toggle.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    if (item.getStatus().equalsIgnoreCase("2")) {
-                        callOrderItemStatus(item.getItemId(), "1");
+
+                    if (!isAlreadyProcess) {
+                        listItem.get(position).isChecked = !listItem.get(position).isChecked;
+                        notifyDataSetChanged();
+                        setOrderDetails();
                     } else {
-                        callOrderItemStatus(item.getItemId(), "2");
+                        notifyDataSetChanged();
                     }
+
                 }
             });
 
@@ -661,189 +761,47 @@ public class DueOrderDetailFragment extends Fragment implements View.OnClickList
             return convertView;
         }
 
-        public void updateListItem(List<ItemListModel> listItem) {
-            this.listItem = listItem;
-            notifyDataSetChanged();
-        }
-
         class ViewHolder {
+            ImageView itemImage;
             TextView itemName;
+
             TextView itemPrice;
             TextView txtWeight;
             TextView itemQuantiy;
             TextView itemsTotal;
-            ImageButton toggle;
+            ToggleButton toggle;
             RelativeLayout parent;
         }
-    }
 
 
-    private void updateView(OrdersListModel ordersListModel) {
-        setUiData();
-        adapter.updateListItem(listItem);
-        linearDynamicTaxBlock.removeAllViews();
-        setOrderDetails();
     }
 
     public void setOrderDetails() {
 
         mDeliveryAddress.setText(address);
+
         if (note.equalsIgnoreCase("") || note.equalsIgnoreCase(null)) {
             mNoteLayout.setVisibility(View.GONE);
         } else {
             mNote.setText(note);
         }
-        mTotalAmount.setText(Util.getCurrency(getActivity()) + " " + Util.getDoubleValue(ordersListModel.getTotal()));
-        mItemsPrice.setText(Util.getCurrency(getActivity()) + " " + Util.getDoubleValue(ordersListModel.getCheckout()));
-        mShippingCharges.setText(Util.getCurrency(getActivity()) + " " + Util.getDoubleValue(shipping_charges));
-        mDiscountVal.setText(Util.getCurrency(getActivity()) + " " + Util.getDoubleValue(discount));
 
-        setupTaxModule();
+        Double itemsAmount = 0.00;
 
+        for (int i = 0; i < listItem.size(); i++) {
+
+            if (listItem.get(i).isChecked) {
+                itemsAmount = itemsAmount + (listItem.get(i).getPrice() * Integer.parseInt(listItem.get(i).getQuantity()));
+            }
+        }
+
+        Double totalAmount = 0.00;
+        totalAmount = (itemsAmount + shipping_charges) - discount + tax;
+        mTotalAmount.setText(Util.getCurrency(getActivity()) + " " + totalAmount);
+        mItemsPrice.setText(Util.getCurrency(getActivity()) + " " + itemsAmount);
+        mShippingCharges.setText(Util.getCurrency(getActivity()) + " " + shipping_charges);
+        mDiscountVal.setText(Util.getCurrency(getActivity()) + " " + discount);
+        taxVal.setText(String.valueOf(tax));
     }
-
-    private void setupTaxModule() {
-        List<StoreTaxModel> fixedStoreTaxes = ordersListModel.getStoreTaxes();
-        List<OrderTaxModel> taxes = ordersListModel.getTaxes();
-        if (fixedStoreTaxes != null && fixedStoreTaxes.size() > 0) {
-            for (StoreTaxModel storeTaxModel : fixedStoreTaxes) {
-                View child = getActivity().getLayoutInflater().inflate(R.layout.tax_row_layout, null);
-                TextView tax_label = (TextView) child.findViewById(R.id.tax_label);
-                TextView tax_value = (TextView) child.findViewById(R.id.tax_value);
-                TextView rs5 = (TextView) child.findViewById(R.id.rs5);
-
-                String currency = Util.getCurrency(getActivity());
-                if (currency.contains("\\")) {
-                    rs5.setText(unescapeJavaString(currency));
-                } else {
-                    rs5.setText(currency);
-                }
-                tax_label.setText("" + storeTaxModel.getFixedTaxLabel());
-                tax_value.setText("" + Util.getDoubleValue(storeTaxModel.getFixedTaxAmount()));
-                if (storeTaxModel.getIsTaxEnable() != null && storeTaxModel.getIsTaxEnable().equalsIgnoreCase("1")) {
-                    linearDynamicTaxBlock.addView(child);
-                }
-            }
-        }
-        if (taxes != null && taxes.size() > 0) {
-            for (OrderTaxModel taxModel : taxes) {
-                View child = getActivity().getLayoutInflater().inflate(R.layout.tax_row_layout, null);
-                TextView tax_label = (TextView) child.findViewById(R.id.tax_label);
-                TextView tax_value = (TextView) child.findViewById(R.id.tax_value);
-                TextView rs5 = (TextView) child.findViewById(R.id.rs5);
-
-                String currency = Util.getCurrency(getActivity());
-                if (currency.contains("\\")) {
-                    rs5.setText(unescapeJavaString(currency));
-                } else {
-                    rs5.setText(currency);
-                }
-                tax_label.setText("" + taxModel.getLabel() + "(" + taxModel.getRate() + "%)");
-                tax_value.setText("" + Util.getDoubleValue(taxModel.getTax()));
-                Double taxValue = null;
-                try {
-                    taxValue = Double.parseDouble(taxModel.getTax());
-                } catch (NumberFormatException e) {
-                    e.printStackTrace();
-                }
-                if (taxValue != null && taxValue != 0.0) {
-                    linearDynamicTaxBlock.addView(child);
-                }
-
-            }
-        }
-        if (fixedStoreTaxes != null && fixedStoreTaxes.size() > 0) {
-            for (StoreTaxModel storeTaxModel : fixedStoreTaxes) {
-                View child = getActivity().getLayoutInflater().inflate(R.layout.tax_row_layout, null);
-                TextView tax_label = (TextView) child.findViewById(R.id.tax_label);
-                TextView tax_value = (TextView) child.findViewById(R.id.tax_value);
-                TextView rs5 = (TextView) child.findViewById(R.id.rs5);
-
-                String currency = Util.getCurrency(getActivity());
-                if (currency.contains("\\")) {
-                    rs5.setText(unescapeJavaString(currency));
-                } else {
-                    rs5.setText(currency);
-                }
-                tax_label.setText("" + storeTaxModel.getFixedTaxLabel());
-                tax_value.setText("" + Util.getDoubleValue(storeTaxModel.getFixedTaxAmount()));
-                if (storeTaxModel.getIsTaxEnable() != null && storeTaxModel.getIsTaxEnable().equalsIgnoreCase("0")) {
-                    linearDynamicTaxBlock.addView(child);
-                }
-            }
-        }
-    }
-
-    public String unescapeJavaString(String st) {
-
-        StringBuilder sb = new StringBuilder(st.length());
-
-        for (int i = 0; i < st.length(); i++) {
-            char ch = st.charAt(i);
-            if (ch == '\\') {
-                char nextChar = (i == st.length() - 1) ? '\\' : st
-                        .charAt(i + 1);
-// Octal escape?
-                if (nextChar >= '0' && nextChar <= '7') {
-                    String code = "" + nextChar;
-                    i++;
-                    if ((i < st.length() - 1) && st.charAt(i + 1) >= '0'
-                            && st.charAt(i + 1) <= '7') {
-                        code += st.charAt(i + 1);
-                        i++;
-                        if ((i < st.length() - 1) && st.charAt(i + 1) >= '0'
-                                && st.charAt(i + 1) <= '7') {
-                            code += st.charAt(i + 1);
-                            i++;
-                        }
-                    }
-                    sb.append((char) Integer.parseInt(code, 8));
-                    continue;
-                }
-                switch (nextChar) {
-                    case '\\':
-                        ch = '\\';
-                        break;
-                    case 'b':
-                        ch = '\b';
-                        break;
-                    case 'f':
-                        ch = '\f';
-                        break;
-                    case 'n':
-                        ch = '\n';
-                        break;
-                    case 'r':
-                        ch = '\r';
-                        break;
-                    case 't':
-                        ch = '\t';
-                        break;
-                    case '\"':
-                        ch = '\"';
-                        break;
-                    case '\'':
-                        ch = '\'';
-                        break;
-// Hex Unicode: u????
-                    case 'u':
-                        if (i >= st.length() - 5) {
-                            ch = 'u';
-                            break;
-                        }
-                        int code = Integer.parseInt(
-                                "" + st.charAt(i + 2) + st.charAt(i + 3)
-                                        + st.charAt(i + 4) + st.charAt(i + 5), 16);
-                        sb.append(Character.toChars(code));
-                        i += 5;
-                        continue;
-                }
-                i++;
-            }
-            sb.append(ch);
-        }
-        return sb.toString();
-    }
-
 
 }

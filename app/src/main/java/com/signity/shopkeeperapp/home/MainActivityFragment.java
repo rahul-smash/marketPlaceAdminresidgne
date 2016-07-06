@@ -21,8 +21,7 @@ import com.signity.shopkeeperapp.model.DashBoardModel;
 import com.signity.shopkeeperapp.model.DashBoardModelDetail;
 import com.signity.shopkeeperapp.model.DashBoardModelStoreDetail;
 import com.signity.shopkeeperapp.network.NetworkAdaper;
-import com.signity.shopkeeperapp.orders.ActiveOrderFragment;
-import com.signity.shopkeeperapp.orders.DueOrderFragment;
+import com.signity.shopkeeperapp.orders.AllOrderFragment;
 import com.signity.shopkeeperapp.util.Constant;
 import com.signity.shopkeeperapp.util.DialogUtils;
 import com.signity.shopkeeperapp.util.FontUtil;
@@ -198,7 +197,8 @@ public class MainActivityFragment extends Fragment implements View.OnClickListen
 
     @Override
     public void onClick(View view) {
-
+        Fragment fragment;
+        Bundle bundle;
         TextView title = (TextView) getActivity().findViewById(R.id.textTitle);
         int id = view.getId();
 
@@ -207,14 +207,24 @@ public class MainActivityFragment extends Fragment implements View.OnClickListen
             case R.id.imageDueOrders:
                 com.signity.shopkeeperapp.home.MainActivity.fragmentName = titleText[0];
                 title.setText(titleText[0]);
-                replace(DueOrderFragment.newInstance(getActivity()));
+
+                fragment = AllOrderFragment.newInstance(getActivity());
+                bundle = new Bundle();
+                bundle.putString("type", Constant.TYPE_DUE_ORDER);
+                fragment.setArguments(bundle);
+
+                replace(fragment);
 
                 break;
 
             case R.id.imageActiveOrders:
                 com.signity.shopkeeperapp.home.MainActivity.fragmentName = titleText[1];
                 title.setText(titleText[1]);
-                replace(ActiveOrderFragment.newInstance(getActivity()));
+                fragment = AllOrderFragment.newInstance(getActivity());
+                bundle = new Bundle();
+                bundle.putString("type", Constant.TYPE_ACTIVE_ORDER);
+                fragment.setArguments(bundle);
+                replace(fragment);
                 break;
 
             case R.id.imageView2:

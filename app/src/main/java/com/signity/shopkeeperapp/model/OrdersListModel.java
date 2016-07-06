@@ -3,13 +3,14 @@ package com.signity.shopkeeperapp.model;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
 /**
  * Created by rajesh on 16/10/15.
  */
-public class OrdersListModel {
+public class OrdersListModel implements Serializable {
 
     @SerializedName("order_id")
     @Expose
@@ -57,9 +58,18 @@ public class OrdersListModel {
     @SerializedName("address")
     @Expose
     private String address;
+
     @SerializedName("items")
     @Expose
     private List<ItemListModel> items = new ArrayList<ItemListModel>();
+
+    @SerializedName("calculated_tax_detail")
+    @Expose
+    private List<OrderTaxModel> taxes = new ArrayList<OrderTaxModel>();
+
+    @SerializedName("store_fixed_tax_detail")
+    @Expose
+    private List<StoreTaxModel> storeTaxes = new ArrayList<StoreTaxModel>();
 
     /**
      * @return The orderId
@@ -274,5 +284,22 @@ public class OrdersListModel {
 
     public void setTax(Double tax) {
         this.tax = tax;
+    }
+
+
+    public List<OrderTaxModel> getTaxes() {
+        return taxes;
+    }
+
+    public void setTaxes(List<OrderTaxModel> taxes) {
+        this.taxes = taxes;
+    }
+
+    public List<StoreTaxModel> getStoreTaxes() {
+        return storeTaxes;
+    }
+
+    public void setStoreTaxes(List<StoreTaxModel> storeTaxes) {
+        this.storeTaxes = storeTaxes;
     }
 }

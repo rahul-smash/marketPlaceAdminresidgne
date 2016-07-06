@@ -131,7 +131,6 @@
                 android:text="234"
                 android:textSize="18sp" />
 
-
         </RelativeLayout>
 
         <TextView
@@ -199,37 +198,44 @@
 
 
         </RelativeLayout>
-        <TextView
-            android:id="@+id/taxLblText"
-            android:layout_width="wrap_content"
+
+        <LinearLayout
+            android:id="@+id/dynamicTaxBlock"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_alignParentLeft="true"
             android:layout_below="@id/discountLblText"
-            android:layout_marginLeft="5dp"
-            android:layout_marginTop="5dp"
-            android:ems="7"
-            android:text="Tax"
-            android:textSize="18sp" />
+            android:orientation="vertical"></LinearLayout>
 
-        <RelativeLayout
-            android:id="@+id/tax_layout"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:layout_alignParentRight="true"
-            android:layout_below="@+id/discount_layout"
-            android:layout_marginRight="5dp"
-            android:layout_marginTop="5dp"
-            android:layout_toRightOf="@+id/discountLblText"
-            android:gravity="right">
+        <!--<TextView-->
+        <!--android:id="@+id/taxLblText"-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:layout_alignParentLeft="true"-->
+        <!--android:layout_below="@id/discountLblText"-->
+        <!--android:layout_marginLeft="5dp"-->
+        <!--android:layout_marginTop="5dp"-->
+        <!--android:ems="7"-->
+        <!--android:text="Tax"-->
+        <!--android:textSize="18sp" />-->
+        <!--<RelativeLayout-->
+        <!--android:id="@+id/tax_layout"-->
+        <!--android:layout_width="fill_parent"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:layout_alignParentRight="true"-->
+        <!--android:layout_below="@+id/discount_layout"-->
+        <!--android:layout_marginRight="5dp"-->
+        <!--android:layout_marginTop="5dp"-->
+        <!--android:layout_toRightOf="@+id/discountLblText"-->
+        <!--android:gravity="right">-->
 
-            <TextView
-                android:id="@+id/taxVal"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="0.00"
-                android:textSize="18sp" />
+        <!--<TextView-->
+        <!--android:id="@+id/taxVal"-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:text="0.00"-->
+        <!--android:textSize="18sp" />-->
 
 
-        </RelativeLayout>
+        <!--</RelativeLayout>-->
     </RelativeLayout>
 </RelativeLayout>

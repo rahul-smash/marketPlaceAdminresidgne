@@ -11,7 +11,7 @@ public class Constant {
     public static final String TYPE_APPROVE = "com.signity.shopkeeperapp.TYPE_APPROVE";
     public static final String TYPE_PROCESSING = "com.signity.shopkeeperapp.TYPE_PROCESSING";
     public static final String TYPE_SHIPPING = "com.signity.shopkeeperapp.TYPE_SHIPPING";
-    public static final String TYPE_DELIVERED = "com.signity.shopkeeperapp.TYPE_DELIVERED";
+
     public static final String ITEMS = "items";
     public static final String SHARED_PREF = "shopkeeper_pref";
     public static final String STORE_DETAILS = "store_details";
@@ -34,7 +34,17 @@ public class Constant {
     public static final String LOCAL_TYPE_TWO = "type_two";
     public static final String LOG_IN_TYPE = "LOG_IN_TYPE";
     public static final String USER_ID = "USER_ID";
-    public static final String LOGIN_TYPE= "mLoginType";
+    public static final String LOGIN_TYPE = "mLoginType";
     public static final String EMAIL = "mEmail";
 
+
+    public static final String TYPE_DUE_ORDER = "com.signity.shopkeeperapp.DUE_ORDER";
+    public static final String TYPE_ACTIVE_ORDER = "com.signity.shopkeeperapp.ACTIVE_ORDER";
+    public static final String TYPE_REJECTED = "com.signity.shopkeeperapp.REJECTED";
+    public static final String TYPE_DELIVERED = "com.signity.shopkeeperapp.DELIVERED";
+    public static final String TYPE_CANCELLED = "com.signity.shopkeeperapp.CANCELLED";
+    public static final String TYPE_ALL_ORDER = "com.signity.shopkeeperapp.ALL_ORDER";
+
+
+    public static final String REFERESH_DATA_REQURIED = "com.signity.shopkeeperapp.REFERESH_DATA_REQURIED";
 }

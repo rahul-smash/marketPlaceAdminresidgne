@@ -40,6 +40,11 @@ public class RvActiveOrderAdapter extends RecyclerView.Adapter<RvActiveOrderAdap
         this.mInflater = LayoutInflater.from(context);
     }
 
+    public void updateListItem(List<OrdersListModel> listOrder) {
+        this.listOrder = listOrder;
+        notifyDataSetChanged();
+    }
+
     @Override
     public MyViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = mInflater.inflate(R.layout.layout_row_active_orders, parent, false);
@@ -48,8 +53,8 @@ public class RvActiveOrderAdapter extends RecyclerView.Adapter<RvActiveOrderAdap
     }
 
     @Override
-    public void onBindViewHolder(MyViewHolder holder, int position) {
-        OrdersListModel order = listOrder.get(position);
+    public void onBindViewHolder(final MyViewHolder holder, final int position) {
+        final OrdersListModel order = listOrder.get(position);
         holder.txtOrderId.setText(order.getOrderId());
         if (order.getCustomerName().equalsIgnoreCase("") || order.getCustomerName().equals(null)) {
             holder.txtCustName.setText("Guest User");
@@ -59,14 +64,13 @@ public class RvActiveOrderAdapter extends RecyclerView.Adapter<RvActiveOrderAdap
         Double totalPrice = 0.00;
         Double itemsPrice = 0.00;
 
-        for (int i = 0; i < order.getItems().size(); i++) {
-
-            if (order.getItems().get(i).getStatus().equalsIgnoreCase("1")) {
-                itemsPrice = itemsPrice + (order.getItems().get(i).getPrice() * Integer.parseInt(order.getItems().get(i).getQuantity()));
-            }
-        }
-        totalPrice = ((itemsPrice + order.getShippingCharges()) - order.getDiscount()) + order.getTax();
-        holder.txtTotalAmount.setText(Util.getCurrency(context) + " " + totalPrice);
+//        for (int i = 0; i < order.getItems().size(); i++) {
+//            if (order.getItems().get(i).getStatus().equalsIgnoreCase("1")) {
+//                itemsPrice = itemsPrice + (order.getItems().get(i).getPrice() * Integer.parseInt(order.getItems().get(i).getQuantity()));
+//            }
+//        }
+//        totalPrice = ((itemsPrice + order.getShippingCharges()) - order.getDiscount()) + order.getTax();
+        holder.txtTotalAmount.setText(Util.getCurrency(context) + Util.getDoubleValue(order.getTotal()));
         holder.txtTime.setText(order.getTime());
         if (order.getStatus().equalsIgnoreCase("1")) {
             holder.status.setText("Processing");
@@ -77,10 +81,25 @@ public class RvActiveOrderAdapter extends RecyclerView.Adapter<RvActiveOrderAdap
         } else if (order.getStatus().equalsIgnoreCase("5")) {
             holder.status.setText("Delivered");
             holder.status.setBackgroundResource(R.drawable.shape_button_delivered);
-        } else {
-            holder.status.setText("Processing");
+        } else if (order.getStatus().equalsIgnoreCase("0")) {
+            holder.status.setText("Due Orders");
             holder.status.setBackgroundResource(R.drawable.shape_button_active);
+        } else if (order.getStatus().equalsIgnoreCase("2")) {
+            holder.status.setText("Rejected");
+            holder.status.setBackgroundResource(R.drawable.shape_button_rejected);
+        } else if (order.getStatus().equalsIgnoreCase("6")) {
+            holder.status.setText("Cancelled");
+            holder.status.setBackgroundResource(R.drawable.shape_button_rejected);
         }
+
+        holder.parent.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // Triggers click upwards to the adapter on click
+                if (listener != null)
+                    listener.onItemClick(holder.parent, position, order);
+            }
+        });
     }
 
     @Override
@@ -90,7 +109,7 @@ public class RvActiveOrderAdapter extends RecyclerView.Adapter<RvActiveOrderAdap
 
     // Define the listener interface
     public interface OnItemClickListener {
-        void onItemClick(View itemView, int position);
+        void onItemClick(View itemView, int position, OrdersListModel order);
     }
 
     // Define the method that allows the parent activity or fragment to define the listener
@@ -118,14 +137,7 @@ public class RvActiveOrderAdapter extends RecyclerView.Adapter<RvActiveOrderAdap
             status = (TextView) convertView.findViewById(R.id.txtStausVal);
             parent = (RelativeLayout) convertView.findViewById(R.id.parent);
 
-            convertView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    // Triggers click upwards to the adapter on click
-//                    if (listener != null)
-//                        listener.onItemClick(convertView, getLayoutPosition());
-                }
-            });
+
         }
 
     }

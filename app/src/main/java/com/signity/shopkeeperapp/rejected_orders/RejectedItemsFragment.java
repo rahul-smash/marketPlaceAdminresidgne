@@ -214,8 +214,6 @@ public class RejectedItemsFragment extends Fragment {
                     rejectedOrderIntent.putExtra("phone", list.get(position).getPhone());
                     rejectedOrderIntent.putExtra("orderID", list.get(position).getOrderId());
                     rejectedOrderIntent.putExtra("userID", list.get(position).getUserId());
-
-
                     context.startActivity(rejectedOrderIntent);
                     AnimUtil.slideFromRightAnim((Activity) context);
                 }

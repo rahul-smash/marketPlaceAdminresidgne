@@ -11,6 +11,7 @@ import com.signity.shopkeeperapp.R;
 import java.io.BufferedReader;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.text.DecimalFormat;
 
 /**
  * Created by Rajinder on 30/9/15.
@@ -181,5 +182,28 @@ public class Util {
             return "";
         }
 
+    }
+
+    public static String getDoubleValue(Object value) {
+        String s = "0.00";
+        DecimalFormat f = new DecimalFormat("#0.00");
+        Double localDouble = new Double(0.00);
+        if (value instanceof String) {
+            try {
+                localDouble = Double.parseDouble((String) value);
+            } catch (NumberFormatException e) {
+                e.printStackTrace();
+            }
+        }
+        if (value instanceof Double) {
+            localDouble = (Double) value;
+        }
+
+        try {
+            s = f.format(localDouble);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return s;
     }
 }

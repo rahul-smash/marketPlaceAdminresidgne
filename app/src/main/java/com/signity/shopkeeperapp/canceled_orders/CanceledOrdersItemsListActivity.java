@@ -18,8 +18,8 @@ import android.widget.TextView;
 import android.widget.ToggleButton;
 
 import com.signity.shopkeeperapp.R;
-import com.signity.shopkeeperapp.app.DataAdapter;
 import com.signity.shopkeeperapp.model.ItemListModel;
+import com.signity.shopkeeperapp.model.OrdersListModel;
 import com.signity.shopkeeperapp.util.AnimUtil;
 import com.signity.shopkeeperapp.util.Constant;
 import com.signity.shopkeeperapp.util.DialogUtils;
@@ -43,16 +43,20 @@ public class CanceledOrdersItemsListActivity extends Activity implements View.On
     CanceledOrderItemsAdapter adapter;
     String userId = "";
     String orderId = "";
+    private OrdersListModel ordersListModel;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.canceled_items_list_activity);
-        name = getIntent().getStringExtra("name");
-        phoneNumber = getIntent().getStringExtra("phone");
-        orderId = getIntent().getStringExtra("orderID");
-        userId = getIntent().getStringExtra("userID");
 
+        ordersListModel = (OrdersListModel) getIntent().getSerializableExtra("object");
+
+        name = ordersListModel.getCustomerName();
+        phoneNumber = ordersListModel.getPhone();
+        orderId = ordersListModel.getOrderId();
+        userId = ordersListModel.getUserId();
+        listItem = ordersListModel.getItems();
         initialize();
 
 
@@ -72,7 +76,6 @@ public class CanceledOrdersItemsListActivity extends Activity implements View.On
     }
 
     private void initialize() {
-        listItem = DataAdapter.getInstance().getListItem();
         listRejectedItems = (ListView) findViewById(R.id.listCanceledItems);
         textTitle = (TextView) findViewById(R.id.textTitle);
         textTitle.setText(name);
