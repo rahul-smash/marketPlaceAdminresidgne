@@ -1,11 +1,8 @@
 package com.signity.shopkeeperapp.LogInModule;
 
-import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
-import android.view.Menu;
-import android.view.MenuItem;
+import android.text.method.PasswordTransformationMethod;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -13,7 +10,6 @@ import android.widget.Toast;
 
 import com.signity.shopkeeperapp.R;
 import com.signity.shopkeeperapp.model.LoginModel;
-import com.signity.shopkeeperapp.model.MobResponse;
 import com.signity.shopkeeperapp.network.NetworkAdaper;
 import com.signity.shopkeeperapp.util.AnimUtil;
 import com.signity.shopkeeperapp.util.Constant;
@@ -31,40 +27,36 @@ import retrofit.client.Response;
 public class ChangePasswordActivity extends AppCompatActivity implements View.OnClickListener {
 
 
-    EditText oldPass,newPass,confirmPass;
-    Button btnSave,backButton;
+    EditText oldPass, newPass, confirmPass;
+    Button btnSave, backButton;
     PrefManager prefManager;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_change_password);
         prefManager = new PrefManager(ChangePasswordActivity.this);
-        oldPass=(EditText)findViewById(R.id.oldPass);
-        newPass=(EditText)findViewById(R.id.newPass);
-        confirmPass=(EditText)findViewById(R.id.confirmPass);
-        btnSave=(Button)findViewById(R.id.btnSave);
-        backButton=(Button)findViewById(R.id.backButton);
-
+        oldPass = (EditText) findViewById(R.id.oldPass);
+        oldPass.setTransformationMethod(new PasswordTransformationMethod());
+        newPass = (EditText) findViewById(R.id.newPass);
+        confirmPass = (EditText) findViewById(R.id.confirmPass);
+        btnSave = (Button) findViewById(R.id.btnSave);
+        backButton = (Button) findViewById(R.id.backButton);
         btnSave.setOnClickListener(this);
         backButton.setOnClickListener(this);
 
     }
 
 
-
-
-
     @Override
     public void onClick(View v) {
-        switch (v.getId()){
+        switch (v.getId()) {
             case R.id.btnSave:
-                if(!oldPass.getText().toString().isEmpty() && !newPass.getText().toString().isEmpty() && !confirmPass.getText().toString().isEmpty()){
-
-                        callNetwrokForChangePassword();
-
-                }
-                else {
-                    Toast.makeText(ChangePasswordActivity.this,"Please enter all the field",Toast.LENGTH_SHORT).show();
+                if (!oldPass.getText().toString().isEmpty() && !newPass.getText().toString().isEmpty()
+                        && !confirmPass.getText().toString().isEmpty()) {
+                    callNetwrokForChangePassword();
+                } else {
+                    Toast.makeText(ChangePasswordActivity.this, "Please enter all the field", Toast.LENGTH_SHORT).show();
                 }
                 break;
             case R.id.backButton:
@@ -76,11 +68,10 @@ public class ChangePasswordActivity extends AppCompatActivity implements View.On
     private void callNetwrokForChangePassword() {
 
         ProgressDialogUtil.showProgressDialog(ChangePasswordActivity.this);
-
-        String old_pass=oldPass.getText().toString().trim();
-        String new_pass=newPass.getText().toString().trim();
-        String confirm_pass=confirmPass.getText().toString().trim();
-        String userId=prefManager.getSharedValue(Constant.USER_ID);
+        String old_pass = oldPass.getText().toString().trim();
+        String new_pass = newPass.getText().toString().trim();
+        String confirm_pass = confirmPass.getText().toString().trim();
+        String userId = prefManager.getSharedValue(Constant.USER_ID);
         Map<String, String> param = new HashMap<String, String>();
         param.put("old_password", old_pass);
         param.put("new_password", new_pass);
@@ -88,7 +79,6 @@ public class ChangePasswordActivity extends AppCompatActivity implements View.On
         param.put("user_id", userId);
 
         NetworkAdaper.getInstance().getNetworkServices().changePassword(param, new Callback<LoginModel>() {
-
             @Override
             public void success(LoginModel loginModel, Response response) {
                 if (loginModel.getSuccess()) {
@@ -96,11 +86,10 @@ public class ChangePasswordActivity extends AppCompatActivity implements View.On
                     oldPass.setText("");
                     newPass.setText("");
                     confirmPass.setText("");
-                    DialogUtils.showAlertDialog(ChangePasswordActivity.this, Constant.APP_TITLE, ""+loginModel.getMessage());
+                    DialogUtils.showAlertDialog(ChangePasswordActivity.this, Constant.APP_TITLE, "" + loginModel.getMessage());
                 } else {
                     ProgressDialogUtil.hideProgressDialog();
-
-                    DialogUtils.showAlertDialog(ChangePasswordActivity.this, Constant.APP_TITLE, ""+loginModel.getMessage());
+                    DialogUtils.showAlertDialog(ChangePasswordActivity.this, Constant.APP_TITLE, "" + loginModel.getMessage());
                 }
             }
 

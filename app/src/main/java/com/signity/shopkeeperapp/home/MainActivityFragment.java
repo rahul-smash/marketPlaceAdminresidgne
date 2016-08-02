@@ -166,15 +166,13 @@ public class MainActivityFragment extends Fragment implements View.OnClickListen
         } catch (Exception e) {
             e.printStackTrace();
         }
-
-
     }
 
     public void setDashBoardValues(DashBoardModelDetail dashBoardValues) {
 
         String currency = Util.getCurrency(getActivity());
 
-        mOutstandingPayment.setText(currency + " " + dashBoardValues.getOutstanding());
+        mOutstandingPayment.setText(currency + "" + dashBoardValues.getOutstanding());
         mDueOrders.setText("" + dashBoardValues.getDueOrders());
         mActiveOrders.setText("" + dashBoardValues.getActiveOrders());
         mAllCustomers.setText("" + dashBoardValues.getCustomers());

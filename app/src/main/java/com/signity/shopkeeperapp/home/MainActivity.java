@@ -180,21 +180,6 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
             e.printStackTrace();
         }
 
-        if (intentValue.equalsIgnoreCase("1")) {
-            textTitle.setText(title[2]);
-            fragmentName = title[2];
-            Fragment fragment = ActiveOrderFragment.newInstance(this);
-            Bundle bundle;
-            bundle = new Bundle();
-            bundle.putString("type", Constant.TYPE_ACTIVE_ORDER);
-            fragment.setArguments(bundle);
-            getSupportFragmentManager().beginTransaction()
-                    .replace(R.id.container, fragment, ActiveOrderFragment.class.getSimpleName()).commit();
-        } else {
-            fragmentName = title[0];
-            getSupportFragmentManager().beginTransaction()
-                    .replace(R.id.container, MainActivityFragment.newInstance(this)).commit();
-        }
 
         DashBoardModelStoreDetail jObject = getStoreDataAsObject(Util.loadPreferenceValue(MainActivity.this, Constant.STORE_DETAILS));
 
@@ -209,9 +194,23 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
             String message = Util.loadPreferenceValue(MainActivity.this, Constant.STORE_STATUS_MESSAGE);
             storeStatusAlertNew(message + "\n" + "Do you want to turn the customer app on?", "on");
         }
-
         setupLocalNotification();
 
+        if (intentValue.equalsIgnoreCase("1")) {
+            textTitle.setText(title[2]);
+            fragmentName = title[2];
+            Fragment fragment = AllOrderFragment.newInstance(this);
+            Bundle bundle;
+            bundle = new Bundle();
+            bundle.putString("type", Constant.TYPE_ACTIVE_ORDER);
+            fragment.setArguments(bundle);
+            getSupportFragmentManager().beginTransaction()
+                    .replace(R.id.container, fragment, AllOrderFragment.class.getSimpleName()).commit();
+        } else {
+            fragmentName = title[0];
+            getSupportFragmentManager().beginTransaction()
+                    .replace(R.id.container, MainActivityFragment.newInstance(this)).commit();
+        }
     }
 
     @Override

@@ -5,146 +5,193 @@
 
 
     <ScrollView
-    android:id="@+id/scrollView"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:layout_below="@+id/header">
-
-    <LinearLayout
-        android:id="@+id/linearLayout"
+        android:id="@+id/scrollView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical">
-
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="35"
-            android:paddingBottom="5dp"
-            android:paddingTop="5dp">
-
-            <ImageView
-                android:id="@+id/imageView"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_centerHorizontal="true"
-                android:src="@drawable/outstanding_dashboard_icon" />
-
-            <TextView
-                android:id="@+id/labelOutStanding"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/imageView"
-                android:layout_centerHorizontal="true"
-                android:text="Outstanding Payment"
-                android:textAppearance="?android:attr/textAppearanceMedium"
-                android:textColor="@color/color_header"
-                android:textSize="@dimen/text_xlarge" />
-
-            <TextView
-                android:id="@+id/outstandingPayment"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/labelOutStanding"
-                android:layout_centerHorizontal="true"
-                android:text="1"
-                android:textAppearance="?android:attr/textAppearanceLarge"
-                android:textColor="@color/color_header"
-                android:textSize="@dimen/text_dash_board_values" />
-
-        </RelativeLayout>
-
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="2dp"
-            android:background="@drawable/dots"
-            android:layerType="software" />
+        android:layout_below="@+id/header">
 
         <LinearLayout
+            android:id="@+id/linearLayout"
             android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="30"
-            android:orientation="horizontal">
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
 
             <RelativeLayout
-                android:id="@+id/dueOrdersLayout"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginRight="1dp"
-                android:layout_weight="50"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="35"
                 android:paddingBottom="5dp"
                 android:paddingTop="5dp">
 
                 <ImageView
-                    android:id="@+id/imageDueOrders"
+                    android:id="@+id/imageView"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_centerHorizontal="true"
-                    android:src="@drawable/due_orders_dashboard_icon" />
+                    android:src="@drawable/outstanding_dashboard_icon" />
 
                 <TextView
-                    android:id="@+id/labelDueOrder"
+                    android:id="@+id/labelOutStanding"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_below="@+id/imageDueOrders"
+                    android:layout_below="@+id/imageView"
                     android:layout_centerHorizontal="true"
-                    android:layout_marginTop="5dp"
-                    android:text="Due Orders"
+                    android:text="Outstanding Payment"
                     android:textAppearance="?android:attr/textAppearanceMedium"
-                    android:textColor="@color/color_text_dashboar_lbl2"
+                    android:textColor="@color/color_header"
                     android:textSize="@dimen/text_xlarge" />
 
                 <TextView
-                    android:id="@+id/dueOrders"
+                    android:id="@+id/outstandingPayment"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_below="@+id/labelDueOrder"
+                    android:layout_below="@+id/labelOutStanding"
                     android:layout_centerHorizontal="true"
-                    android:layout_marginTop="5dp"
                     android:text="1"
-                    android:textAppearance="?android:attr/textAppearanceMedium"
-                    android:textColor="@color/color_text_dashboar_lbl2"
+                    android:textAppearance="?android:attr/textAppearanceLarge"
+                    android:textColor="@color/color_header"
                     android:textSize="@dimen/text_dash_board_values" />
 
             </RelativeLayout>
 
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="2dp"
+                android:background="@drawable/dots"
+                android:layerType="software" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="30"
+                android:orientation="horizontal">
+
+                <RelativeLayout
+                    android:id="@+id/dueOrdersLayout"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginRight="1dp"
+                    android:layout_weight="50"
+                    android:paddingBottom="5dp"
+                    android:paddingTop="5dp">
+
+                    <ImageView
+                        android:id="@+id/imageDueOrders"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerHorizontal="true"
+                        android:src="@drawable/due_orders_dashboard_icon" />
+
+                    <TextView
+                        android:id="@+id/labelDueOrder"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@+id/imageDueOrders"
+                        android:layout_centerHorizontal="true"
+                        android:layout_marginTop="5dp"
+                        android:text="Due Orders"
+                        android:textAppearance="?android:attr/textAppearanceMedium"
+                        android:textColor="@color/color_text_dashboar_lbl2"
+                        android:textSize="@dimen/text_xlarge" />
+
+                    <TextView
+                        android:id="@+id/dueOrders"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@+id/labelDueOrder"
+                        android:layout_centerHorizontal="true"
+                        android:layout_marginTop="5dp"
+                        android:text="1"
+                        android:textAppearance="?android:attr/textAppearanceMedium"
+                        android:textColor="@color/color_text_dashboar_lbl2"
+                        android:textSize="@dimen/text_dash_board_values" />
+
+                </RelativeLayout>
+
+                <RelativeLayout
+                    android:id="@+id/activeOrdersLayout"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="50"
+                    android:paddingBottom="5dp"
+                    android:paddingTop="5dp">
+
+                    <ImageView
+                        android:id="@+id/imageActiveOrders"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerHorizontal="true"
+                        android:src="@drawable/active_orders_dashboard_icon" />
+
+                    <TextView
+                        android:id="@+id/labelActiveOrder"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@+id/imageActiveOrders"
+                        android:layout_centerHorizontal="true"
+                        android:layout_marginTop="5dp"
+                        android:text="Active Orders"
+                        android:textAppearance="?android:attr/textAppearanceMedium"
+                        android:textColor="@color/color_text_dashboar_lbl2"
+                        android:textSize="@dimen/text_xlarge" />
+
+                    <TextView
+                        android:id="@+id/activeOrder"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@+id/labelActiveOrder"
+                        android:layout_centerHorizontal="true"
+                        android:layout_marginTop="5dp"
+                        android:text="1"
+                        android:textAppearance="?android:attr/textAppearanceMedium"
+                        android:textColor="@color/color_text_dashboar_lbl2"
+                        android:textSize="@dimen/text_dash_board_values" />
+
+                </RelativeLayout>
+
+
+            </LinearLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="2dp"
+                android:background="@drawable/dots"
+                android:layerType="software" />
+
             <RelativeLayout
-                android:id="@+id/activeOrdersLayout"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="50"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="35"
                 android:paddingBottom="5dp"
                 android:paddingTop="5dp">
 
                 <ImageView
-                    android:id="@+id/imageActiveOrders"
+                    android:id="@+id/imageView2"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_centerHorizontal="true"
-                    android:src="@drawable/active_orders_dashboard_icon" />
+                    android:src="@drawable/customers_dashboard_icon" />
 
                 <TextView
-                    android:id="@+id/labelActiveOrder"
+                    android:id="@+id/labelAllCust"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_below="@+id/imageActiveOrders"
+                    android:layout_below="@+id/imageView2"
                     android:layout_centerHorizontal="true"
-                    android:layout_marginTop="5dp"
-                    android:text="Active Orders"
+                    android:text="All Customers"
                     android:textAppearance="?android:attr/textAppearanceMedium"
-                    android:textColor="@color/color_text_dashboar_lbl2"
+                    android:textColor="@color/color_header"
                     android:textSize="@dimen/text_xlarge" />
 
                 <TextView
-                    android:id="@+id/activeOrder"
+                    android:id="@+id/allCustomers"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_below="@+id/labelActiveOrder"
+                    android:layout_below="@+id/labelAllCust"
                     android:layout_centerHorizontal="true"
-                    android:layout_marginTop="5dp"
                     android:text="1"
-                    android:textAppearance="?android:attr/textAppearanceMedium"
-                    android:textColor="@color/color_text_dashboar_lbl2"
+                    android:textAppearance="?android:attr/textAppearanceLarge"
+                    android:textColor="@color/color_header"
                     android:textSize="@dimen/text_dash_board_values" />
 
             </RelativeLayout>
@@ -152,57 +199,7 @@
 
         </LinearLayout>
 
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="2dp"
-            android:background="@drawable/dots"
-            android:layerType="software" />
-
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="35"
-            android:paddingBottom="5dp"
-            android:paddingTop="5dp">
-
-            <ImageView
-                android:id="@+id/imageView2"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_centerHorizontal="true"
-                android:src="@drawable/customers_dashboard_icon" />
-
-            <TextView
-                android:id="@+id/labelAllCust"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/imageView2"
-                android:layout_centerHorizontal="true"
-                android:text="All Customers"
-                android:textAppearance="?android:attr/textAppearanceMedium"
-                android:textColor="@color/color_header"
-                android:textSize="@dimen/text_xlarge" />
-
-            <TextView
-                android:id="@+id/allCustomers"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/labelAllCust"
-                android:layout_centerHorizontal="true"
-                android:text="1"
-                android:textAppearance="?android:attr/textAppearanceLarge"
-                android:textColor="@color/color_header"
-                android:textSize="@dimen/text_dash_board_values" />
-
-        </RelativeLayout>
-
-
-    </LinearLayout>
-
     </ScrollView>
-
-
-
 
 
 </RelativeLayout>

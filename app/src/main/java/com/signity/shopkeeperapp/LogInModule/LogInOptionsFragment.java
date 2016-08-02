@@ -4,14 +4,10 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.inputmethod.EditorInfo;
 import android.widget.Button;
-import android.widget.EditText;
-import android.widget.TextView;
 
 import com.signity.shopkeeperapp.R;
 import com.signity.shopkeeperapp.util.AnimUtil;
@@ -24,7 +20,7 @@ import com.signity.shopkeeperapp.view.LoginScreenActivity;
  */
 public class LogInOptionsFragment extends Fragment implements View.OnClickListener {
 
-    Button numberBtn,emailBtn;
+    Button numberBtn, emailBtn;
     PrefManager prefManager;
 
     public static Fragment newInstance(Context context) {
@@ -36,15 +32,14 @@ public class LogInOptionsFragment extends Fragment implements View.OnClickListen
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         prefManager = new PrefManager(getActivity());
-        //     pushClientManager = new GCMClientManager(getActivity(), Constant.PROJECT_NUMBER);
     }
 
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_login_options, container, false);
-        numberBtn=(Button)rootView.findViewById(R.id.numberBtn);
-        emailBtn=(Button) rootView.findViewById(R.id.emailBtn);
+        numberBtn = (Button) rootView.findViewById(R.id.numberBtn);
+        emailBtn = (Button) rootView.findViewById(R.id.emailBtn);
 
 
         numberBtn.setOnClickListener(this);
@@ -54,26 +49,24 @@ public class LogInOptionsFragment extends Fragment implements View.OnClickListen
 
     @Override
     public void onClick(View v) {
-        switch (v.getId()){
+        switch (v.getId()) {
             case R.id.numberBtn:
-                prefManager.storeSharedValue(Constant.LOG_IN_TYPE,"mobile");
+                prefManager.storeSharedValue(Constant.LOG_IN_TYPE, "mobile");
                 Intent intent_home = new Intent(getActivity(),
                         LoginScreenActivity.class);
                 startActivity(intent_home);
                 AnimUtil.slideFromRightAnim(getActivity());
 //                getActivity().finish();
                 break;
-
             case R.id.emailBtn:
-                prefManager.storeSharedValue(Constant.LOG_IN_TYPE,"email");
+                prefManager.storeSharedValue(Constant.LOG_IN_TYPE, "email");
                 Intent intent = new Intent(getActivity(),
-                        LogInWithEmailActivity.class);
+                        LoginScreenActivity.class);
+                intent.putExtra("type", "email");
                 startActivity(intent);
                 AnimUtil.slideFromRightAnim(getActivity());
 //                getActivity().finish();
-
                 break;
-
         }
     }
 }

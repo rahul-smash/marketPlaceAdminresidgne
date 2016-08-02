@@ -1,6 +1,5 @@
 package com.signity.shopkeeperapp.view;
 
-import android.app.Activity;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
@@ -17,8 +16,13 @@ public class LoginScreenActivity extends FragmentActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
-
-        Fragment fragment = LoginFragmentMobile.newInstance(this);
+        Fragment fragment;
+        String type = getIntent().getStringExtra("type");
+        if (type != null && type.equalsIgnoreCase("email")) {
+            fragment = LoginFragmentEmail.newInstance(this);
+        }else{
+            fragment = LoginFragmentMobile.newInstance(this);
+        }
 
         if (savedInstanceState == null)
             getSupportFragmentManager().beginTransaction()

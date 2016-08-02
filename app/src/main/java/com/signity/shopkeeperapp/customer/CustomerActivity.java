@@ -6,7 +6,6 @@ import android.support.v4.app.FragmentActivity;
 
 import com.signity.shopkeeperapp.R;
 import com.signity.shopkeeperapp.util.AnimUtil;
-import com.signity.shopkeeperapp.util.Util;
 
 /**
  * Created by rajesh on 28/9/15.
@@ -37,7 +36,6 @@ public class CustomerActivity extends FragmentActivity {
         if (savedInstanceState == null)
             getSupportFragmentManager().beginTransaction()
                     .add(R.id.container, fragment).commit();
-
     }
 
 

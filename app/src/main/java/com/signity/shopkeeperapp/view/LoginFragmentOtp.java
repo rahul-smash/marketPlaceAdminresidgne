@@ -43,6 +43,7 @@ public class LoginFragmentOtp extends Fragment implements View.OnClickListener {
     String phone;
     String otp;
     String status;
+    String role;
     String name;
     String email;
 
@@ -66,6 +67,8 @@ public class LoginFragmentOtp extends Fragment implements View.OnClickListener {
         status = bundle.getString("status");
         name = bundle.getString("name");
         email = bundle.getString("email");
+        role = bundle.getString("role");
+
 
     }
 
@@ -98,7 +101,6 @@ public class LoginFragmentOtp extends Fragment implements View.OnClickListener {
                     callNetworkServiceOtpVerify();
                 }
                 break;
-
             case R.id.backButton:
                 getActivity().onBackPressed();
                 break;
@@ -106,12 +108,6 @@ public class LoginFragmentOtp extends Fragment implements View.OnClickListener {
                 callNetworkServiceForOtp();
                 break;
         }
-    }
-
-
-    private void saveUserIdToPref() {
-
-        Util.savePreferenceValue(getActivity(), Constant.LOGIN_CHECK, "1");
     }
 
     private boolean vallidOtp() {
@@ -128,8 +124,9 @@ public class LoginFragmentOtp extends Fragment implements View.OnClickListener {
     }
 
     private void callNetworkServiceForOtp() {
-        ProgressDialogUtil.showProgressDialog(getActivity());
 
+        ProgressDialogUtil.showProgressDialog(getActivity());
+        edtOTp.setText("");
         String deviceId = Settings.Secure.getString(getActivity().getApplicationContext().getContentResolver(), Settings.Secure.ANDROID_ID);
         //String deviceToken = pushClientManager.getRegistrationId(getActivity());
         String deviceToken = Util.loadPreferenceValue(getActivity(), Constant.DEVICE_TOKEN);
@@ -147,6 +144,7 @@ public class LoginFragmentOtp extends Fragment implements View.OnClickListener {
                     id = mobResponse.getData().getId();
                     otp = mobResponse.getData().getOtp();
                     status = mobResponse.getData().getStatus();
+                    role = mobResponse.getData().getRole();
                     Toast.makeText(getActivity(), "OTP sent to your registered mobile", Toast.LENGTH_SHORT).show();
                 } else {
                     Toast.makeText(getActivity(), mobResponse.getMessage(), Toast.LENGTH_SHORT).show();
@@ -159,7 +157,6 @@ public class LoginFragmentOtp extends Fragment implements View.OnClickListener {
                 Toast.makeText(getActivity(), "Error!", Toast.LENGTH_SHORT).show();
             }
         });
-
     }
 
     private void callNetworkServiceOtpVerify() {
@@ -171,10 +168,10 @@ public class LoginFragmentOtp extends Fragment implements View.OnClickListener {
         String deviceToken = Util.loadPreferenceValue(getActivity(), Constant.DEVICE_TOKEN);
         Map<String, String> param = new HashMap<String, String>();
         param.put("phone", phone);
+        param.put("otp", otpValue);
         param.put("device_id", deviceId);
         param.put("device_token", deviceToken);
         param.put("platform", Constant.PLATFORM);
-        param.put("otp", otpValue);
         NetworkAdaper.getInstance().getNetworkServices().otpVerify(param, new Callback<OtpVerifyModel>() {
 
             @Override
@@ -198,7 +195,8 @@ public class LoginFragmentOtp extends Fragment implements View.OnClickListener {
     }
 
     private void proceedFutherForHomeScreen() {
-        saveUserIdToPref();
+        Util.savePreferenceValue(getActivity(), Constant.LOGIN_CHECK, "1");
+        Util.savePreferenceValue(getActivity(), Constant.IS_ADMIN, (role != null && !(role.isEmpty())) ? role : "");
         Intent intent_home = new Intent(getActivity(), MainActivity.class);
 //        intent_home.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP|Intent.FLAG_ACTIVITY_NEW_TASK);
         intent_home.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);

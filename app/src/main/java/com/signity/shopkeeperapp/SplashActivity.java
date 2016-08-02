@@ -1,32 +1,22 @@
 package com.signity.shopkeeperapp;
 
 import android.app.Activity;
-import android.app.AlarmManager;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
-import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.BitmapFactory;
-import android.media.AudioManager;
-import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
-import android.support.v4.app.NotificationCompat;
 
 import com.signity.shopkeeperapp.LogInModule.LogInOptionsActivity;
 import com.signity.shopkeeperapp.app.DbAdapter;
 import com.signity.shopkeeperapp.db.AppDatabase;
-import com.signity.shopkeeperapp.gcm.GCMClientManager;
 import com.signity.shopkeeperapp.home.MainActivity;
-import com.signity.shopkeeperapp.receiver.LocalNotifyReceiver;
 import com.signity.shopkeeperapp.util.AnimUtil;
 import com.signity.shopkeeperapp.util.Constant;
 import com.signity.shopkeeperapp.util.DialogHandler;
 import com.signity.shopkeeperapp.util.Util;
-
-import java.util.Calendar;
 
 /**
  * Created by Rajinder on 29/9/15.
@@ -41,7 +31,6 @@ public class SplashActivity extends Activity {
     private BroadcastReceiver mRegistrationBroadcastReceiver;
 
     private int SPLASH_TIME_OUT = 1000;
-    private GCMClientManager pushClientManager;
 
     AppDatabase appDatabase;
 
@@ -52,26 +41,6 @@ public class SplashActivity extends Activity {
         appDatabase = DbAdapter.getInstance().getDb();
 
         //sendNotification("Local","First Notification");
-
-       /* pushClientManager = new GCMClientManager(this, Constant.PROJECT_NUMBER);
-
-        String deviceToken = pushClientManager.getRegistrationId(SplashActivity.this);
-
-        if (deviceToken != null && !deviceToken.isEmpty()) {
-            moveNext();
-        } else {
-            pushClientManager.registerIfNeeded(new GCMClientManager.RegistrationCompletedHandler() {
-                @Override
-                public void onSuccess(String registrationId, boolean isNewRegistration) {
-                    moveNext();
-                }
-
-                @Override
-                public void onFailure(String ex) {
-                    super.onFailure(ex);
-                }
-            });
-        }*/
 
         removeNotificationsFromStatusBar();
 

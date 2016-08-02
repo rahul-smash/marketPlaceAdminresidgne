@@ -52,7 +52,7 @@
             android:contentDescription=""
             android:drawableLeft="@drawable/ic_add_user"
             android:paddingLeft="5dp"
-            android:visibility="visible" />
+            android:visibility="gone" />
 
 
     </RelativeLayout>

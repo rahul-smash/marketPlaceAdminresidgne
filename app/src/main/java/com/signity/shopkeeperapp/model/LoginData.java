@@ -39,6 +39,9 @@ public class LoginData {
     @SerializedName("role_id")
     @Expose
     private String roleId;
+    @SerializedName("role")
+    @Expose
+    private String role;
     @SerializedName("status")
     @Expose
     private String status;
@@ -53,7 +56,13 @@ public class LoginData {
     private String platform;
 
 
+    public String getRole() {
+        return role;
+    }
 
+    public void setRole(String role) {
+        this.role = role;
+    }
 
     public String getStoreId() {
         return storeId;
@@ -64,216 +73,168 @@ public class LoginData {
     }
 
     /**
-     *
-     * @return
-     * The id
+     * @return The id
      */
     public String getId() {
         return id;
     }
 
     /**
-     *
-     * @param id
-     * The id
+     * @param id The id
      */
     public void setId(String id) {
         this.id = id;
     }
 
     /**
-     *
-     * @return
-     * The fullName
+     * @return The fullName
      */
     public String getFullName() {
         return fullName;
     }
 
     /**
-     *
-     * @param fullName
-     * The full_name
+     * @param fullName The full_name
      */
     public void setFullName(String fullName) {
         this.fullName = fullName;
     }
 
     /**
-     *
-     * @return
-     * The fbId
+     * @return The fbId
      */
     public String getFbId() {
         return fbId;
     }
 
     /**
-     *
-     * @param fbId
-     * The fb_id
+     * @param fbId The fb_id
      */
     public void setFbId(String fbId) {
         this.fbId = fbId;
     }
 
     /**
-     *
-     * @return
-     * The email
+     * @return The email
      */
     public String getEmail() {
         return email;
     }
 
     /**
-     *
-     * @param email
-     * The email
+     * @param email The email
      */
     public void setEmail(String email) {
         this.email = email;
     }
 
     /**
-     *
-     * @return
-     * The phone
+     * @return The phone
      */
     public String getPhone() {
         return phone;
     }
 
     /**
-     *
-     * @param phone
-     * The phone
+     * @param phone The phone
      */
     public void setPhone(String phone) {
         this.phone = phone;
     }
 
     /**
-     *
-     * @return
-     * The otp
+     * @return The otp
      */
     public String getOtp() {
         return otp;
     }
 
     /**
-     *
-     * @param otp
-     * The otp
+     * @param otp The otp
      */
     public void setOtp(String otp) {
         this.otp = otp;
     }
 
     /**
-     *
-     * @return
-     * The otpVerify
+     * @return The otpVerify
      */
     public String getOtpVerify() {
         return otpVerify;
     }
 
     /**
-     *
-     * @param otpVerify
-     * The otp_verify
+     * @param otpVerify The otp_verify
      */
     public void setOtpVerify(String otpVerify) {
         this.otpVerify = otpVerify;
     }
 
     /**
-     *
-     * @return
-     * The roleId
+     * @return The roleId
      */
     public String getRoleId() {
         return roleId;
     }
 
     /**
-     *
-     * @param roleId
-     * The role_id
+     * @param roleId The role_id
      */
     public void setRoleId(String roleId) {
         this.roleId = roleId;
     }
 
     /**
-     *
-     * @return
-     * The status
+     * @return The status
      */
     public String getStatus() {
         return status;
     }
 
     /**
-     *
-     * @param status
-     * The status
+     * @param status The status
      */
     public void setStatus(String status) {
         this.status = status;
     }
 
     /**
-     *
-     * @return
-     * The deviceId
+     * @return The deviceId
      */
     public String getDeviceId() {
         return deviceId;
     }
 
     /**
-     *
-     * @param deviceId
-     * The device_id
+     * @param deviceId The device_id
      */
     public void setDeviceId(String deviceId) {
         this.deviceId = deviceId;
     }
 
     /**
-     *
-     * @return
-     * The deviceToken
+     * @return The deviceToken
      */
     public String getDeviceToken() {
         return deviceToken;
     }
 
     /**
-     *
-     * @param deviceToken
-     * The device_token
+     * @param deviceToken The device_token
      */
     public void setDeviceToken(String deviceToken) {
         this.deviceToken = deviceToken;
     }
 
     /**
-     *
-     * @return
-     * The platform
+     * @return The platform
      */
     public String getPlatform() {
         return platform;
     }
 
     /**
-     *
-     * @param platform
-     * The platform
+     * @param platform The platform
      */
     public void setPlatform(String platform) {
         this.platform = platform;

@@ -10,6 +10,7 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.provider.Settings;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.LocalBroadcastManager;
@@ -29,7 +30,6 @@ import com.google.android.gms.common.GoogleApiAvailability;
 import com.signity.shopkeeperapp.R;
 import com.signity.shopkeeperapp.gcm.QuickstartPreferences;
 import com.signity.shopkeeperapp.gcm.RegistrationIntentService;
-import com.signity.shopkeeperapp.model.MobResponseDetails;
 import com.signity.shopkeeperapp.model.StoresModel;
 import com.signity.shopkeeperapp.network.NetworkAdaper;
 import com.signity.shopkeeperapp.util.Constant;
@@ -39,37 +39,82 @@ import com.signity.shopkeeperapp.util.Util;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import retrofit.Callback;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
 
 /**
- * Created by Rajesh on 12/10/15.
+ * Created by rajesh on 6/7/16.
  */
-public class LoginFragmentMobile extends Fragment implements View.OnClickListener {
-
-    Button btnNext, backButton;
-    EditText edtPhone;
-    String from;
+public class LoginFragmentEmail extends Fragment implements View.OnClickListener {
 
     private static final int PLAY_SERVICES_RESOLUTION_REQUEST = 9000;
-    private static final String TAG = "MainActivity";
 
     private BroadcastReceiver mRegistrationBroadcastReceiver;
+    private Button btnNext;
+    private EditText edtEmail;
+    private Button backButton;
+
+
+    public static Fragment newInstance(Context context) {
+        return Fragment.instantiate(context,
+                LoginFragmentEmail.class.getName());
+    }
 
 
     @Override
-    public void onCreate(Bundle savedInstanceState) {
+    public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
     }
 
     @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        View rootView = inflater.inflate(R.layout.fragment_layout_login_email, container, false);
+        btnNext = (Button) rootView.findViewById(R.id.btnNext);
+        edtEmail = (EditText) rootView.findViewById(R.id.edtEmail);
+        backButton = (Button) rootView.findViewById(R.id.backButton);
+        btnNext.setOnClickListener(this);
+        backButton.setOnClickListener(this);
+
+        edtEmail.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+            @Override
+            public boolean onEditorAction(TextView textView, int actionId, KeyEvent keyEvent) {
+                if (actionId == EditorInfo.IME_ACTION_DONE) {
+                    processStart();
+                }
+
+                return false;
+            }
+        });
+
+        return rootView;
+    }
+
+
+    @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-
         if (Util.loadPreferenceValue(getActivity(), Constant.DEVICE_TOKEN).equalsIgnoreCase("") || Util.loadPreferenceValue(getActivity(), Constant.DEVICE_TOKEN).equalsIgnoreCase(null)) {
             processForDeviceToken();
+        }
+
+    }
+
+    private void processForDeviceToken() {
+
+        if (checkPlayServices()) {
+            // Start IntentService to register this application with GCM.
+            try {
+                Intent intent = new Intent(getActivity(), RegistrationIntentService.class);
+                getActivity().startService(intent);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        } else {
+            alert(getActivity(), Constant.APP_TITLE, "This device is not supported.");
         }
 
         mRegistrationBroadcastReceiver = new BroadcastReceiver() {
@@ -87,67 +132,39 @@ public class LoginFragmentMobile extends Fragment implements View.OnClickListene
         };
     }
 
-    public static Fragment newInstance(Context context) {
-        return Fragment.instantiate(context,
-                LoginFragmentMobile.class.getName());
-    }
-
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View rootView = inflater.inflate(R.layout.fragment_layout_login_mobile, container, false);
-        btnNext = (Button) rootView.findViewById(R.id.btnNext);
-        edtPhone = (EditText) rootView.findViewById(R.id.edtPhone);
-        backButton = (Button) rootView.findViewById(R.id.backButton);
-        btnNext.setOnClickListener(this);
-        backButton.setOnClickListener(this);
-
-        edtPhone.setOnEditorActionListener(new TextView.OnEditorActionListener() {
-            @Override
-            public boolean onEditorAction(TextView textView, int actionId, KeyEvent keyEvent) {
-                if (actionId == EditorInfo.IME_ACTION_DONE) {
-                    processStart();
-                }
-
-                return false;
-            }
-        });
-
-        return rootView;
-    }
-
-
-    @Override
-    public void onClick(View view) {
-
-        switch (view.getId()) {
-            case R.id.btnNext:
-                processStart();
-                break;
-            case R.id.backButton:
-                getActivity().onBackPressed();
-                break;
-        }
-
-    }
 
     private void processStart() {
-        if (vallidPhone()) {
+        String email = edtEmail.getText().toString();
+        if (checkValidEmail(email)) {
             if (Util.checkIntenetConnection(getActivity())) {
 //                callNetworkServiceForOtp();
-                String phone = edtPhone.getText().toString();
-                Util.savePreferenceValue(getActivity(), Constant.LOGIN_USER_MOBILE_NUMBER, phone);
+                Util.savePreferenceValue(getActivity(), Constant.LOGIN_USER_EMAIL_ID, email);
                 getAdminStores();
             } else {
                 DialogUtils.showAlertDialog(getActivity(), "Internet", "Please check your Internet Connection.");
             }
+        } else {
+            edtEmail.setError("Invalid Email");
         }
     }
 
+    public boolean checkValidEmail(String email) {
+        if (email == null || email.isEmpty()) {
+            return false;
+        }
+        boolean isValid = false;
+        String PATTERN = "^[_A-Za-z0-9-]+(\\.[_A-Za-z0-9-]+)*@[A-Za-z0-9-]+(\\.[A-Za-z0-9]+)*(\\.[A-Za-z]{2,})$";
+        Pattern pattern = Pattern.compile(PATTERN);
+        Matcher matcher = pattern.matcher(email);
+        isValid = matcher.matches();
+        return isValid;
+    }
 
     private void getAdminStores() {
 
         ProgressDialogUtil.showProgressDialog(getActivity());
-        String phone = edtPhone.getText().toString();
+
+        String phone = edtEmail.getText().toString();
         String deviceId = Settings.Secure.getString(getActivity().getApplicationContext().getContentResolver(), Settings.Secure.ANDROID_ID);
         //String deviceToken = pushClientManager.getRegistrationId(getActivity());
         String deviceToken = Util.loadPreferenceValue(getActivity(), Constant.DEVICE_TOKEN);
@@ -156,6 +173,7 @@ public class LoginFragmentMobile extends Fragment implements View.OnClickListene
         param.put("device_id", deviceId);
         param.put("device_token", deviceToken);
         param.put("platform", Constant.PLATFORM);
+        param.put("type", "email");
 
 
         NetworkAdaper.getInstance().getNetworkServices().getAdminStores(param, new Callback<StoresModel>() {
@@ -182,34 +200,14 @@ public class LoginFragmentMobile extends Fragment implements View.OnClickListene
 
     }
 
-
-    private void proceedToMobileOtpGeneration(MobResponseDetails data) {
-        Log.e("OTP", data.getOtp());
-        Fragment fragment = LoginFragmentOtp.newInstance(getActivity());
-        Bundle bundle = new Bundle();
-        bundle.putString("id", data.getId());
-        bundle.putString("phone", data.getPhone());
-        bundle.putString("name", data.getFullName());
-        bundle.putString("email", data.getEmail());
-        bundle.putString("otp", data.getOtp());
-        bundle.putString("status", data.getStatus());
-        fragment.setArguments(bundle);
-        FragmentTransaction ft = getFragmentManager().beginTransaction();
-        ft.setCustomAnimations(R.anim.right_to_center_slide,
-                R.anim.center_to_left_slide,
-                R.anim.left_to_center_slide,
-                R.anim.center_to_right_slide);
-        ft.replace(R.id.container, fragment);
-        ft.commit();
-    }
-
     private void proceedToStoresListing(StoresModel data) {
 
         Fragment fragment = LoginFragmentStoresListing.newInstance(getActivity());
         LoginFragmentStoresListing.mStoresList = data.getStoresList();
-        String phone = edtPhone.getText().toString();
+        String email = edtEmail.getText().toString();
         Bundle bundle = new Bundle();
-        bundle.putString("phone", phone);
+        bundle.putString("phone", email);
+        bundle.putString("type", "email");
         fragment.setArguments(bundle);
         FragmentTransaction ft = getFragmentManager().beginTransaction();
         ft.setCustomAnimations(R.anim.right_to_center_slide,
@@ -220,31 +218,19 @@ public class LoginFragmentMobile extends Fragment implements View.OnClickListene
         ft.commit();
     }
 
-    private boolean vallidPhone() {
-        String phone = edtPhone.getText().toString();
-        if (phone.isEmpty()) {
-            Toast.makeText(getActivity(), "Enter Phone Number", Toast.LENGTH_SHORT).show();
-            return false;
+
+    @Override
+    public void onClick(View view) {
+        switch (view.getId()) {
+            case R.id.btnNext:
+                processStart();
+                break;
+            case R.id.backButton:
+                getActivity().onBackPressed();
+                break;
         }
-        return true;
+
     }
-
-
-    private void processForDeviceToken() {
-
-        if (checkPlayServices()) {
-            // Start IntentService to register this application with GCM.
-            try {
-                Intent intent = new Intent(getActivity(), RegistrationIntentService.class);
-                getActivity().startService(intent);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        } else {
-            alert(getActivity(), Constant.APP_TITLE, "This device is not supported.");
-        }
-    }
-
 
     @Override
     public void onResume() {
@@ -260,27 +246,7 @@ public class LoginFragmentMobile extends Fragment implements View.OnClickListene
     }
 
 
-    /**
-     * Check the device to make sure it has the Google Play Services APK. If
-     * it doesn't, display a dialog that allows users to download the APK from
-     * the Google Play Store or enable it in the device's system settings.
-     */
-    private boolean checkPlayServices() {
-        GoogleApiAvailability apiAvailability = GoogleApiAvailability.getInstance();
-        int resultCode = apiAvailability.isGooglePlayServicesAvailable(getActivity());
-        if (resultCode != ConnectionResult.SUCCESS) {
-            if (apiAvailability.isUserResolvableError(resultCode)) {
-                apiAvailability.getErrorDialog(getActivity(), resultCode, PLAY_SERVICES_RESOLUTION_REQUEST)
-                        .show();
-            } else {
-                Log.i(TAG, "This device is not supported.");
-
-            }
-            return false;
-        }
-        return true;
-    }
-
+    /*Popup*/
     private void alert(Context context, String title,
                        String message) {
 
@@ -312,4 +278,24 @@ public class LoginFragmentMobile extends Fragment implements View.OnClickListene
     }
 
 
+    /**
+     * Check the device to make sure it has the Google Play Services APK. If
+     * it doesn't, display a dialog that allows users to download the APK from
+     * the Google Play Store or enable it in the device's system settings.
+     */
+    private boolean checkPlayServices() {
+        GoogleApiAvailability apiAvailability = GoogleApiAvailability.getInstance();
+        int resultCode = apiAvailability.isGooglePlayServicesAvailable(getActivity());
+        if (resultCode != ConnectionResult.SUCCESS) {
+            if (apiAvailability.isUserResolvableError(resultCode)) {
+                apiAvailability.getErrorDialog(getActivity(), resultCode, PLAY_SERVICES_RESOLUTION_REQUEST)
+                        .show();
+            } else {
+                Log.i("TAG", "This device is not supported.");
+
+            }
+            return false;
+        }
+        return true;
+    }
 }
