@@ -714,7 +714,7 @@ public class OrderDetailFragment extends Fragment implements View.OnClickListene
             ItemListModel data = listItem.get(position);
 
             holder.itemName.setText(listItem.get(position).getName());
-            holder.itemPrice.setText("Price: " + Util.getCurrency(context) + " " + listItem.get(position).getPrice());
+            holder.itemPrice.setText("Price: " + Util.getCurrency(context) + "" + listItem.get(position).getPrice());
             holder.itemQuantiy.setText("Qty: " + listItem.get(position).getQuantity());
 
             if ((data.getWeight() != null && !(data.getWeight().isEmpty())) && (data.getUnitType() != null && !(data.getUnitType()
@@ -740,7 +740,7 @@ public class OrderDetailFragment extends Fragment implements View.OnClickListene
 
             Double itemsTotal = 0.00;
             itemsTotal = listItem.get(position).getPrice() * Integer.parseInt(listItem.get(position).getQuantity());
-            holder.itemsTotal.setText("Total: " + Util.getCurrency(context) + " " + itemsTotal);
+            holder.itemsTotal.setText("Total: " + Util.getCurrency(context) + "" + itemsTotal);
 
             holder.toggle.setOnClickListener(new View.OnClickListener() {
                 @Override

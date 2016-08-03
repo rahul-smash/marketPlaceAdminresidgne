@@ -245,7 +245,7 @@ public class ActiveOrderFragmentItem extends Fragment implements View.OnClickLis
 
             totalPrice = ((itemsPrice + order.getShippingCharges()) - order.getDiscount()) + order.getTax();
 
-            holder.txtTotalAmount.setText(Util.getCurrency(context) + " " + totalPrice);
+            holder.txtTotalAmount.setText(Util.getCurrency(context) + "" + totalPrice);
             holder.txtTime.setText(order.getTime());
             holder.checkbox.setChecked(false);
 

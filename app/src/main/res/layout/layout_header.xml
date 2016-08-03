@@ -26,7 +26,7 @@
         android:layout_centerVertical="true"
         android:text="About"
         android:textColor="@color/color_white"
-        android:textSize="@dimen/text_xxlarge"
+        android:textSize="@dimen/text_xlarge"
         android:visibility="visible" />
 
 

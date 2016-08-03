@@ -32,6 +32,10 @@
     <color name="color_delivered_orange">#F39C12</color>
     <color name="color_rejected_cancelled_red">#FFD1001E</color>
 
+    <color name="color_due_orders">#A20000</color>
+    <color name="color_processing">#59B3E5</color>
+    <color name="color_shipping">#32A532</color>
+
 
 
 </resources>

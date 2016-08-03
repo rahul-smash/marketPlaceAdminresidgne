@@ -84,6 +84,7 @@
                     android:layout_alignLeft="@+id/addressBlock"
                     android:layout_below="@+id/addressBlock"
                     android:layout_marginTop="5dp"
+                    android:layout_marginLeft="10dp"
                     android:ems="4"
                     android:text="Email:"
                     android:textColor="@android:color/black"
@@ -108,6 +109,7 @@
                     android:layout_alignLeft="@+id/addressBlock"
                     android:layout_below="@+id/txtLblEmail"
                     android:layout_marginTop="5dp"
+                    android:layout_marginLeft="10dp"
                     android:ems="4"
                     android:text="Contact:"
                     android:textColor="@android:color/black"
@@ -148,7 +150,7 @@
                     android:layout_marginLeft="10dp"
                     android:text="Total Orders"
                     android:textColor="@color/color_text"
-                    android:textSize="22dp" />
+                    android:textSize="@dimen/text_xlarge" />
 
                 <TextView
                     android:id="@+id/txtTotalOrderVal"
@@ -158,7 +160,7 @@
                     android:layout_centerVertical="true"
                     android:layout_marginRight="10dp"
                     android:text="0"
-                    android:textSize="22dp" />
+                    android:textSize="@dimen/text_xlarge" />
 
             </RelativeLayout>
 
@@ -183,7 +185,7 @@
                     android:layout_marginLeft="10dp"
                     android:text="Amount Paid"
                     android:textColor="@color/color_text"
-                    android:textSize="22dp" />
+                    android:textSize="@dimen/text_xlarge" />
 
                 <TextView
                     android:id="@+id/txtAmoutPaidVal"
@@ -193,7 +195,7 @@
                     android:layout_centerVertical="true"
                     android:layout_marginRight="10dp"
                     android:text="0"
-                    android:textSize="22dp" />
+                    android:textSize="@dimen/text_xlarge" />
 
             </RelativeLayout>
 
@@ -218,7 +220,7 @@
                     android:layout_marginLeft="10dp"
                     android:text="Active Orders"
                     android:textColor="@color/color_text"
-                    android:textSize="22dp" />
+                    android:textSize="@dimen/text_xlarge" />
 
                 <TextView
                     android:id="@+id/txtActiveOrdersVal"
@@ -228,7 +230,7 @@
                     android:layout_centerVertical="true"
                     android:layout_marginRight="10dp"
                     android:text="0"
-                    android:textSize="22dp" />
+                    android:textSize="@dimen/text_xlarge" />
 
             </RelativeLayout>
 
@@ -253,7 +255,7 @@
                     android:layout_marginLeft="10dp"
                     android:text="Amount Due"
                     android:textColor="@color/color_text"
-                    android:textSize="22dp" />
+                    android:textSize="@dimen/text_xlarge" />
 
                 <TextView
                     android:id="@+id/txtAmtDueVal"
@@ -263,7 +265,7 @@
                     android:layout_centerVertical="true"
                     android:layout_marginRight="10dp"
                     android:text="0"
-                    android:textSize="22dp" />
+                    android:textSize="@dimen/text_xlarge" />
 
             </RelativeLayout>
 

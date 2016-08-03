@@ -216,9 +216,9 @@ public class CustomerDetailFragment extends Fragment {
 
     public void setCutomerDetailValues(CustomerDetailModel cutomerDetailValues) {
         mTotalOrderValue.setText("" + cutomerDetailValues.getTotalOrders());
-        mAmountPaidValue.setText(Util.getCurrency(getActivity()) + " " + cutomerDetailValues.getPaidAmount());
+        mAmountPaidValue.setText(Util.getCurrency(getActivity()) + "" + cutomerDetailValues.getPaidAmount());
         mActiveOrderValue.setText(""+cutomerDetailValues.getActiveOrders());
-        mAmountDueValue.setText(Util.getCurrency(getActivity()) + " " + cutomerDetailValues.getDueAmount());
+        mAmountDueValue.setText(Util.getCurrency(getActivity()) + "" + cutomerDetailValues.getDueAmount());
     }
 
     private void callAlert() {

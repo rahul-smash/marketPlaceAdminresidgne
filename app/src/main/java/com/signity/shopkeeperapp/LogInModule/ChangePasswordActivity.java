@@ -56,7 +56,7 @@ public class ChangePasswordActivity extends AppCompatActivity implements View.On
                         && !confirmPass.getText().toString().isEmpty()) {
                     callNetwrokForChangePassword();
                 } else {
-                    Toast.makeText(ChangePasswordActivity.this, "Please enter all the field", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(ChangePasswordActivity.this, "Please enter all the fields", Toast.LENGTH_SHORT).show();
                 }
                 break;
             case R.id.backButton:

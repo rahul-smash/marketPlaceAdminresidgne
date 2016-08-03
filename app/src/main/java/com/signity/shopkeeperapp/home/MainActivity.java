@@ -76,7 +76,7 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
 
     SlidingPaneLayout mSlidingPanel;
 
-    String[] title = {"Dashboard", "Due Orders", "Active Orders", "Rejected Orders", "Cancelled Orders", "Customers", "Enquiries", "Manage Stores", "Categories"};
+    String[] title = {"Dashboard", "Delivered Orders", "Active Orders", "Rejected Orders", "Cancelled Orders", "Customers", "Enquiries", "Manage Stores", "Categories"};
     String shareContent = "";
 
     public static String fragmentName = "";
@@ -202,7 +202,7 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
             Fragment fragment = AllOrderFragment.newInstance(this);
             Bundle bundle;
             bundle = new Bundle();
-            bundle.putString("type", Constant.TYPE_ACTIVE_ORDER);
+            bundle.putString("type", Constant.TYPE_ALL_ORDER);
             fragment.setArguments(bundle);
             getSupportFragmentManager().beginTransaction()
                     .replace(R.id.container, fragment, AllOrderFragment.class.getSimpleName()).commit();
@@ -287,7 +287,8 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
         TextView manageStaff = (TextView) layout.findViewById(R.id.staff);
 
         if (isAdmin.equalsIgnoreCase("admin")) {
-            manageStaff.setVisibility(View.VISIBLE);
+//            manageStaff.setVisibility(View.VISIBLE);
+            manageStaff.setVisibility(View.GONE);
         } else if (isAdmin.equalsIgnoreCase("staff")) {
             manageStaff.setVisibility(View.GONE);
         } else {

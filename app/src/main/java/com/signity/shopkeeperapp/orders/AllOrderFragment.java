@@ -214,10 +214,20 @@ public class AllOrderFragment extends Fragment implements RvActiveOrderAdapter.O
         checkboxShippedOrder = (CheckBox) dialogView.findViewById(R.id.checkboxShippedOrder);
         checkboxActiveOrders = (CheckBox) dialogView.findViewById(R.id.checkboxActiveOrders);
         checkboxDueOrders = (CheckBox) dialogView.findViewById(R.id.checkboxDueOrders);
-        checkboxDueOrders.setTag("");
+        /*checkboxDueOrders.setTag("");
         checkboxActiveOrders.setTag("");
         checkboxShippedOrder.setTag("");
-        checkboxAllOrders.setTag("");
+        checkboxAllOrders.setTag("");*/
+
+        checkboxDueOrders.setTag("0");
+        checkboxActiveOrders.setTag("1");
+        checkboxShippedOrder.setTag("4");
+        checkboxAllOrders.setTag("all");
+        checkboxDueOrders.setChecked(true);
+        checkboxActiveOrders.setChecked(true);
+        checkboxShippedOrder.setChecked(true);
+        checkboxAllOrders.setChecked(true);
+
         apply = (Button) dialogView.findViewById(R.id.buttonApply);
 
         checkboxDueOrders.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
@@ -273,8 +283,14 @@ public class AllOrderFragment extends Fragment implements RvActiveOrderAdapter.O
             public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
                 if (b) {
                     checkboxAllOrders.setTag("all");
+                    checkboxDueOrders.setChecked(true);
+                    checkboxActiveOrders.setChecked(true);
+                    checkboxShippedOrder.setChecked(true);
                 } else {
                     checkboxAllOrders.setTag("");
+                    checkboxDueOrders.setChecked(false);
+                    checkboxActiveOrders.setChecked(false);
+                    checkboxShippedOrder.setChecked(false);
                 }
             }
         });

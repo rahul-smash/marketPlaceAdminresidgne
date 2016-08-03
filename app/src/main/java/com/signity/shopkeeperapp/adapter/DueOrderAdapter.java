@@ -101,7 +101,7 @@ public class DueOrderAdapter extends BaseAdapter {
         }
 
         holder.txtCustOrderId.setText("" + list.get(position).getOrderId());
-        holder.txtCustTotalAmt.setText(Util.getCurrency(context) + " " + Double.parseDouble(new DecimalFormat(
+        holder.txtCustTotalAmt.setText(Util.getCurrency(context) + "" + Double.parseDouble(new DecimalFormat(
                 "#####.##").format(list.get(position).getTotal())));
         holder.txtCustTime.setText("" + list.get(position).getTime());
 

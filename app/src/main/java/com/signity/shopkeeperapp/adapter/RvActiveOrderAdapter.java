@@ -74,16 +74,16 @@ public class RvActiveOrderAdapter extends RecyclerView.Adapter<RvActiveOrderAdap
         holder.txtTime.setText(order.getTime());
         if (order.getStatus().equalsIgnoreCase("1")) {
             holder.status.setText("Processing");
-            holder.status.setBackgroundResource(R.drawable.shape_button_active);
+            holder.status.setBackgroundResource(R.drawable.shape_button_processing);
         } else if (order.getStatus().equalsIgnoreCase("4")) {
             holder.status.setText("Shipping");
-            holder.status.setBackgroundResource(R.drawable.shape_button_shipped);
+            holder.status.setBackgroundResource(R.drawable.shape_button_shipping);
         } else if (order.getStatus().equalsIgnoreCase("5")) {
             holder.status.setText("Delivered");
             holder.status.setBackgroundResource(R.drawable.shape_button_delivered);
         } else if (order.getStatus().equalsIgnoreCase("0")) {
             holder.status.setText("Due Orders");
-            holder.status.setBackgroundResource(R.drawable.shape_button_active);
+            holder.status.setBackgroundResource(R.drawable.shape_button_due_orders);
         } else if (order.getStatus().equalsIgnoreCase("2")) {
             holder.status.setText("Rejected");
             holder.status.setBackgroundResource(R.drawable.shape_button_rejected);

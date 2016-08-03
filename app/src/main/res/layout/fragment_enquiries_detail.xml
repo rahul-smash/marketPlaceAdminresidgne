@@ -23,23 +23,42 @@
                 android:layout_height="wrap_content">
 
 
-                <TextView
-                    android:id="@+id/txtName"
-                    android:layout_width="wrap_content"
+                <RelativeLayout
+                    android:id="@+id/nameBlock"
+                    android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="10dp"
                     android:layout_marginTop="10dp"
-                    android:text="Amit Kumar"
-                    android:textColor="@color/color_text"
-                    android:textSize="@dimen/text_large" />
+                    >
 
+                    <TextView
+                        android:id="@+id/txtLblName"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:ems="6"
+                        android:text="Name:"
+                        android:textColor="@android:color/black"
+                        android:textStyle="bold"
+                        android:visibility="visible" />
+
+                    <TextView
+                        android:id="@+id/txtName"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="5dp"
+                        android:layout_marginRight="5dp"
+                        android:layout_toRightOf="@+id/txtLblName"
+                        android:text="Amit Kumar"
+                        android:textColor="@android:color/black"
+                        android:visibility="visible" />
+                </RelativeLayout>
 
                 <RelativeLayout
                     android:id="@+id/addressBlock"
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
-                    android:layout_alignLeft="@+id/txtName"
-                    android:layout_below="@+id/txtName"
+                    android:layout_alignLeft="@+id/nameBlock"
+                    android:layout_below="@+id/nameBlock"
                     android:layout_marginTop="10dp">
 
                     <TextView
@@ -68,7 +87,7 @@
                     android:id="@+id/txtLblEmail"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_alignLeft="@+id/txtName"
+                    android:layout_alignLeft="@+id/nameBlock"
                     android:layout_below="@+id/addressBlock"
                     android:layout_marginTop="5dp"
                     android:ems="6"
@@ -92,7 +111,7 @@
                     android:id="@+id/txtLblContact"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_alignLeft="@+id/txtName"
+                    android:layout_alignLeft="@+id/nameBlock"
                     android:layout_below="@+id/txtLblEmail"
                     android:layout_marginTop="5dp"
                     android:ems="6"
@@ -115,7 +134,7 @@
                     android:id="@+id/txtLblBookingDate"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_alignLeft="@+id/txtName"
+                    android:layout_alignLeft="@+id/nameBlock"
                     android:layout_below="@+id/txtLblContact"
                     android:layout_marginTop="5dp"
                     android:ems="6"

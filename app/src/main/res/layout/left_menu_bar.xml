@@ -181,7 +181,7 @@
                         android:clickable="false"
                         android:focusable="false"
                         android:gravity="center_vertical"
-                        android:text="Active Order"
+                        android:text="Active Orders"
                         android:textColor="@color/color_white"
                         android:textSize="@dimen/text_normal" />
                 </LinearLayout>
@@ -214,7 +214,7 @@
                         android:clickable="false"
                         android:focusable="false"
                         android:gravity="center_vertical"
-                        android:text="Delivered Order"
+                        android:text="Delivered Orders"
                         android:textColor="@color/color_white"
                         android:textSize="@dimen/text_normal" />
                 </LinearLayout>
@@ -245,7 +245,7 @@
                         android:clickable="false"
                         android:focusable="false"
                         android:gravity="center_vertical"
-                        android:text="Rejected Order"
+                        android:text="Rejected Orders"
                         android:textColor="@color/color_white"
                         android:textSize="@dimen/text_normal" />
 
@@ -283,7 +283,7 @@
                         android:clickable="false"
                         android:focusable="false"
                         android:gravity="center_vertical"
-                        android:text="Canceled Order"
+                        android:text="Canceled Orders"
                         android:textColor="@color/color_white"
                         android:textSize="@dimen/text_normal" />
 

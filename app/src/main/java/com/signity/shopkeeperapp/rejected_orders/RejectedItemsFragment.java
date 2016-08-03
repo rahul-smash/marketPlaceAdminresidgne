@@ -193,7 +193,7 @@ public class RejectedItemsFragment extends Fragment {
             if (list.get(position).getTotalAmount().toString().equalsIgnoreCase("") || list.get(position).getTotalAmount().toString().equals(null)) {
                 holder.valTotalAmt.setText("");
             } else {
-                holder.valTotalAmt.setText(Util.getCurrency(context) + " " + list.get(position).getTotalAmount().toString());
+                holder.valTotalAmt.setText(Util.getCurrency(context) + "" + list.get(position).getTotalAmount().toString());
             }
             if (list.get(position).getTime().equalsIgnoreCase("") || list.get(position).getTime().equals(null)) {
                 holder.valTime.setText("");

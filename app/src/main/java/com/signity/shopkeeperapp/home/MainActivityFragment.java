@@ -208,7 +208,7 @@ public class MainActivityFragment extends Fragment implements View.OnClickListen
 
                 fragment = AllOrderFragment.newInstance(getActivity());
                 bundle = new Bundle();
-                bundle.putString("type", Constant.TYPE_DUE_ORDER);
+                bundle.putString("type", Constant.TYPE_ALL_ORDER);
                 fragment.setArguments(bundle);
 
                 replace(fragment);
