@@ -81,7 +81,7 @@ public class DueOrderDetailFragment extends Fragment implements View.OnClickList
 
     TextView mTotalAmount;
 
-    TextView mDeliveryAddress, mNote, mItemsPrice, mShippingCharges, mDiscountVal, taxVal,shipping_charges_text,discountLblText;
+    TextView mDeliveryAddress, mNote, mItemsPrice, mShippingCharges, mDiscountVal, taxVal, shipping_charges_text, discountLblText;
     RelativeLayout mNoteLayout, mAddressLayout;
     LinearLayout linearDynamicTaxBlock;
     ImageButton btnOrderProceed, btnMoveToShipping, btnMoveToDeliver;
@@ -91,7 +91,7 @@ public class DueOrderDetailFragment extends Fragment implements View.OnClickList
     private boolean isAlreadyDelivered = false;
     private OrdersListModel ordersListModel;
     private PrefManager prefManager;
-    RelativeLayout shipping_layout,discount_layout;
+    RelativeLayout shipping_layout, discount_layout;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -186,10 +186,10 @@ public class DueOrderDetailFragment extends Fragment implements View.OnClickList
         linearDynamicTaxBlock = (LinearLayout) headerView.findViewById(R.id.dynamicTaxBlock);
         mNoteLayout = (RelativeLayout) headerView.findViewById(R.id.noteLayout);
         mAddressLayout = (RelativeLayout) headerView.findViewById(R.id.addressLayout);
-        shipping_charges_text=(TextView)headerView.findViewById(R.id.shipping_charges_text);
-        discountLblText=(TextView)headerView.findViewById(R.id.discountLblText);
-        shipping_layout=(RelativeLayout)headerView.findViewById(R.id.shipping_layout);
-        discount_layout=(RelativeLayout)headerView.findViewById(R.id.discount_layout);
+        shipping_charges_text = (TextView) headerView.findViewById(R.id.shipping_charges_text);
+        discountLblText = (TextView) headerView.findViewById(R.id.discountLblText);
+        shipping_layout = (RelativeLayout) headerView.findViewById(R.id.shipping_layout);
+        discount_layout = (RelativeLayout) headerView.findViewById(R.id.discount_layout);
         listDueOrderItems.addHeaderView(headerView);
     }
 
@@ -264,7 +264,7 @@ public class DueOrderDetailFragment extends Fragment implements View.OnClickList
         switch (view.getId()) {
             case R.id.btnOrderProceed:
                 if (!Util.checkIntenetConnection(getActivity())) {
-                    DialogUtils.showAlertDialog(getActivity(), "Internet", "Please check your Internet Connection.");
+                    showAlertDialog(getActivity(), "Internet", "Please check your Internet Connection.");
                     return;
                 }
                 if (btnOrderProceed.isEnabled()) {
@@ -278,7 +278,7 @@ public class DueOrderDetailFragment extends Fragment implements View.OnClickList
                 break;
             case R.id.relDeclineOrder:
                 if (!Util.checkIntenetConnection(getActivity())) {
-                    DialogUtils.showAlertDialog(getActivity(), "Internet", "Please check your Internet Connection.");
+                    showAlertDialog(getActivity(), "Internet", "Please check your Internet Connection.");
                     return;
                 }
                 if (buttonRejectOrder.isEnabled()) {
@@ -289,7 +289,7 @@ public class DueOrderDetailFragment extends Fragment implements View.OnClickList
                 break;
             case R.id.btnMoveToShipping:
                 if (!Util.checkIntenetConnection(getActivity())) {
-                    DialogUtils.showAlertDialog(getActivity(), "Internet", "Please check your Internet Connection.");
+                    showAlertDialog(getActivity(), "Internet", "Please check your Internet Connection.");
                     return;
                 }
                 if (btnMoveToShipping.isEnabled()) {
@@ -305,7 +305,7 @@ public class DueOrderDetailFragment extends Fragment implements View.OnClickList
                 break;
             case R.id.btnMoveToDeliver:
                 if (!Util.checkIntenetConnection(getActivity())) {
-                    DialogUtils.showAlertDialog(getActivity(), "Internet", "Please check your Internet Connection.");
+                    showAlertDialog(getActivity(), "Internet", "Please check your Internet Connection.");
                     return;
                 }
                 if (btnMoveToDeliver.isEnabled()) {
@@ -546,7 +546,7 @@ public class DueOrderDetailFragment extends Fragment implements View.OnClickList
 
         final DialogHandler dialogHandler = new DialogHandler(getActivity());
 
-        dialogHandler.setDialog(Constant.APP_TITLE, message);
+        dialogHandler.setDialog(title, message);
         dialogHandler.setPostiveButton("Ok", true)
                 .setOnClickListener(new View.OnClickListener() {
                     @Override
@@ -570,24 +570,6 @@ public class DueOrderDetailFragment extends Fragment implements View.OnClickList
             this.context = context;
             this.listItem = listItem;
 
-//            rejectItemList.clear();
-//            acceptItemList.clear();
-//
-//            if (type.equalsIgnoreCase("due")) {
-//
-//                for (int i = 0; i < listItem.size(); i++) {
-//                    listItem.get(i).isChecked = true;
-//                }
-//
-//            } else {
-//                for (int i = 0; i < listItem.size(); i++) {
-//                    if (listItem.get(i).getStatus().equalsIgnoreCase("1")) {
-//                        listItem.get(i).isChecked = true;
-//                    } else {
-//                        listItem.get(i).isChecked = false;
-//                    }
-//                }
-//            }
         }
 
         @Override
@@ -651,24 +633,22 @@ public class DueOrderDetailFragment extends Fragment implements View.OnClickList
             holder.itemsTotal.setText("Total: " + Util.getCurrency(context) + "" + itemsTotal);
 
 
-                holder.toggle.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
+            holder.toggle.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
 
-                        if(btnOrderProceed.isSelected() || btnMoveToShipping.isSelected() || btnMoveToDeliver.isSelected()){
+                    if (btnOrderProceed.isSelected() || btnMoveToShipping.isSelected() || btnMoveToDeliver.isSelected()) {
 
-                        }else {
-                            if (item.getStatus().equalsIgnoreCase("2")) {
-//                            callOrderItemStatus(item.getItemId(), "1");
-                            } else {
-                                callOrderItemStatus(item.getItemId(), "2");
-                            }
+                    } else {
+                        if (item.getStatus().equalsIgnoreCase("2")) {
+                            callOrderItemStatus(item.getItemId(), "1");
+                        } else {
+                            callOrderItemStatus(item.getItemId(), "2");
                         }
-
                     }
-                });
 
-
+                }
+            });
 
 
             return convertView;
@@ -709,7 +689,7 @@ public class DueOrderDetailFragment extends Fragment implements View.OnClickList
         mTotalAmount.setText(Util.getCurrency(getActivity()) + "" + Util.getDoubleValue(ordersListModel.getTotal()));
         mItemsPrice.setText(Util.getCurrency(getActivity()) + "" + Util.getDoubleValue(ordersListModel.getCheckout()));
         mShippingCharges.setText(Util.getCurrency(getActivity()) + "" + Util.getDoubleValue(shipping_charges));
-        mDiscountVal.setText("-"+Util.getCurrency(getActivity()) + "" + Util.getDoubleValue(discount));
+        mDiscountVal.setText("-" + Util.getCurrency(getActivity()) + "" + Util.getDoubleValue(discount));
 
         if (shipping_charges == 0.0) {
             shipping_charges_text.setVisibility(View.GONE);
@@ -726,9 +706,7 @@ public class DueOrderDetailFragment extends Fragment implements View.OnClickList
             discountLblText.setVisibility(View.VISIBLE);
             discount_layout.setVisibility(View.VISIBLE);
         }
-
         setupTaxModule();
-
     }
 
     private void setupTaxModule() {
@@ -750,14 +728,14 @@ public class DueOrderDetailFragment extends Fragment implements View.OnClickList
                 tax_label.setText("" + storeTaxModel.getFixedTaxLabel());
                 tax_value.setText("" + Util.getDoubleValue(storeTaxModel.getFixedTaxAmount()));
 
-                Double tax=null;
+                Double tax = null;
                 try {
-                    tax= Double.parseDouble(storeTaxModel.getFixedTaxAmount());
+                    tax = Double.parseDouble(storeTaxModel.getFixedTaxAmount());
                 } catch (NumberFormatException e) {
                     e.printStackTrace();
                 }
 
-                if(tax!=null && tax!=0.0){
+                if (tax != null && tax != 0.0) {
                     if (storeTaxModel.getIsTaxEnable() != null && storeTaxModel.getIsTaxEnable().equalsIgnoreCase("1")) {
                         linearDynamicTaxBlock.addView(child);
                     }
@@ -808,14 +786,14 @@ public class DueOrderDetailFragment extends Fragment implements View.OnClickList
                 tax_label.setText("" + storeTaxModel.getFixedTaxLabel());
                 tax_value.setText("" + Util.getDoubleValue(storeTaxModel.getFixedTaxAmount()));
 
-                Double tax=null;
+                Double tax = null;
                 try {
-                    tax= Double.parseDouble(storeTaxModel.getFixedTaxAmount());
+                    tax = Double.parseDouble(storeTaxModel.getFixedTaxAmount());
                 } catch (NumberFormatException e) {
                     e.printStackTrace();
                 }
 
-                if(tax!=null && tax!=0.0){
+                if (tax != null && tax != 0.0) {
                     if (storeTaxModel.getIsTaxEnable() != null && storeTaxModel.getIsTaxEnable().equalsIgnoreCase("0")) {
                         linearDynamicTaxBlock.addView(child);
                     }

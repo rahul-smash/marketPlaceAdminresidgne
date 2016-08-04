@@ -123,6 +123,11 @@
             android:screenOrientation="portrait"
             android:label="@string/title_activity_change_password" >
         </activity>
+        <activity
+            android:name=".setting.StoreSettingActivity"
+            android:screenOrientation="portrait"
+            android:label="@string/title_activity_change_password" >
+        </activity>
     </application>
 
 </manifest>

@@ -19,6 +19,7 @@ import android.view.Window;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -160,7 +161,7 @@ public class AllOrderFragment extends Fragment implements RvActiveOrderAdapter.O
     public void getActiveOrders() {
         ProgressDialogUtil.showProgressDialog(getActivity());
         Map<String, String> param = new HashMap<String, String>();
-        param.put("order_type", "all");
+        param.put("order_type", Constant.KEY_ALL);
 
         NetworkAdaper.getInstance().getNetworkServices().getStoreOrders(param, new Callback<GetOrdersModel>() {
             @Override
@@ -170,8 +171,10 @@ public class AllOrderFragment extends Fragment implements RvActiveOrderAdapter.O
                     if (getValues.getData().getOrders().size() > 0) {
                         recyclerView.setVisibility(View.VISIBLE);
                         noDataFound.setVisibility(View.GONE);
-                        listOrderMain = getSortedList(getValues.getData().getOrders());
-                        orderListModel = getSortedListByType(getValues.getData().getOrders());
+                        List<OrdersListModel> list = new ArrayList<OrdersListModel>();
+                        list.addAll(getValues.getData().getOrders());
+                        listOrderMain = list;
+                        orderListModel = getValues.getData().getOrders();
                         adapter.updateListItem(orderListModel);
                         dbTask = new DbInsertUpdateTask();
                         dbTask.execute(orderListModel);
@@ -198,8 +201,15 @@ public class AllOrderFragment extends Fragment implements RvActiveOrderAdapter.O
 
     public void openPopupForFilter() {
 
+
+        int width = Util.getDisplayMatric(getActivity()).widthPixels - 20;
+        int height = (int) (Util.getDisplayMatric(getActivity()).heightPixels * (.66));
+
         final CheckBox checkboxShippedOrder, checkboxActiveOrders, checkboxDueOrders, checkboxAllOrders;
         Button apply;
+
+
+        LinearLayout.LayoutParams param = new LinearLayout.LayoutParams(width, height);
 
         LayoutInflater inflater = (LayoutInflater) getActivity().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         View dialogView

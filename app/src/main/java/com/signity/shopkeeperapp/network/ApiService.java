@@ -11,6 +11,7 @@ import com.signity.shopkeeperapp.model.MobResponse;
 import com.signity.shopkeeperapp.model.MobResponseLogin;
 import com.signity.shopkeeperapp.model.OrderItemResponseModel;
 import com.signity.shopkeeperapp.model.OtpVerifyModel;
+import com.signity.shopkeeperapp.model.ResponseForceUpdate;
 import com.signity.shopkeeperapp.model.SetOrdersModel;
 import com.signity.shopkeeperapp.model.StoresModel;
 
@@ -19,6 +20,7 @@ import java.util.Map;
 import retrofit.Callback;
 import retrofit.http.FieldMap;
 import retrofit.http.FormUrlEncoded;
+import retrofit.http.GET;
 import retrofit.http.POST;
 
 /**
@@ -63,6 +65,10 @@ public interface ApiService {
     void moblieVerification(@FieldMap Map<String, String> parameters, Callback<MobResponseLogin> response);
 
     @FormUrlEncoded
+    @POST("/validateStaff")
+    void validStaff(@FieldMap Map<String, String> parameters, Callback<MobResponseLogin> response);
+
+    @FormUrlEncoded
     @POST("/verifyOtp")
     void otpVerify(@FieldMap Map<String, String> parameters, Callback<OtpVerifyModel> response);
 
@@ -93,5 +99,8 @@ public interface ApiService {
     @FormUrlEncoded
     @POST("/forgetPassword")
     void forgetPassword(@FieldMap Map<String, String> parameters, Callback<LoginModel> response);
+
+    @GET("/forceDownload")
+    void forceDownload(Callback<ResponseForceUpdate> response);
 
 }

@@ -85,7 +85,7 @@ public class DueOrderDetailFragmentWithoutUpdations extends Fragment implements 
     Animation slideDownAnim;
 
     TextView mTotalAmount;
-    TextView mDeliveryAddress, mNote, mItemsPrice, mShippingCharges, mDiscountVal, mTaxVal,shipping_charges_text,discountLblText;
+    TextView mDeliveryAddress, mNote, mItemsPrice, mShippingCharges, mDiscountVal, mTaxVal, shipping_charges_text, discountLblText;
     RelativeLayout mNoteLayout, mAddressLayout;
     ImageButton btnOrderProceed, btnMoveToShipping, btnMoveToDeliver;
     Button buttonRejectOrder;
@@ -97,7 +97,7 @@ public class DueOrderDetailFragmentWithoutUpdations extends Fragment implements 
     private OrdersListModel ordersListModel;
     private PrefManager prefManager;
     private LinearLayout linearDynamicTaxBlock;
-    RelativeLayout shipping_layout,discount_layout;
+    RelativeLayout shipping_layout, discount_layout;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -179,6 +179,8 @@ public class DueOrderDetailFragmentWithoutUpdations extends Fragment implements 
             isAlreadyShipped = true;
             btnOrderProceed.setSelected(true);
             btnMoveToShipping.setSelected(true);
+            btnOrderProceed.setEnabled(false);
+            btnMoveToShipping.setEnabled(false);
             btnMoveToDeliver.setEnabled(true);
             buttonRejectOrder.setVisibility(View.GONE);
         } else if (ordersListModel.getStatus().equalsIgnoreCase("5")) {
@@ -186,6 +188,9 @@ public class DueOrderDetailFragmentWithoutUpdations extends Fragment implements 
             btnOrderProceed.setSelected(true);
             btnMoveToShipping.setSelected(true);
             btnMoveToDeliver.setSelected(true);
+            btnOrderProceed.setEnabled(false);
+            btnMoveToShipping.setEnabled(false);
+            btnOrderProceed.setEnabled(false);
             buttonRejectOrder.setVisibility(View.GONE);
         }
     }
@@ -201,10 +206,10 @@ public class DueOrderDetailFragmentWithoutUpdations extends Fragment implements 
         linearDynamicTaxBlock = (LinearLayout) headerView.findViewById(R.id.dynamicTaxBlock);
         mNoteLayout = (RelativeLayout) headerView.findViewById(R.id.noteLayout);
         mAddressLayout = (RelativeLayout) headerView.findViewById(R.id.addressLayout);
-        shipping_charges_text=(TextView)headerView.findViewById(R.id.shipping_charges_text);
-        discountLblText=(TextView)headerView.findViewById(R.id.discountLblText);
-        shipping_layout=(RelativeLayout)headerView.findViewById(R.id.shipping_layout);
-        discount_layout=(RelativeLayout)headerView.findViewById(R.id.discount_layout);
+        shipping_charges_text = (TextView) headerView.findViewById(R.id.shipping_charges_text);
+        discountLblText = (TextView) headerView.findViewById(R.id.discountLblText);
+        shipping_layout = (RelativeLayout) headerView.findViewById(R.id.shipping_layout);
+        discount_layout = (RelativeLayout) headerView.findViewById(R.id.discount_layout);
         listDueOrderItems.addHeaderView(headerView);
 
     }
@@ -630,31 +635,16 @@ public class DueOrderDetailFragmentWithoutUpdations extends Fragment implements 
     }
 
     public void setOrderDetails() {
-
         mDeliveryAddress.setText(address);
-
         if (note.equalsIgnoreCase("") || note.equalsIgnoreCase(null)) {
-
             mNoteLayout.setVisibility(View.GONE);
         } else {
             mNote.setText(note);
         }
-
-        Double itemsAmount = 0.00;
-
-        for (int i = 0; i < listItem.size(); i++) {
-            if (listItem.get(i).isChecked) {
-                itemsAmount = itemsAmount + (listItem.get(i).getPrice() * Integer.parseInt(listItem.get(i).getQuantity()));
-            }
-        }
-
-        Double totalAmount = 0.00;
-        totalAmount = (itemsAmount + shipping_charges) - discount + tax;
-
-        mTotalAmount.setText(Util.getCurrency(getActivity()) + "" + Util.getDoubleValue(totalAmount));
-        mItemsPrice.setText(Util.getCurrency(getActivity()) + "" + Util.getDoubleValue(itemsAmount));
+        mTotalAmount.setText(Util.getCurrency(getActivity()) + "" + Util.getDoubleValue(ordersListModel.getTotal()));
+        mItemsPrice.setText(Util.getCurrency(getActivity()) + "" + Util.getDoubleValue(ordersListModel.getCheckout()));
         mShippingCharges.setText(Util.getCurrency(getActivity()) + "" + Util.getDoubleValue(shipping_charges));
-        mDiscountVal.setText("-"+Util.getCurrency(getActivity()) + "" + Util.getDoubleValue(discount));
+        mDiscountVal.setText("-" + Util.getCurrency(getActivity()) + "" + Util.getDoubleValue(discount));
 
         if (shipping_charges == 0.0) {
             shipping_charges_text.setVisibility(View.GONE);
@@ -694,14 +684,14 @@ public class DueOrderDetailFragmentWithoutUpdations extends Fragment implements 
                 tax_label.setText("" + storeTaxModel.getFixedTaxLabel());
                 tax_value.setText("" + Util.getDoubleValue(storeTaxModel.getFixedTaxAmount()));
 
-                Double tax=null;
+                Double tax = null;
                 try {
-                    tax= Double.parseDouble(storeTaxModel.getFixedTaxAmount());
+                    tax = Double.parseDouble(storeTaxModel.getFixedTaxAmount());
                 } catch (NumberFormatException e) {
                     e.printStackTrace();
                 }
 
-                if(tax!=null && tax!=0.0){
+                if (tax != null && tax != 0.0) {
                     if (storeTaxModel.getIsTaxEnable() != null && storeTaxModel.getIsTaxEnable().equalsIgnoreCase("1")) {
                         linearDynamicTaxBlock.addView(child);
                     }
@@ -752,14 +742,14 @@ public class DueOrderDetailFragmentWithoutUpdations extends Fragment implements 
                 tax_label.setText("" + storeTaxModel.getFixedTaxLabel());
                 tax_value.setText("" + Util.getDoubleValue(storeTaxModel.getFixedTaxAmount()));
 
-                Double tax=null;
+                Double tax = null;
                 try {
-                    tax= Double.parseDouble(storeTaxModel.getFixedTaxAmount());
+                    tax = Double.parseDouble(storeTaxModel.getFixedTaxAmount());
                 } catch (NumberFormatException e) {
                     e.printStackTrace();
                 }
 
-                if(tax!=null && tax!=0.0){
+                if (tax != null && tax != 0.0) {
                     if (storeTaxModel.getIsTaxEnable() != null && storeTaxModel.getIsTaxEnable().equalsIgnoreCase("0")) {
                         linearDynamicTaxBlock.addView(child);
                     }

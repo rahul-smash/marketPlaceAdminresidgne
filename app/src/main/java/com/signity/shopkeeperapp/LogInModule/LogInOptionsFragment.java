@@ -41,7 +41,6 @@ public class LogInOptionsFragment extends Fragment implements View.OnClickListen
         numberBtn = (Button) rootView.findViewById(R.id.numberBtn);
         emailBtn = (Button) rootView.findViewById(R.id.emailBtn);
 
-
         numberBtn.setOnClickListener(this);
         emailBtn.setOnClickListener(this);
         return rootView;

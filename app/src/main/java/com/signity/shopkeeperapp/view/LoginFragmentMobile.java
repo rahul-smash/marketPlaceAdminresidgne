@@ -91,7 +91,6 @@ public class LoginFragmentMobile extends Fragment implements View.OnClickListene
         return Fragment.instantiate(context,
                 LoginFragmentMobile.class.getName());
     }
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_layout_login_mobile, container, false);
@@ -204,7 +203,6 @@ public class LoginFragmentMobile extends Fragment implements View.OnClickListene
     }
 
     private void proceedToStoresListing(StoresModel data) {
-
         Fragment fragment = LoginFragmentStoresListing.newInstance(getActivity());
         LoginFragmentStoresListing.mStoresList = data.getStoresList();
         String phone = edtPhone.getText().toString();

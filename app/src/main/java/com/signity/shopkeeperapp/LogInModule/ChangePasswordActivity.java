@@ -71,7 +71,7 @@ public class ChangePasswordActivity extends AppCompatActivity implements View.On
         String old_pass = oldPass.getText().toString().trim();
         String new_pass = newPass.getText().toString().trim();
         String confirm_pass = confirmPass.getText().toString().trim();
-        String userId = prefManager.getSharedValue(Constant.USER_ID);
+        String userId = prefManager.getSharedValue(Constant.STAFF_ADMIN_ID);
         Map<String, String> param = new HashMap<String, String>();
         param.put("old_password", old_pass);
         param.put("new_password", new_pass);

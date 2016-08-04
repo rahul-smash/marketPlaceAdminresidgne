@@ -23,6 +23,7 @@ import com.signity.shopkeeperapp.model.OrdersListModel;
 import com.signity.shopkeeperapp.util.AnimUtil;
 import com.signity.shopkeeperapp.util.Constant;
 import com.signity.shopkeeperapp.util.DialogUtils;
+import com.signity.shopkeeperapp.util.Util;
 import com.squareup.picasso.Picasso;
 
 import java.util.List;
@@ -45,7 +46,6 @@ public class RejectedItemsListActivity extends Activity implements View.OnClickL
     RejectedOrderItemsAdapter adapter;
     String userId = "";
     String orderId = "";
-    String orderDetail = "";
 
     String note, discount, total, shippingCharge, address;
 
@@ -56,7 +56,6 @@ public class RejectedItemsListActivity extends Activity implements View.OnClickL
         super.onCreate(savedInstanceState);
         setContentView(R.layout.rejected_items_list_activity);
         ordersListModel = (OrdersListModel) getIntent().getSerializableExtra("object");
-        orderDetail = getIntent().getStringExtra("order_detail");
         name = ordersListModel.getCustomerName();
         phoneNumber = ordersListModel.getPhone();
         orderId = ordersListModel.getOrderId();
@@ -107,11 +106,11 @@ public class RejectedItemsListActivity extends Activity implements View.OnClickL
             mAddressLayout.setVisibility(View.GONE);
         }
         mItemsPrice = (TextView) headerView.findViewById(R.id.items_price);
-        mItemsPrice.setText(total);
+        mItemsPrice.setText(Util.getCurrency(RejectedItemsListActivity.this) + total);
         mShippingCharges = (TextView) headerView.findViewById(R.id.shipping_charges);
-        mShippingCharges.setText(shippingCharge);
+        mShippingCharges.setText(Util.getCurrency(RejectedItemsListActivity.this) + shippingCharge);
         mDiscountVal = (TextView) headerView.findViewById(R.id.discountVal);
-        mDiscountVal.setText(discount);
+        mDiscountVal.setText(Util.getCurrency(RejectedItemsListActivity.this) + discount);
         listRejectedItems.addHeaderView(headerView);
 
     }
@@ -123,8 +122,7 @@ public class RejectedItemsListActivity extends Activity implements View.OnClickL
         backButton = (Button) findViewById(R.id.backButton);
         btnCall = (Button) findViewById(R.id.btnCall);
         mTotalAmount = (TextView) findViewById(R.id.txtTotalAmount);
-        mTotalAmount.setText((total != null && !total.isEmpty() ? total : ""));
-
+        mTotalAmount.setText(Util.getCurrency(RejectedItemsListActivity.this) + (total != null && !total.isEmpty() ? total : ""));
     }
 
     @Override

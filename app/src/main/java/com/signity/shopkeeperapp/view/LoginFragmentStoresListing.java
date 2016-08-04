@@ -187,7 +187,6 @@ public class LoginFragmentStoresListing extends Fragment implements View.OnClick
         Util.savePreferenceValue(getActivity(), Constant.STORE_ID, id);
         String url = NetworkConstant.BASE + "/" + id + NetworkConstant.APISTORE;
         NetworkAdaper.setupRetrofitClient(url);
-
         if (type.equalsIgnoreCase("email")) {
             openDialogForPassword();
         } else {
@@ -306,7 +305,7 @@ public class LoginFragmentStoresListing extends Fragment implements View.OnClick
                         String userId = loginModel.getData().getId();
                         String email = loginModel.getData().getEmail();
                         String role = loginModel.getData().getRole();
-                        prefManager.storeSharedValue(Constant.USER_ID, userId);
+                        prefManager.storeSharedValue(Constant.STAFF_ADMIN_ID, userId);
                         prefManager.storeSharedValue(Constant.LOGIN_TYPE, "email");
                         prefManager.storeSharedValue(Constant.EMAIL, email);
                         prefManager.storeSharedValue(Constant.IS_ADMIN, (role != null &&
@@ -406,6 +405,7 @@ public class LoginFragmentStoresListing extends Fragment implements View.OnClick
         if (response.getUserExists().toString().equalsIgnoreCase("1")) {
             Util.savePreferenceValue(getActivity(), Constant.LOGIN_CHECK, "1");
             prefManager.storeSharedValue(Constant.IS_ADMIN, response.getData().getRole());
+            prefManager.storeSharedValue(Constant.STAFF_ADMIN_ID, response.getData().getId());
             Intent intent_home = new Intent(getActivity(), MainActivity.class);
             intent_home.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
             startActivity(intent_home);

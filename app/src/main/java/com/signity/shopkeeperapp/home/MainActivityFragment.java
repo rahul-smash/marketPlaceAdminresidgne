@@ -1,6 +1,8 @@
 package com.signity.shopkeeperapp.home;
 
 import android.content.Context;
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.text.Html;
@@ -13,6 +15,7 @@ import android.widget.TextView;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
+import com.signity.shopkeeperapp.BuildConfig;
 import com.signity.shopkeeperapp.R;
 import com.signity.shopkeeperapp.app.DbAdapter;
 import com.signity.shopkeeperapp.customer.CustomerFragment;
@@ -20,9 +23,12 @@ import com.signity.shopkeeperapp.db.AppDatabase;
 import com.signity.shopkeeperapp.model.DashBoardModel;
 import com.signity.shopkeeperapp.model.DashBoardModelDetail;
 import com.signity.shopkeeperapp.model.DashBoardModelStoreDetail;
+import com.signity.shopkeeperapp.model.ModelForceUpdate;
+import com.signity.shopkeeperapp.model.ResponseForceUpdate;
 import com.signity.shopkeeperapp.network.NetworkAdaper;
 import com.signity.shopkeeperapp.orders.AllOrderFragment;
 import com.signity.shopkeeperapp.util.Constant;
+import com.signity.shopkeeperapp.util.DialogHandler;
 import com.signity.shopkeeperapp.util.DialogUtils;
 import com.signity.shopkeeperapp.util.FontUtil;
 import com.signity.shopkeeperapp.util.ProgressDialogUtil;
@@ -49,15 +55,18 @@ public class MainActivityFragment extends Fragment implements View.OnClickListen
 
     AppDatabase appDatabase;
 
-
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         appDatabase = DbAdapter.getInstance().getDb();
     }
 
-    public MainActivityFragment() {
+    @Override
+    public void onResume() {
+        super.onResume();
+        callForceUpdatApi();
     }
+
 
     public static Fragment newInstance(Context context) {
         return Fragment.instantiate(context,
@@ -192,7 +201,6 @@ public class MainActivityFragment extends Fragment implements View.OnClickListen
                 .replace(R.id.container, fragment).commit();
     }
 
-
     @Override
     public void onClick(View view) {
         Fragment fragment;
@@ -230,6 +238,96 @@ public class MainActivityFragment extends Fragment implements View.OnClickListen
                 title.setText(titleText[2]);
                 replace(CustomerFragment.newInstance(getActivity()));
                 break;
+        }
+    }
+
+
+    /*Version update Module*/
+    private void callForceUpdatApi() {
+
+        NetworkAdaper.getInstance().getNetworkServices().forceDownload(new Callback<ResponseForceUpdate>() {
+            @Override
+            public void success(ResponseForceUpdate responseForceUpdate, Response response) {
+                if (responseForceUpdate != null && responseForceUpdate.getSuccess()) {
+                    try {
+                        ModelForceUpdate forceUpdate = responseForceUpdate.getData().get(0);
+                        checkForceUpdate(forceUpdate);
+
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+
+            @Override
+            public void failure(RetrofitError error) {
+                Log.e("Log", "err:" + error.getMessage());
+            }
+        });
+    }
+
+    private void checkForceUpdate(ModelForceUpdate forceUpdate) {
+
+        String currentVersion = null;
+        String playStoreVersion = null;
+        if (forceUpdate != null) {
+            currentVersion = BuildConfig.VERSION_NAME;
+            playStoreVersion = forceUpdate.getAndroidAppVerison();
+
+            if (playStoreVersion != null && !playStoreVersion.isEmpty()) {
+                try {
+                    double playVersion = Double.parseDouble(playStoreVersion);
+                    double appVersion = Double.parseDouble(currentVersion);
+                    if (playVersion > appVersion) {
+                        openDialogForVersion(forceUpdate);
+                    }
+                } catch (NumberFormatException e) {
+                    e.printStackTrace();
+                }
+            }
+
+        }
+
+    }
+
+    private void openDialogForVersion(ModelForceUpdate forceUpdate) {
+        if (forceUpdate.getForceDownload() != null) {
+            final DialogHandler dialogHandler = new DialogHandler(getActivity());
+            dialogHandler.setDialog("APPLICATION UPDATE", forceUpdate.getForceDownloadMessage());
+            if (forceUpdate.getForceDownload().equalsIgnoreCase("1")) {
+                dialogHandler.setCancelable(false);
+                dialogHandler.setPostiveButton("Update", true).setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        openPlayStoreLink();
+                        dialogHandler.dismiss();
+                    }
+
+                });
+            } else {
+                dialogHandler.setNegativeButton("Cancel", true).setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        dialogHandler.dismiss();
+                    }
+                });
+                dialogHandler.setPostiveButton("Update", true).setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        openPlayStoreLink();
+                        dialogHandler.dismiss();
+                    }
+                });
+            }
+        }
+    }
+
+    private void openPlayStoreLink() {
+        final String appPackageName = BuildConfig.APPLICATION_ID; // getPackageName() from Context or Activity object
+        try {
+            startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id=" + appPackageName)));
+        } catch (android.content.ActivityNotFoundException anfe) {
+            startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("http://play.google.com/store/apps/details?id=" + appPackageName)));
         }
     }
 }

@@ -46,6 +46,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="5dp"
+                android:layout_marginLeft="15dp"
+                android:layout_marginRight="15dp"
                 android:layout_marginTop="5dp"
                 android:paddingBottom="15dp"
                 android:paddingTop="15dp">
@@ -54,7 +56,6 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_centerVertical="true"
-                    android:layout_marginLeft="15dp"
                     android:padding="5dp"
                     android:text="Select All"
                     android:textColor="@android:color/black"
@@ -66,8 +67,7 @@
                     android:layout_height="wrap_content"
                     android:layout_alignParentRight="true"
                     android:layout_centerVertical="true"
-                    android:layout_marginRight="35dp"
-                    android:button="@drawable/selector_for_radio_buttons"/>
+                    android:button="@drawable/selector_for_radio_buttons" />
             </RelativeLayout>
 
             <View
@@ -91,7 +91,7 @@
                     android:layout_marginRight="10dp"
                     android:layout_marginTop="5dp"
                     android:button="@drawable/selector_for_radio_buttons"
-                    android:padding="8dp"/>
+                    android:padding="8dp" />
 
 
                 <TextView
@@ -102,8 +102,8 @@
                     android:layout_toRightOf="@id/checkboxDueOrders"
                     android:padding="5dp"
                     android:text="Due Orders"
-                    android:textSize="@dimen/text_xlarge"
-                    android:textColor="@color/color_due_orders"/>
+                    android:textColor="@color/color_due_orders"
+                    android:textSize="@dimen/text_xlarge" />
 
 
                 <CheckBox
@@ -116,7 +116,7 @@
                     android:layout_marginRight="10dp"
                     android:layout_marginTop="5dp"
                     android:button="@drawable/selector_for_radio_buttons"
-                    android:padding="8dp"/>
+                    android:padding="8dp" />
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -127,8 +127,8 @@
                     android:layout_toRightOf="@+id/checkboxActiveOrders"
                     android:padding="5dp"
                     android:text="Processing"
-                    android:textSize="@dimen/text_xlarge"
-                    android:textColor="@color/color_processing"/>
+                    android:textColor="@color/color_processing"
+                    android:textSize="@dimen/text_xlarge" />
 
                 <CheckBox
                     android:id="@+id/checkboxShippedOrder"
@@ -140,7 +140,7 @@
                     android:layout_marginRight="10dp"
                     android:layout_marginTop="5dp"
                     android:button="@drawable/selector_for_radio_buttons"
-                    android:padding="8dp"/>
+                    android:padding="8dp" />
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -152,8 +152,8 @@
                     android:layout_toRightOf="@+id/checkboxShippedOrder"
                     android:padding="5dp"
                     android:text="Shipped"
-                    android:textSize="@dimen/text_xlarge"
-                    android:textColor="@color/color_shipping"/>
+                    android:textColor="@color/color_shipping"
+                    android:textSize="@dimen/text_xlarge" />
 
 
             </RelativeLayout>

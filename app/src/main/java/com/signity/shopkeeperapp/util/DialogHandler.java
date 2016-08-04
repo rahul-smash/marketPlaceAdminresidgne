@@ -20,8 +20,33 @@ public class DialogHandler {
 
     private Context context;
 
-    Dialog dialog;
+    private Dialog dialog;
     private TextView positveButton, negativeButton, titleTxt, messageText;
+
+    /*Click Handler on positive and negitive button*/
+    OnPostiveButtonClick onPostiveButtonClick;
+    OnNegativeButtonClick onNegativeButtonClick;
+
+    public interface OnPostiveButtonClick {
+        void Onclick();
+
+    }
+
+    public interface OnNegativeButtonClick {
+        void Onclick();
+    }
+
+    public void setOnPositiveButtonClickListener(String text, OnPostiveButtonClick onPostiveButtonClick) {
+        positveButton.setText(text);
+        positveButton.setVisibility(View.VISIBLE);
+        this.onPostiveButtonClick = onPostiveButtonClick;
+    }
+
+    public void setOnNegativeButtonClickListener(String text, OnNegativeButtonClick onNegativeButtonClick) {
+        negativeButton.setText(text);
+        negativeButton.setVisibility(View.VISIBLE);
+        this.onNegativeButtonClick = onNegativeButtonClick;
+    }
 
 
     /* Static 'instance' method */
@@ -41,6 +66,18 @@ public class DialogHandler {
         negativeButton = (TextView) dialog.findViewById(R.id.noBtn);
         titleTxt = (TextView) dialog.findViewById(R.id.title);
         messageText = (TextView) dialog.findViewById(R.id.message);
+        positveButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                onPostiveButtonClick.Onclick();
+            }
+        });
+        negativeButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                onNegativeButtonClick.Onclick();
+            }
+        });
     }
 
     public void setDialog(String title, String message) {
@@ -50,6 +87,10 @@ public class DialogHandler {
         dialog.show();
         dialog.getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE);
 
+    }
+
+    public void setCancelable(boolean status) {
+        dialog.setCancelable(status);
     }
 
     public View setPostiveButton(String text, boolean isShow) {
@@ -90,7 +131,6 @@ public class DialogHandler {
                 dismiss();
             }
         });
-
 
         dialog.show();
         dialog.getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE);

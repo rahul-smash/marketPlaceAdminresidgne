@@ -4,7 +4,6 @@ import android.app.AlarmManager;
 import android.app.Dialog;
 import android.app.PendingIntent;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.drawable.ColorDrawable;
 import android.media.AudioManager;
@@ -13,12 +12,10 @@ import android.os.Handler;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.widget.SlidingPaneLayout;
-import android.support.v7.app.AlertDialog;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.Menu;
-import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
@@ -83,7 +80,10 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
     Button btnMenu, btnMenuRight;
     TextView textTitle, txtShopName, txtShopKeeperName;
 
-    TextView textDashBoard, textDueOrders, textActiveOrders, textRejectedOrders, textCanceledOrders, textCustomers, textEnquiries, textmanageStores;
+    TextView textDashBoard, txtDelivedOrders,
+            textActiveOrders, textRejectedOrders,
+            textCanceledOrders, textCustomers, textEnquiries,
+            textmanageStores;
     PopupWindow rightMenuPopUpWindow;
     View topDot;
 
@@ -152,8 +152,8 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
         slideDownAnim = AnimationUtils.loadAnimation(this
                 .getApplicationContext(), R.anim.slide_down_for_oder_detail);
 
-        textDueOrders = (TextView) findViewById(R.id.txtDueOrders);
-        textDueOrders.setTypeface(FontUtil.getTypeface(com.signity.shopkeeperapp.home.MainActivity.this, FontUtil.FONT_ROBOTO_REGULAR));
+        txtDelivedOrders = (TextView) findViewById(R.id.txtDelivedOrders);
+        txtDelivedOrders.setTypeface(FontUtil.getTypeface(com.signity.shopkeeperapp.home.MainActivity.this, FontUtil.FONT_ROBOTO_REGULAR));
 
         textActiveOrders = (TextView) findViewById(R.id.txtActiveOrders);
         textActiveOrders.setTypeface(FontUtil.getTypeface(com.signity.shopkeeperapp.home.MainActivity.this, FontUtil.FONT_ROBOTO_REGULAR));
@@ -175,7 +175,8 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
 
         String intentValue = "";
         try {
-            intentValue = getIntent().getExtras().getString("Active");
+            if (getIntent().getExtras() != null)
+                intentValue = getIntent().getExtras().getString("Active");
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -213,26 +214,12 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
         }
     }
 
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_main, menu);
         return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
-        }
-
-        return super.onOptionsItemSelected(item);
     }
 
 
@@ -437,9 +424,9 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
                 break;
             /*This module is working as a due orders display in version one as on later due order is merge with
             active order and this id is used for  delivered module */
-            case R.id.btnDueOrders:
-                textTitle.setText(title[1]);
-                fragmentName = title[1];
+            case R.id.btnDelivered:
+                textTitle.setText("Delivered Orders");
+                fragmentName = "Delivered Orders";
                 fragment = ActiveOrderFragment.newInstance(this);
                 bundle = new Bundle();
                 bundle.putString("type", Constant.TYPE_DELIVERED);
@@ -548,7 +535,6 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
 
     }
 
-
     private void setShareContent() {
 
         DashBoardModelStoreDetail jobj = getStoreDataAsObject(Util.loadPreferenceValue(MainActivity.this, Constant.STORE_DETAILS));
@@ -586,7 +572,8 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
         Util.savePreferenceValue(com.signity.shopkeeperapp.home.MainActivity.this, Constant.LOGIN_CHECK, "0");
         Util.savePreferenceValue(this, Constant.DEVICE_TOKEN, "");
         Util.savePreferenceValue(this, Constant.STORE_ID, "");
-//        Intent intent_home = new Intent(com.signity.shopkeeperapp.home.MainActivity.this,LoginScreenActivity.class);
+        Util.savePreferenceValue(this, Constant.STAFF_ADMIN_ID, "");
+        NetworkAdaper.getInstance().setupRetrofitClient(NetworkAdaper.getInstance().setBaseUrl(""));
         Intent intent_home = new Intent(com.signity.shopkeeperapp.home.MainActivity.this, LogInOptionsActivity.class);
         intent_home.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         startActivity(intent_home);
@@ -597,24 +584,6 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
     public void replace(Fragment fragment) {
         getSupportFragmentManager().beginTransaction()
                 .replace(R.id.container, fragment).commit();
-    }
-
-    private void logoutAlert(String title) {
-
-        AlertDialog.Builder adb = new AlertDialog.Builder(this);
-        adb.setTitle(title);
-        adb.setIcon(R.drawable.ic_launcher);
-        adb.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int which) {
-                clearSharedPref();
-            }
-        });
-
-        adb.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int which) {
-            }
-        });
-        adb.show();
     }
 
     private void logoutAlertNew(String msg) {
@@ -637,34 +606,6 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
                         dialogHandler.dismiss();
                     }
                 });
-    }
-
-    private void storeStatusAlert(String title, final String storeStatusValue) {
-
-        AlertDialog.Builder adb = new AlertDialog.Builder(this);
-
-
-        adb.setTitle(title);
-
-
-        adb.setIcon(R.drawable.ic_launcher);
-
-
-        adb.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int which) {
-
-//                setStoreStatus(storeStatusValue);
-
-            }
-        });
-
-
-        adb.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int which) {
-
-            }
-        });
-        adb.show();
     }
 
     private void storeStatusAlertNew(String msg, final String storeStatusValue) {

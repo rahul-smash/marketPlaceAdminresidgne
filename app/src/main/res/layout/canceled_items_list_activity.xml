@@ -7,13 +7,84 @@
         android:id="@+id/header"
         layout="@layout/layout_header_activity" />
 
+    <RelativeLayout
+        android:id="@+id/orderDtailsBlock"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/header"
+        android:background="@color/colorGrayForOrderDtail"
+        android:padding="5dp">
+
+        <RelativeLayout
+            android:id="@+id/detailBtnBlock"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+
+            <TextView
+                android:id="@+id/labelDetails"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="5dp"
+                android:text="Details"
+                android:textColor="@color/color_white"
+                android:textSize="@dimen/text_large"
+                android:textStyle="bold" />
+
+            <ImageButton
+                android:id="@+id/btnOrderDetail"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="10dp"
+                android:layout_toRightOf="@+id/labelDetails"
+                android:background="@drawable/order_detail_selector"
+                android:clickable="false"
+                android:visibility="gone" />
+
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/amountBlock"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:layout_toRightOf="@+id/detailBtnBlock">
+
+            <TextView
+                android:id="@+id/labelTotalAmount"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_toLeftOf="@+id/txtTotalAmount"
+                android:singleLine="true"
+                android:text="Total:"
+                android:textColor="@color/color_white"
+                android:textSize="@dimen/text_large"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/txtTotalAmount"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_marginLeft="5dp"
+                android:singleLine="true"
+                android:text="1000"
+                android:textColor="@color/color_white"
+                android:textSize="@dimen/text_large"
+                android:textStyle="bold" />
+
+        </RelativeLayout>
+    </RelativeLayout>
+
 
     <ListView
         android:id="@+id/listCanceledItems"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_above="@+id/footer"
-        android:layout_below="@+id/header"
+        android:layout_below="@+id/orderDtailsBlock"
         android:divider="@android:color/transparent"
         android:dividerHeight="8dp"></ListView>
 

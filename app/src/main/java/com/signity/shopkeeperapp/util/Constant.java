@@ -17,9 +17,10 @@ public class Constant {
     public static final String STORE_DETAILS = "store_details";
     public static final String STORE_ID = "store_id";
     public static final String LOGIN_USER_MOBILE_NUMBER = "mobile_number";
-    public static final String LOGIN_USER_EMAIL_ID= "emailId";
+    public static final String LOGIN_USER_EMAIL_ID = "emailId";
     public static final String LOGIN_CHECK = "com.signity.shopkeeperapp.LOGIN_CHECK";
     public static final String IS_ADMIN = "com.signity.shopkeeperapp.ADMIN";
+    public static final String STAFF_ADMIN_ID = "com.signity.shopkeeperapp.STAFF_ADMIN_ID";
     public static final String DEVICE_TOKEN = "device_token";
     public static final String STORE_STATUS_MESSAGE = "com.signity.shopkeeperapp.STORE_STATUS_MESSAGE";
     public static final String STORE_CURRENCY = "com.signity.shopkeeperapp.CURRENCY";
@@ -46,6 +47,9 @@ public class Constant {
     public static final String TYPE_CANCELLED = "com.signity.shopkeeperapp.CANCELLED";
     public static final String TYPE_ALL_ORDER = "com.signity.shopkeeperapp.ALL_ORDER";
 
+    public static final String KEY_ALL = "pending-processing-shipped";
 
     public static final String REFERESH_DATA_REQURIED = "com.signity.shopkeeperapp.REFERESH_DATA_REQURIED";
+
+
 }

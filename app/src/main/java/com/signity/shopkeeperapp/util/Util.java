@@ -1,10 +1,15 @@
 package com.signity.shopkeeperapp.util;
 
+import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.os.Build;
+import android.util.DisplayMetrics;
 import android.util.Log;
+import android.view.Display;
 
 import com.signity.shopkeeperapp.R;
 
@@ -60,20 +65,6 @@ public class Util {
             return info.isConnected();
         else
             return false;
-
-/*        ConnectivityManager connectivity = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
-        if (connectivity != null){
-            NetworkInfo[] info = connectivity.getAllNetworkInfo();
-            if (info != null)
-                for (int i = 0; i < info.length; i++)
-                    if (info[i].getState() == NetworkInfo.State.CONNECTED)
-                    {
-                        return true;
-                    }
-
-        }
-        return  false;*/
-
     }
 
     public static void savePreferenceValue(Context context, String key, String value) {
@@ -205,5 +196,41 @@ public class Util {
             e.printStackTrace();
         }
         return s;
+    }
+
+
+    public static DisplayMetrics getDisplayMatric(Context context) {
+        DisplayMetrics metrics = new DisplayMetrics();
+        Display display = ((Activity) context).getWindowManager().getDefaultDisplay();
+        display.getMetrics(metrics);
+        Log.e("Dimension", metrics.widthPixels + "*" + metrics.heightPixels);
+        return metrics;
+    }
+
+
+    @SuppressLint("NewApi")
+    private static int getSoftButtonsBarHeight(Context context) {
+        // getRealMetrics is only available with API 17 and +
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
+            DisplayMetrics metrics = new DisplayMetrics();
+            ((Activity) context).getWindowManager().getDefaultDisplay().getMetrics(metrics);
+            int usableHeight = metrics.heightPixels;
+            ((Activity) context).getWindowManager().getDefaultDisplay().getRealMetrics(metrics);
+            int realHeight = metrics.heightPixels;
+            if (realHeight > usableHeight)
+                return realHeight - usableHeight;
+            else
+                return 0;
+        }
+        return 0;
+    }
+
+    public static int getStatusBarHeight(Context context) {
+        int result = 0;
+        int resourceId = context.getResources().getIdentifier("status_bar_height", "dimen", "android");
+        if (resourceId > 0) {
+            result = context.getResources().getDimensionPixelSize(resourceId);
+        }
+        return result;
     }
 }

@@ -8,15 +8,26 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
+import android.util.Log;
 
 import com.signity.shopkeeperapp.LogInModule.LogInOptionsActivity;
 import com.signity.shopkeeperapp.app.DbAdapter;
 import com.signity.shopkeeperapp.db.AppDatabase;
 import com.signity.shopkeeperapp.home.MainActivity;
+import com.signity.shopkeeperapp.model.MobResponseLogin;
+import com.signity.shopkeeperapp.network.NetworkAdaper;
 import com.signity.shopkeeperapp.util.AnimUtil;
 import com.signity.shopkeeperapp.util.Constant;
 import com.signity.shopkeeperapp.util.DialogHandler;
+import com.signity.shopkeeperapp.util.PrefManager;
+import com.signity.shopkeeperapp.util.ProgressDialogUtil;
 import com.signity.shopkeeperapp.util.Util;
+
+import java.util.HashMap;
+
+import retrofit.Callback;
+import retrofit.RetrofitError;
+import retrofit.client.Response;
 
 /**
  * Created by Rajinder on 29/9/15.
@@ -34,144 +45,149 @@ public class SplashActivity extends Activity {
 
     AppDatabase appDatabase;
 
+    PrefManager prefManager;
+
+    String storeId;
+    String userId;
+    boolean isInternetConnected;
+    private Context context;
+    NetworkAdaper netWorkAdapter;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash);
+        context = this;
+        netWorkAdapter = NetworkAdaper.getInstance();
         appDatabase = DbAdapter.getInstance().getDb();
-
-        //sendNotification("Local","First Notification");
-
+        prefManager = new PrefManager(this);
+        storeId = prefManager.getSharedValue(Constant.STORE_ID);
+        userId = prefManager.getSharedValue(Constant.STAFF_ADMIN_ID);
+        isInternetConnected = Util.checkIntenetConnection(this);
         removeNotificationsFromStatusBar();
 
-
-        new Handler().postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                String storeId = Util.loadPreferenceValue(SplashActivity.this, Constant.STORE_ID);
-                if (storeId != null && !(storeId.isEmpty())) {
-                    moveNext();
-                } else {
-                    if (Util.checkIntenetConnection(SplashActivity.this)) {
-                        moveNext();
-                    } else {
-                        final DialogHandler dialogHandler = new DialogHandler(SplashActivity.this);
-                        dialogHandler.setdialogForFinish("Internet", "Please check your Internet Connection.", true);
-                    }
-                }
-            }
-        }, 2000);
+        startSplashModule();
 
     }
 
-    private void removeNotificationsFromStatusBar() {
+    private void startSplashModule() {
+        if (!storeId.isEmpty() && !userId.isEmpty()) {
+            if (isInternetConnected) {
+                checkForStaffValidationProcess();
+            } else {
+                openHomeScreen();
+            }
+        } else {
+            if (isInternetConnected) {
+                new Handler().postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        openLoginScreen();
+                    }
+                }, 2000);
+            } else {
+                openAlertForNoInternet();
+            }
+        }
 
+    }
+
+
+    private void removeNotificationsFromStatusBar() {
         NotificationManager notifManager = (NotificationManager) SplashActivity.this.getSystemService(Context.NOTIFICATION_SERVICE);
         notifManager.cancelAll();
     }
 
 
-    void moveNext() {
+    public void checkForStaffValidationProcess() {
 
-        String loginCheck = Util.loadPreferenceValue(SplashActivity.this, Constant.LOGIN_CHECK);
-        if (loginCheck.equalsIgnoreCase("0")) {
-            Intent intent_home = new Intent(SplashActivity.this,
-                    LogInOptionsActivity.class);
-            intent_home.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-            startActivity(intent_home);
-            AnimUtil.slideFromRightAnim(SplashActivity.this);
-            finish();
-        } else if (loginCheck.equalsIgnoreCase("1")) {
-            Intent intent_home = new Intent(SplashActivity.this,
-                    MainActivity.class);
-            startActivity(intent_home);
-            AnimUtil.slideFromRightAnim(SplashActivity.this);
-            finish();
-        } else {
-            Intent intent_home = new Intent(SplashActivity.this,
-                    LogInOptionsActivity.class);
-            intent_home.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-            startActivity(intent_home);
-            AnimUtil.slideFromRightAnim(SplashActivity.this);
-            finish();
-        }
+        ProgressDialogUtil.showProgressDialog(context);
+
+        HashMap<String, String> map = new HashMap<>();
+        map.put("staff_id", userId);
+
+        NetworkAdaper.getInstance().getNetworkServices().validStaff(map, new Callback<MobResponseLogin>() {
+            @Override
+            public void success(MobResponseLogin mobResponseLogin, Response response) {
+                ProgressDialogUtil.hideProgressDialog();
+                if (mobResponseLogin.getSuccess()) {
+                    openHomeScreen();
+                } else {
+                    clearLoginCredIf();
+                    openLoginScreen();
+                }
+            }
+
+            @Override
+            public void failure(RetrofitError error) {
+                ProgressDialogUtil.hideProgressDialog();
+                Log.e("Splash", "" + error.getMessage());
+                openErrorAlert("Error", "Server not working, please try later");
+            }
+        });
 
 
     }
 
 
-//    private void sendNotification(String title, String message) {
-//
-//
-//        final int currentMode;
-//        boolean modeChange = false;
-//        final AudioManager am;
-//        am = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
-//        currentMode = am.getRingerMode();
-//
-//        if (currentMode != AudioManager.RINGER_MODE_NORMAL) {
-//            am.setRingerMode(AudioManager.RINGER_MODE_NORMAL);
-//            modeChange = true;
-//        }
-//
-//        Intent intent = new Intent(this, MainActivity.class);
-//        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
-//        PendingIntent pendingIntent = PendingIntent.getActivity(this, 0 /* Request code */, intent,
-//                PendingIntent.FLAG_ONE_SHOT);
-//        int icon = R.mipmap.ic_launcher;
-//
-//
-//        Uri defaultSoundUri = Uri.parse(ContentResolver.SCHEME_ANDROID_RESOURCE + "://com.signity.valueappz/raw/notificationrecieved");
-////        Uri defaultSoundUri = Uri.parse("android.resource://com.signity.valueappz/" + R.raw.notificationrecieved);
-//        NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(this)
-//                .setContentTitle(title)
-//                .setContentText(message)
-//                .setTicker(title)
-//                .setSmallIcon(icon)
-//                .setAutoCancel(true)
-//                .setSound(defaultSoundUri)
-//                .setLargeIcon(BitmapFactory.decodeResource(getResources(), R.mipmap.ic_launcher))
-//                .setStyle(new NotificationCompat.BigTextStyle().bigText(message))
-//                .setContentIntent(pendingIntent);
-//
-//        NotificationManager notificationManager =
-//                (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
-//        notificationManager.notify(1 /* ID of notification */, notificationBuilder.build());
-//
-//        if (modeChange) {
-//            new Handler().postDelayed(new Runnable() {
-//                @Override
-//                public void run() {
-//                    am.setRingerMode(currentMode);
-//                }
-//            }, 2000);
-//        }
-//
-//        setupLocalNotification();
-//
-//    }
-//
-//    private void setupLocalNotification() {
-//        Calendar cal = Calendar.getInstance();
-//        // add 5 minutes to the calendar object
-//        cal.add(Calendar.SECOND, 10);
-//        Intent intent = new Intent(this, LocalNotifyReceiver.class);
-//        sender = PendingIntent.getBroadcast(this, 192837, intent, PendingIntent.FLAG_UPDATE_CURRENT);
-//        // In reality, you would want to have a static variable for the request code instead of 192837
-//
-//        // Get the AlarmManager service
-//        AlarmManager am = (AlarmManager) getSystemService(ALARM_SERVICE);
-////        am.set(AlarmManager.RTC_WAKEUP, cal.getTimeInMillis(), sender);
-//        am.setRepeating(AlarmManager.RTC_WAKEUP, cal.getTimeInMillis(), 10000, sender);
-//
-//    }
+    public void openLoginScreen() {
+        Intent intent_home = new Intent(SplashActivity.this,
+                LogInOptionsActivity.class);
+        intent_home.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        startActivity(intent_home);
+        AnimUtil.slideFromRightAnim(SplashActivity.this);
+        finish();
+    }
+
+    public void openHomeScreen() {
+        Intent intent_home = new Intent(SplashActivity.this,
+                MainActivity.class);
+        startActivity(intent_home);
+        AnimUtil.slideFromRightAnim(SplashActivity.this);
+        finish();
+    }
+
+    private void clearLoginCredIf() {
+        prefManager.clearSharedValue(Constant.STORE_ID);
+        prefManager.clearSharedValue(Constant.STAFF_ADMIN_ID);
+    }
+
+    /*Intent check for very first time*/
+    private void openAlertForNoInternet() {
+
+        final DialogHandler dialogHandler = new DialogHandler(context);
+        dialogHandler.setDialog("No Internet", "Please check your internet connection");
+        dialogHandler.setOnPositiveButtonClickListener("Ok", new DialogHandler.OnPostiveButtonClick() {
+            @Override
+            public void Onclick() {
+                startSplashModule();
+                dialogHandler.dismiss();
+            }
+        });
+        dialogHandler.setOnNegativeButtonClickListener("Cancel", new DialogHandler.OnNegativeButtonClick() {
+            @Override
+            public void Onclick() {
+                dialogHandler.dismiss();
+                finish();
+            }
+        });
+
+    }
+
+    private void openErrorAlert(String title, String message) {
+
+        final DialogHandler dialogHandler = new DialogHandler(context);
+        dialogHandler.setDialog(title, message);
+        dialogHandler.setOnNegativeButtonClickListener("Ok", new DialogHandler.OnNegativeButtonClick() {
+            @Override
+            public void Onclick() {
+                dialogHandler.dismiss();
+                finish();
+            }
+        });
+
+    }
 
 
-//    @Override
-//    protected void onDestroy() {
-//        super.onDestroy();
-//        AlarmManager am = (AlarmManager) getSystemService(ALARM_SERVICE);
-//        am.cancel(sender);
-//    }
 }
 
