@@ -18,7 +18,7 @@ public class DueOrderActivity extends FragmentActivity {
 
         setContentView(R.layout.activity_due_order);
         Bundle bundle = getIntent().getExtras();
-        Fragment fragment = DueOrderDetailFragment.newInstance(this);
+        Fragment fragment = OrderDetailFragment.newInstance(this);
         fragment.setArguments(bundle);
         if (savedInstanceState == null)
             getSupportFragmentManager().beginTransaction()

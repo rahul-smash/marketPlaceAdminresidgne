@@ -47,6 +47,12 @@ public class StoresListModel {
     @SerializedName("version")
     @Expose
     private String version;
+    @SerializedName("contact_email")
+    @Expose
+    private String contactEmail;
+    @SerializedName("user_id")
+    @Expose
+    private String userId;
 
     /**
      * @return The id
@@ -230,5 +236,19 @@ public class StoresListModel {
         this.version = version;
     }
 
+    public String getContactEmail() {
+        return contactEmail;
+    }
 
+    public void setContactEmail(String contactEmail) {
+        this.contactEmail = contactEmail;
+    }
+
+    public String getUserId() {
+        return userId;
+    }
+
+    public void setUserId(String userId) {
+        this.userId = userId;
+    }
 }

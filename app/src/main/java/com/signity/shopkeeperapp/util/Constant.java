@@ -52,4 +52,7 @@ public class Constant {
     public static final String REFERESH_DATA_REQURIED = "com.signity.shopkeeperapp.REFERESH_DATA_REQURIED";
 
 
+    public static final String APP_NOTIFICATION_URL = "com.signity.shopkeeperapp.APP_NOTIFICATION_URL";
+    public static final String APP_STATE_VISIBLE = "com.signity.shopkeeperapp.APP_STATE_VISIBLE";
+
 }

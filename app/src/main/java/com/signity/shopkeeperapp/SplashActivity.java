@@ -68,7 +68,9 @@ public class SplashActivity extends Activity {
 
         startSplashModule();
 
+
     }
+
 
     private void startSplashModule() {
         if (!storeId.isEmpty() && !userId.isEmpty()) {
@@ -190,4 +192,41 @@ public class SplashActivity extends Activity {
 
 
 }
+
+
+//    private void sendTestNotification() {
+//
+//        int icon = R.mipmap.ic_launcher;
+//
+//
+////        Uri defaultSoundUri = Uri.parse(prefManager.getAppNotificationUri());
+//        String uriString = prefManager.getAppNotificationUri();
+//        Uri defaultSoundUri = Uri.parse(uriString);
+//        Intent intent = null;
+//        if (prefManager.isApplicationVisible()) {
+//            intent = new Intent();
+//        } else {
+//            intent = new Intent(this, SplashActivity.class);
+//        }
+//        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
+//        PendingIntent pendingIntent = PendingIntent.getActivity(this, 0 /* Request code */, intent,
+//                PendingIntent.FLAG_ONE_SHOT);
+////        Uri defaultSoundUri = Uri.parse("android.resource://com.signity.valueappz/" + R.raw.notificationrecieved);
+//        NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(MainActivity.this)
+//                .setContentTitle("Test")
+//                .setContentText("Test Message")
+//                .setTicker("Test Ticker")
+//                .setSmallIcon(icon)
+//                .setSound(defaultSoundUri)
+//                .setAutoCancel(true)
+//                .setLargeIcon(BitmapFactory.decodeResource(getResources(), R.mipmap.ic_launcher))
+//                .setStyle(new NotificationCompat.BigTextStyle().bigText("Tesing custom Notification"))
+//                .setContentIntent(pendingIntent);
+//
+//
+//        NotificationManager notificationManager =
+//                (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+//
+//        notificationManager.notify(1/* ID of notification */, notificationBuilder.build());
+//    }
 

@@ -1,5 +1,6 @@
 package com.signity.shopkeeperapp.util;
 
+import android.content.ContentResolver;
 import android.content.Context;
 import android.content.SharedPreferences;
 
@@ -48,5 +49,19 @@ public class PrefManager {
 
     public int getDueOrderLocalNotiCount() {
         return sharedpreferences.getInt(DUE_ORDER_NOTI_COUNT, 0);
+    }
+
+    public String getAppNotificationUri() {
+        return sharedpreferences.getString(Constant.APP_NOTIFICATION_URL, String.valueOf(ContentResolver.SCHEME_ANDROID_RESOURCE + "://com.signity.valueappz/raw/notificationrecieved"));
+    }
+
+    public void setApplicationVisibleState(boolean status) {
+        SharedPreferences.Editor editor = sharedpreferences.edit();
+        editor.putBoolean(Constant.APP_STATE_VISIBLE, status);
+        editor.commit();
+    }
+
+    public boolean isApplicationVisible() {
+        return sharedpreferences.getBoolean(Constant.APP_STATE_VISIBLE, false);
     }
 }

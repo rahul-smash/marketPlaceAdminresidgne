@@ -19,7 +19,6 @@ package com.signity.shopkeeperapp.gcm;
 import android.app.AlarmManager;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
-import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.BitmapFactory;
@@ -76,15 +75,21 @@ public class MyGcmListenerService extends GcmListenerService {
      * @param message GCM message received.
      */
     private void sendNotification(String title, String message) {
-        Intent intent = new Intent(this, SplashActivity.class);
+        PrefManager prefManager = new PrefManager(this);
+        Intent intent = null;
+        if (prefManager.isApplicationVisible()) {
+            intent = new Intent();
+        } else {
+            intent = new Intent(this, SplashActivity.class);
+        }
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         PendingIntent pendingIntent = PendingIntent.getActivity(this, 0 /* Request code */, intent,
                 PendingIntent.FLAG_ONE_SHOT);
 
         int icon = R.mipmap.ic_launcher;
-//        Uri defaultSoundUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
-//        Uri defaultSoundUri = Uri.parse("android.resource://com.androidbook.samplevideo/" + R.raw.notificationrecieved);
-        Uri defaultSoundUri = Uri.parse(ContentResolver.SCHEME_ANDROID_RESOURCE + "://com.signity.valueappz/raw/notificationrecieved");
+
+        String uriString = prefManager.getAppNotificationUri();
+        Uri defaultSoundUri = Uri.parse(uriString);
         NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(this)
                 .setContentTitle(title)
                 .setContentText(message)

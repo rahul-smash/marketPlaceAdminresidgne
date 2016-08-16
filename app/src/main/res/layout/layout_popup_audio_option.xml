@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/card_view"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_gravity="center"
+    android:background="@color/color_white"
+    android:orientation="vertical">
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/ColorPrimary"
+        android:padding="5dp"
+        android:text="Change notification sound"
+        android:textColor="@color/color_white"
+        android:textSize="@dimen/text_large"></TextView>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center"
+        android:orientation="horizontal">
+
+        <RelativeLayout
+            android:id="@+id/relativeBlockRingtone"
+            android:layout_width="150dp"
+            android:layout_height="wrap_content"
+            android:paddingBottom="25dp"
+            android:paddingTop="25dp">
+
+            <ImageView
+                android:id="@+id/img_pick_camera"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+                android:adjustViewBounds="true"
+                android:background="@drawable/ic_ringtone" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/img_pick_camera"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="8dp"
+                android:text="Ringtone"
+                android:textSize="@dimen/text_large" />
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/relativeBlockAudio"
+            android:layout_width="150dp"
+            android:layout_height="wrap_content"
+            android:paddingBottom="25dp"
+            android:paddingTop="25dp">
+
+            <ImageView
+                android:id="@+id/img_pick_gallery"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+                android:adjustViewBounds="true"
+                android:background="@drawable/ic_audio" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/img_pick_gallery"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="8dp"
+                android:text="Audio"
+                android:textSize="@dimen/text_large" />
+        </RelativeLayout>
+
+    </LinearLayout>
+
+</LinearLayout>

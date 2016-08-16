@@ -24,6 +24,16 @@ public class RvActiveOrderAdapter extends RecyclerView.Adapter<RvActiveOrderAdap
     // Define listener member variable
     private static OnItemClickListener listener;
 
+    // Define the listener interface
+    public interface OnItemClickListener {
+        void onItemClick(View itemView, int position, OrdersListModel order);
+    }
+
+    // Define the method that allows the parent activity or fragment to define the listener
+    public void setOnItemClickListener(OnItemClickListener listener) {
+        this.listener = listener;
+    }
+
 
     private final LayoutInflater mInflater;
 
@@ -105,16 +115,6 @@ public class RvActiveOrderAdapter extends RecyclerView.Adapter<RvActiveOrderAdap
     @Override
     public int getItemCount() {
         return listOrder.size();
-    }
-
-    // Define the listener interface
-    public interface OnItemClickListener {
-        void onItemClick(View itemView, int position, OrdersListModel order);
-    }
-
-    // Define the method that allows the parent activity or fragment to define the listener
-    public void setOnItemClickListener(OnItemClickListener listener) {
-        this.listener = listener;
     }
 
 

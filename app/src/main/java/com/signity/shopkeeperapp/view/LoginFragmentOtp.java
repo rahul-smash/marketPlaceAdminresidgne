@@ -198,6 +198,8 @@ public class LoginFragmentOtp extends Fragment implements View.OnClickListener {
         Util.savePreferenceValue(getActivity(), Constant.LOGIN_CHECK, "1");
         Util.savePreferenceValue(getActivity(), Constant.IS_ADMIN, (role != null && !(role.isEmpty())) ? role : "");
         Util.savePreferenceValue(getActivity(), Constant.STAFF_ADMIN_ID, id);
+        Util.savePreferenceValue(getActivity(), Constant.LOGIN_TYPE, "phone");
+        Util.savePreferenceValue(getActivity(), Constant.EMAIL, "");
 
         Intent intent_home = new Intent(getActivity(), MainActivity.class);
 //        intent_home.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP|Intent.FLAG_ACTIVITY_NEW_TASK);

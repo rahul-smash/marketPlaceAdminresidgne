@@ -5,7 +5,6 @@ import android.app.AlarmManager;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
-import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.BitmapFactory;
@@ -15,7 +14,7 @@ import android.support.v4.app.NotificationCompat;
 import android.util.Log;
 
 import com.signity.shopkeeperapp.R;
-import com.signity.shopkeeperapp.home.MainActivity;
+import com.signity.shopkeeperapp.SplashActivity;
 import com.signity.shopkeeperapp.model.GetOrdersModel;
 import com.signity.shopkeeperapp.model.OrdersModel;
 import com.signity.shopkeeperapp.network.NetworkAdaper;
@@ -178,14 +177,20 @@ public class LocalNotifyReceiver extends BroadcastReceiver {
             prefManager.setDueOrderLocalNotiCount(currentCount++);
         }
 
+        Intent intent = null;
+        if (prefManager.isApplicationVisible()) {
+            intent = new Intent();
+        } else {
+            intent = new Intent(context, SplashActivity.class);
+        }
 
-        Intent intent = new Intent(context, MainActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
         PendingIntent pendingIntent = PendingIntent.getActivity(context, 0 /* Request code */, intent,
                 PendingIntent.FLAG_ONE_SHOT);
+
         int icon = R.mipmap.ic_launcher;
-        Uri defaultSoundUri = Uri.parse(ContentResolver.SCHEME_ANDROID_RESOURCE + "://com.signity.valueappz/raw/notificationrecieved");
-//        Uri defaultSoundUri = Uri.parse("android.resource://com.signity.valueappz/" + R.raw.notificationrecieved);
+        String uriString = prefManager.getAppNotificationUri();
+        Uri defaultSoundUri = Uri.parse(uriString);
         NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(context)
                 .setContentTitle(title)
                 .setContentText(message)
@@ -201,10 +206,7 @@ public class LocalNotifyReceiver extends BroadcastReceiver {
                 (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
 
         notificationManager.notify(notificationId/* ID of notification */, notificationBuilder.build());
-
-
     }
-
 }
 
 

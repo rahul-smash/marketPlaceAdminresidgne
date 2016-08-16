@@ -64,7 +64,6 @@ public class MainActivityFragment extends Fragment implements View.OnClickListen
     @Override
     public void onResume() {
         super.onResume();
-        callForceUpdatApi();
     }
 
 
@@ -81,6 +80,7 @@ public class MainActivityFragment extends Fragment implements View.OnClickListen
 
         initialize();
 
+        callForceUpdatApi();
         return fragmentView;
     }
 

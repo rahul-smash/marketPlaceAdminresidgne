@@ -1,16 +1,22 @@
 package com.signity.shopkeeperapp.home;
 
+import android.app.Activity;
 import android.app.AlarmManager;
 import android.app.Dialog;
+import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.BitmapFactory;
 import android.graphics.drawable.ColorDrawable;
 import android.media.AudioManager;
+import android.media.RingtoneManager;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
+import android.support.v4.app.NotificationCompat;
 import android.support.v4.widget.SlidingPaneLayout;
 import android.util.Log;
 import android.view.KeyEvent;
@@ -40,6 +46,7 @@ import com.signity.shopkeeperapp.LogInModule.ChangePasswordActivity;
 import com.signity.shopkeeperapp.LogInModule.LogInOptionsActivity;
 import com.signity.shopkeeperapp.ManageVolume.ManageVolumeActivity;
 import com.signity.shopkeeperapp.R;
+import com.signity.shopkeeperapp.SplashActivity;
 import com.signity.shopkeeperapp.customer.CustomerFragment;
 import com.signity.shopkeeperapp.enquiries.EnquiriesFragment;
 import com.signity.shopkeeperapp.manage_stores.ManageStaffActivity;
@@ -70,6 +77,10 @@ import retrofit.RetrofitError;
 import retrofit.client.Response;
 
 public class MainActivity extends FragmentActivity implements View.OnClickListener {
+
+    private static final int REQUEST_SELECT_RINGTONE = 328;
+    private static final int REQUEST_SELECT_AUDIO = 329;
+
 
     SlidingPaneLayout mSlidingPanel;
 
@@ -268,8 +279,6 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
         // layout.setAnimation(AnimationUtils.loadAnimation(this, R.anim.popup_window_show));
 
         String isAdmin = Util.loadPreferenceValue(MainActivity.this, Constant.IS_ADMIN);
-
-
         TextView mStoreStatus = (TextView) layout.findViewById(R.id.textStoreStatus);
         TextView manageStaff = (TextView) layout.findViewById(R.id.staff);
 
@@ -285,6 +294,7 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
         TextView mShare = (TextView) layout.findViewById(R.id.share);
         TextView mLogOut = (TextView) layout.findViewById(R.id.logOut);
         TextView mChangePass = (TextView) layout.findViewById(R.id.changePass);
+        TextView changeSound = (TextView) layout.findViewById(R.id.changeSound);
 
         if (logIn_type.equalsIgnoreCase("mobile")) {
             mChangePass.setVisibility(View.GONE);
@@ -389,6 +399,60 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
         });
 
 
+        changeSound.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                rightMenuPopUpWindow.dismiss();
+                openOptionForSelectingSound();
+            }
+        });
+
+
+    }
+
+    private void openOptionForSelectingSound() {
+        final Dialog dialog = new Dialog(MainActivity.this);
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
+        dialog.setContentView(R.layout.layout_popup_audio_option);
+        dialog.setCanceledOnTouchOutside(true);
+
+        RelativeLayout relativeBlockRingtone = (RelativeLayout) dialog.findViewById(R.id.relativeBlockRingtone);
+        RelativeLayout relativeBlockAudio = (RelativeLayout) dialog.findViewById(R.id.relativeBlockAudio);
+
+        relativeBlockRingtone.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                dialog.dismiss();
+                choseDefaultRingtone();
+
+            }
+        });
+        relativeBlockAudio.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                dialog.dismiss();
+                choseCustomAudioResource();
+            }
+        });
+
+        dialog.show();
+        dialog.getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE);
+    }
+
+    private void choseDefaultRingtone() {
+        Intent intent = new Intent(RingtoneManager.ACTION_RINGTONE_PICKER);
+        intent.putExtra(RingtoneManager.EXTRA_RINGTONE_TYPE, RingtoneManager.TYPE_NOTIFICATION);
+        intent.putExtra(RingtoneManager.EXTRA_RINGTONE_TITLE, "Select Tone");
+        intent.putExtra(RingtoneManager.EXTRA_RINGTONE_EXISTING_URI, (Uri) null);
+        startActivityForResult(intent, REQUEST_SELECT_RINGTONE);
+    }
+
+    private void choseCustomAudioResource() {
+        Intent intent = new Intent();
+        intent.setType("audio/*");
+        intent.setAction(Intent.ACTION_GET_CONTENT);
+        startActivityForResult(Intent.createChooser(intent, "Select Audio "), REQUEST_SELECT_AUDIO);
     }
 
     private void setStoreDetails() {
@@ -845,4 +909,37 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
 
         am.setRepeating(AlarmManager.RTC_WAKEUP, calendar2.getTimeInMillis(), AlarmManager.INTERVAL_DAY, pendingIntent2);
     }
+
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        switch (requestCode) {
+            case REQUEST_SELECT_RINGTONE:
+                if (resultCode == Activity.RESULT_OK) {
+                    Uri uri = data.getParcelableExtra(RingtoneManager.EXTRA_RINGTONE_PICKED_URI);
+
+                    if (uri != null) {
+                        prefManager.storeSharedValue(Constant.APP_NOTIFICATION_URL, uri.toString());
+//                this.chosenRingtone = uri.toString();
+                    } else {
+//                this.chosenRingtone = null;
+                    }
+                }
+                break;
+            case REQUEST_SELECT_AUDIO:
+                if (resultCode == Activity.RESULT_OK) {
+                    Uri uri = data.getData();
+                    if (uri != null) {
+                        prefManager.storeSharedValue(Constant.APP_NOTIFICATION_URL, uri.toString());
+//                this.chosenRingtone = uri.toString();
+                    } else {
+//                this.chosenRingtone = null;
+                    }
+                }
+                break;
+        }
+    }
+
 }

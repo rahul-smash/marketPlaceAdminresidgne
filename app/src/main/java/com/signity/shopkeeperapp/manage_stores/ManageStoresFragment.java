@@ -1,13 +1,11 @@
 package com.signity.shopkeeperapp.manage_stores;
 
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.provider.Settings;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.support.v7.app.AlertDialog;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -29,6 +27,7 @@ import com.signity.shopkeeperapp.network.NetworkAdaper;
 import com.signity.shopkeeperapp.network.NetworkConstant;
 import com.signity.shopkeeperapp.util.AnimUtil;
 import com.signity.shopkeeperapp.util.Constant;
+import com.signity.shopkeeperapp.util.DialogHandler;
 import com.signity.shopkeeperapp.util.DialogUtils;
 import com.signity.shopkeeperapp.util.FontUtil;
 import com.signity.shopkeeperapp.util.ProgressDialogUtil;
@@ -121,10 +120,8 @@ public class ManageStoresFragment extends Fragment {
                 ProgressDialogUtil.hideProgressDialog();
                 if (mobResponse.getSuccess()) {
                     if (mobResponse.getStoresList().size() > 0) {
-
                         adapter = new StoresListAdapter(getActivity(), mobResponse.getStoresList());
                         mListView.setAdapter(adapter);
-
                     } else {
                         Toast.makeText(getActivity(), "No store found", Toast.LENGTH_SHORT).show();
                     }
@@ -224,7 +221,7 @@ public class ManageStoresFragment extends Fragment {
                     if (currentStoreId.equalsIgnoreCase(list.get(position).getId())) {
                         showAlertForCurrentStore(Constant.APP_TITLE, "You already in " + list.get(position).getStoreName() + ". Please select different store");
                     } else {
-                        storeSwitchAlert(Constant.APP_TITLE, list.get(position).getId(), list.get(position).getStoreName());
+                        storeSwitchAlert(Constant.APP_TITLE, list.get(position), list.get(position).getStoreName());
                     }
 
                 }
@@ -241,82 +238,52 @@ public class ManageStoresFragment extends Fragment {
 
     }
 
-    private void setStoreId(String id) {
-        Util.savePreferenceValue(getActivity(), Constant.STORE_ID, id);
-        String url = NetworkConstant.BASE + "/" + id + NetworkConstant.APISTORE;
-        NetworkAdaper.setupRetrofitClient(url);
 
-    }
-
-    private void storeSwitchAlert(String title, final String id, final String storeName) {
-
-        AlertDialog.Builder adb = new AlertDialog.Builder(getActivity());
+    private void storeSwitchAlert(String title, final StoresListModel storeListModel, final String storeName) {
 
 
-        adb.setTitle(title);
-        adb.setMessage("Are you sure switch to " + storeName + " ?");
-        adb.setIcon(R.drawable.ic_launcher);
+        String message = "Are you sure switch to " + storeName + " ?";
+        final DialogHandler dialogHandler = new DialogHandler(getActivity());
 
+        dialogHandler.setDialog(title, message);
 
-        adb.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int which) {
-                storeSwitch(Constant.APP_TITLE, id, "You are successfully switch to " + storeName + ".");
-            }
-        });
-
-
-        adb.setNegativeButton("No", new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int which) {
-                dialog.dismiss();
-            }
-        });
-        adb.show();
-    }
-
-
-    private void storeSwitch(String title, final String storeId, String msg) {
-
-        AlertDialog.Builder adb = new AlertDialog.Builder(getActivity());
-
-        adb.setCancelable(false);
-        adb.setTitle(title);
-        adb.setMessage(msg);
-        adb.setIcon(R.drawable.ic_launcher);
-
-
-        adb.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int which) {
-                setStoreId(storeId);
+        dialogHandler.setOnPositiveButtonClickListener("Yes", new DialogHandler.OnPostiveButtonClick() {
+            @Override
+            public void Onclick() {
+                dialogHandler.dismiss();
+                Util.savePreferenceValue(getActivity(), Constant.STORE_ID, storeListModel.getId());
+                Util.savePreferenceValue(getActivity(), Constant.STAFF_ADMIN_ID, storeListModel.getUserId());
+                String url = NetworkConstant.BASE + "/" + storeListModel.getId() + NetworkConstant.APISTORE;
+                NetworkAdaper.setupRetrofitClient(url);
                 Intent intent_home = new Intent(getActivity(),
                         MainActivity.class);
                 startActivity(intent_home);
                 AnimUtil.slideFromRightAnim(getActivity());
                 getActivity().finish();
-
             }
         });
 
-        adb.show();
+        dialogHandler.setOnNegativeButtonClickListener("No", new DialogHandler.OnNegativeButtonClick() {
+            @Override
+            public void Onclick() {
+                dialogHandler.dismiss();
+            }
+        });
+
     }
+
 
     private void showAlertForCurrentStore(String title, String msg) {
 
-        AlertDialog.Builder adb = new AlertDialog.Builder(getActivity());
-
-        adb.setCancelable(false);
-        adb.setTitle(title);
-        adb.setMessage(msg);
-        adb.setIcon(R.drawable.ic_launcher);
-
-
-        adb.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int which) {
-                dialog.dismiss();
-
+        final DialogHandler dialogHandler = new DialogHandler(getActivity());
+        dialogHandler.setDialog(title, msg);
+        dialogHandler.setOnPositiveButtonClickListener("Ok", new DialogHandler.OnPostiveButtonClick() {
+            @Override
+            public void Onclick() {
+                dialogHandler.dismiss();
             }
         });
 
-        adb.show();
     }
 
 }
