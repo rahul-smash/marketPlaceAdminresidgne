@@ -641,7 +641,6 @@ public class OrderDetailFragment extends Fragment implements View.OnClickListene
             } else {
                 holder.txtWeight.setVisibility(View.GONE);
             }
-
             if (item.getStatus().equalsIgnoreCase("2")) {
                 totalItemRejected = totalItemRejected + 1;
                 holder.toggle.setSelected(false);
@@ -661,23 +660,23 @@ public class OrderDetailFragment extends Fragment implements View.OnClickListene
                     if (btnOrderProceed.isSelected() || btnMoveToShipping.isSelected() || btnMoveToDeliver.isSelected()) {
 
                     } else {
-                        if (totalItemRejected == getCount() - 1) {
-                            String message = "Kindly Accept atleast one item to proceed or else Reject the Complete Order.";
-
-                            final DialogHandler dialogHandler = new DialogHandler(getActivity());
-
-                            dialogHandler.setDialog(Constant.APP_TITLE, message);
-                            dialogHandler.setPostiveButton("OK", true)
-                                    .setOnClickListener(new View.OnClickListener() {
-                                        @Override
-                                        public void onClick(View view) {
-                                            dialogHandler.dismiss();
-                                        }
-                                    });
-
+                        if (item.getStatus().equalsIgnoreCase("2")) {
+                            callOrderItemStatus(item.getItemId(), "1");
                         } else {
-                            if (item.getStatus().equalsIgnoreCase("2")) {
-                                callOrderItemStatus(item.getItemId(), "1");
+                            if (totalItemRejected == getCount() - 1) {
+                                String message = "Kindly Accept atleast one item to proceed or else Reject the Complete Order.";
+
+                                final DialogHandler dialogHandler = new DialogHandler(getActivity());
+
+                                dialogHandler.setDialog(Constant.APP_TITLE, message);
+                                dialogHandler.setPostiveButton("OK", true)
+                                        .setOnClickListener(new View.OnClickListener() {
+                                            @Override
+                                            public void onClick(View view) {
+                                                dialogHandler.dismiss();
+                                            }
+                                        });
+
                             } else {
                                 callOrderItemStatus(item.getItemId(), "2");
                             }

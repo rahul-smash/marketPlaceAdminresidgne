@@ -56,6 +56,7 @@ public class LocalNotifyReceiver extends BroadcastReceiver {
                 notificationId = Constant.LOCAL_NOTIFY_FOR_DUE_ORDER;
                 prefManager = new PrefManager(context);
                 dueOrderNotificaionCount = prefManager.getDueOrderLocalNotiCount();
+                Log.e("-----Current count 1---", dueOrderNotificaionCount + "");
                 if (dueOrderNotificaionCount < 2) {
                     checkDueOrderStatus(context);
                 } else {
@@ -81,7 +82,6 @@ public class LocalNotifyReceiver extends BroadcastReceiver {
         param.put("order_type", "pending");
         param.put("api_key", "");
 
-
         NetworkAdaper.getInstance().getNetworkServices().getStoreOrders(param, new Callback<GetOrdersModel>() {
             @Override
             public void success(GetOrdersModel getOrdersModel, Response response) {
@@ -101,7 +101,6 @@ public class LocalNotifyReceiver extends BroadcastReceiver {
                 Log.e("Error", error.getMessage());
             }
         });
-
     }
 
     private void checkActiveOrderStatus(Context context) {
@@ -155,13 +154,15 @@ public class LocalNotifyReceiver extends BroadcastReceiver {
 
         if (notificationId == Constant.LOCAL_NOTIFY_FOR_DUE_ORDER) {
             int currentCount = prefManager.getDueOrderLocalNotiCount();
-            prefManager.setDueOrderLocalNotiCount(currentCount++);
+            Log.e("-----Current count 2---", currentCount + "");
+            prefManager.setDueOrderLocalNotiCount(currentCount + 1);
         }
 
         sendNotification(mContext, "Order Notification", message, notificationId);
     }
 
     private void cancelAlaramManagerTask(Context context) {
+        Log.e("-----Cancel---", "Cancel");
         AlarmManager am = (AlarmManager) context.getSystemService(Activity.ALARM_SERVICE);
         Intent intents = new Intent(context, LocalNotifyReceiver.class);
         PendingIntent pendingIntent;
@@ -171,11 +172,6 @@ public class LocalNotifyReceiver extends BroadcastReceiver {
     }
 
     private void sendNotification(Context context, String title, String message, int notificationId) {
-
-        if (notificationId == Constant.LOCAL_NOTIFY_FOR_DUE_ORDER) {
-            int currentCount = prefManager.getDueOrderLocalNotiCount();
-            prefManager.setDueOrderLocalNotiCount(currentCount++);
-        }
 
         Intent intent = null;
         if (prefManager.isApplicationVisible()) {
@@ -208,24 +204,3 @@ public class LocalNotifyReceiver extends BroadcastReceiver {
         notificationManager.notify(notificationId/* ID of notification */, notificationBuilder.build());
     }
 }
-
-
-//        final int currentMode;
-//        boolean modeChange = false;
-//        final AudioManager am;
-//        am = (AudioManager) context.getSystemService(Context.AUDIO_SERVICE);
-//        currentMode = am.getRingerMode();
-//        if (currentMode != AudioManager.RINGER_MODE_NORMAL) {
-//            am.setRingerMode(AudioManager.RINGER_MODE_NORMAL);
-//            modeChange = true;
-//        }
-
-
-//if (modeChange) {
-//        new Handler().postDelayed(new Runnable() {
-//@Override
-//public void run() {
-//        am.setRingerMode(currentMode);
-//        }
-//        }, 2000);
-//        }

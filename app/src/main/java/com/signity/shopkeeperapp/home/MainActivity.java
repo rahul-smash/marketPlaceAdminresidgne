@@ -3,11 +3,9 @@ package com.signity.shopkeeperapp.home;
 import android.app.Activity;
 import android.app.AlarmManager;
 import android.app.Dialog;
-import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.BitmapFactory;
 import android.graphics.drawable.ColorDrawable;
 import android.media.AudioManager;
 import android.media.RingtoneManager;
@@ -16,7 +14,6 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
-import android.support.v4.app.NotificationCompat;
 import android.support.v4.widget.SlidingPaneLayout;
 import android.util.Log;
 import android.view.KeyEvent;
@@ -46,12 +43,12 @@ import com.signity.shopkeeperapp.LogInModule.ChangePasswordActivity;
 import com.signity.shopkeeperapp.LogInModule.LogInOptionsActivity;
 import com.signity.shopkeeperapp.ManageVolume.ManageVolumeActivity;
 import com.signity.shopkeeperapp.R;
-import com.signity.shopkeeperapp.SplashActivity;
 import com.signity.shopkeeperapp.customer.CustomerFragment;
 import com.signity.shopkeeperapp.enquiries.EnquiriesFragment;
 import com.signity.shopkeeperapp.manage_stores.ManageStaffActivity;
 import com.signity.shopkeeperapp.manage_stores.ManageStoresFragment;
 import com.signity.shopkeeperapp.model.DashBoardModelStoreDetail;
+import com.signity.shopkeeperapp.model.LoginModel;
 import com.signity.shopkeeperapp.model.MobResponse;
 import com.signity.shopkeeperapp.network.NetworkAdaper;
 import com.signity.shopkeeperapp.orders.ActiveOrderFragment;
@@ -602,7 +599,6 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
     private void setShareContent() {
 
         DashBoardModelStoreDetail jobj = getStoreDataAsObject(Util.loadPreferenceValue(MainActivity.this, Constant.STORE_DETAILS));
-
         String storeName = "";
         String storeCity = "";
         String storeLiveUrl = "";
@@ -632,11 +628,16 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
     }
 
     private void clearSharedPref() {
-
         Util.savePreferenceValue(com.signity.shopkeeperapp.home.MainActivity.this, Constant.LOGIN_CHECK, "0");
         Util.savePreferenceValue(this, Constant.DEVICE_TOKEN, "");
         Util.savePreferenceValue(this, Constant.STORE_ID, "");
         Util.savePreferenceValue(this, Constant.STAFF_ADMIN_ID, "");
+        Util.savePreferenceValue(this, Constant.IS_ADMIN, "");
+        Util.savePreferenceValue(this, Constant.EMAIL, "");
+        Util.savePreferenceValue(this, Constant.LOGIN_TYPE, "");
+        Util.savePreferenceValue(this, Constant.LOGIN_CHECK, "");
+        Util.savePreferenceValue(this, Constant.PHONE, "");
+
         NetworkAdaper.getInstance().setupRetrofitClient(NetworkAdaper.getInstance().setBaseUrl(""));
         Intent intent_home = new Intent(com.signity.shopkeeperapp.home.MainActivity.this, LogInOptionsActivity.class);
         intent_home.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
@@ -657,7 +658,8 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
                 .setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        clearSharedPref();
+
+                        callLogOutApi();
                         dialogHandler.dismiss();
                     }
                 });
@@ -670,6 +672,39 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
                         dialogHandler.dismiss();
                     }
                 });
+    }
+
+    private void callLogOutApi() {
+
+        ProgressDialogUtil.showProgressDialog(MainActivity.this);
+        String type = prefManager.getSharedValue(Constant.LOGIN_TYPE);
+        String login_id;
+        if (type != null && type.equalsIgnoreCase("phone")) {
+            login_id = prefManager.getSharedValue(Constant.PHONE);
+        } else {
+            login_id = prefManager.getSharedValue(Constant.EMAIL);
+        }
+
+        Map<String, String> param = new HashMap<String, String>();
+        param.put("login_id", login_id);
+        param.put("type", type);
+
+        NetworkAdaper.getInstance().getNetworkServices().logout(param, new Callback<LoginModel>() {
+            @Override
+            public void success(LoginModel loginModel, Response response) {
+                ProgressDialogUtil.hideProgressDialog();
+                clearSharedPref();
+                Toast.makeText(MainActivity.this, "Logout Successfully", Toast.LENGTH_LONG).show();
+            }
+
+            @Override
+            public void failure(RetrofitError error) {
+                ProgressDialogUtil.hideProgressDialog();
+                clearSharedPref();
+            }
+        });
+
+
     }
 
     private void storeStatusAlertNew(String msg, final String storeStatusValue) {

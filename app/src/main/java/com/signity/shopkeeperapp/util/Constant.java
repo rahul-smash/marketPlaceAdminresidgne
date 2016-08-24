@@ -38,6 +38,7 @@ public class Constant {
     public static final String USER_ID = "USER_ID";
     public static final String LOGIN_TYPE = "mLoginType";
     public static final String EMAIL = "mEmail";
+    public static final String PHONE = "mPhone";
 
 
     public static final String TYPE_DUE_ORDER = "com.signity.shopkeeperapp.DUE_ORDER";

@@ -198,6 +198,7 @@ public class LoginFragmentOtp extends Fragment implements View.OnClickListener {
         Util.savePreferenceValue(getActivity(), Constant.LOGIN_CHECK, "1");
         Util.savePreferenceValue(getActivity(), Constant.IS_ADMIN, (role != null && !(role.isEmpty())) ? role : "");
         Util.savePreferenceValue(getActivity(), Constant.STAFF_ADMIN_ID, id);
+        Util.savePreferenceValue(getActivity(), Constant.PHONE, phone);
         Util.savePreferenceValue(getActivity(), Constant.LOGIN_TYPE, "phone");
         Util.savePreferenceValue(getActivity(), Constant.EMAIL, "");
 

@@ -91,6 +91,9 @@ public interface ApiService {
     @FormUrlEncoded
     @POST("/userLogin")
     void loginVerification(@FieldMap Map<String, String> parameters, Callback<LoginModel> response);
+    @FormUrlEncoded
+    @POST("/logout")
+    void logout(@FieldMap Map<String, String> parameters, Callback<LoginModel> response);
 
     @FormUrlEncoded
     @POST("/changePassword")
@@ -102,5 +105,7 @@ public interface ApiService {
 
     @GET("/forceDownload")
     void forceDownload(Callback<ResponseForceUpdate> response);
+
+
 
 }

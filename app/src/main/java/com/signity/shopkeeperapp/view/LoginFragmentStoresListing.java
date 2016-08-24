@@ -377,15 +377,6 @@ public class LoginFragmentStoresListing extends Fragment implements View.OnClick
                 if (mobResponse.getSuccess()) {
                     checkUserExistModule(mobResponse);
 
-                    // Comment Updated on March 17 to open login otp services
-//                    MobResponseDetails details = mobResponse.getData();
-//                    Util.savePreferenceValue(getActivity(), Constant.IS_ADMIN, details.getRole());
-//                    saveUserIdToPref();
-//                    Intent intent_home = new Intent(getActivity(), MainActivity.class);
-//                    intent_home.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-//                    startActivity(intent_home);
-//                    getActivity().finish();
-//                    AnimUtil.slideFromRightAnim(getActivity());
                 } else {
                     Toast.makeText(getActivity(), "" + mobResponse.getMessage(), Toast.LENGTH_SHORT).show();
                 }
@@ -406,6 +397,9 @@ public class LoginFragmentStoresListing extends Fragment implements View.OnClick
             Util.savePreferenceValue(getActivity(), Constant.LOGIN_CHECK, "1");
             prefManager.storeSharedValue(Constant.IS_ADMIN, response.getData().getRole());
             prefManager.storeSharedValue(Constant.STAFF_ADMIN_ID, response.getData().getId());
+            Util.savePreferenceValue(getActivity(), Constant.PHONE, phone);
+            Util.savePreferenceValue(getActivity(), Constant.LOGIN_TYPE, "phone");
+            Util.savePreferenceValue(getActivity(), Constant.EMAIL, "");
             Intent intent_home = new Intent(getActivity(), MainActivity.class);
             intent_home.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
             startActivity(intent_home);
