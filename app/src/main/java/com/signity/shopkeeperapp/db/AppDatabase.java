@@ -150,30 +150,40 @@ public class AppDatabase {
 
     public void setAllCustomers(List<UserModel> customers) {
         String storeId = Util.loadPreferenceValue(context, Constant.STORE_ID);
+        long stime = System.currentTimeMillis();
+        Log.d("StartTime", "" + stime);
+        db.beginTransaction();
+        try {
+            for (UserModel customer : customers) {
+                try {
+                    ContentValues values = new ContentValues();
+                    values.put("id", customer.getId());
+                    values.put("store_id", storeId);
+                    values.put("full_name", customer.getFullName());
+                    values.put("phone", customer.getPhone());
+                    values.put("status", customer.getStatus());
+                    values.put("email", customer.getEmail());
+                    values.put("area", customer.getArea());
 
-        for (UserModel customer : customers) {
-            try {
-
-                ContentValues values = new ContentValues();
-                values.put("id", customer.getId());
-                values.put("store_id", storeId);
-                values.put("full_name", customer.getFullName());
-                values.put("phone", customer.getPhone());
-                values.put("status", customer.getStatus());
-                values.put("email", customer.getEmail());
-                values.put("area", customer.getArea());
-
-                if (isCustomerExit(customer.getId())) {
-                    long l = db.update("customers", values, "id=? AND store_id=?", new String[]{customer.getId(), storeId});
-                    Log.i(TAG, "--------Customer--------UPDATED------------");
-                } else {
-                    long l = db.insert("customers", null, values);
-                    Log.i(TAG, "--------Customer--------CREATED------------");
+                    if (isCustomerExit(customer.getId())) {
+                        long l = db.update("customers", values, "id=? AND store_id=?", new String[]{customer.getId(), storeId});
+                        Log.i(TAG, "--------Customer--------UPDATED------------");
+                    } else {
+                        long l = db.insert("customers", null, values);
+                        Log.i(TAG, "--------Customer--------CREATED------------");
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
                 }
-
-            } catch (Exception e) {
-                e.printStackTrace();
             }
+            db.setTransactionSuccessful();
+            Log.d("ENDTIME", "" + System.currentTimeMillis());
+            Log.d("DIFFERENT", "" + ((stime - System.currentTimeMillis())/1000)+" sec");
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            db.endTransaction();
         }
 
     }
