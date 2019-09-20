@@ -9,10 +9,18 @@ public class NetworkConstant {
 
     public static final String STORE_ID = "/1";
     public static final String APISTORE = "/apistore_v2";
+   // public static final String BASE = "http://app.grocersapp.com";     // staging Url
+
+
     //    public static final String BASE = "http://app.grocersapp.com";  // Live
     //    public static final String BASE = "http://dev.grocersapp.com";     // Dev Url
-    public static final String BASE = "http://app.grocersapp.com";     // staging Url
+
+    public static final String BASE = "http://192.168.1.59/valueappz-cms";     // TestingPupose Url
+
 //    public static final String BASE = "http://staging.grocersapp.com";     // staging Url
     //public static final String BASE = "http://app.grocersapp.com";     // live Url
     //  public static final String BASE = "http://192.168.1.176/maas/1/apistore";
 }
+
+//Testing Pupose usedd
+//http://192.168.1.59/valueappz-cms/1/apistore_v2/adminStores

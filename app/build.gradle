@@ -3,13 +3,15 @@ apply plugin: 'com.android.application'
 
 android {
     compileSdkVersion 28
-    buildToolsVersion '27.0.3'
+    buildToolsVersion '28.0.0'
     defaultConfig {
         applicationId 'com.signity.valueappz'
         minSdkVersion 15
         targetSdkVersion 28
         versionCode 6
         versionName "1.51"
+        multiDexEnabled true
+
     }
     buildTypes {
         release {
@@ -23,14 +25,21 @@ android {
     productFlavors {
     }
 }
-
 ext {
+    supportLibVersion = '28.0.0'
+    playLibVersion = '15.0.1'
+    okhttpLibVersion = '2.0.0'
+    retrofitLibVersion = '1.9.0'
+    picassoLibVersion = '2.5.2'
+}
+
+/*ext {
     supportLibVersion = '23.0.1'
     playLibVersion = '8.4.0'
     okhttpLibVersion = '2.0.0'
     retrofitLibVersion = '1.9.0'
     picassoLibVersion = '2.5.2'
-}
+}*/
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
     implementation "com.android.support:appcompat-v7:${supportLibVersion}"

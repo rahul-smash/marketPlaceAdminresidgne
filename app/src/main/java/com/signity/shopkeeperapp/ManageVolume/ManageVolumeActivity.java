@@ -3,7 +3,6 @@ package com.signity.shopkeeperapp.ManageVolume;
 import android.content.Context;
 import android.media.AudioManager;
 import android.support.v4.app.FragmentManager;
-import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
