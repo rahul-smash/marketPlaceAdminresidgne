@@ -88,6 +88,7 @@ public class CustomerAdapter extends BaseAdapter implements Filterable {
                 custDetailIntent.putExtra("phone", list.get(position).getPhone());
                 context.startActivity(custDetailIntent);
                 AnimUtil.slideFromRightAnim((Activity)context);
+
             }
         });
 
