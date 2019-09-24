@@ -14,7 +14,7 @@ public class DataAdapter {
 
 
     public List<ItemListModel> listItem;
-
+    public String notificationMessage;
     /* Static 'instance' method */
     public static DataAdapter getInstance() {
         return cInstance;
@@ -33,5 +33,12 @@ public class DataAdapter {
 
     public void setListItem(List<ItemListModel> listItem) {
         this.listItem = listItem;
+    }
+    public String getNotificationMessage() {
+        return notificationMessage;
+    }
+
+    public void setNotificationMessage(String notificationMessage) {
+        this.notificationMessage = notificationMessage;
     }
 }

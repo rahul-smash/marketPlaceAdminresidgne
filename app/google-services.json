@@ -1,28 +1,45 @@
 {
   "project_info": {
-    "project_number": "453682303477",
-    "project_id": "grocery-valueappz"
+    "project_number": "430236525670",
+    "firebase_url": "https://valueapps-6c7fd.firebaseio.com",
+    "project_id": "valueapps-6c7fd",
+    "storage_bucket": "valueapps-6c7fd.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:453682303477:android:339097c5007639d7",
+        "mobilesdk_app_id": "1:430236525670:android:be269d95f5c837e75c79a7",
         "android_client_info": {
-          "package_name": "com.signity.valueappz"
+          "package_name": "com.signity.valueapps"
         }
       },
-      "oauth_client": [],
-      "api_key": [],
+      "oauth_client": [
+        {
+          "client_id": "430236525670-pthq3g4qttrjsha9pdhbd17lfaqofosg.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.signity.valueapps",
+            "certificate_hash": "eae6951cb4a3e5605bb8696e32a1bc1fd78a68d9"
+          }
+        },
+        {
+          "client_id": "430236525670-fv0vldpbdnud580c1v49pgi6glfhsarg.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBsZAfdO1u1CJob8rOCCggtkeNvkDJgRVE"
+        }
+      ],
       "services": {
-        "analytics_service": {
-          "status": 1
-        },
         "appinvite_service": {
-          "status": 1,
-          "other_platform_oauth_client": []
-        },
-        "ads_service": {
-          "status": 1
+          "other_platform_oauth_client": [
+            {
+              "client_id": "430236525670-fv0vldpbdnud580c1v49pgi6glfhsarg.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
         }
       }
     }

@@ -10,7 +10,6 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-
 import com.signity.shopkeeperapp.R;
 import com.signity.shopkeeperapp.app.DataAdapter;
 import com.signity.shopkeeperapp.model.ItemListModel;
@@ -19,7 +18,6 @@ import com.signity.shopkeeperapp.orders.DueOrderActivity;
 import com.signity.shopkeeperapp.util.AnimUtil;
 import com.signity.shopkeeperapp.util.FontUtil;
 import com.signity.shopkeeperapp.util.Util;
-
 import java.text.DecimalFormat;
 import java.util.List;
 

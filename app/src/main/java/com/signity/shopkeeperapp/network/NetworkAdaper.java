@@ -3,6 +3,8 @@ package com.signity.shopkeeperapp.network;
 
 import android.content.Context;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.signity.shopkeeperapp.util.Constant;
 import com.signity.shopkeeperapp.util.Util;
 import com.squareup.okhttp.OkHttpClient;
@@ -40,6 +42,8 @@ public class NetworkAdaper {
         OkHttpClient client = new OkHttpClient();
         client.setConnectTimeout(2, TimeUnit.MINUTES);
         client.setReadTimeout(2, TimeUnit.MINUTES);
+
+
         RestAdapter restAdapter = new RestAdapter.Builder()
                 .setClient(new OkClient(client)).setEndpoint(url).setLogLevel(RestAdapter.LogLevel.FULL)
                 .build();

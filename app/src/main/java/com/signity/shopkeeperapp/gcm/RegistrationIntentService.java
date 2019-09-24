@@ -12,7 +12,8 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- */
+ *//*
+
 
 package com.signity.shopkeeperapp.gcm;
 
@@ -78,26 +79,30 @@ public class RegistrationIntentService extends IntentService {
         LocalBroadcastManager.getInstance(this).sendBroadcast(registrationComplete);
     }
 
-    /**
+    */
+/**
      * Persist registration to third-party servers.
      * <p/>
      * Modify this method to associate the user's GCM registration token with any server-side account
      * maintained by your application.
      *
      * @param token The new token.
-     */
+     *//*
+
     private void sendRegistrationToServer(String token) {
         // Add custom implementation, as needed.
 
         Util.savePreferenceValue(this, Constant.DEVICE_TOKEN, token);
     }
 
-    /**
+    */
+/**
      * Subscribe to any GCM topics of interest, as defined by the TOPICS constant.
      *
      * @param token GCM token
      * @throws IOException if unable to reach the GCM PubSub service
-     */
+     *//*
+
     // [START subscribe_topics]
     private void subscribeTopics(String token) throws IOException {
         GcmPubSub pubSub = GcmPubSub.getInstance(this);
@@ -108,3 +113,4 @@ public class RegistrationIntentService extends IntentService {
     // [END subscribe_topics]
 
 }
+*/

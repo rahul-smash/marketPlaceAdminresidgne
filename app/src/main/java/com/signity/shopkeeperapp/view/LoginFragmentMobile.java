@@ -27,13 +27,15 @@ import android.widget.Toast;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
 import com.signity.shopkeeperapp.R;
+/*import com.signity.shopkeeperapp.gcm.QuickstartPreferences;
+import com.signity.shopkeeperapp.gcm.RegistrationIntentService;*/
 import com.signity.shopkeeperapp.gcm.QuickstartPreferences;
-import com.signity.shopkeeperapp.gcm.RegistrationIntentService;
 import com.signity.shopkeeperapp.model.MobResponseDetails;
 import com.signity.shopkeeperapp.model.StoresModel;
 import com.signity.shopkeeperapp.network.NetworkAdaper;
 import com.signity.shopkeeperapp.util.Constant;
 import com.signity.shopkeeperapp.util.DialogUtils;
+import com.signity.shopkeeperapp.util.PrefManager;
 import com.signity.shopkeeperapp.util.ProgressDialogUtil;
 import com.signity.shopkeeperapp.util.Util;
 
@@ -52,7 +54,8 @@ public class LoginFragmentMobile extends Fragment implements View.OnClickListene
     Button btnNext, backButton;
     EditText edtPhone;
     String from;
-
+    PrefManager prefManager;
+    String deviceToken;
     private static final int PLAY_SERVICES_RESOLUTION_REQUEST = 9000;
     private static final String TAG = "MainActivity";
 
@@ -62,17 +65,21 @@ public class LoginFragmentMobile extends Fragment implements View.OnClickListene
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        prefManager = new PrefManager(getActivity());
     }
 
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
+        prefManager = new PrefManager(getActivity());
 
         if (Util.loadPreferenceValue(getActivity(), Constant.DEVICE_TOKEN).equalsIgnoreCase("") || Util.loadPreferenceValue(getActivity(), Constant.DEVICE_TOKEN).equalsIgnoreCase(null)) {
-            processForDeviceToken();
+            //  processForDeviceToken();
+            deviceToken = prefManager.getSharedValue(Constant.DEVICE_TOKEN);
+            Log.i("@@onAttach", deviceToken);
         }
 
-        mRegistrationBroadcastReceiver = new BroadcastReceiver() {
+       /* mRegistrationBroadcastReceiver = new BroadcastReceiver() {
             @Override
             public void onReceive(Context context, Intent intent) {
                 SharedPreferences sharedPreferences =
@@ -84,16 +91,19 @@ public class LoginFragmentMobile extends Fragment implements View.OnClickListene
                     alert(getActivity(), Constant.APP_TITLE, "This device is not registered on server, please try again.");
                 }
             }
-        };
+        };*/
     }
 
     public static Fragment newInstance(Context context) {
         return Fragment.instantiate(context,
                 LoginFragmentMobile.class.getName());
     }
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_layout_login_mobile, container, false);
+        Log.i("@@onAttach", "");
+
         btnNext = (Button) rootView.findViewById(R.id.btnNext);
         edtPhone = (EditText) rootView.findViewById(R.id.edtPhone);
         backButton = (Button) rootView.findViewById(R.id.backButton);
@@ -149,7 +159,10 @@ public class LoginFragmentMobile extends Fragment implements View.OnClickListene
         String phone = edtPhone.getText().toString();
         String deviceId = Settings.Secure.getString(getActivity().getApplicationContext().getContentResolver(), Settings.Secure.ANDROID_ID);
         //String deviceToken = pushClientManager.getRegistrationId(getActivity());
+       // deviceToken = prefManager.getSharedValue(Constant.DEVICE_TOKEN);
         String deviceToken = Util.loadPreferenceValue(getActivity(), Constant.DEVICE_TOKEN);
+        // deviceToken = Util.loadPreferenceValue(getActivity(), prefManager.getSharedValue(Constant.DEVICE_TOKEN));
+        Log.i("@@getAdminStores", deviceToken);
         Map<String, String> param = new HashMap<String, String>();
         param.put("mobile", phone);
         param.put("device_id", deviceId);
@@ -228,7 +241,7 @@ public class LoginFragmentMobile extends Fragment implements View.OnClickListene
     }
 
 
-    private void processForDeviceToken() {
+    /*private void processForDeviceToken() {
 
         if (checkPlayServices()) {
             // Start IntentService to register this application with GCM.
@@ -241,7 +254,7 @@ public class LoginFragmentMobile extends Fragment implements View.OnClickListene
         } else {
             alert(getActivity(), Constant.APP_TITLE, "This device is not supported.");
         }
-    }
+    }*/
 
 
     @Override

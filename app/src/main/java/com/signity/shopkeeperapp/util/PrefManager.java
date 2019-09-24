@@ -64,4 +64,14 @@ public class PrefManager {
     public boolean isApplicationVisible() {
         return sharedpreferences.getBoolean(Constant.APP_STATE_VISIBLE, false);
     }
+    public void storeBoolean(String key, boolean value) {
+        SharedPreferences.Editor editor = sharedpreferences.edit();
+        editor.putBoolean(key, value);
+        editor.commit();
+    }
+
+    public boolean getBoolean(String key) {
+        return sharedpreferences.getBoolean(key, false);
+    }
+
 }

@@ -29,11 +29,12 @@ import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
 import com.signity.shopkeeperapp.R;
 import com.signity.shopkeeperapp.gcm.QuickstartPreferences;
-import com.signity.shopkeeperapp.gcm.RegistrationIntentService;
+/*import com.signity.shopkeeperapp.gcm.RegistrationIntentService;*/
 import com.signity.shopkeeperapp.model.StoresModel;
 import com.signity.shopkeeperapp.network.NetworkAdaper;
 import com.signity.shopkeeperapp.util.Constant;
 import com.signity.shopkeeperapp.util.DialogUtils;
+import com.signity.shopkeeperapp.util.PrefManager;
 import com.signity.shopkeeperapp.util.ProgressDialogUtil;
 import com.signity.shopkeeperapp.util.Util;
 
@@ -57,7 +58,8 @@ public class LoginFragmentEmail extends Fragment implements View.OnClickListener
     private Button btnNext;
     private EditText edtEmail;
     private Button backButton;
-
+    PrefManager prefManager;
+    String deviceToken;
 
     public static Fragment newInstance(Context context) {
         return Fragment.instantiate(context,
@@ -68,6 +70,7 @@ public class LoginFragmentEmail extends Fragment implements View.OnClickListener
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        prefManager = new PrefManager(getActivity());
     }
 
     @Override
@@ -97,13 +100,15 @@ public class LoginFragmentEmail extends Fragment implements View.OnClickListener
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
+        prefManager=new PrefManager(getActivity());
         if (Util.loadPreferenceValue(getActivity(), Constant.DEVICE_TOKEN).equalsIgnoreCase("") || Util.loadPreferenceValue(getActivity(), Constant.DEVICE_TOKEN).equalsIgnoreCase(null)) {
-            processForDeviceToken();
+            //   processForDeviceToken();
+            deviceToken = prefManager.getSharedValue(Constant.DEVICE_TOKEN);
         }
 
     }
 
-    private void processForDeviceToken() {
+   /* private void processForDeviceToken() {
 
         if (checkPlayServices()) {
             // Start IntentService to register this application with GCM.
@@ -131,7 +136,7 @@ public class LoginFragmentEmail extends Fragment implements View.OnClickListener
             }
         };
     }
-
+*/
 
     private void processStart() {
         String email = edtEmail.getText().toString();
@@ -168,6 +173,7 @@ public class LoginFragmentEmail extends Fragment implements View.OnClickListener
         String deviceId = Settings.Secure.getString(getActivity().getApplicationContext().getContentResolver(), Settings.Secure.ANDROID_ID);
         //String deviceToken = pushClientManager.getRegistrationId(getActivity());
         String deviceToken = Util.loadPreferenceValue(getActivity(), Constant.DEVICE_TOKEN);
+        Log.i("@@Device_token_Email", "" + deviceToken);
         Map<String, String> param = new HashMap<String, String>();
         param.put("mobile", phone);
         param.put("device_id", deviceId);

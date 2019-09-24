@@ -44,6 +44,9 @@ public class MyApplication extends Application implements Application.ActivityLi
 
     @Override
     public void onActivityPaused(Activity activity) {
+        prefManager.storeBoolean("applicationOnPause",true);
+        Log.e("","onActivityPaused "+activity.getClass());
+
         prefManager.setApplicationVisibleState(false);
 //        Log.e("", "onActivityPaused " + activity.getClass());
 
@@ -51,6 +54,8 @@ public class MyApplication extends Application implements Application.ActivityLi
 
     @Override
     public void onActivityResumed(Activity activity) {
+        prefManager.storeBoolean("applicationOnPause",false);
+        Log.e("","onActivityResumed "+activity.getClass());
         prefManager.setApplicationVisibleState(true);
 //        Log.e("", "onActivityResumed " + activity.getClass());
 
@@ -73,4 +78,6 @@ public class MyApplication extends Application implements Application.ActivityLi
 //        Log.e("", "onActivityStopped");
 
     }
+
+
 }

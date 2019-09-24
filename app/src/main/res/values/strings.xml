@@ -5,12 +5,17 @@
     <string name="cancel">Cancel</string>
     <string name="ok">Ok</string>
     <string name="title_activity_rejected_items_list">RejectedItemsListActivity</string>
-    <string name="gcm_defaultSenderId">453682303477</string>
+   <!-- <string name="gcm_defaultSenderId">453682303477</string>-->
     <string name="text_rs">\u20B9</string>
     <string name="title_activity_manage_volume">ManageVolumeActivity</string>
     <string name="title_activity_log_in_options">LogInOptionsActivity</string>
     <string name="title_activity_log_in_with_email">LogInWithEmailActivity</string>
     <string name="title_activity_change_password">ChangePasswordActivity</string>
     <string name="title_activity_setting">StoreSettingActivity</string>
+    <string name="str_lbl_ok">OK</string>
+    <string name="layout_notification_detail_yes">Yes</string>
+    <string name="layout_notification_detail_no">No</string>
+    <string name="layout_notification_detail_confirm">Message</string>
+    <string name="dialog_title">Message</string>
 
 </resources>

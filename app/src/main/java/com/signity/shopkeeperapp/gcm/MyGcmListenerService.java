@@ -12,7 +12,8 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- */
+ *//*
+
 
 package com.signity.shopkeeperapp.gcm;
 
@@ -39,13 +40,15 @@ public class MyGcmListenerService extends GcmListenerService {
 
     private static final String TAG = "MyGcmListenerService";
 
-    /**
+    */
+/**
      * Called when message is received.
      *
      * @param from SenderID of the sender.
      * @param data Data bundle containing message data as key/value pairs.
      *             For Set of keys use data.keySet().
-     */
+     *//*
+
     // [START receive_message]
     @Override
     public void onMessageReceived(String from, Bundle data) {
@@ -69,11 +72,13 @@ public class MyGcmListenerService extends GcmListenerService {
 
     // [END receive_message]
 
-    /**
+    */
+/**
      * Create and show a simple notification containing the received GCM message.
      *
      * @param message GCM message received.
-     */
+     *//*
+
     private void sendNotification(String title, String message) {
         PrefManager prefManager = new PrefManager(this);
         Intent intent = null;
@@ -83,7 +88,9 @@ public class MyGcmListenerService extends GcmListenerService {
             intent = new Intent(this, SplashActivity.class);
         }
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-        PendingIntent pendingIntent = PendingIntent.getActivity(this, 0 /* Request code */, intent,
+        PendingIntent pendingIntent = PendingIntent.getActivity(this, 0 */
+/* Request code *//*
+, intent,
                 PendingIntent.FLAG_ONE_SHOT);
 
         int icon = R.mipmap.ic_launcher;
@@ -104,7 +111,9 @@ public class MyGcmListenerService extends GcmListenerService {
         NotificationManager notificationManager =
                 (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
 
-        notificationManager.notify(0 /* ID of notification */, notificationBuilder.build());
+        notificationManager.notify(0 */
+/* ID of notification *//*
+, notificationBuilder.build());
     }
 
     private void setupLocalNotificationDueOrder() {
@@ -126,3 +135,4 @@ public class MyGcmListenerService extends GcmListenerService {
         prefManager.setDueOrderLocalNotiCount(0);
     }
 }
+*/
