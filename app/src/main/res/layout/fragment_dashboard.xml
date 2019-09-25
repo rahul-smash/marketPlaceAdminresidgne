@@ -63,7 +63,7 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
-                android:layout_weight="30"
+                android:layout_weight="31"
                 android:orientation="horizontal">
 
                 <RelativeLayout
@@ -73,7 +73,7 @@
                     android:layout_marginRight="1dp"
                     android:layout_weight="50"
                     android:paddingBottom="5dp"
-                    android:paddingTop="5dp">
+                    android:paddingTop="3dp">
 
                     <ImageView
                         android:id="@+id/imageDueOrders"
@@ -88,7 +88,7 @@
                         android:layout_height="wrap_content"
                         android:layout_below="@+id/imageDueOrders"
                         android:layout_centerHorizontal="true"
-                        android:layout_marginTop="5dp"
+                        android:layout_marginTop="3dp"
                         android:text="Due Orders"
                         android:textAppearance="?android:attr/textAppearanceMedium"
                         android:textColor="@color/color_text_dashboar_lbl2"
@@ -100,7 +100,7 @@
                         android:layout_height="wrap_content"
                         android:layout_below="@+id/labelDueOrder"
                         android:layout_centerHorizontal="true"
-                        android:layout_marginTop="5dp"
+                        android:layout_marginTop="3dp"
                         android:text="1"
                         android:textAppearance="?android:attr/textAppearanceMedium"
                         android:textColor="@color/color_text_dashboar_lbl2"
@@ -129,19 +129,20 @@
                         android:layout_height="wrap_content"
                         android:layout_below="@+id/imageActiveOrders"
                         android:layout_centerHorizontal="true"
-                        android:layout_marginTop="5dp"
+                        android:layout_marginTop="3dp"
                         android:text="Active Orders"
                         android:textAppearance="?android:attr/textAppearanceMedium"
                         android:textColor="@color/color_text_dashboar_lbl2"
                         android:textSize="@dimen/text_xlarge" />
 
                     <TextView
+                        android:paddingBottom="1dp"
                         android:id="@+id/activeOrder"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_below="@+id/labelActiveOrder"
                         android:layout_centerHorizontal="true"
-                        android:layout_marginTop="5dp"
+                        android:layout_marginTop="3dp"
                         android:text="1"
                         android:textAppearance="?android:attr/textAppearanceMedium"
                         android:textColor="@color/color_text_dashboar_lbl2"
@@ -159,9 +160,10 @@
                 android:layerType="software" />
 
             <RelativeLayout
+                android:layout_marginTop="2dp"
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
-                android:layout_weight="35"
+                android:layout_weight="34"
                 android:paddingBottom="5dp"
                 android:paddingTop="5dp">
 

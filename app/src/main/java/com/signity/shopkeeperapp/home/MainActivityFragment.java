@@ -180,7 +180,7 @@ public class MainActivityFragment extends Fragment implements View.OnClickListen
     public void setDashBoardValues(DashBoardModelDetail dashBoardValues) {
 
         String currency = Util.getCurrency(getActivity());
-
+        Log.i("@@setDashBoardValues", "" + currency + "" + dashBoardValues.getOutstanding());
         mOutstandingPayment.setText(currency + "" + dashBoardValues.getOutstanding());
         mDueOrders.setText("" + dashBoardValues.getDueOrders());
         mActiveOrders.setText("" + dashBoardValues.getActiveOrders());
