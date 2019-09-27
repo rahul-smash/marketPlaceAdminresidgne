@@ -90,6 +90,7 @@ public class RvActiveOrderAdapter extends RecyclerView.Adapter<RvActiveOrderAdap
 //        totalPrice = ((itemsPrice + order.getShippingCharges()) - order.getDiscount()) + order.getTax();
         holder.txtTotalAmount.setText(Util.getCurrency(context) + Util.getDoubleValue(order.getTotal()));
             String dateStr = order.getTime();
+
             DateFormat df = new SimpleDateFormat("dd MMM yyyy HH:mm",Locale.US);
         Date date = null;
         try {
