@@ -248,6 +248,7 @@ public class MainActivityFragment extends Fragment implements View.OnClickListen
         NetworkAdaper.getInstance().getNetworkServices().forceDownload(new Callback<ResponseForceUpdate>() {
             @Override
             public void success(ResponseForceUpdate responseForceUpdate, Response response) {
+                Log.i("@@callForceUpdatApi",""+responseForceUpdate);
                 if (responseForceUpdate != null && responseForceUpdate.getSuccess()) {
                     try {
                         ModelForceUpdate forceUpdate = responseForceUpdate.getData().get(0);
@@ -277,7 +278,11 @@ public class MainActivityFragment extends Fragment implements View.OnClickListen
             if (playStoreVersion != null && !playStoreVersion.isEmpty()) {
                 try {
                     double playVersion = Double.parseDouble(playStoreVersion);
+
                     double appVersion = Double.parseDouble(currentVersion);
+                    Log.i("@@playversion",""+playVersion);
+                    Log.i("@@appVersion",""+appVersion);
+
                     if (playVersion > appVersion) {
                         openDialogForVersion(forceUpdate);
                     }
@@ -324,6 +329,7 @@ public class MainActivityFragment extends Fragment implements View.OnClickListen
 
     private void openPlayStoreLink() {
         final String appPackageName = BuildConfig.APPLICATION_ID; // getPackageName() from Context or Activity object
+        Log.i("@@openPlayStoreLink",""+appPackageName);
         try {
             startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id=" + appPackageName)));
         } catch (android.content.ActivityNotFoundException anfe) {

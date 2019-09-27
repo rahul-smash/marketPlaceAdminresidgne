@@ -2,6 +2,7 @@ package com.signity.shopkeeperapp.adapter;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,7 +13,14 @@ import com.signity.shopkeeperapp.R;
 import com.signity.shopkeeperapp.model.OrdersListModel;
 import com.signity.shopkeeperapp.util.Util;
 
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
+import java.util.Locale;
+import java.util.TimeZone;
 
 /**
  * Created by rajesh on 27/6/16.
@@ -81,6 +89,23 @@ public class RvActiveOrderAdapter extends RecyclerView.Adapter<RvActiveOrderAdap
 //        }
 //        totalPrice = ((itemsPrice + order.getShippingCharges()) - order.getDiscount()) + order.getTax();
         holder.txtTotalAmount.setText(Util.getCurrency(context) + Util.getDoubleValue(order.getTotal()));
+            String dateStr = order.getTime();
+            DateFormat df = new SimpleDateFormat("dd MMM yyyy HH:mm",Locale.US);
+        Date date = null;
+        try {
+            date = df.parse(dateStr);
+            Log.i("@@TimeZone",""+date);
+
+            Log.i("@@TimeZone",""+TimeZone.getTimeZone("America/Adak"));
+            df.setTimeZone(TimeZone.getTimeZone("America/Adak"));;
+            String formattedDate = df.format(date);
+            Log.i("@@Order_getTime", "" + formattedDate);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+
+
+        Log.i("@@Order_getTime", "" + order.getTime());
         holder.txtTime.setText(order.getTime());
         if (order.getStatus().equalsIgnoreCase("1")) {
             holder.status.setText("Processing");
