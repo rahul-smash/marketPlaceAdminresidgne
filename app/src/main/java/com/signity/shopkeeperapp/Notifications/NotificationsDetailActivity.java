@@ -25,7 +25,7 @@ public class NotificationsDetailActivity extends Activity implements View.OnClic
         setContentView(R.layout.activity_notifications_detail);
         //android O fix bug orientation
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.O) {
-            Log.i("@@NotificationsDetailActivity","AddressSelectActivity");
+            Log.i("@@NotificatDetailActi","AddressSelectActivity");
             setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
         }
         this.setFinishOnTouchOutside(false);

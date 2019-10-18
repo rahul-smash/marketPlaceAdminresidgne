@@ -30,6 +30,7 @@ import com.signity.shopkeeperapp.util.Constant;
 import com.signity.shopkeeperapp.util.DialogHandler;
 import com.signity.shopkeeperapp.util.DialogUtils;
 import com.signity.shopkeeperapp.util.FontUtil;
+import com.signity.shopkeeperapp.util.PrefManager;
 import com.signity.shopkeeperapp.util.ProgressDialogUtil;
 import com.signity.shopkeeperapp.util.Util;
 
@@ -52,6 +53,7 @@ public class ManageStoresFragment extends Fragment {
     TextView noDataFound;
     StoresListAdapter adapter;
     String phone_number = "";
+    PrefManager prefManager;
 
     public static Fragment newInstance(Context context) {
         Bundle args = new Bundle();
@@ -64,7 +66,7 @@ public class ManageStoresFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
         rootView = inflater.inflate(R.layout.fragment_layout_manage_stores, container, false);
-
+        prefManager = new PrefManager(getActivity());
         initialization();
 
         getActivity().getWindow().setSoftInputMode(
@@ -102,7 +104,9 @@ public class ManageStoresFragment extends Fragment {
         String phone = phone_number;
         String deviceId = Settings.Secure.getString(getActivity().getApplicationContext().getContentResolver(), Settings.Secure.ANDROID_ID);
 //        String deviceToken = pushClientManager.getRegistrationId(getActivity());
-        String deviceToken = Util.loadPreferenceValue(getActivity(), Constant.DEVICE_TOKEN);
+        //String deviceToken = Util.loadPreferenceValue(getActivity(), Constant.DEVICE_TOKEN);
+        String deviceToken = prefManager.getSharedValue(Constant.DEVICE_TOKEN);
+
         Map<String, String> param = new HashMap<String, String>();
         param.put("device_id", deviceId);
         param.put("device_token", deviceToken);

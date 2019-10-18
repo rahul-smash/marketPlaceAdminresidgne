@@ -80,7 +80,6 @@ public class CustomerAdapter extends BaseAdapter implements Filterable {
         holder.parent.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
                 Intent custDetailIntent = new Intent(context, CustomerActivity.class);
                 custDetailIntent.putExtra("name", list.get(position).getFullName());
                 custDetailIntent.putExtra("id", list.get(position).getId());

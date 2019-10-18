@@ -24,6 +24,7 @@ import com.signity.shopkeeperapp.model.OtpVerifyModel;
 import com.signity.shopkeeperapp.network.NetworkAdaper;
 import com.signity.shopkeeperapp.util.AnimUtil;
 import com.signity.shopkeeperapp.util.Constant;
+import com.signity.shopkeeperapp.util.PrefManager;
 import com.signity.shopkeeperapp.util.ProgressDialogUtil;
 import com.signity.shopkeeperapp.util.Util;
 
@@ -46,7 +47,7 @@ public class LoginFragmentOtp extends Fragment implements View.OnClickListener {
     String role;
     String name;
     String email;
-
+PrefManager prefManager;
     boolean isEmailExist = false, isNameExist = false;
 
     public static Button btnDone, backButton;
@@ -60,6 +61,7 @@ public class LoginFragmentOtp extends Fragment implements View.OnClickListener {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        prefManager=new PrefManager(getActivity());
         Bundle bundle = getArguments();
         id = bundle.getString("id");
         phone = bundle.getString("phone");
@@ -129,7 +131,8 @@ public class LoginFragmentOtp extends Fragment implements View.OnClickListener {
         edtOTp.setText("");
         String deviceId = Settings.Secure.getString(getActivity().getApplicationContext().getContentResolver(), Settings.Secure.ANDROID_ID);
         //String deviceToken = pushClientManager.getRegistrationId(getActivity());
-        String deviceToken = Util.loadPreferenceValue(getActivity(), Constant.DEVICE_TOKEN);
+      //  String deviceToken = Util.loadPreferenceValue(getActivity(), Constant.DEVICE_TOKEN);
+        String deviceToken=prefManager.getSharedValue(Constant.DEVICE_TOKEN);
         Map<String, String> param = new HashMap<String, String>();
         param.put("phone", phone);
         param.put("device_id", deviceId);

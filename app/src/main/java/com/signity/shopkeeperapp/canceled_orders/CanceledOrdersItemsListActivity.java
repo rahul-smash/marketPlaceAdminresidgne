@@ -16,7 +16,6 @@ import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.ToggleButton;
-
 import com.signity.shopkeeperapp.R;
 import com.signity.shopkeeperapp.model.ItemListModel;
 import com.signity.shopkeeperapp.model.OrdersListModel;

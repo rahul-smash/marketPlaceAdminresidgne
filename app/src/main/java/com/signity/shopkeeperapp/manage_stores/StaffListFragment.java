@@ -24,6 +24,7 @@ import com.signity.shopkeeperapp.model.GetStaffResponse;
 import com.signity.shopkeeperapp.network.NetworkAdaper;
 import com.signity.shopkeeperapp.util.Constant;
 import com.signity.shopkeeperapp.util.FontUtil;
+import com.signity.shopkeeperapp.util.PrefManager;
 import com.signity.shopkeeperapp.util.ProgressDialogUtil;
 import com.signity.shopkeeperapp.util.Util;
 
@@ -46,6 +47,7 @@ public class StaffListFragment extends Fragment implements View.OnClickListener 
     TextView textViewTitle, textViewNoStaff;
     ListStaffAdapter adapter;
     List<GetStaffDataModel> listData;
+    PrefManager prefManager;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -62,6 +64,7 @@ public class StaffListFragment extends Fragment implements View.OnClickListener 
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View rootView;
         rootView = inflater.inflate(R.layout.fragment_staff_list, container, false);
+        prefManager = new PrefManager(getActivity());
         listViewStaff = (ListView) rootView.findViewById(R.id.listStaff);
         buttonBack = (Button) rootView.findViewById(R.id.backButton);
         buttonAddStaff = (Button) rootView.findViewById(R.id.addUser);
@@ -82,8 +85,8 @@ public class StaffListFragment extends Fragment implements View.OnClickListener 
         ProgressDialogUtil.showProgressDialog(getActivity());
         String deviceId = Settings.Secure.getString(getActivity().getApplicationContext().getContentResolver(), Settings.Secure.ANDROID_ID);
         //String deviceToken = pushClientManager.getRegistrationId(getActivity());
-        String deviceToken = Util.loadPreferenceValue(getActivity(), Constant.DEVICE_TOKEN);
-
+        //  String deviceToken = Util.loadPreferenceValue(getActivity(), Constant.DEVICE_TOKEN);
+        String deviceToken = prefManager.getSharedValue(Constant.DEVICE_TOKEN);
         String storeId = Util.loadPreferenceValue(getActivity(), Constant.STORE_ID);
         String mobile = Util.loadPreferenceValue(getActivity(), Constant.LOGIN_USER_MOBILE_NUMBER);
         Map<String, String> param = new HashMap<String, String>();

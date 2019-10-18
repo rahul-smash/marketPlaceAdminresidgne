@@ -22,6 +22,7 @@ import com.signity.shopkeeperapp.model.GetStaffResponse;
 import com.signity.shopkeeperapp.network.NetworkAdaper;
 import com.signity.shopkeeperapp.util.Constant;
 import com.signity.shopkeeperapp.util.DialogHandler;
+import com.signity.shopkeeperapp.util.PrefManager;
 import com.signity.shopkeeperapp.util.ProgressDialogUtil;
 import com.signity.shopkeeperapp.util.Util;
 
@@ -48,11 +49,12 @@ public class AddStaffFragment extends Fragment implements View.OnClickListener {
     boolean isEdit;
 
     String status = "active";
+    PrefManager prefManager;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
+        prefManager = new PrefManager(getActivity());
         Bundle bundle = getArguments();
         getStaffDataModel = (GetStaffDataModel) bundle.getSerializable("data");
         if (getStaffDataModel != null) {
@@ -177,7 +179,8 @@ public class AddStaffFragment extends Fragment implements View.OnClickListener {
 
         String deviceId = Settings.Secure.getString(getActivity().getApplicationContext().getContentResolver(), Settings.Secure.ANDROID_ID);
         //String deviceToken = pushClientManager.getRegistrationId(getActivity());
-        String deviceToken = Util.loadPreferenceValue(getActivity(), Constant.DEVICE_TOKEN);
+        //  String deviceToken = Util.loadPreferenceValue(getActivity(), Constant.DEVICE_TOKEN);
+        String deviceToken = prefManager.getSharedValue(Constant.DEVICE_TOKEN);
         String platform = Constant.PLATFORM;
 
         String storeId = Util.loadPreferenceValue(getActivity(), Constant.STORE_ID);
@@ -247,7 +250,8 @@ public class AddStaffFragment extends Fragment implements View.OnClickListener {
 
         String deviceId = Settings.Secure.getString(getActivity().getApplicationContext().getContentResolver(), Settings.Secure.ANDROID_ID);
         //String deviceToken = pushClientManager.getRegistrationId(getActivity());
-        String deviceToken = Util.loadPreferenceValue(getActivity(), Constant.DEVICE_TOKEN);
+        //  String deviceToken = Util.loadPreferenceValue(getActivity(), Constant.DEVICE_TOKEN);
+        String deviceToken = prefManager.getSharedValue(Constant.DEVICE_TOKEN);
         String platform = Constant.PLATFORM;
 
         String storeId = Util.loadPreferenceValue(getActivity(), Constant.STORE_ID);

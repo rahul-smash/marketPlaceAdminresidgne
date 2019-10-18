@@ -101,8 +101,11 @@ public class LoginFragmentEmail extends Fragment implements View.OnClickListener
     public void onAttach(Context context) {
         super.onAttach(context);
         prefManager=new PrefManager(getActivity());
-        if (Util.loadPreferenceValue(getActivity(), Constant.DEVICE_TOKEN).equalsIgnoreCase("") || Util.loadPreferenceValue(getActivity(), Constant.DEVICE_TOKEN).equalsIgnoreCase(null)) {
-            //   processForDeviceToken();
+       // if (Util.loadPreferenceValue(getActivity(), Constant.DEVICE_TOKEN).equalsIgnoreCase("") || Util.loadPreferenceValue(getActivity(), Constant.DEVICE_TOKEN).equalsIgnoreCase(null)) {
+            if (prefManager.getSharedValue(Constant.DEVICE_TOKEN).equalsIgnoreCase("") || prefManager.getSharedValue(Constant.DEVICE_TOKEN).equalsIgnoreCase(null)) {
+
+
+                //   processForDeviceToken();
             deviceToken = prefManager.getSharedValue(Constant.DEVICE_TOKEN);
         }
 

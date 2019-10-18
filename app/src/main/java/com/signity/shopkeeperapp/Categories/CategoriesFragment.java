@@ -56,9 +56,6 @@ public class CategoriesFragment extends Fragment {
 
     View rootView;
 
-
-
-
     public static Fragment newInstance(Context context) {
         Bundle args = new Bundle();
         return Fragment.instantiate(context,
@@ -70,7 +67,6 @@ public class CategoriesFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
         rootView = inflater.inflate(R.layout.category_fragment, container, false);
-
 
 
         initialization();
@@ -99,14 +95,6 @@ public class CategoriesFragment extends Fragment {
             DialogUtils.showAlertDialog(getActivity(), "Internet", "Please check your Internet Connection.");
         }
     }
-
-
-
-
-
-
-
-
 
 
 }

@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.provider.Settings;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -284,7 +285,9 @@ public class LoginFragmentStoresListing extends Fragment implements View.OnClick
         ProgressDialogUtil.showProgressDialog(getActivity());
         String deviceId = Settings.Secure.getString(getActivity().getApplicationContext().getContentResolver(), Settings.Secure.ANDROID_ID);
         //String deviceToken = pushClientManager.getRegistrationId(getActivity());
-        String deviceToken = Util.loadPreferenceValue(getActivity(), Constant.DEVICE_TOKEN);
+      //  String deviceToken = Util.loadPreferenceValue(getActivity(), Constant.DEVICE_TOKEN);
+        String deviceToken=prefManager.getSharedValue(Constant.DEVICE_TOKEN);
+        Log.i("@@deviceToken",deviceToken);
         String email = prefManager.getSharedValue(Constant.LOGIN_USER_EMAIL_ID);
         String pass = password;
         Map<String, String> param = new HashMap<String, String>();
@@ -363,7 +366,10 @@ public class LoginFragmentStoresListing extends Fragment implements View.OnClick
         ProgressDialogUtil.showProgressDialog(getActivity());
         String deviceId = Settings.Secure.getString(getActivity().getApplicationContext().getContentResolver(), Settings.Secure.ANDROID_ID);
         //String deviceToken = pushClientManager.getRegistrationId(getActivity());
-        String deviceToken = Util.loadPreferenceValue(getActivity(), Constant.DEVICE_TOKEN);
+     //   String deviceToken = Util.loadPreferenceValue(getActivity(), Constant.DEVICE_TOKEN);
+        String deviceToken =prefManager.getSharedValue(Constant.DEVICE_TOKEN);
+        Log.i("@@deviceToken",deviceToken);
+
         Map<String, String> param = new HashMap<String, String>();
         param.put("phone", phone);
         param.put("device_id", deviceId);

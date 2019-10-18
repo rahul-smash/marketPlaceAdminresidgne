@@ -23,7 +23,6 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
 import com.signity.shopkeeperapp.R;
@@ -160,7 +159,9 @@ public class LoginFragmentMobile extends Fragment implements View.OnClickListene
         String deviceId = Settings.Secure.getString(getActivity().getApplicationContext().getContentResolver(), Settings.Secure.ANDROID_ID);
         //String deviceToken = pushClientManager.getRegistrationId(getActivity());
        // deviceToken = prefManager.getSharedValue(Constant.DEVICE_TOKEN);
-        String deviceToken = Util.loadPreferenceValue(getActivity(), Constant.DEVICE_TOKEN);
+      //  String deviceToken = Util.loadPreferenceValue(getActivity(), Constant.DEVICE_TOKEN);
+        String deviceToken = prefManager.getSharedValue(Constant.DEVICE_TOKEN);
+
         // deviceToken = Util.loadPreferenceValue(getActivity(), prefManager.getSharedValue(Constant.DEVICE_TOKEN));
         Log.i("@@getAdminStores", deviceToken);
         Map<String, String> param = new HashMap<String, String>();

@@ -629,7 +629,8 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
 
     private void clearSharedPref() {
         Util.savePreferenceValue(com.signity.shopkeeperapp.home.MainActivity.this, Constant.LOGIN_CHECK, "0");
-        Util.savePreferenceValue(this, Constant.DEVICE_TOKEN, "");
+        //Util.savePreferenceValue(this, Constant.DEVICE_TOKEN, "");
+        prefManager.getSharedValue(Constant.DEVICE_TOKEN);
         Util.savePreferenceValue(this, Constant.STORE_ID, "");
         Util.savePreferenceValue(this, Constant.STAFF_ADMIN_ID, "");
         Util.savePreferenceValue(this, Constant.IS_ADMIN, "");
