@@ -15,7 +15,6 @@ import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-
 import com.signity.shopkeeperapp.R;
 import com.signity.shopkeeperapp.model.GetStaffDataModel;
 import com.signity.shopkeeperapp.model.GetStaffResponse;
@@ -25,10 +24,8 @@ import com.signity.shopkeeperapp.util.DialogHandler;
 import com.signity.shopkeeperapp.util.PrefManager;
 import com.signity.shopkeeperapp.util.ProgressDialogUtil;
 import com.signity.shopkeeperapp.util.Util;
-
 import java.util.HashMap;
 import java.util.Map;
-
 import retrofit.Callback;
 import retrofit.RetrofitError;
 import retrofit.client.Response;

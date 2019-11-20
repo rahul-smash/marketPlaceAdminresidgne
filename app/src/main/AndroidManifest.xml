@@ -13,8 +13,7 @@
         android:protectionLevel="signature" />
 
     <uses-permission android:name="com.signity.shopkeeperapp.permission.C2D_MESSAGE" />
-    <uses-permission android:name="android.permission.RECEIVE_SMS" />
-    <uses-permission android:name="android.permission.READ_SMS" />
+
 
     <application
         android:name=".app.MyApplication"

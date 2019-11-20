@@ -77,7 +77,6 @@ public class DueOrderAdapter extends BaseAdapter {
             holder.txtCustTime = (TextView) convertView.findViewById(R.id.valTime);
             holder.txtCustTime.setTypeface(FontUtil.getTypeface(context, FontUtil.FONT_ROBOTO_REGULAR));
             holder.parent = (RelativeLayout) convertView.findViewById(R.id.parent);
-
             holder.txtLblOdrId = (TextView) convertView.findViewById(R.id.txtLblOdrId);
             holder.txtLblOdrId.setTypeface(FontUtil.getTypeface(context, FontUtil.FONT_ROBOTO_REGULAR));
             holder.txtLblCustName = (TextView) convertView.findViewById(R.id.txtLblCustName);

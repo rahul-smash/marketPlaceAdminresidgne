@@ -11,12 +11,10 @@ import android.widget.Filter;
 import android.widget.Filterable;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-
 import com.signity.shopkeeperapp.R;
 import com.signity.shopkeeperapp.customer.CustomerActivity;
 import com.signity.shopkeeperapp.model.UserModel;
 import com.signity.shopkeeperapp.util.AnimUtil;
-
 import java.util.List;
 
 /**
