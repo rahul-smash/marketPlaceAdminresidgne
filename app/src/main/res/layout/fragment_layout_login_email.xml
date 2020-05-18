@@ -55,6 +55,7 @@
     </RelativeLayout>
 
     <TextView
+        android:layout_centerInParent="true"
         android:id="@+id/textLbl2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -86,10 +87,11 @@
         android:textColorHint="@color/color_white" />
 
     <Button
+
         android:id="@+id/btnNext"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/edtPhone"
+        android:layout_below="@+id/edtEmail"
         android:layout_centerHorizontal="true"
         android:layout_centerVertical="true"
         android:layout_marginBottom="5dp"

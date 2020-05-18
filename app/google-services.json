@@ -6,19 +6,20 @@
     "storage_bucket": "valueapps-6c7fd.appspot.com"
   },
   "client": [
+
     {
       "client_info": {
-        "mobilesdk_app_id": "1:430236525670:android:be269d95f5c837e75c79a7",
+        "mobilesdk_app_id": "1:430236525670:android:cfa8e23c9e2e8b005c79a7",
         "android_client_info": {
-          "package_name": "com.signity.valueapps"
+          "package_name": "com.signity.valueadminrestro"
         }
       },
       "oauth_client": [
         {
-          "client_id": "430236525670-pthq3g4qttrjsha9pdhbd17lfaqofosg.apps.googleusercontent.com",
+          "client_id": "430236525670-lr5risoq3p4vdqbkmioek5bg245qs8bj.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
-            "package_name": "com.signity.valueapps",
+            "package_name": "com.signity.valueadminrestro",
             "certificate_hash": "eae6951cb4a3e5605bb8696e32a1bc1fd78a68d9"
           }
         },

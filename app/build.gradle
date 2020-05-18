@@ -6,7 +6,7 @@ android {
 
     defaultConfig {
        // applicationId 'com.signity.valueappz'
-        applicationId 'com.signity.valueapps'
+        applicationId 'com.signity.valueadminrestro'
 
         minSdkVersion 16
         targetSdkVersion 28
