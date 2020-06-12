@@ -1,5 +1,7 @@
 package com.signity.shopkeeperapp.util;
 
+import android.Manifest;
+
 /**
  * Created by rajesh on 30/9/15.
  */
@@ -55,5 +57,11 @@ public class Constant {
 
     public static final String APP_NOTIFICATION_URL = "com.signity.shopkeeperapp.APP_NOTIFICATION_URL";
     public static final String APP_STATE_VISIBLE = "com.signity.shopkeeperapp.APP_STATE_VISIBLE";
+    public static final String CAMERA = Manifest.permission.CAMERA;
+    public static final String CALENDAR = Manifest.permission.WRITE_CALENDAR;
+    public static final String READ_SDCARD = Manifest.permission.READ_EXTERNAL_STORAGE;
+    public static final String WRITE_SDCARD = Manifest.permission.WRITE_EXTERNAL_STORAGE;
+    public static final String CALL = Manifest.permission.CALL_PHONE;
+
 
 }

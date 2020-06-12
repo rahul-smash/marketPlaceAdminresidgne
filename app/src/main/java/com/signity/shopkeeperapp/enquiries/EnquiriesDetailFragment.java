@@ -3,6 +3,7 @@ package com.signity.shopkeeperapp.enquiries;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -12,11 +13,14 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.signity.shopkeeperapp.R;
 import com.signity.shopkeeperapp.util.AnimUtil;
 import com.signity.shopkeeperapp.util.DialogUtils;
 import com.signity.shopkeeperapp.util.Util;
+
+import static android.content.Intent.ACTION_DIAL;
 
 /**
  * Created by rajesh on 24/12/15.
@@ -174,12 +178,27 @@ public class EnquiriesDetailFragment extends Fragment {
         });
         adb.show();
     }
-
     private void actionCall() {
+
+        try {
+            PackageManager pm = getContext().getPackageManager();
+            if (pm.hasSystemFeature(PackageManager.FEATURE_TELEPHONY)) {
+                Intent intent = new Intent(ACTION_DIAL);
+                intent.setData(Uri.parse("tel:" + phoneNumber));
+                startActivity(intent);
+                AnimUtil.slideFromRightAnim(getActivity());
+            } else {
+                Toast.makeText(getActivity(), "Your device is not supporting any calling feature", Toast.LENGTH_SHORT).show();
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+  /*  private void actionCall() {
         Intent callIntent = new Intent(Intent.ACTION_CALL);
         callIntent.setData(Uri.parse("tel:" + phoneNumber));
         startActivity(callIntent);
         AnimUtil.slideFromLeftAnim(getActivity());
-    }
+    }*/
 
 }

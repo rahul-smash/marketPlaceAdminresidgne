@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -15,6 +16,7 @@ import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 import android.widget.ToggleButton;
 
 import com.signity.shopkeeperapp.R;
@@ -27,6 +29,8 @@ import com.signity.shopkeeperapp.util.Util;
 import com.squareup.picasso.Picasso;
 
 import java.util.List;
+
+import static android.content.Intent.ACTION_DIAL;
 
 public class RejectedItemsListActivity extends Activity implements View.OnClickListener {
 
@@ -173,13 +177,28 @@ public class RejectedItemsListActivity extends Activity implements View.OnClickL
         adb.show();
     }
 
-    private void actionCall() {
+   /* private void actionCall() {
         Intent callIntent = new Intent(Intent.ACTION_CALL);
         callIntent.setData(Uri.parse("tel:" + phoneNumber));
         startActivity(callIntent);
         AnimUtil.slideFromLeftAnim(this);
-    }
+    }*/
+    private void actionCall() {
 
+        try {
+            PackageManager pm = getApplicationContext().getPackageManager();
+            if (pm.hasSystemFeature(PackageManager.FEATURE_TELEPHONY)) {
+                Intent intent = new Intent(ACTION_DIAL);
+                intent.setData(Uri.parse("tel:" + phoneNumber));
+                startActivity(intent);
+                AnimUtil.slideFromRightAnim(this);
+            } else {
+                Toast.makeText(getApplicationContext(), "Your device is not supporting any calling feature", Toast.LENGTH_SHORT).show();
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
     class RejectedOrderItemsAdapter extends BaseAdapter {
 
         Context context;

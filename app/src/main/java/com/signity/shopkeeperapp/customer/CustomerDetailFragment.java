@@ -3,6 +3,7 @@ package com.signity.shopkeeperapp.customer;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -13,6 +14,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.signity.shopkeeperapp.R;
 import com.signity.shopkeeperapp.app.DbAdapter;
@@ -33,6 +35,8 @@ import java.util.Map;
 import retrofit.Callback;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
+
+import static android.content.Intent.ACTION_DIAL;
 
 /**
  * Created by Rajinder on 28/9/15.
@@ -217,7 +221,7 @@ public class CustomerDetailFragment extends Fragment {
     public void setCutomerDetailValues(CustomerDetailModel cutomerDetailValues) {
         mTotalOrderValue.setText("" + cutomerDetailValues.getTotalOrders());
         mAmountPaidValue.setText(Util.getCurrency(getActivity()) + "" + cutomerDetailValues.getPaidAmount());
-        mActiveOrderValue.setText(""+cutomerDetailValues.getActiveOrders());
+        mActiveOrderValue.setText("" + cutomerDetailValues.getActiveOrders());
         mAmountDueValue.setText(Util.getCurrency(getActivity()) + "" + cutomerDetailValues.getDueAmount());
     }
 
@@ -251,9 +255,25 @@ public class CustomerDetailFragment extends Fragment {
     }
 
     private void actionCall() {
+
+        try {
+            PackageManager pm = getActivity().getPackageManager();
+            if (pm.hasSystemFeature(PackageManager.FEATURE_TELEPHONY)) {
+                Intent intent = new Intent(ACTION_DIAL);
+                intent.setData(Uri.parse("tel:" + phoneNumber));
+                startActivity(intent);
+                AnimUtil.slideFromRightAnim(getActivity());
+            } else {
+                Toast.makeText(getActivity(), "Your device is not supporting any calling feature", Toast.LENGTH_SHORT).show();
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+  /*  private void actionCall() {
         Intent callIntent = new Intent(Intent.ACTION_CALL);
         callIntent.setData(Uri.parse("tel:" + phoneNumber));
         startActivity(callIntent);
         AnimUtil.slideFromLeftAnim(getActivity());
+    }*/
     }
 }

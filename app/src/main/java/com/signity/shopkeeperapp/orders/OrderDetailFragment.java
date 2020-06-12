@@ -3,6 +3,7 @@ package com.signity.shopkeeperapp.orders;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -44,6 +45,8 @@ import java.util.Map;
 import retrofit.Callback;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
+
+import static android.content.Intent.ACTION_DIAL;
 
 /**
  * Created by Rajinder on 28/9/15.
@@ -273,10 +276,25 @@ public class OrderDetailFragment extends Fragment implements View.OnClickListene
     }
 
     private void actionCall() {
-        Intent callIntent = new Intent(Intent.ACTION_CALL);
+
+        try {
+            PackageManager pm = getActivity().getPackageManager();
+            if (pm.hasSystemFeature(PackageManager.FEATURE_TELEPHONY)) {
+                Intent intent = new Intent(ACTION_DIAL);
+                intent.setData(Uri.parse("tel:" + phoneNumber));
+                startActivity(intent);
+                AnimUtil.slideFromRightAnim(getActivity());
+            } else {
+                Toast.makeText(getActivity(), "Your device is not supporting any calling feature", Toast.LENGTH_SHORT).show();
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+      /*  Intent callIntent = new Intent(Intent.ACTION_CALL);
         callIntent.setData(Uri.parse("tel:" + phoneNumber));
         startActivity(callIntent);
-        AnimUtil.slideFromLeftAnim(getActivity());
+        AnimUtil.slideFromLeftAnim(getActivity());*/
     }
 
     public void handleBackButton(View rootView) {
