@@ -4,10 +4,10 @@
     android:layout_width="fill_parent"
     android:layout_height="wrap_content"
     android:layout_below="@+id/orderDtailsBlock"
-    android:layout_marginBottom="2dp"
     android:layout_marginLeft="2dp"
-    android:layout_marginRight="2dp"
     android:layout_marginTop="2dp"
+    android:layout_marginRight="2dp"
+    android:layout_marginBottom="2dp"
     android:background="@drawable/shape_order_details"
     android:paddingBottom="10dp"
     android:visibility="visible">
@@ -17,11 +17,11 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginLeft="10dp"
-        android:layout_marginRight="10dp"
         android:layout_marginTop="10dp"
+        android:layout_marginRight="10dp"
         android:background="@drawable/shape_order_details"
-        android:paddingBottom="5dp"
-        android:paddingTop="5dp">
+        android:paddingTop="5dp"
+        android:paddingBottom="5dp">
 
         <RelativeLayout
             android:id="@+id/addressLayout"
@@ -43,8 +43,8 @@
                 android:id="@+id/txtDeliveryAddress"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_alignParentLeft="true"
                 android:layout_below="@+id/lblAddress"
+                android:layout_alignParentLeft="true"
                 android:layout_marginLeft="5dp"
                 android:text="House no 328A, chandigarh"
                 android:textSize="16sp" />
@@ -72,8 +72,8 @@
                 android:id="@+id/txtNote"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_alignParentLeft="true"
                 android:layout_below="@+id/lblNote"
+                android:layout_alignParentLeft="true"
                 android:layout_marginLeft="5dp"
                 android:maxLines="3"
 
@@ -97,11 +97,11 @@
         android:layout_height="wrap_content"
         android:layout_below="@+id/sectionAddress"
         android:layout_marginLeft="10dp"
-        android:layout_marginRight="10dp"
         android:layout_marginTop="10dp"
+        android:layout_marginRight="10dp"
         android:background="@drawable/shape_order_details"
-        android:paddingBottom="5dp"
-        android:paddingTop="5dp">
+        android:paddingTop="5dp"
+        android:paddingBottom="5dp">
 
         <TextView
             android:id="@+id/items_price_text"
@@ -119,8 +119,8 @@
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
-            android:layout_marginRight="5dp"
             android:layout_marginTop="5dp"
+            android:layout_marginRight="5dp"
             android:layout_toRightOf="@+id/items_price_text"
             android:gravity="right">
 
@@ -137,8 +137,8 @@
             android:id="@+id/shipping_charges_text"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentLeft="true"
             android:layout_below="@id/items_price_text"
+            android:layout_alignParentLeft="true"
             android:layout_marginLeft="5dp"
             android:layout_marginTop="5dp"
             android:ems="7"
@@ -149,10 +149,10 @@
             android:id="@+id/shipping_layout"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:layout_alignParentRight="true"
             android:layout_below="@+id/price_layout"
-            android:layout_marginRight="5dp"
+            android:layout_alignParentRight="true"
             android:layout_marginTop="5dp"
+            android:layout_marginRight="5dp"
             android:layout_toRightOf="@+id/shipping_charges_text"
             android:gravity="right">
 
@@ -170,8 +170,8 @@
             android:id="@+id/discountLblText"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentLeft="true"
             android:layout_below="@id/shipping_charges_text"
+            android:layout_alignParentLeft="true"
             android:layout_marginLeft="5dp"
             android:layout_marginTop="5dp"
             android:ems="7"
@@ -182,10 +182,10 @@
             android:id="@+id/discount_layout"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:layout_alignParentRight="true"
             android:layout_below="@+id/shipping_layout"
-            android:layout_marginRight="5dp"
+            android:layout_alignParentRight="true"
             android:layout_marginTop="5dp"
+            android:layout_marginRight="5dp"
             android:layout_toRightOf="@+id/discountLblText"
             android:gravity="right">
 
@@ -238,4 +238,18 @@
 
         <!--</RelativeLayout>-->
     </RelativeLayout>
+
+    <Button
+        android:id="@+id/btnGuidMe"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/sectionAmountDetail"
+        android:layout_centerInParent="true"
+        android:layout_marginTop="5dp"
+        android:background="@drawable/shape_guide_me"
+        android:padding="2dp"
+        android:text="Guide Me"
+        android:textColor="#fff"
+        android:textSize="14sp"
+        android:visibility="visible" />
 </RelativeLayout>

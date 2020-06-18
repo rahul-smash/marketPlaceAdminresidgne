@@ -33,8 +33,8 @@ public interface ApiService {
     void getDashBoard(@FieldMap Map<String, String> parameters, Callback<DashBoardModel> response);
 
     @FormUrlEncoded
-    @POST("/storeCustomers")
-    void getCustomers(@FieldMap Map<String, String> parameters, Callback<CustomersModel> response);
+    @GET("/storeCustomers")
+    void getCustomers(Callback<CustomersModel> response);
 
     @FormUrlEncoded
     @POST("/getCustomer")

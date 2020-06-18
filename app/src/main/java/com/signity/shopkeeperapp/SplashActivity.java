@@ -74,20 +74,31 @@ public class SplashActivity extends Activity {
 
     private void startSplashModule() {
         if (!storeId.isEmpty() && !userId.isEmpty()) {
+            Log.i("startSplashModule_1","startSplashModule");
             if (isInternetConnected) {
+                Log.i("startSplashModule_2","startSplashModule");
+
                 checkForStaffValidationProcess();
             } else {
+                Log.i("startSplashModule_3","startSplashModule");
+
                 openHomeScreen();
             }
         } else {
             if (isInternetConnected) {
+                Log.i("startSplashModule_4","startSplashModule");
+
                 new Handler().postDelayed(new Runnable() {
                     @Override
                     public void run() {
+                        Log.i("startSplashModule_5","startSplashModule");
+
                         openLoginScreen();
                     }
                 }, 2000);
             } else {
+                Log.i("startSplashModule_6","startSplashModule");
+
                 openAlertForNoInternet();
             }
         }

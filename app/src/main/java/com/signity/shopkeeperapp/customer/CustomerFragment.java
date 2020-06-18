@@ -121,13 +121,13 @@ public class CustomerFragment extends Fragment {
     public void getCustomers() {
         ProgressDialogUtil.showProgressDialog(getActivity());
         Map<String, String> param = new HashMap<String, String>();
-        param.put("api_key", "123");
 
-        NetworkAdaper.getInstance().getNetworkServices().getCustomers(param, new Callback<CustomersModel>() {
+        NetworkAdaper.getInstance().getNetworkServices().getCustomers( new Callback<CustomersModel>() {
             @Override
             public void success(CustomersModel getCustomers, Response response) {
                 Log.e("Tab", getCustomers.toString());
                 if (getCustomers.getSuccess()) {
+
                     ProgressDialogUtil.hideProgressDialog();
                     if (getCustomers != null) {
                         if (getCustomers.getData().getCustomers().size() > 0) {

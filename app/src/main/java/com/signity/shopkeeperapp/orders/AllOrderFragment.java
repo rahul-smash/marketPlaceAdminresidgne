@@ -12,6 +12,7 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -87,6 +88,7 @@ public class AllOrderFragment extends Fragment implements RvActiveOrderAdapter.O
         super.onCreate(savedInstanceState);
         isRefreshRequire = "0";
         type = getArguments().getString("type");
+        Log.i("@@Type____",type);
         context = getActivity();
         prefManager = new PrefManager(getActivity());
         appDatabase = DbAdapter.getInstance().getDb();
@@ -108,6 +110,7 @@ public class AllOrderFragment extends Fragment implements RvActiveOrderAdapter.O
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_layout_all_order, container, false);
+        Log.i("@@AllOrderFragment","AllOrderFragment");
         recyclerView = (RecyclerView) rootView.findViewById(R.id.recyclerView);
         parent = (RelativeLayout) rootView.findViewById(R.id.parent);
         noDataFound = (TextView) rootView.findViewById(R.id.noDataFound);

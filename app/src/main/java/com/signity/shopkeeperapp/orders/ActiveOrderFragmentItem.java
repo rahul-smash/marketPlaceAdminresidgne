@@ -301,6 +301,7 @@ public class ActiveOrderFragmentItem extends Fragment implements View.OnClickLis
                 @Override
                 public void onClick(View view) {
                     if (type.equals(Constant.TYPE_APPROVE)) {
+                        Log.i("@@Log_2","Log_1");
 
                         onButtonClick(view, listOrder.get(position).getItems(), listOrder.get(position).getCustomerName(),
                                 listOrder.get(position).getPhone(), listOrder.get(position).getOrderId(),
@@ -308,7 +309,7 @@ public class ActiveOrderFragmentItem extends Fragment implements View.OnClickLis
                                 , listOrder.get(position).getTotal(), listOrder.get(position).getShippingCharges(), listOrder.get(position).getAddress());
 
                     } else if (type.equals(Constant.TYPE_PROCESSING)) {
-
+                        Log.i("@@Log_3","Log_1");
                         DataAdapter.getInstance().setListItem(listOrder.get(position).getItems());
                         Intent dueOrderIntent = new Intent(context, DueOrderActivityWithoutUpdations.class);
                         dueOrderIntent.putExtra("name", listOrder.get(position).getCustomerName());
@@ -328,7 +329,7 @@ public class ActiveOrderFragmentItem extends Fragment implements View.OnClickLis
                         AnimUtil.slideFromRightAnim((Activity) context);
 
                     } else if (type.equals(Constant.TYPE_SHIPPING)) {
-
+                        Log.i("@@Log_4","Log_1");
                         DataAdapter.getInstance().setListItem(listOrder.get(position).getItems());
                         Intent dueOrderIntent = new Intent(context, DueOrderActivityWithoutUpdations.class);
                         dueOrderIntent.putExtra("name", listOrder.get(position).getCustomerName());
@@ -347,7 +348,7 @@ public class ActiveOrderFragmentItem extends Fragment implements View.OnClickLis
                         AnimUtil.slideFromRightAnim((Activity) context);
 
                     } else if (type.equals(Constant.TYPE_DELIVERED)) {
-
+                        Log.i("@@Log_5","Log_1");
                         DataAdapter.getInstance().setListItem(listOrder.get(position).getItems());
                         Intent dueOrderIntent = new Intent(context, DueOrderActivityWithoutUpdations.class);
                         dueOrderIntent.putExtra("name", listOrder.get(position).getCustomerName());
@@ -395,6 +396,7 @@ public class ActiveOrderFragmentItem extends Fragment implements View.OnClickLis
 
         getActivity().startActivity(dueOrderIntent);
         AnimUtil.slideFromRightAnim((Activity) getActivity());
+        Log.i("@@Log_1","Log_1");
     }
 
     static class ViewHolder {

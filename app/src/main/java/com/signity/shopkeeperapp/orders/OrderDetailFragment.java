@@ -22,7 +22,11 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import com.signity.shopkeeperapp.R;
+import com.signity.shopkeeperapp.home.MainActivity;
+import com.signity.shopkeeperapp.model.DashBoardModelStoreDetail;
 import com.signity.shopkeeperapp.model.ItemListModel;
 import com.signity.shopkeeperapp.model.OrderItemResponseModel;
 import com.signity.shopkeeperapp.model.OrderTaxModel;
@@ -38,6 +42,7 @@ import com.signity.shopkeeperapp.util.PrefManager;
 import com.signity.shopkeeperapp.util.ProgressDialogUtil;
 import com.signity.shopkeeperapp.util.Util;
 
+import java.lang.reflect.Type;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -81,7 +86,7 @@ public class OrderDetailFragment extends Fragment implements View.OnClickListene
     Animation slideDownAnim;
 
     TextView mTotalAmount;
-
+Button btnGuidMe;
     TextView mDeliveryAddress, mNote, mItemsPrice, mShippingCharges, mDiscountVal, taxVal, shipping_charges_text, discountLblText;
     RelativeLayout mNoteLayout, mAddressLayout;
     LinearLayout linearDynamicTaxBlock;
@@ -92,7 +97,9 @@ public class OrderDetailFragment extends Fragment implements View.OnClickListene
     RelativeLayout shipping_layout, discount_layout;
     private LinearLayout footer1;
     String status;
-
+    String getLat = "";
+    String getLong = "";
+    String    destinationLat,destinationLang;
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -100,6 +107,30 @@ public class OrderDetailFragment extends Fragment implements View.OnClickListene
         prefManager = new PrefManager(getActivity());
         ordersListModel = (OrdersListModel) getArguments().getSerializable("object");
         setUiData();
+        setShareContent();
+    }
+    public DashBoardModelStoreDetail getStoreDataAsObject(String store) {
+        DashBoardModelStoreDetail object;
+        Gson gson = new Gson();
+        Type type = new TypeToken<DashBoardModelStoreDetail>() {
+        }.getType();
+        object = gson.fromJson(store, type);
+        return object;
+    }
+
+    private void setShareContent() {
+
+        DashBoardModelStoreDetail jobj = getStoreDataAsObject(Util.loadPreferenceValue(getActivity(), Constant.STORE_DETAILS));
+
+        try {
+            getLat = jobj.getLat();
+            getLong = jobj.getLng();
+            Log.i("@@Latitude",""+getLat+getLong);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
     }
 
     public void setUiData() {
@@ -115,6 +146,9 @@ public class OrderDetailFragment extends Fragment implements View.OnClickListene
         address = ordersListModel.getAddress();
         listItem = ordersListModel.getItems();
         tax = ordersListModel.getTax();
+        destinationLat=ordersListModel.getDestinationuser_lat();
+        destinationLang=ordersListModel.getDestinationuser_lng();
+        Log.i("@@OrderListFragment---",""+address+status+"DestingLAtLng"+destinationLat+destinationLang);
     }
 
     public static Fragment newInstance(Context context) {
@@ -137,6 +171,7 @@ public class OrderDetailFragment extends Fragment implements View.OnClickListene
     }
 
     private void setUpClickListener() {
+        btnGuidMe.setOnClickListener(this);
         buttonRejectOrder.setOnClickListener(this);
         btnOrderProceed.setOnClickListener(this);
         btnMoveToShipping.setOnClickListener(this);
@@ -155,6 +190,7 @@ public class OrderDetailFragment extends Fragment implements View.OnClickListene
             setFooterForShippedOrder();
         } else if (status.equalsIgnoreCase("5")) {
             setFooterForDeliveredOrder();
+            btnGuidMe.setVisibility(View.GONE);
         } else if (status.equalsIgnoreCase("6")) {
             setFooterForCancelOrder();
         }
@@ -228,6 +264,9 @@ public class OrderDetailFragment extends Fragment implements View.OnClickListene
 
     private void addHeaderToList() {
         View headerView = (View) getActivity().getLayoutInflater().inflate(R.layout.layout_header_order_detail_address, null);
+        Log.i("@@OrderDetailFragment","OrderDetailFragment");
+        btnGuidMe=(Button)headerView.findViewById(R.id.btnGuidMe);
+
         mDeliveryAddress = (TextView) headerView.findViewById(R.id.txtDeliveryAddress);
         mNote = (TextView) headerView.findViewById(R.id.txtNote);
         mItemsPrice = (TextView) headerView.findViewById(R.id.items_price);
@@ -309,11 +348,48 @@ public class OrderDetailFragment extends Fragment implements View.OnClickListene
     public void setHeader(View rootView) {
         ((TextView) rootView.findViewById(R.id.textTitle)).setText(name);
     }
+    public void openMap(String src_lat,String src_ltg,String des_lat,String des_ltg){
+        try {
+            Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse("http://maps.google.com/maps?saddr="+src_lat+","+src_ltg+"&daddr="+des_lat+","+des_ltg));
+            intent.setClassName("com.google.android.apps.maps", "com.google.android.maps.MapsActivity");
+            startActivity(intent);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
 
+    /*public static void openMap(Context context,String lat, String lng) {
+        //String strUri = "http://maps.google.com/maps?q=loc:" + lat + "," + lng + " (" + "Label which you want" + ")";
+        String strUri = "http://maps.google.com/maps?q=loc:" + lat + "," + lng + ")";
+        Intent intent = new Intent(android.content.Intent.ACTION_VIEW, Uri.parse(strUri));
+        intent.setClassName("com.google.android.apps.maps", "com.google.android.maps.MapsActivity");
+        context.startActivity(intent);
+    }*/
     @Override
     public void onClick(View view) {
 
         switch (view.getId()) {
+            case R.id.btnGuidMe:
+            //    Toast.makeText(getActivity(),address,Toast.LENGTH_SHORT).show();
+                if(getLat.equalsIgnoreCase("")||getLong.equalsIgnoreCase("")||destinationLat.equalsIgnoreCase("")||destinationLang.equalsIgnoreCase("")){
+                   Log.i("@@---1",""+getLat);
+                    Log.i("@@---2",""+getLong);
+                    Log.i("@@---3",""+destinationLat);
+                    Log.i("@@---4",""+destinationLang);
+                    Log.i("@@---FirstCondition",""+"FirstCondition");
+                    String map = "http://maps.google.co.in/maps?q=" + address;
+                    Intent mapIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(map));
+                    mapIntent.setPackage("com.google.android.apps.maps");
+                    startActivity(mapIntent);
+
+                }else{
+                    Log.i("@@---else",""+"else");
+                 //   Toast.makeText(getActivity(),"blankAddrees"+address,Toast.LENGTH_SHORT).show();
+                      openMap(getLat, getLong,destinationLat,destinationLang);
+
+
+                }
+                break;
             case R.id.btnOrderProceed:
                 if (!Util.checkIntenetConnection(getActivity())) {
                     showAlertDialog(getActivity(), "Internet", "Please check your Internet Connection.");

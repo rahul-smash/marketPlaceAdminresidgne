@@ -53,7 +53,7 @@ public class CanceledOrdersItemsListActivity extends Activity implements View.On
     String userId = "";
     String orderId = "";
     private OrdersListModel ordersListModel;
-
+Button btnGuidMe;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -73,7 +73,7 @@ public class CanceledOrdersItemsListActivity extends Activity implements View.On
         listItem = ordersListModel.getItems();
         initialize();
         addHeaderToList();
-
+        btnGuidMe.setOnClickListener(this);
         backButton.setOnClickListener(this);
         btnCall.setOnClickListener(this);
 
@@ -91,6 +91,8 @@ public class CanceledOrdersItemsListActivity extends Activity implements View.On
 
     private void addHeaderToList() {
         View headerView = getLayoutInflater().inflate(R.layout.layout_header_order_detail_address, null);
+        btnGuidMe=(Button)headerView.findViewById(R.id.btnGuidMe);
+        btnGuidMe.setVisibility(View.GONE);
         mDeliveryAddress = (TextView) headerView.findViewById(R.id.txtDeliveryAddress);
         mNote = (TextView) headerView.findViewById(R.id.txtNote);
         mShippingCharges = (TextView) headerView.findViewById(R.id.shipping_charges);
@@ -133,6 +135,9 @@ public class CanceledOrdersItemsListActivity extends Activity implements View.On
     @Override
     public void onClick(View view) {
         switch (view.getId()) {
+            case R.id.btnGuidMe:
+
+                break;
             case R.id.backButton:
                 onBackPressed();
                 break;

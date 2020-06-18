@@ -115,6 +115,7 @@ public class RvActiveOrderAdapter extends RecyclerView.Adapter<RvActiveOrderAdap
             holder.status.setText("Shipping");
             holder.status.setBackgroundResource(R.drawable.shape_button_shipping);
         } else if (order.getStatus().equalsIgnoreCase("5")) {
+            Log.i("@@DeleiverdOrder__","order.getStatus()");
             holder.status.setText("Delivered");
             holder.status.setBackgroundResource(R.drawable.shape_button_delivered);
         } else if (order.getStatus().equalsIgnoreCase("0")) {

@@ -54,7 +54,7 @@ public class RejectedItemsListActivity extends Activity implements View.OnClickL
     String note, discount, total, shippingCharge, address;
 
     OrdersListModel ordersListModel;
-
+Button btnGuidMe;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -72,7 +72,7 @@ public class RejectedItemsListActivity extends Activity implements View.OnClickL
         listItem = ordersListModel.getItems();
         initialize();
         addHeaderToList();
-
+        btnGuidMe.setOnClickListener(this);
         backButton.setOnClickListener(this);
         btnCall.setOnClickListener(this);
 
@@ -91,6 +91,8 @@ public class RejectedItemsListActivity extends Activity implements View.OnClickL
 
     private void addHeaderToList() {
         View headerView = getLayoutInflater().inflate(R.layout.layout_header_order_detail_address, null);
+        btnGuidMe=(Button)headerView.findViewById(R.id.btnGuidMe);
+        btnGuidMe.setVisibility(View.GONE);
         mDeliveryAddress = (TextView) headerView.findViewById(R.id.txtDeliveryAddress);
         mNote = (TextView) headerView.findViewById(R.id.txtNote);
         mShippingCharges = (TextView) headerView.findViewById(R.id.shipping_charges);

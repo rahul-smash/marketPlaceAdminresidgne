@@ -12,6 +12,31 @@ import java.util.List;
  */
 public class OrdersListModel implements Serializable {
 
+
+    @SerializedName("user_lat")
+    @Expose
+    private String Destinationuser_lat;
+
+    public String getDestinationuser_lat() {
+        return Destinationuser_lat;
+    }
+
+    public void setDestinationuser_lat(String destinationuser_lat) {
+        Destinationuser_lat = destinationuser_lat;
+    }
+
+    public String getDestinationuser_lng() {
+        return Destinationuser_lng;
+    }
+
+    public void setDestinationuser_lng(String destinationuser_lng) {
+        Destinationuser_lng = destinationuser_lng;
+    }
+
+    @SerializedName("user_lng")
+    @Expose
+    private String Destinationuser_lng;
+
     @SerializedName("order_id")
     @Expose
     private String orderId;

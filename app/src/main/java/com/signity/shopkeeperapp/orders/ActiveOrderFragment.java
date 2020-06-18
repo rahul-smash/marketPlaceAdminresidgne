@@ -89,6 +89,7 @@ public class ActiveOrderFragment extends Fragment implements RvActiveOrderAdapte
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_layout_order_list, container, false);
+        Log.i("@@ActiveOrderFragment","ActiveOrderFragment");
         recyclerView = (RecyclerView) rootView.findViewById(R.id.recyclerView);
         noDataFound = (TextView) rootView.findViewById(R.id.noDataFound);
         mLinearLayoutManager = new LinearLayoutManager(getActivity());

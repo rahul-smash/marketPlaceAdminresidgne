@@ -205,7 +205,7 @@ public class RejectedItemsFragment extends Fragment {
             holder.parent.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-
+                    Log.i("@@Log1_Rejected_parent", "Log1_Rejected");
                     DataAdapter.getInstance().setListItem(list.get(position).getItems());
                     Intent rejectedOrderIntent = new Intent(getActivity(), RejectedItemsListActivity.class);
                     String orderItemDetailString = getOrderItemDetail(list.get(position));
