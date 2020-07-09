@@ -73,7 +73,9 @@ public class RvActiveOrderAdapter extends RecyclerView.Adapter<RvActiveOrderAdap
     @Override
     public void onBindViewHolder(final MyViewHolder holder, final int position) {
         final OrdersListModel order = listOrder.get(position);
-        holder.txtOrderId.setText(order.getOrderId());
+        //holder.txtOrderId.setText(order.getOrderId());//changed by sachinClient call
+Log.i("@@ChangedOrderID",order.getDisplay_order_id());
+        holder.txtOrderId.setText(order.getDisplay_order_id());
         if (order.getCustomerName().equalsIgnoreCase("") || order.getCustomerName().equals(null)) {
             holder.txtCustName.setText("Guest User");
         } else {

@@ -37,6 +37,17 @@ public class OrdersListModel implements Serializable {
     @Expose
     private String Destinationuser_lng;
 
+    public String getDisplay_order_id() {
+        return display_order_id;
+    }
+
+    public void setDisplay_order_id(String display_order_id) {
+        this.display_order_id = display_order_id;
+    }
+
+    @SerializedName("display_order_id")
+    @Expose
+    private String display_order_id;
     @SerializedName("order_id")
     @Expose
     private String orderId;
