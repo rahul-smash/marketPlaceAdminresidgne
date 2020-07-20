@@ -22,7 +22,7 @@
         android:layout_alignParentLeft="true"
         android:layout_marginLeft="5dp"
         android:layout_toLeftOf="@+id/toggle"
-        android:singleLine="true"
+android:maxLines="2"
         android:text="Amul Butter"
         android:textColor="@color/color_text"
         android:textSize="@dimen/text_normal" />
@@ -36,7 +36,7 @@
         android:layout_marginLeft="5dp"
         android:layout_marginTop="5dp"
         android:gravity="center"
-        android:text=""
+        android:text="gdgwssdgdsgdsgsdgsdgsdgsdgss"
         android:textSize="@dimen/text_small" />
 
     <TextView

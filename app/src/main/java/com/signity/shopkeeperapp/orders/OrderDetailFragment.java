@@ -86,7 +86,7 @@ public class OrderDetailFragment extends Fragment implements View.OnClickListene
     Animation slideDownAnim;
 
     TextView mTotalAmount;
-Button btnGuidMe;
+    Button btnGuidMe;
     TextView mDeliveryAddress, mNote, mItemsPrice, mShippingCharges, mDiscountVal, taxVal, shipping_charges_text, discountLblText;
     RelativeLayout mNoteLayout, mAddressLayout;
     LinearLayout linearDynamicTaxBlock;
@@ -99,7 +99,8 @@ Button btnGuidMe;
     String status;
     String getLat = "";
     String getLong = "";
-    String    destinationLat,destinationLang;
+    String destinationLat, destinationLang;
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -109,6 +110,7 @@ Button btnGuidMe;
         setUiData();
         setShareContent();
     }
+
     public DashBoardModelStoreDetail getStoreDataAsObject(String store) {
         DashBoardModelStoreDetail object;
         Gson gson = new Gson();
@@ -125,7 +127,7 @@ Button btnGuidMe;
         try {
             getLat = jobj.getLat();
             getLong = jobj.getLng();
-            Log.i("@@Latitude",""+getLat+getLong);
+            Log.i("@@Latitude", "" + getLat + getLong);
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -146,9 +148,9 @@ Button btnGuidMe;
         address = ordersListModel.getAddress();
         listItem = ordersListModel.getItems();
         tax = ordersListModel.getTax();
-        destinationLat=ordersListModel.getDestinationuser_lat();
-        destinationLang=ordersListModel.getDestinationuser_lng();
-        Log.i("@@OrderListFragment---",""+address+status+"DestingLAtLng"+destinationLat+destinationLang);
+        destinationLat = ordersListModel.getDestinationuser_lat();
+        destinationLang = ordersListModel.getDestinationuser_lng();
+        Log.i("@@OrderListFragment---", "" + address + status + "DestingLAtLng" + destinationLat + destinationLang);
     }
 
     public static Fragment newInstance(Context context) {
@@ -264,8 +266,8 @@ Button btnGuidMe;
 
     private void addHeaderToList() {
         View headerView = (View) getActivity().getLayoutInflater().inflate(R.layout.layout_header_order_detail_address, null);
-        Log.i("@@OrderDetailFragment","OrderDetailFragment");
-        btnGuidMe=(Button)headerView.findViewById(R.id.btnGuidMe);
+        Log.i("@@OrderDetailFragment", "OrderDetailFragment");
+        btnGuidMe = (Button) headerView.findViewById(R.id.btnGuidMe);
 
         mDeliveryAddress = (TextView) headerView.findViewById(R.id.txtDeliveryAddress);
         mNote = (TextView) headerView.findViewById(R.id.txtNote);
@@ -348,9 +350,10 @@ Button btnGuidMe;
     public void setHeader(View rootView) {
         ((TextView) rootView.findViewById(R.id.textTitle)).setText(name);
     }
-    public void openMap(String src_lat,String src_ltg,String des_lat,String des_ltg){
+
+    public void openMap(String src_lat, String src_ltg, String des_lat, String des_ltg) {
         try {
-            Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse("http://maps.google.com/maps?saddr="+src_lat+","+src_ltg+"&daddr="+des_lat+","+des_ltg));
+            Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse("http://maps.google.com/maps?saddr=" + src_lat + "," + src_ltg + "&daddr=" + des_lat + "," + des_ltg));
             intent.setClassName("com.google.android.apps.maps", "com.google.android.maps.MapsActivity");
             startActivity(intent);
         } catch (Exception e) {
@@ -370,22 +373,22 @@ Button btnGuidMe;
 
         switch (view.getId()) {
             case R.id.btnGuidMe:
-            //    Toast.makeText(getActivity(),address,Toast.LENGTH_SHORT).show();
-                if(getLat.equalsIgnoreCase("")||getLong.equalsIgnoreCase("")||destinationLat.equalsIgnoreCase("")||destinationLang.equalsIgnoreCase("")){
-                   Log.i("@@---1",""+getLat);
-                    Log.i("@@---2",""+getLong);
-                    Log.i("@@---3",""+destinationLat);
-                    Log.i("@@---4",""+destinationLang);
-                    Log.i("@@---FirstCondition",""+"FirstCondition");
+                //    Toast.makeText(getActivity(),address,Toast.LENGTH_SHORT).show();
+                if (getLat.equalsIgnoreCase("") || getLong.equalsIgnoreCase("") || destinationLat.equalsIgnoreCase("") || destinationLang.equalsIgnoreCase("")) {
+                    Log.i("@@---1", "" + getLat);
+                    Log.i("@@---2", "" + getLong);
+                    Log.i("@@---3", "" + destinationLat);
+                    Log.i("@@---4", "" + destinationLang);
+                    Log.i("@@---FirstCondition", "" + "FirstCondition");
                     String map = "http://maps.google.co.in/maps?q=" + address;
                     Intent mapIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(map));
                     mapIntent.setPackage("com.google.android.apps.maps");
                     startActivity(mapIntent);
 
-                }else{
-                    Log.i("@@---else",""+"else");
-                 //   Toast.makeText(getActivity(),"blankAddrees"+address,Toast.LENGTH_SHORT).show();
-                      openMap(getLat, getLong,destinationLat,destinationLang);
+                } else {
+                    Log.i("@@---else", "" + "else");
+                    //   Toast.makeText(getActivity(),"blankAddrees"+address,Toast.LENGTH_SHORT).show();
+                    openMap(getLat, getLong, destinationLat, destinationLang);
 
 
                 }
@@ -723,7 +726,7 @@ Button btnGuidMe;
 
 
             final ItemListModel item = listItem.get(position);
-
+            Log.i("@@OrderDetailFrag", "-----" + item.getName());
             holder.itemName.setText(item.getName());
             holder.itemPrice.setText("Price: " + Util.getCurrency(context) + "" + item.getPrice());
             holder.itemQuantiy.setText("Qty: " + item.getQuantity());
