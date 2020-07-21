@@ -74,7 +74,7 @@ public class RvActiveOrderAdapter extends RecyclerView.Adapter<RvActiveOrderAdap
     public void onBindViewHolder(final MyViewHolder holder, final int position) {
         final OrdersListModel order = listOrder.get(position);
         //holder.txtOrderId.setText(order.getOrderId());//changed by sachinClient call
-Log.i("@@ChangedOrderID",order.getDisplay_order_id());
+        Log.i("@@ChangedOrderID", order.getDisplay_order_id());
         holder.txtOrderId.setText(order.getDisplay_order_id());
         if (order.getCustomerName().equalsIgnoreCase("") || order.getCustomerName().equals(null)) {
             holder.txtCustName.setText("Guest User");
@@ -91,16 +91,17 @@ Log.i("@@ChangedOrderID",order.getDisplay_order_id());
 //        }
 //        totalPrice = ((itemsPrice + order.getShippingCharges()) - order.getDiscount()) + order.getTax();
         holder.txtTotalAmount.setText(Util.getCurrency(context) + Util.getDoubleValue(order.getTotal()));
-            String dateStr = order.getTime();
+        String dateStr = order.getTime();
 
-            DateFormat df = new SimpleDateFormat("dd MMM yyyy HH:mm",Locale.US);
+        DateFormat df = new SimpleDateFormat("dd MMM yyyy HH:mm", Locale.US);
         Date date = null;
         try {
             date = df.parse(dateStr);
-            Log.i("@@TimeZone",""+date);
+            Log.i("@@TimeZone", "" + date);
 
-            Log.i("@@TimeZone",""+TimeZone.getTimeZone("America/Adak"));
-            df.setTimeZone(TimeZone.getTimeZone("America/Adak"));;
+            Log.i("@@TimeZone", "" + TimeZone.getTimeZone("America/Adak"));
+            df.setTimeZone(TimeZone.getTimeZone("America/Adak"));
+            ;
             String formattedDate = df.format(date);
             Log.i("@@Order_getTime", "" + formattedDate);
         } catch (ParseException e) {
@@ -117,7 +118,7 @@ Log.i("@@ChangedOrderID",order.getDisplay_order_id());
             holder.status.setText("Shipping");
             holder.status.setBackgroundResource(R.drawable.shape_button_shipping);
         } else if (order.getStatus().equalsIgnoreCase("5")) {
-            Log.i("@@DeleiverdOrder__","order.getStatus()");
+            Log.i("@@DeleiverdOrder__", "order.getStatus()");
             holder.status.setText("Delivered");
             holder.status.setBackgroundResource(R.drawable.shape_button_delivered);
         } else if (order.getStatus().equalsIgnoreCase("0")) {

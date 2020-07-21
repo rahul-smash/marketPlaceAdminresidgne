@@ -733,7 +733,7 @@ public class OrderDetailFragment extends Fragment implements View.OnClickListene
 
             if ((item.getWeight() != null && !(item.getWeight().isEmpty())) && (item.getUnitType() != null && !(item.getUnitType()
                     .isEmpty()))) {
-                holder.txtWeight.setText(item.getWeight() + " " + item.getUnitType());
+                holder.txtWeight.setText("Weight: "+item.getWeight() /*+ " " + item.getUnitType()*/);
                 holder.txtWeight.setVisibility(View.VISIBLE);
             } else {
                 holder.txtWeight.setVisibility(View.GONE);
