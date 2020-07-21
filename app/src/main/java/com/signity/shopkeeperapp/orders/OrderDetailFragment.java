@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.media.Image;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -16,6 +17,7 @@ import android.view.animation.Animation;
 import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
@@ -41,6 +43,7 @@ import com.signity.shopkeeperapp.util.DialogUtils;
 import com.signity.shopkeeperapp.util.PrefManager;
 import com.signity.shopkeeperapp.util.ProgressDialogUtil;
 import com.signity.shopkeeperapp.util.Util;
+import com.squareup.picasso.Picasso;
 
 import java.lang.reflect.Type;
 import java.util.HashMap;
@@ -712,6 +715,7 @@ public class OrderDetailFragment extends Fragment implements View.OnClickListene
                 holder = new ViewHolder();
                 convertView = inflater
                         .inflate(R.layout.row_list_due_orders_items, null);
+                holder.itemImage = (ImageView) convertView.findViewById(R.id.itemImage);
                 holder.itemName = (TextView) convertView.findViewById(R.id.txtItemName);
                 holder.itemPrice = (TextView) convertView.findViewById(R.id.txtPrice);
                 holder.itemQuantiy = (TextView) convertView.findViewById(R.id.txtLblQuantity);
@@ -730,10 +734,16 @@ public class OrderDetailFragment extends Fragment implements View.OnClickListene
             holder.itemName.setText(item.getName());
             holder.itemPrice.setText("Price: " + Util.getCurrency(context) + "" + item.getPrice());
             holder.itemQuantiy.setText("Qty: " + item.getQuantity());
+            Log.i("@@OrderDetailag___000", "-----" + item.getImage());
 
+            if (item.getImage() != null && !item.getImage().isEmpty()) {
+                Picasso.with(getActivity()).load(item.getImage()).resize(50, 50).error(R.mipmap.ic_launcher).into(holder.itemImage);
+            } else {
+                holder.itemImage.setImageResource(R.mipmap.ic_launcher);
+            }
             if ((item.getWeight() != null && !(item.getWeight().isEmpty())) && (item.getUnitType() != null && !(item.getUnitType()
                     .isEmpty()))) {
-                holder.txtWeight.setText("Weight: "+item.getWeight() /*+ " " + item.getUnitType()*/);
+                holder.txtWeight.setText("Weight: " + item.getWeight() /*+ " " + item.getUnitType()*/);
                 holder.txtWeight.setVisibility(View.VISIBLE);
             } else {
                 holder.txtWeight.setVisibility(View.GONE);
@@ -796,12 +806,14 @@ public class OrderDetailFragment extends Fragment implements View.OnClickListene
         }
 
         class ViewHolder {
+            ImageView itemImage;
             TextView itemName;
             TextView itemPrice;
             TextView txtWeight;
             TextView itemQuantiy;
             TextView itemsTotal;
             ImageButton toggle;
+
             RelativeLayout parent;
         }
     }

@@ -12,75 +12,85 @@
         android:id="@+id/itemImage"
         android:layout_width="60dp"
         android:layout_height="60dp"
-        android:scaleType="fitXY"
-        android:visibility="gone" />
-
-    <TextView
-        android:id="@+id/txtItemName"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
-        android:layout_marginLeft="5dp"
-        android:layout_toLeftOf="@+id/toggle"
-android:maxLines="2"
-        android:text="Amul Butter"
-        android:textColor="@color/color_text"
-        android:textSize="@dimen/text_normal" />
-
-
-    <TextView
-        android:id="@+id/txtWeight"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/txtItemName"
-        android:layout_marginLeft="5dp"
-        android:layout_marginTop="5dp"
-        android:gravity="center"
-        android:text="gdgwssdgdsgdsgsdgsdgsdgsdgss"
-        android:textSize="@dimen/text_small" />
-
-    <TextView
-        android:id="@+id/txtPrice"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/txtWeight"
-        android:layout_marginLeft="5dp"
-        android:layout_marginTop="5dp"
-        android:gravity="center"
-        android:text="Rs 500"
-        android:textSize="@dimen/text_small" />
-
-    <TextView
-        android:id="@+id/txtLblQuantity"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/txtPrice"
-        android:layout_marginLeft="5dp"
-        android:layout_marginTop="5dp"
-        android:layout_toRightOf="@+id/itemImage"
-        android:gravity="center"
-        android:text="Qtn:"
-        android:textSize="@dimen/text_small" />
-
-    <TextView
-        android:id="@+id/txtLblTotal"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/txtPrice"
-        android:layout_marginLeft="15dp"
-        android:layout_marginTop="5dp"
-        android:layout_toRightOf="@+id/txtLblQuantity"
-        android:gravity="center"
-        android:text="Total:"
-        android:textSize="@dimen/text_small" />
-
-
-    <ImageButton
-        android:id="@+id/toggle"
-        android:layout_width="60dp"
-        android:layout_height="40dp"
-        android:layout_alignParentRight="true"
         android:layout_centerVertical="true"
-        android:background="@drawable/on_off_selector" />
+        android:scaleType="fitXY"
+        android:src="@drawable/ic_launcher"
+        android:visibility="visible" />
+
+    <RelativeLayout
+        android:layout_marginLeft="2dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_toEndOf="@+id/itemImage"
+        android:layout_toRightOf="@+id/itemImage">
+
+        <TextView
+            android:id="@+id/txtItemName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_marginLeft="5dp"
+            android:layout_toLeftOf="@+id/toggle"
+            android:maxLines="2"
+            android:text="Amul Butter"
+            android:textColor="@color/color_text"
+            android:textSize="@dimen/text_normal" />
+
+
+        <TextView
+            android:id="@+id/txtWeight"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/txtItemName"
+            android:layout_marginLeft="5dp"
+            android:layout_marginTop="5dp"
+            android:gravity="center"
+            android:text="gdgwssdgdsgdsgsdgsdgsdgsdgss"
+            android:textSize="@dimen/text_small" />
+
+        <TextView
+            android:id="@+id/txtPrice"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/txtWeight"
+            android:layout_marginLeft="5dp"
+            android:layout_marginTop="5dp"
+            android:gravity="center"
+            android:text="Rs 500"
+            android:textSize="@dimen/text_small" />
+
+        <TextView
+            android:id="@+id/txtLblQuantity"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/txtPrice"
+            android:layout_marginLeft="5dp"
+            android:layout_marginTop="5dp"
+            android:gravity="center"
+            android:text="Qtn:"
+            android:textSize="@dimen/text_small"
+          />
+
+        <TextView
+            android:id="@+id/txtLblTotal"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/txtPrice"
+            android:layout_marginLeft="15dp"
+            android:layout_marginTop="5dp"
+            android:layout_toRightOf="@+id/txtLblQuantity"
+            android:gravity="center"
+            android:text="Total:"
+            android:textSize="@dimen/text_small" />
+
+
+        <ImageButton
+            android:id="@+id/toggle"
+            android:layout_width="60dp"
+            android:layout_height="40dp"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:background="@drawable/on_off_selector" />
+    </RelativeLayout>
 
 </RelativeLayout>
