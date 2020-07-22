@@ -737,12 +737,19 @@ public class OrderDetailFragment extends Fragment implements View.OnClickListene
             Log.i("@@OrderDetailag___000", "-----" + item.getImage());
 
             if (item.getImage() != null && !item.getImage().isEmpty()) {
+                Log.i("@@ImageShowing", "-----" + item.getImage());
+
                 Picasso.with(getActivity()).load(item.getImage()).resize(50, 50).error(R.mipmap.ic_launcher).into(holder.itemImage);
+                holder.itemImage.setVisibility(View.GONE);
+
             } else {
+                holder.itemImage.setVisibility(View.GONE);
+
                 holder.itemImage.setImageResource(R.mipmap.ic_launcher);
             }
-            if ((item.getWeight() != null && !(item.getWeight().isEmpty())) && (item.getUnitType() != null && !(item.getUnitType()
-                    .isEmpty()))) {
+            /*if ((item.getWeight() != null && !(item.getWeight().isEmpty())) *//*&& (item.getUnitType() != null && !(item.getUnitType()
+                    .isEmpty()))*//*) {*/
+                if(item.getWeight()!=null){
                 holder.txtWeight.setText("Weight: " + item.getWeight() /*+ " " + item.getUnitType()*/);
                 holder.txtWeight.setVisibility(View.VISIBLE);
             } else {

@@ -15,7 +15,7 @@
         android:layout_centerVertical="true"
         android:scaleType="fitXY"
         android:src="@drawable/ic_launcher"
-        android:visibility="visible" />
+        android:visibility="gone" />
 
     <RelativeLayout
         android:layout_marginLeft="2dp"
