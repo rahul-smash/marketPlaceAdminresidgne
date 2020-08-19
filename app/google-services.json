@@ -1,42 +1,34 @@
 {
   "project_info": {
-    "project_number": "430236525670",
-    "firebase_url": "https://valueapps-6c7fd.firebaseio.com",
-    "project_id": "valueapps-6c7fd",
-    "storage_bucket": "valueapps-6c7fd.appspot.com"
+    "project_number": "39604572111",
+    "firebase_url": "https://valueappz-admin.firebaseio.com",
+    "project_id": "valueappz-admin",
+    "storage_bucket": "valueappz-admin.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:430236525670:android:be269d95f5c837e75c79a7",
+        "mobilesdk_app_id": "1:39604572111:android:48c2c57f4d530243bc4cba",
         "android_client_info": {
           "package_name": "com.signity.valueapps"
         }
       },
       "oauth_client": [
         {
-          "client_id": "430236525670-pthq3g4qttrjsha9pdhbd17lfaqofosg.apps.googleusercontent.com",
-          "client_type": 1,
-          "android_info": {
-            "package_name": "com.signity.valueapps",
-            "certificate_hash": "eae6951cb4a3e5605bb8696e32a1bc1fd78a68d9"
-          }
-        },
-        {
-          "client_id": "430236525670-fv0vldpbdnud580c1v49pgi6glfhsarg.apps.googleusercontent.com",
+          "client_id": "39604572111-bndc3nc0j8fvf1aol7c1cip0taka55g1.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyBsZAfdO1u1CJob8rOCCggtkeNvkDJgRVE"
+          "current_key": "AIzaSyBymckYW7b1xjDC095uNSHiMTCMtCt7rBw"
         }
       ],
       "services": {
         "appinvite_service": {
           "other_platform_oauth_client": [
             {
-              "client_id": "430236525670-fv0vldpbdnud580c1v49pgi6glfhsarg.apps.googleusercontent.com",
+              "client_id": "39604572111-bndc3nc0j8fvf1aol7c1cip0taka55g1.apps.googleusercontent.com",
               "client_type": 3
             }
           ]
