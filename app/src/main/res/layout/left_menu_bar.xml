@@ -2,13 +2,13 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/ColorPrimaryDark"
+    android:background="@color/colorPrimaryDark"
     android:orientation="vertical">
 
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/color_header"
+        android:background="@color/colorHeader"
         android:paddingBottom="10dp"
         android:paddingTop="10dp">
 
@@ -29,7 +29,7 @@
             android:layout_toRightOf="@+id/imageShop"
             android:text="Bon Bon Mumbai"
             android:textAppearance="?android:attr/textAppearanceMedium"
-            android:textColor="@color/color_white"
+            android:textColor="@color/colorWhite"
             android:textSize="@dimen/text_large" />
 
         <TextView
@@ -42,7 +42,7 @@
             android:layout_toRightOf="@+id/imageShop"
             android:text="Admin App"
             android:textAppearance="?android:attr/textAppearanceMedium"
-            android:textColor="@color/color_white"
+            android:textColor="@color/colorWhite"
             android:textSize="@dimen/text_small" />
 
     </RelativeLayout>
@@ -85,7 +85,7 @@
                     android:focusable="false"
                     android:gravity="center_vertical"
                     android:text="Dashboard"
-                    android:textColor="@color/color_white"
+                    android:textColor="@color/colorWhite"
                     android:textSize="@dimen/text_normal" />
             </LinearLayout>
 
@@ -124,7 +124,7 @@
                     android:focusable="false"
                     android:gravity="center_vertical"
                     android:text="Orders"
-                    android:textColor="@color/color_white"
+                    android:textColor="@color/colorWhite"
                     android:textSize="@dimen/text_normal" />
 
                 <ImageView
@@ -183,7 +183,7 @@
                         android:focusable="false"
                         android:gravity="center_vertical"
                         android:text="Active Orders"
-                        android:textColor="@color/color_white"
+                        android:textColor="@color/colorWhite"
                         android:textSize="@dimen/text_normal" />
                 </LinearLayout>
 
@@ -216,7 +216,7 @@
                         android:focusable="false"
                         android:gravity="center_vertical"
                         android:text="Delivered Orders"
-                        android:textColor="@color/color_white"
+                        android:textColor="@color/colorWhite"
                         android:textSize="@dimen/text_normal" />
                 </LinearLayout>
 
@@ -247,7 +247,7 @@
                         android:focusable="false"
                         android:gravity="center_vertical"
                         android:text="Rejected Orders"
-                        android:textColor="@color/color_white"
+                        android:textColor="@color/colorWhite"
                         android:textSize="@dimen/text_normal" />
 
                 </LinearLayout>
@@ -285,7 +285,7 @@
                         android:focusable="false"
                         android:gravity="center_vertical"
                         android:text="Cancelled Orders"
-                        android:textColor="@color/color_white"
+                        android:textColor="@color/colorWhite"
                         android:textSize="@dimen/text_normal" />
 
                 </LinearLayout>
@@ -326,7 +326,7 @@
                     android:focusable="false"
                     android:gravity="center_vertical"
                     android:text="Customers"
-                    android:textColor="@color/color_white"
+                    android:textColor="@color/colorWhite"
                     android:textSize="@dimen/text_normal" />
 
             </LinearLayout>
@@ -366,7 +366,7 @@
                     android:focusable="false"
                     android:gravity="center_vertical"
                     android:text="Enquiries"
-                    android:textColor="@color/color_white"
+                    android:textColor="@color/colorWhite"
                     android:textSize="15sp" />
 
             </LinearLayout>
@@ -406,7 +406,7 @@
                     android:focusable="false"
                     android:gravity="center_vertical"
                     android:text="Manage Stores"
-                    android:textColor="@color/color_white"
+                    android:textColor="@color/colorWhite"
                     android:textSize="15sp"
                     android:visibility="visible" />
 
@@ -447,7 +447,7 @@
                     android:focusable="false"
                     android:gravity="center_vertical"
                     android:text="Categories"
-                    android:textColor="@color/color_white"
+                    android:textColor="@color/colorWhite"
                     android:textSize="15sp"
                     android:visibility="visible" />
 

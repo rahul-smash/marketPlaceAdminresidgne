@@ -4,11 +4,10 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.media.Image;
 import android.net.Uri;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
+import androidx.annotation.Nullable;
+import androidx.fragment.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -27,7 +26,6 @@ import android.widget.Toast;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.signity.shopkeeperapp.R;
-import com.signity.shopkeeperapp.home.MainActivity;
 import com.signity.shopkeeperapp.model.DashBoardModelStoreDetail;
 import com.signity.shopkeeperapp.model.ItemListModel;
 import com.signity.shopkeeperapp.model.OrderItemResponseModel;
@@ -302,7 +300,7 @@ public class OrderDetailFragment extends Fragment implements View.OnClickListene
     }
 
     private void callAlert() {
-        android.support.v7.app.AlertDialog.Builder adb = new android.support.v7.app.AlertDialog.Builder(getActivity());
+        androidx.appcompat.app.AlertDialog.Builder adb = new androidx.appcompat.app.AlertDialog.Builder(getActivity());
         adb.setTitle("Call " + phoneNumber + " ?");
         adb.setIcon(R.drawable.ic_launcher);
         adb.setPositiveButton("Yes", new DialogInterface.OnClickListener() {

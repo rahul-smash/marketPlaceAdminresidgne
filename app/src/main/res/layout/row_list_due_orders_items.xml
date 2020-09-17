@@ -3,7 +3,7 @@
     android:id="@+id/parent"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@color/color_white"
+    android:background="@color/colorWhite"
     android:clickable="true"
     android:padding="10dp">
 
@@ -33,7 +33,7 @@
             android:layout_toLeftOf="@+id/toggle"
             android:maxLines="2"
             android:text="Amul Butter"
-            android:textColor="@color/color_text"
+            android:textColor="@color/colorTextDark"
             android:textSize="@dimen/text_normal" />
 
 

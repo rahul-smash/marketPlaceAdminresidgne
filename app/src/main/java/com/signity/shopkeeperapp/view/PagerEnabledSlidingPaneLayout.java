@@ -1,8 +1,8 @@
 package com.signity.shopkeeperapp.view;
 
 import android.content.Context;
-import android.support.v4.view.MotionEventCompat;
-import android.support.v4.widget.SlidingPaneLayout;
+import androidx.core.view.MotionEventCompat;
+import androidx.slidingpanelayout.widget.SlidingPaneLayout;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.ViewConfiguration;

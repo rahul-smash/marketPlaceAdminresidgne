@@ -13,6 +13,7 @@ import android.util.Log;
 import com.signity.shopkeeperapp.LogInModule.LogInOptionsActivity;
 import com.signity.shopkeeperapp.app.DbAdapter;
 import com.signity.shopkeeperapp.db.AppDatabase;
+import com.signity.shopkeeperapp.dashboard.DashboardActivity;
 import com.signity.shopkeeperapp.home.MainActivity;
 import com.signity.shopkeeperapp.model.MobResponseLogin;
 import com.signity.shopkeeperapp.network.NetworkAdaper;
@@ -34,24 +35,18 @@ import retrofit.client.Response;
  */
 public class SplashActivity extends Activity {
 
-    PendingIntent sender;
-
     private static final int PLAY_SERVICES_RESOLUTION_REQUEST = 9000;
     private static final String TAG = "MainActivity";
-
-    private BroadcastReceiver mRegistrationBroadcastReceiver;
-
-    private int SPLASH_TIME_OUT = 1000;
-
+    PendingIntent sender;
     AppDatabase appDatabase;
-
     PrefManager prefManager;
-
     String storeId;
     String userId;
     boolean isInternetConnected;
-    private Context context;
     NetworkAdaper netWorkAdapter;
+    private BroadcastReceiver mRegistrationBroadcastReceiver;
+    private int SPLASH_TIME_OUT = 1000;
+    private Context context;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -74,30 +69,30 @@ public class SplashActivity extends Activity {
 
     private void startSplashModule() {
         if (!storeId.isEmpty() && !userId.isEmpty()) {
-            Log.i("startSplashModule_1","startSplashModule");
+            Log.i("startSplashModule_1", "startSplashModule");
             if (isInternetConnected) {
-                Log.i("startSplashModule_2","startSplashModule");
+                Log.i("startSplashModule_2", "startSplashModule");
 
                 checkForStaffValidationProcess();
             } else {
-                Log.i("startSplashModule_3","startSplashModule");
+                Log.i("startSplashModule_3", "startSplashModule");
 
                 openHomeScreen();
             }
         } else {
             if (isInternetConnected) {
-                Log.i("startSplashModule_4","startSplashModule");
+                Log.i("startSplashModule_4", "startSplashModule");
 
                 new Handler().postDelayed(new Runnable() {
                     @Override
                     public void run() {
-                        Log.i("startSplashModule_5","startSplashModule");
+                        Log.i("startSplashModule_5", "startSplashModule");
 
-                        openLoginScreen();
+                        startActivity(DashboardActivity.getStartIntent(SplashActivity.this));
                     }
                 }, 2000);
             } else {
-                Log.i("startSplashModule_6","startSplashModule");
+                Log.i("startSplashModule_6", "startSplashModule");
 
                 openAlertForNoInternet();
             }

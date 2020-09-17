@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:card_view="http://schemas.android.com/apk/res-auto"
     android:id="@+id/card_view"
     android:layout_width="match_parent"
@@ -13,7 +13,7 @@
         android:id="@+id/parent"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/color_white"
+        android:background="@color/colorWhite"
         android:clickable="true"
         android:padding="10dp">
 
@@ -23,7 +23,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Order ID:"
-            android:textColor="@color/color_text"
+            android:textColor="@color/colorTextDark"
             android:textSize="@dimen/text_large" />
 
         <TextView
@@ -49,7 +49,7 @@
             android:layout_below="@+id/txtLblOdrId"
             android:layout_marginTop="5dp"
             android:text="Customer Name:"
-            android:textColor="@color/color_text"
+            android:textColor="@color/colorTextDark"
             android:textSize="@dimen/text_large" />
 
         <TextView
@@ -75,7 +75,7 @@
             android:layout_below="@+id/txtLblCustName"
             android:layout_marginTop="5dp"
             android:text="Total Amount:"
-            android:textColor="@color/color_text"
+            android:textColor="@color/colorTextDark"
             android:textSize="@dimen/text_large" />
 
         <TextView
@@ -100,7 +100,7 @@
             android:layout_below="@+id/txtLblTotalAmt"
             android:layout_marginTop="5dp"
             android:text="Time:"
-            android:textColor="@color/color_text"
+            android:textColor="@color/colorTextDark"
             android:textSize="@dimen/text_large" />
 
         <TextView
@@ -125,7 +125,7 @@
             android:layout_below="@+id/txtLblTime"
             android:layout_marginTop="5dp"
             android:text="Status"
-            android:textColor="@color/color_text"
+            android:textColor="@color/colorTextDark"
             android:textSize="@dimen/text_large" />
 
         <TextView
@@ -143,8 +143,8 @@
             android:paddingRight="5dp"
             android:paddingTop="3dp"
             android:text="Current Status"
-            android:textColor="@color/color_white"
+            android:textColor="@color/colorWhite"
             android:textSize="@dimen/text_normal" />
 
     </RelativeLayout>
-</android.support.v7.widget.CardView>
+</androidx.cardview.widget.CardView>

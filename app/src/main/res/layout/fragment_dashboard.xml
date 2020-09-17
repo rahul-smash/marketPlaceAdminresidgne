@@ -38,7 +38,7 @@
                     android:layout_centerHorizontal="true"
                     android:text="Outstanding Payment"
                     android:textAppearance="?android:attr/textAppearanceMedium"
-                    android:textColor="@color/color_header"
+                    android:textColor="@color/colorHeader"
                     android:textSize="@dimen/text_xlarge" />
 
                 <TextView
@@ -49,7 +49,7 @@
                     android:layout_centerHorizontal="true"
                     android:text="1"
                     android:textAppearance="?android:attr/textAppearanceLarge"
-                    android:textColor="@color/color_header"
+                    android:textColor="@color/colorHeader"
                     android:textSize="@dimen/text_dash_board_values" />
 
             </RelativeLayout>
@@ -182,7 +182,7 @@
                     android:layout_centerHorizontal="true"
                     android:text="All Customers"
                     android:textAppearance="?android:attr/textAppearanceMedium"
-                    android:textColor="@color/color_header"
+                    android:textColor="@color/colorHeader"
                     android:textSize="@dimen/text_xlarge" />
 
                 <TextView
@@ -193,7 +193,7 @@
                     android:layout_centerHorizontal="true"
                     android:text="1"
                     android:textAppearance="?android:attr/textAppearanceLarge"
-                    android:textColor="@color/color_header"
+                    android:textColor="@color/colorHeader"
                     android:textSize="@dimen/text_dash_board_values" />
 
             </RelativeLayout>

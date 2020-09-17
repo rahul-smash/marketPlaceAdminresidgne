@@ -5,12 +5,11 @@
 
     </style>
 
-    <style name="AppTheme.Base" parent="Theme.AppCompat.Light.NoActionBar">
-        <item name="colorPrimary">@color/ColorPrimary</item>
-        <item name="colorPrimaryDark">@color/ColorPrimaryDark</item>
-        <item name="textAllCaps">false</item>
+    <style name="AppTheme.Base" parent="Theme.MaterialComponents.Light.NoActionBar">
+        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+        <item name="colorAccent">@color/colorPrimary</item>
     </style>
-
 
     <style name="ProgressDialog" parent="android:Theme.Holo.Dialog">
         <item name="android:alertDialogStyle">@style/CustomAlertDialogStyle</item>
@@ -38,6 +37,57 @@
 
     <style name="MineCustomTabText" parent="TextAppearance.Design.Tab">
         <item name="android:textSize">11sp</item>
+    </style>
+
+    <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
+
+    <style name="AppTheme.AppBarOverlay.SearchView" parent="ThemeOverlay.AppCompat.ActionBar" />
+
+    <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
+
+    <style name="AppTheme.EditText" parent="Widget.AppCompat.EditText">
+        <item name="android:textColor">@color/colorTextDark</item>
+        <item name="android:textColorHint">@color/colorTextGrey</item>
+        <item name="android:textAppearance">@style/TextAppearance.AppCompat.Medium</item>
+        <item name="android:singleLine">true</item>
+        <item name="android:imeOptions">actionNext</item>
+        <item name="android:inputType">textPersonName</item>
+    </style>
+
+    <style name="AppTheme.EditText.MultiLine" parent="AppTheme.EditText">
+        <item name="android:imeOptions">actionDone</item>
+        <item name="android:singleLine">false</item>
+        <item name="android:inputType">textMultiLine</item>
+        <item name="android:scrollbars">vertical</item>
+        <item name="android:overScrollMode">always</item>
+        <item name="android:scrollbarStyle">insideInset</item>
+        <item name="android:gravity">start</item>
+        <item name="android:padding">16dp</item>
+    </style>
+
+    <!--TextView Styles-->
+    <style name="AppTheme.TextView.Medium" parent="Widget.AppCompat.TextView">
+        <item name="android:textColor">@color/colorTextDark</item>
+        <item name="android:textAppearance">@style/TextAppearance.AppCompat.Medium</item>
+    </style>
+
+    <style name="AppTheme.TextView.MediumBold" parent="AppTheme.TextView.Medium">
+        <item name="android:textStyle">bold</item>
+    </style>
+
+    <style name="AppTheme.TextView.MediumGrey" parent="AppTheme.TextView.Medium">
+        <item name="android:textColor">@color/colorTextGrey</item>
+    </style>
+
+    <style name="AppTheme.TextView.Small" parent="Widget.AppCompat.TextView">
+        <item name="android:textColor">@color/colorTextGrey</item>
+        <item name="android:textAppearance">@style/TextAppearance.AppCompat.Small</item>
+    </style>
+
+    <style name="AppTheme.TextView.Small.BottomNavigation" parent="Widget.AppCompat.TextView">
+        <item name="android:textColor">@color/colorTextGrey</item>
+        <item name="android:textSize">10sp</item>
+        <item name="android:textAppearance">@style/TextAppearance.AppCompat.Small</item>
     </style>
 
 </resources>

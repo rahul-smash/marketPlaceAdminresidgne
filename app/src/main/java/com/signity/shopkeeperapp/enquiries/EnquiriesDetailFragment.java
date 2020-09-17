@@ -6,8 +6,8 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
+import androidx.annotation.Nullable;
+import androidx.fragment.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,8 +17,6 @@ import android.widget.Toast;
 
 import com.signity.shopkeeperapp.R;
 import com.signity.shopkeeperapp.util.AnimUtil;
-import com.signity.shopkeeperapp.util.DialogUtils;
-import com.signity.shopkeeperapp.util.Util;
 
 import static android.content.Intent.ACTION_DIAL;
 
@@ -152,7 +150,7 @@ public class EnquiriesDetailFragment extends Fragment {
 
     private void callAlert() {
 
-        android.support.v7.app.AlertDialog.Builder adb = new android.support.v7.app.AlertDialog.Builder(getActivity());
+        androidx.appcompat.app.AlertDialog.Builder adb = new androidx.appcompat.app.AlertDialog.Builder(getActivity());
 
 
         adb.setTitle("Call " + phoneNumber + " ?");

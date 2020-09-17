@@ -9,7 +9,7 @@
         android:id="@+id/header"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/color_header">
+        android:background="@color/colorHeader">
 
         <ImageButton
             android:id="@+id/btnBack"
@@ -27,7 +27,7 @@
             android:layout_centerHorizontal="true"
             android:layout_centerVertical="true"
             android:text=""
-            android:textColor="@color/color_white"
+            android:textColor="@color/colorWhite"
             android:textSize="@dimen/text_xxlarge"
             android:visibility="visible" />
 

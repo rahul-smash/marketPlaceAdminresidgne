@@ -8,7 +8,7 @@
         android:id="@+id/header"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/color_header">
+        android:background="@color/colorHeader">
 
         <Button
             android:id="@+id/backButton"
@@ -30,7 +30,7 @@
             android:layout_centerInParent="true"
             android:singleLine="true"
             android:text="Mobile Verification"
-            android:textColor="@color/color_white"
+            android:textColor="@color/colorWhite"
             android:textSize="@dimen/text_xlarge"
             android:visibility="visible" />
 
@@ -76,7 +76,7 @@
             android:background="@drawable/rectangle_shape_with_header_color"
             android:text="Resend"
             android:textAppearance="?android:attr/textAppearanceLarge"
-            android:textColor="@color/color_white"
+            android:textColor="@color/colorWhite"
             android:padding="5dp"
             android:textSize="@dimen/text_normal" />
 
@@ -92,7 +92,7 @@
             android:contentDescription=""
             android:text="Done"
             android:padding="5dp"
-            android:textColor="@color/color_white"
+            android:textColor="@color/colorWhite"
             android:textSize="@dimen/text_normal"
             android:visibility="visible" />
 

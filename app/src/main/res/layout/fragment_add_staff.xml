@@ -7,7 +7,7 @@
         android:id="@+id/header"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/color_header">
+        android:background="@color/colorHeader">
 
         <Button
             android:id="@+id/backButton"
@@ -36,7 +36,7 @@
             android:gravity="center"
             android:singleLine="true"
             android:text="Add Staff"
-            android:textColor="@color/color_white"
+            android:textColor="@color/colorWhite"
             android:textSize="@dimen/text_xxlarge"
             android:visibility="visible" />
 
@@ -54,7 +54,7 @@
             android:layout_height="wrap_content"
             android:layout_centerHorizontal="true"
             android:layout_marginTop="25dp"
-            android:background="@color/color_white"
+            android:background="@color/colorWhite"
             android:ems="12"
             android:hint="Full Name"
             android:inputType="text"
@@ -71,7 +71,7 @@
             android:layout_below="@+id/editTextFullName"
             android:layout_centerHorizontal="true"
             android:layout_marginTop="15dp"
-            android:background="@color/color_white"
+            android:background="@color/colorWhite"
             android:ems="12"
             android:hint="Phone Number"
             android:imeOptions="actionDone"
@@ -99,7 +99,7 @@
                 android:gravity="center"
                 android:singleLine="true"
                 android:text="Status"
-                android:textColor="@color/color_white"
+                android:textColor="@color/colorWhite"
                 android:textSize="@dimen/text_xxlarge"
                 android:visibility="visible" />
 
@@ -120,7 +120,7 @@
                     android:drawableLeft="@drawable/radio_status_check_selector"
                     android:drawablePadding="10dp"
                     android:text="Active"
-                    android:textColor="@color/color_white"
+                    android:textColor="@color/colorWhite"
                     android:textSize="25dp" />
 
                 <RadioButton
@@ -132,7 +132,7 @@
                     android:drawableLeft="@drawable/radio_status_check_selector"
                     android:drawablePadding="10dp"
                     android:text="InActive"
-                    android:textColor="@color/color_white"
+                    android:textColor="@color/colorWhite"
                     android:textSize="25dp" />
             </RadioGroup>
         </RelativeLayout>
@@ -149,7 +149,7 @@
             android:paddingBottom="10dp"
             android:paddingTop="10dp"
             android:text="Save"
-            android:textColor="@color/color_black" />
+            android:textColor="@color/colorBlack" />
 
         <Button
             android:id="@+id/buttonDelete"
@@ -163,7 +163,7 @@
             android:paddingBottom="10dp"
             android:paddingTop="10dp"
             android:text="Delete"
-            android:textColor="@color/color_black" />
+            android:textColor="@color/colorBlack" />
     </RelativeLayout>
 
 

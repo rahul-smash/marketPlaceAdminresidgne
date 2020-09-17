@@ -3,7 +3,7 @@
     android:id="@+id/parent"
     android:layout_width="fill_parent"
     android:layout_height="wrap_content"
-    android:background="@color/color_white"
+    android:background="@color/colorWhite"
     android:orientation="horizontal"
     android:weightSum="3"
     android:clickable="true"
@@ -22,7 +22,7 @@
         android:paddingLeft="8dp"
         android:singleLine="true"
         android:text="Amit Kumar"
-        android:textColor="@color/color_text"
+        android:textColor="@color/colorTextDark"
         android:textSize="@dimen/text_normal" />
     <View
         android:layout_width="3dp"
@@ -41,7 +41,7 @@
         android:paddingLeft="8dp"
         android:singleLine="true"
         android:text="+9193928918"
-        android:textColor="@color/color_text"
+        android:textColor="@color/colorTextDark"
         android:textSize="@dimen/text_normal" />
     <View
         android:layout_width="3dp"
@@ -60,7 +60,7 @@
         android:paddingLeft="8dp"
         android:singleLine="true"
         android:text="Ambala"
-        android:textColor="@color/color_text"
+        android:textColor="@color/colorTextDark"
         android:textSize="@dimen/text_normal" />
 
 </LinearLayout>

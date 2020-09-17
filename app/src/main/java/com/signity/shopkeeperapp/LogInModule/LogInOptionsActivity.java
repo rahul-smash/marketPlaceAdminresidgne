@@ -1,24 +1,12 @@
 package com.signity.shopkeeperapp.LogInModule;
 
-import android.content.Intent;
-import android.os.Handler;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentActivity;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentActivity;
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
-import android.view.Menu;
-import android.view.MenuItem;
-import android.view.View;
-import android.widget.Button;
+import androidx.appcompat.app.AppCompatActivity;
 
 import com.signity.shopkeeperapp.R;
-import com.signity.shopkeeperapp.home.MainActivity;
 import com.signity.shopkeeperapp.util.AnimUtil;
-import com.signity.shopkeeperapp.util.Constant;
-import com.signity.shopkeeperapp.util.DialogHandler;
-import com.signity.shopkeeperapp.util.Util;
-import com.signity.shopkeeperapp.view.LoginFragmentMobile;
-import com.signity.shopkeeperapp.view.LoginScreenActivity;
 
 public class LogInOptionsActivity extends FragmentActivity {
 

@@ -18,7 +18,7 @@
             android:gravity="center"
             android:padding="10dp"
             android:text="@string/layout_notification_detail_confirm"
-            android:textColor="@color/ColorPrimary"
+            android:textColor="@color/colorPrimary"
             android:textSize="@dimen/text_size_normal"
             android:textStyle="bold" />
 
@@ -27,7 +27,7 @@
             android:layout_width="fill_parent"
             android:layout_height="1dp"
             android:layout_below="@+id/title"
-            android:background="@color/ColorPrimary" />
+            android:background="@color/colorPrimary" />
 
         <RelativeLayout
             android:layout_width="fill_parent"
@@ -39,7 +39,7 @@
                 android:id="@+id/relative0"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
-                android:background="@color/color_white">
+                android:background="@color/colorWhite">
 
                 <TextView
                     android:id="@+id/message"

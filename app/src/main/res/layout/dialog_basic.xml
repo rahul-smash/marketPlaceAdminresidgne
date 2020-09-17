@@ -9,7 +9,7 @@
         android:id="@+id/dTitle"
         android:layout_width="match_parent"
         android:layout_height="64dp"
-        android:background="@color/color_header"
+        android:background="@color/colorHeader"
         android:contentDescription="@string/app_name"
         android:gravity="center"
         android:text="title"

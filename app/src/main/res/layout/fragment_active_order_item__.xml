@@ -229,6 +229,6 @@
             android:background="@drawable/selector_button_rejected"
             android:gravity="center"
             android:text="Reject Order"
-            android:textColor="@color/color_white"></Button>
+            android:textColor="@color/colorWhite"></Button>
     </LinearLayout>
 </RelativeLayout>

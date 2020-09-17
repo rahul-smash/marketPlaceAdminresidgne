@@ -4,15 +4,12 @@ import android.app.AlertDialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.DialogInterface;
-import android.content.Intent;
 import android.content.IntentFilter;
-import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
 import android.provider.Settings;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentTransaction;
-import android.support.v4.content.LocalBroadcastManager;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentTransaction;
+import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
@@ -100,8 +97,8 @@ public class LoginFragmentMobile extends Fragment implements View.OnClickListene
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View rootView = inflater.inflate(R.layout.fragment_layout_login_mobile, container, false);
-        Log.i("@@onAttach", "");
+        View rootView = inflater.inflate(R.layout.mobile_login_fragment, container, false);
+        /*Log.i("@@onAttach", "");
 
         btnNext = (Button) rootView.findViewById(R.id.btnNext);
         edtPhone = (EditText) rootView.findViewById(R.id.edtPhone);
@@ -118,7 +115,7 @@ public class LoginFragmentMobile extends Fragment implements View.OnClickListene
 
                 return false;
             }
-        });
+        });*/
 
         return rootView;
     }

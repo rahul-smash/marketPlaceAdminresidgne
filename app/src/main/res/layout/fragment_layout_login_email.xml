@@ -9,7 +9,7 @@
         android:id="@+id/header"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/color_header"
+        android:background="@color/colorHeader"
         android:visibility="gone">
 
         <Button
@@ -32,7 +32,7 @@
             android:layout_centerInParent="true"
             android:singleLine="true"
             android:text="Email Verification"
-            android:textColor="@color/color_white"
+            android:textColor="@color/colorWhite"
             android:textSize="@dimen/text_xlarge"
             android:visibility="visible" />
 
@@ -47,7 +47,7 @@
             android:background="@android:color/transparent"
             android:contentDescription=""
             android:text="Next"
-            android:textColor="@color/color_white"
+            android:textColor="@color/colorWhite"
             android:textSize="@dimen/text_large"
             android:visibility="visible" />
 
@@ -67,7 +67,7 @@
         android:gravity="center"
         android:text="Please enter your registered email to proceed next."
         android:textAppearance="?android:attr/textAppearanceLarge"
-        android:textColor="@color/color_white"
+        android:textColor="@color/colorWhite"
         android:textSize="@dimen/text_xlarge" />
 
     <EditText
@@ -84,7 +84,7 @@
         android:inputType="textEmailAddress"
         android:singleLine="true"
         android:textColor="@android:color/white"
-        android:textColorHint="@color/color_white" />
+        android:textColorHint="@color/colorWhite" />
 
     <Button
 
@@ -101,7 +101,7 @@
         android:minHeight="10dp"
         android:padding="5dp"
         android:text="GO"
-        android:textColor="@color/color_black"
+        android:textColor="@color/colorBlack"
         android:textSize="@dimen/text_large"
         android:visibility="visible" />
 

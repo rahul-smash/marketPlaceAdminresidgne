@@ -175,7 +175,7 @@
                     android:layout_height="wrap_content"
                     android:layout_margin="10dp"
                     android:text="Message:"
-                    android:textColor="@color/color_text"
+                    android:textColor="@color/colorTextDark"
                     android:textSize="@dimen/text_large" />
 
                 <TextView

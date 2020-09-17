@@ -14,9 +14,9 @@
             android:layout_height="wrap_content"
             android:layout_centerHorizontal="true"
             android:layout_margin="10dp"
-            android:background="@color/color_white"
+            android:background="@color/colorWhite"
             android:text="Login with number"
-            android:textColor="@color/color_black" />
+            android:textColor="@color/colorBlack" />
 
         <TextView
             android:id="@+id/orTxt"
@@ -35,8 +35,8 @@
             android:layout_below="@+id/orTxt"
             android:layout_centerHorizontal="true"
             android:layout_margin="10dp"
-            android:background="@color/color_white"
+            android:background="@color/colorWhite"
             android:text="Login with email"
-            android:textColor="@color/color_black" />
+            android:textColor="@color/colorBlack" />
     </RelativeLayout>
 </RelativeLayout>

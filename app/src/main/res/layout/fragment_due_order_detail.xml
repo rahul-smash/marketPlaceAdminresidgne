@@ -28,7 +28,7 @@
                 android:layout_centerVertical="true"
                 android:layout_marginLeft="5dp"
                 android:text="Details"
-                android:textColor="@color/color_white"
+                android:textColor="@color/colorWhite"
                 android:textSize="@dimen/text_large"
                 android:textStyle="bold" />
 
@@ -60,7 +60,7 @@
                 android:layout_toLeftOf="@+id/txtTotalAmount"
                 android:singleLine="true"
                 android:text="Total:"
-                android:textColor="@color/color_white"
+                android:textColor="@color/colorWhite"
                 android:textSize="@dimen/text_large"
                 android:textStyle="bold" />
 
@@ -72,7 +72,7 @@
                 android:layout_marginLeft="5dp"
                 android:singleLine="true"
                 android:text=""
-                android:textColor="@color/color_white"
+                android:textColor="@color/colorWhite"
                 android:textSize="@dimen/text_large"
                 android:textStyle="bold" />
 
@@ -103,7 +103,7 @@
             android:background="@drawable/selector_button_rejected"
             android:gravity="center"
             android:text="Reject Order"
-            android:textColor="@color/color_white"></Button>
+            android:textColor="@color/colorWhite"></Button>
 
         <RelativeLayout
             android:id="@+id/relProcess"

@@ -4,16 +4,16 @@
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:layout_gravity="center"
-    android:background="@color/color_white"
+    android:background="@color/colorWhite"
     android:orientation="vertical">
 
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/ColorPrimary"
+        android:background="@color/colorPrimary"
         android:padding="5dp"
         android:text="Change notification sound"
-        android:textColor="@color/color_white"
+        android:textColor="@color/colorWhite"
         android:textSize="@dimen/text_large"></TextView>
 
     <LinearLayout

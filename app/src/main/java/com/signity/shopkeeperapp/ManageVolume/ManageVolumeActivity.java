@@ -2,13 +2,10 @@ package com.signity.shopkeeperapp.ManageVolume;
 
 import android.content.Context;
 import android.media.AudioManager;
-import android.support.v4.app.FragmentManager;
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
+import androidx.appcompat.app.AppCompatActivity;
+
 import android.view.KeyEvent;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageButton;
@@ -18,7 +15,6 @@ import android.widget.TextView;
 
 import com.signity.shopkeeperapp.R;
 import com.signity.shopkeeperapp.util.AnimUtil;
-import com.signity.shopkeeperapp.util.Constant;
 import com.signity.shopkeeperapp.util.PrefManager;
 
 public class ManageVolumeActivity extends AppCompatActivity implements View.OnClickListener {
