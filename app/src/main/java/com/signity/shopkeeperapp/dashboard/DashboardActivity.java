@@ -7,6 +7,7 @@ import android.os.Handler;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -37,6 +38,7 @@ public class DashboardActivity extends AppCompatActivity implements BottomNaviga
     private ActionBarDrawerToggle mDrawerToggle;
     private Toolbar toolbar;
     private TextView toolbarTitle;
+    ImageView imgFilter;
     private boolean doubleBackToExitPressedOnce;
 
     public static Intent getStartIntent(Context context) {
@@ -56,6 +58,7 @@ public class DashboardActivity extends AppCompatActivity implements BottomNaviga
     private void initViews() {
         bottomNavigationView = findViewById(R.id.bottomNavigationView);
         toolbar = findViewById(R.id.toolbar);
+      //  imgFilter=(ImageView)findViewById(R.id.imgFilter);
         drawerLayout = findViewById(R.id.drawer_layout);
         toolbarTitle = findViewById(R.id.tv_toolbar_dashboard);
         BadgeDrawable badgeDrawable = bottomNavigationView.getOrCreateBadge(R.id.action_bottom_orders);

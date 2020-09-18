@@ -7,10 +7,11 @@
     android:layout_marginTop="16dp"
     android:layout_marginEnd="16dp"
     android:background="@drawable/item_background_rounded"
-    android:padding="16dp">
+    android:padding="16dp"
+    android:id="@+id/itemView_Parent">
 
     <ImageView
-        android:id="@+id/imageView3"
+        android:id="@+id/imgProduct"
         android:layout_width="64dp"
         android:layout_height="64dp"
         android:adjustViewBounds="true"
@@ -20,7 +21,7 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
-        android:id="@+id/textView"
+        android:id="@+id/txt_Name"
         style="@style/AppTheme.TextView.Medium"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -28,22 +29,22 @@
         android:layout_marginLeft="16dp"
         android:text="Mohit Gupta"
         android:textSize="16sp"
-        app:layout_constraintStart_toEndOf="@+id/imageView3"
+        app:layout_constraintStart_toEndOf="@+id/imgProduct"
         app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
-        android:id="@+id/textView22"
+        android:id="@+id/txt_Price"
         style="@style/AppTheme.TextView.Medium"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Rs.300"
         android:textSize="16sp"
-        app:layout_constraintBottom_toBottomOf="@+id/textView2"
+        app:layout_constraintBottom_toBottomOf="@+id/txtorderId"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/textView2" />
+        app:layout_constraintTop_toTopOf="@+id/txtorderId" />
 
     <TextView
-        android:id="@+id/textView2"
+        android:id="@+id/txtorderId"
         style="@style/AppTheme.TextView.Medium"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
@@ -51,12 +52,12 @@
         android:layout_marginLeft="16dp"
         android:text="Order- 1112221"
         android:textColor="@color/colorBlack"
-        app:layout_constraintEnd_toStartOf="@+id/textView22"
-        app:layout_constraintStart_toEndOf="@+id/imageView3"
-        app:layout_constraintTop_toBottomOf="@+id/textView" />
+        app:layout_constraintEnd_toStartOf="@+id/txt_Price"
+        app:layout_constraintStart_toEndOf="@+id/imgProduct"
+        app:layout_constraintTop_toBottomOf="@+id/txt_Name" />
 
     <TextView
-        android:id="@+id/textView4"
+        android:id="@+id/txt_items"
         style="@style/AppTheme.TextView.Small"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -65,11 +66,11 @@
         android:text="2 items"
         android:textSize="12sp"
         app:layout_constraintHorizontal_chainStyle="spread_inside"
-        app:layout_constraintStart_toEndOf="@+id/imageView3"
-        app:layout_constraintTop_toBottomOf="@+id/textView2" />
+        app:layout_constraintStart_toEndOf="@+id/imgProduct"
+        app:layout_constraintTop_toBottomOf="@+id/txtorderId" />
 
     <TextView
-        android:id="@+id/textView3"
+        android:id="@+id/txtDate"
         style="@style/AppTheme.TextView.Small"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
@@ -77,10 +78,11 @@
         android:text="11 Sep 2020, 09:15 PM"
         android:textSize="12sp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/textView4"
-        app:layout_constraintTop_toBottomOf="@+id/textView2" />
+        app:layout_constraintStart_toEndOf="@+id/txt_items"
+        app:layout_constraintTop_toBottomOf="@+id/txtorderId" />
 
     <ImageView
+        android:id="@+id/imgArrow"
         android:layout_width="12dp"
         android:layout_height="12dp"
         android:src="@drawable/detailnextarrow"
@@ -94,7 +96,7 @@
         android:orientation="horizontal"
         android:visibility="visible"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/imageView3">
+        app:layout_constraintTop_toBottomOf="@+id/imgProduct">
 
         <View
             android:layout_width="4dp"
@@ -102,6 +104,7 @@
             android:background="@drawable/accepted_dot" />
 
         <TextView
+            android:id="@+id/txtStatus"
             style="@style/AppTheme.TextView.Small"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -120,7 +123,7 @@
         android:gravity="center"
         android:orientation="horizontal"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/imageView3">
+        app:layout_constraintTop_toBottomOf="@+id/imgProduct">
 
         <LinearLayout
             android:layout_width="wrap_content"

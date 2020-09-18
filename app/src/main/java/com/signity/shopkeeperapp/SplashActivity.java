@@ -68,7 +68,14 @@ public class SplashActivity extends Activity {
 
 
     private void startSplashModule() {
-        if (!storeId.isEmpty() && !userId.isEmpty()) {
+
+        Intent intent_home = new Intent(SplashActivity.this,
+                DashboardActivity.class);
+        startActivity(intent_home);
+        AnimUtil.slideFromRightAnim(SplashActivity.this);
+        finish();
+
+      /*  if (!storeId.isEmpty() && !userId.isEmpty()) {
             Log.i("startSplashModule_1", "startSplashModule");
             if (isInternetConnected) {
                 Log.i("startSplashModule_2", "startSplashModule");
@@ -88,6 +95,7 @@ public class SplashActivity extends Activity {
                     public void run() {
                         Log.i("startSplashModule_5", "startSplashModule");
 
+
                         openLoginScreen();
                     }
                 }, 2000);
@@ -97,7 +105,7 @@ public class SplashActivity extends Activity {
                 openAlertForNoInternet();
             }
         }
-
+*/
     }
 
 

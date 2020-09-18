@@ -36,6 +36,12 @@
                     android:textAlignment="center"
                     android:textColor="@color/colorWhite" />
 
+               <!-- <ImageView
+                    android:id="@+id/imgFilter"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="right"
+                    android:src="@drawable/filtericon" />-->
             </androidx.appcompat.widget.Toolbar>
 
         </com.google.android.material.appbar.AppBarLayout>
