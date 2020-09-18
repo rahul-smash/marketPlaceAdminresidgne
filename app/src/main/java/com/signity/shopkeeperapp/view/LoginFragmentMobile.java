@@ -1,31 +1,30 @@
 package com.signity.shopkeeperapp.view;
 
 import android.app.AlertDialog;
+import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.DialogInterface;
-import android.content.IntentFilter;
+import android.content.IntentSender;
 import android.os.Bundle;
+import android.os.Handler;
 import android.provider.Settings;
-import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentTransaction;
-import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 import android.util.Log;
-import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.inputmethod.EditorInfo;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.TextView;
 import android.widget.Toast;
+
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentTransaction;
+
+import com.google.android.gms.auth.api.credentials.Credentials;
+import com.google.android.gms.auth.api.credentials.HintRequest;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
 import com.signity.shopkeeperapp.R;
-/*import com.signity.shopkeeperapp.gcm.QuickstartPreferences;
-import com.signity.shopkeeperapp.gcm.RegistrationIntentService;*/
-import com.signity.shopkeeperapp.gcm.QuickstartPreferences;
 import com.signity.shopkeeperapp.model.MobResponseDetails;
 import com.signity.shopkeeperapp.model.StoresModel;
 import com.signity.shopkeeperapp.network.NetworkAdaper;
@@ -42,26 +41,48 @@ import retrofit.Callback;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
 
+/*import com.signity.shopkeeperapp.gcm.QuickstartPreferences;
+import com.signity.shopkeeperapp.gcm.RegistrationIntentService;*/
+
 /**
  * Created by Rajesh on 12/10/15.
  */
 public class LoginFragmentMobile extends Fragment implements View.OnClickListener {
 
+    private static final int PLAY_SERVICES_RESOLUTION_REQUEST = 9000;
+    private static final String TAG = "MainActivity";
+    private static final int CREDENTIAL_PICKER_REQUEST = 1;
     Button btnNext, backButton;
     EditText edtPhone;
     String from;
     PrefManager prefManager;
     String deviceToken;
-    private static final int PLAY_SERVICES_RESOLUTION_REQUEST = 9000;
-    private static final String TAG = "MainActivity";
-
     private BroadcastReceiver mRegistrationBroadcastReceiver;
 
+    public static Fragment newInstance(Context context) {
+        return Fragment.instantiate(context,
+                LoginFragmentMobile.class.getName());
+    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         prefManager = new PrefManager(getActivity());
+    }
+
+    private void requestHint() {
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                HintRequest hintRequest = new HintRequest.Builder().setPhoneNumberIdentifierSupported(true).build();
+                PendingIntent intent = Credentials.getClient(getContext()).getHintPickerIntent(hintRequest);
+                try {
+                    startIntentSenderForResult(intent.getIntentSender(), CREDENTIAL_PICKER_REQUEST, null, 0, 0, 0, null);
+                } catch (IntentSender.SendIntentException e) {
+                    e.printStackTrace();
+                }
+            }
+        }, 200);
     }
 
     @Override
@@ -88,11 +109,6 @@ public class LoginFragmentMobile extends Fragment implements View.OnClickListene
                 }
             }
         };*/
-    }
-
-    public static Fragment newInstance(Context context) {
-        return Fragment.instantiate(context,
-                LoginFragmentMobile.class.getName());
     }
 
     @Override
@@ -155,8 +171,8 @@ public class LoginFragmentMobile extends Fragment implements View.OnClickListene
         String phone = edtPhone.getText().toString();
         String deviceId = Settings.Secure.getString(getActivity().getApplicationContext().getContentResolver(), Settings.Secure.ANDROID_ID);
         //String deviceToken = pushClientManager.getRegistrationId(getActivity());
-       // deviceToken = prefManager.getSharedValue(Constant.DEVICE_TOKEN);
-      //  String deviceToken = Util.loadPreferenceValue(getActivity(), Constant.DEVICE_TOKEN);
+        // deviceToken = prefManager.getSharedValue(Constant.DEVICE_TOKEN);
+        //  String deviceToken = Util.loadPreferenceValue(getActivity(), Constant.DEVICE_TOKEN);
         String deviceToken = prefManager.getSharedValue(Constant.DEVICE_TOKEN);
 
         // deviceToken = Util.loadPreferenceValue(getActivity(), prefManager.getSharedValue(Constant.DEVICE_TOKEN));
@@ -258,13 +274,13 @@ public class LoginFragmentMobile extends Fragment implements View.OnClickListene
     @Override
     public void onResume() {
         super.onResume();
-        LocalBroadcastManager.getInstance(getActivity()).registerReceiver(mRegistrationBroadcastReceiver,
-                new IntentFilter(QuickstartPreferences.REGISTRATION_COMPLETE));
+//        LocalBroadcastManager.getInstance(getActivity()).registerReceiver(mRegistrationBroadcastReceiver,
+//                new IntentFilter(QuickstartPreferences.REGISTRATION_COMPLETE));
     }
 
     @Override
     public void onPause() {
-        LocalBroadcastManager.getInstance(getActivity()).unregisterReceiver(mRegistrationBroadcastReceiver);
+//        LocalBroadcastManager.getInstance(getActivity()).unregisterReceiver(mRegistrationBroadcastReceiver);
         super.onPause();
     }
 

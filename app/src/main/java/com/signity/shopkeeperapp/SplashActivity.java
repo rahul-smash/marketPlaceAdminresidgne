@@ -88,7 +88,7 @@ public class SplashActivity extends Activity {
                     public void run() {
                         Log.i("startSplashModule_5", "startSplashModule");
 
-                        startActivity(DashboardActivity.getStartIntent(SplashActivity.this));
+                        openLoginScreen();
                     }
                 }, 2000);
             } else {
