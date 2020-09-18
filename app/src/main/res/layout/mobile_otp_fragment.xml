@@ -23,9 +23,9 @@
             android:gravity="center">
 
             <ImageView
-                android:layout_marginLeft="8dp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginLeft="8dp"
                 android:src="@drawable/enteroptscreenicon" />
 
         </LinearLayout>
@@ -40,7 +40,7 @@
             android:textColor="@android:color/white" />
 
         <TextView
-            android:id="@+id/enter_no_tv"
+            android:id="@+id/tv_otp_message"
             style="@style/TextAppearance.AppCompat.Medium"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -50,20 +50,20 @@
 
     </LinearLayout>
 
-    <LinearLayout
+    <RelativeLayout
         android:id="@+id/ll_mobile"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@+id/ll_top_view"
         android:layout_centerHorizontal="true"
-        android:orientation="vertical"
         android:padding="42dp">
 
         <LinearLayout
             android:id="@+id/ll_edit"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_centerInParent="true"
+            android:layout_alignParentTop="true"
+            android:layout_centerHorizontal="true"
             android:layout_gravity="center_vertical"
             android:gravity="center_horizontal"
             android:orientation="horizontal">
@@ -75,6 +75,7 @@
                 android:layout_height="50dp"
                 android:layout_gravity="center"
                 android:background="@drawable/opt_background"
+                android:gravity="center"
                 android:imeOptions="actionNext"
                 android:inputType="number"
                 android:maxLength="1"
@@ -89,6 +90,7 @@
                 android:layout_marginStart="8dp"
                 android:layout_marginEnd="8dp"
                 android:background="@drawable/opt_background"
+                android:gravity="center"
                 android:imeOptions="actionNext"
                 android:inputType="number"
                 android:maxLength="1"
@@ -102,6 +104,7 @@
                 android:layout_gravity="center"
                 android:layout_marginRight="8dp"
                 android:background="@drawable/opt_background"
+                android:gravity="center"
                 android:imeOptions="actionNext"
                 android:inputType="number"
                 android:maxLength="1"
@@ -114,35 +117,38 @@
                 android:layout_height="50dp"
                 android:layout_gravity="center"
                 android:background="@drawable/opt_background"
+                android:gravity="center"
                 android:imeOptions="actionDone"
                 android:inputType="number"
                 android:maxLength="1"
                 android:textAlignment="center" />
         </LinearLayout>
 
-        <LinearLayout
-            android:layout_width="match_parent"
+    </RelativeLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/ll_mobile"
+        android:layout_marginTop="-24dp"
+        android:layout_centerHorizontal="true"
+        android:gravity="center"
+        android:orientation="horizontal">
+
+        <ProgressBar
+            android:id="@+id/progressbar"
+            android:layout_width="16dp"
+            android:layout_height="16dp"
+            android:indeterminate="true"
+            android:indeterminateTint="@color/colorPrimaryDark" />
+
+        <TextView
+            android:id="@+id/tv_timertext"
+            style="@style/AppTheme.TextView.Small"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
-            android:gravity="center"
-            android:orientation="horizontal">
-
-            <ProgressBar
-                android:id="@+id/progressbar"
-                android:layout_width="16dp"
-                android:layout_height="16dp"
-                android:indeterminate="true"
-                android:indeterminateTint="@color/colorPrimaryDark" />
-
-            <TextView
-                android:id="@+id/tv_timertext"
-                style="@style/AppTheme.TextView.Small"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Tying to auto capture in "
-                android:textColor="@color/colorTextGrey" />
-
-        </LinearLayout>
+            android:text="Tying to auto capture in "
+            android:textColor="@color/colorTextGrey" />
 
     </LinearLayout>
 
@@ -183,7 +189,7 @@
                 android:orientation="vertical">
 
                 <TextView
-                    android:id="@+id/resend_tv_click"
+                    android:id="@+id/tv_resend_otp"
                     style="@style/AppTheme.TextView.Medium"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -202,4 +208,5 @@
         </LinearLayout>
 
     </RelativeLayout>
+
 </RelativeLayout>

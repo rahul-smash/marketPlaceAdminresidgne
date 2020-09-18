@@ -13,7 +13,7 @@ import com.signity.shopkeeperapp.R;
 import com.signity.shopkeeperapp.util.AnimUtil;
 import com.signity.shopkeeperapp.util.Constant;
 import com.signity.shopkeeperapp.util.PrefManager;
-import com.signity.shopkeeperapp.view.LoginScreenActivity;
+import com.signity.shopkeeperapp.login.MobileLoginActivity;
 
 /**
  * Created by root on 25/4/16.
@@ -52,7 +52,7 @@ public class LogInOptionsFragment extends Fragment implements View.OnClickListen
             case R.id.numberBtn:
                 prefManager.storeSharedValue(Constant.LOG_IN_TYPE, "mobile");
                 Intent intent_home = new Intent(getActivity(),
-                        LoginScreenActivity.class);
+                        MobileLoginActivity.class);
                 startActivity(intent_home);
                 AnimUtil.slideFromRightAnim(getActivity());
 //                getActivity().finish();
@@ -60,7 +60,7 @@ public class LogInOptionsFragment extends Fragment implements View.OnClickListen
             case R.id.emailBtn:
                 prefManager.storeSharedValue(Constant.LOG_IN_TYPE, "email");
                 Intent intent = new Intent(getActivity(),
-                        LoginScreenActivity.class);
+                        MobileLoginActivity.class);
                 intent.putExtra("type", "email");
                 startActivity(intent);
                 AnimUtil.slideFromRightAnim(getActivity());

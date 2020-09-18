@@ -19,8 +19,7 @@ public class PrefManager {
 
     public PrefManager(Context _ctx) {
         this._ctx = _ctx;
-        sharedpreferences = _ctx.getSharedPreferences(
-                Constant.SHARED_PREF, Context.MODE_PRIVATE);
+        sharedpreferences = _ctx.getSharedPreferences(Constant.SHARED_PREF, Context.MODE_PRIVATE);
     }
 
     public void storeSharedValue(String key, String value) {

@@ -7,17 +7,17 @@ public class NetworkConstant {
 
     //public static final String BASE = "http://dev2.signitysolutions.co.in/maas/apistore";
 
-    public static final String STORE_ID = "/1";
-    public static final String APISTORE = "/apistore_v2";
+    public static final String STORE_ID = "/393";
+    public static final String APISTORE = "/apistore_v3";
 
 
-   public static final String BASE = "https://app.restroapp.com";     // staging Url
+//   public static final String BASE = "https://app.restroapp.com";     // staging Url
 
 
 
 
 
-     //public static final String BASE = "https://stage.grocersapp.com";     // TestingPupose Url
+     public static final String BASE = "https://stage.grocersapp.com/apistore_v3";     // TestingPupose Url
 
 
 

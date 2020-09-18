@@ -58,8 +58,9 @@
             android:value="default_channel_id" />
 
         <activity
-            android:name=".view.LoginScreenActivity"
+            android:name=".login.MobileLoginActivity"
             android:label="@string/app_name"
+            android:launchMode="singleTop"
             android:screenOrientation="portrait" />
         <activity
             android:name=".home.MainActivity"
@@ -103,19 +104,19 @@
         <activity
             android:name=".LogInModule.LogInOptionsActivity"
             android:label="@string/title_activity_log_in_options"
-            android:screenOrientation="portrait"></activity>
+            android:screenOrientation="portrait" />
         <activity
             android:name=".LogInModule.LogInWithEmailActivity"
             android:label="@string/title_activity_log_in_with_email"
-            android:screenOrientation="portrait"></activity>
+            android:screenOrientation="portrait" />
         <activity
             android:name=".LogInModule.ChangePasswordActivity"
             android:label="@string/title_activity_change_password"
-            android:screenOrientation="portrait"></activity>
+            android:screenOrientation="portrait" />
         <activity
             android:name=".setting.StoreSettingActivity"
             android:label="@string/title_activity_change_password"
-            android:screenOrientation="portrait"></activity>
+            android:screenOrientation="portrait" />
         <activity
             android:name=".dashboard.DashboardActivity"
             android:launchMode="singleTask"

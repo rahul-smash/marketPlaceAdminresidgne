@@ -5,7 +5,7 @@ import androidx.fragment.app.Fragment;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.signity.shopkeeperapp.R;
-import com.signity.shopkeeperapp.view.LoginFragmentMobile;
+import com.signity.shopkeeperapp.login.LoginMobileFragment;
 
 public class LogInWithEmailActivity extends AppCompatActivity {
 
@@ -14,7 +14,7 @@ public class LogInWithEmailActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_log_in_with_email);
-        Fragment fragment = LoginFragmentMobile.newInstance(this);
+        Fragment fragment = LoginMobileFragment.getInstance(null);
 
         if (savedInstanceState == null)
             getSupportFragmentManager().beginTransaction()

@@ -1,12 +1,12 @@
 apply plugin: 'com.android.application'
-
+apply plugin: 'com.google.gms.google-services'
 
 android {
     compileSdkVersion 29
 
     defaultConfig {
-       // applicationId 'com.signity.valueappz'
-       // applicationId 'com.signity.valueadminrestro'//Changes as per sachin mittal
+        // applicationId 'com.signity.valueappz'
+        // applicationId 'com.signity.valueadminrestro'//Changes as per sachin mittal
         applicationId 'com.signity.valueapps'
         minSdkVersion 16
         targetSdkVersion 29
@@ -64,8 +64,12 @@ dependencies {
     implementation 'androidx.constraintlayout:constraintlayout:2.0.1'
     // implementation "com.google.android.gms:play-services-gcm:${playLibVersion}"
 
-    implementation 'com.google.android.gms:play-services-auth:18.1.0'
+    implementation 'com.google.android.gms:play-services-auth:17.0.0'
     implementation 'com.google.android.gms:play-services-auth-api-phone:17.4.0'
+    implementation 'com.google.android.gms:play-services-base:17.4.0'
+    implementation 'com.google.android.play:core:1.8.0'
+
+    implementation 'androidx.slidingpanelayout:slidingpanelayout:1.1.0'
+    implementation 'androidx.localbroadcastmanager:localbroadcastmanager:1.0.0'
 
 }
-apply plugin: 'com.google.gms.google-services'

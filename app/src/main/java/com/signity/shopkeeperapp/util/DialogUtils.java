@@ -7,8 +7,7 @@ import android.content.Context;
  */
 public class DialogUtils {
 
-    public static void showAlertDialog(Context context, String title,
-                                       String message) {
+    public static void showAlertDialog(Context context, String title, String message) {
 
         final DialogHandler dialogHandler = new DialogHandler(context);
         dialogHandler.setdialogForFinish(title, message, false);

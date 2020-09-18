@@ -67,13 +67,16 @@
             android:textColor="@color/colorGrayForOrderDtail" />
 
         <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/tv_mobile"
+            android:id="@+id/edt_mobile"
             style="@style/AppTheme.EditText"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:focusableInTouchMode="true"
+            android:imeOptions="actionDone"
             android:inputType="phone"
             android:maxLength="10"
+            android:paddingStart="8dp"
+            android:paddingLeft="8dp"
             android:singleLine="true"
             android:textColor="@color/colorTextDark" />
 
@@ -83,6 +86,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_below="@+id/ll_mobile"
+        android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true">
 
         <com.google.android.material.floatingactionbutton.FloatingActionButton
