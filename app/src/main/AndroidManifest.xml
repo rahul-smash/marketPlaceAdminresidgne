@@ -71,6 +71,10 @@
             android:label="@string/app_name"
             android:screenOrientation="portrait" />
         <activity
+            android:name=".dashboard.orders.OrderDetailActivity"
+            android:label="@string/app_name"
+            android:screenOrientation="portrait" />
+        <activity
             android:name=".orders.DueOrderActivityWithoutUpdations"
             android:label="@string/app_name"
             android:screenOrientation="portrait" />

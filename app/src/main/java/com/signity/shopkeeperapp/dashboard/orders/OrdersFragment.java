@@ -217,6 +217,10 @@ public class OrdersFragment extends Fragment implements OrdersAdapter.OnItemClic
         if (order != null) {
             Log.i("@@particular_click", "clcikEvent");
 
+            Intent intent = new Intent(getActivity(), OrderDetailActivity.class);
+            startActivity(intent);
+
+
 
         }
     }
