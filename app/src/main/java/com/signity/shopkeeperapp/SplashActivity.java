@@ -13,6 +13,7 @@ import android.util.Log;
 import com.signity.shopkeeperapp.LogInModule.LogInOptionsActivity;
 import com.signity.shopkeeperapp.app.DbAdapter;
 import com.signity.shopkeeperapp.dashboard.DashboardActivity;
+import com.signity.shopkeeperapp.dashboard.orders.OrderDetailActivity;
 import com.signity.shopkeeperapp.db.AppDatabase;
 import com.signity.shopkeeperapp.home.MainActivity;
 import com.signity.shopkeeperapp.model.MobResponseLogin;
