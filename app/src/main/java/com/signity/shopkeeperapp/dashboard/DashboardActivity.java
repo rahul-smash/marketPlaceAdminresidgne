@@ -108,7 +108,6 @@ public class DashboardActivity extends AppCompatActivity implements BottomNaviga
     }
 
     private void setUpToolbar() {
-
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayShowTitleEnabled(false);
     }

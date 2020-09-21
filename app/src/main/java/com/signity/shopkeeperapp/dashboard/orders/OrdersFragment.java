@@ -96,7 +96,6 @@ public class OrdersFragment extends Fragment implements OrdersAdapter.OnItemClic
         adapter = new OrdersAdapter(context, orderListModel);
         adapter.setOnItemClickListener(this);
         recyclerView.setAdapter(adapter);
-        getAllOrdersMethod();
        /* fab = (FloatingActionButton) rootView.findViewById(R.id.fab);
         fab.setVisibility(View.VISIBLE);
         fab.setOnClickListener(new View.OnClickListener() {

@@ -8,10 +8,10 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
 import android.os.CountDownTimer;
+import android.os.Parcelable;
 import android.provider.Settings;
 import android.text.Editable;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -24,7 +24,6 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentTransaction;
 
 import com.google.android.gms.auth.api.phone.SmsRetriever;
 import com.google.android.gms.auth.api.phone.SmsRetrieverClient;
@@ -35,16 +34,19 @@ import com.google.android.gms.tasks.Task;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.signity.shopkeeperapp.R;
 import com.signity.shopkeeperapp.classes.CustomTextWatcher;
-import com.signity.shopkeeperapp.model.MobResponseDetails;
+import com.signity.shopkeeperapp.dashboard.DashboardActivity;
 import com.signity.shopkeeperapp.model.MobResponseLogin;
-import com.signity.shopkeeperapp.model.OtpVerifyModel;
+import com.signity.shopkeeperapp.model.verify.OtpVerifyResponse;
 import com.signity.shopkeeperapp.network.NetworkAdaper;
+import com.signity.shopkeeperapp.stores.StoresActivity;
+import com.signity.shopkeeperapp.util.AnimUtil;
 import com.signity.shopkeeperapp.util.Constant;
 import com.signity.shopkeeperapp.util.PrefManager;
 import com.signity.shopkeeperapp.util.ProgressDialogUtil;
 import com.signity.shopkeeperapp.util.Util;
-import com.signity.shopkeeperapp.view.LoginFragmentOtp;
+import com.signity.shopkeeperapp.util.prefs.AppPreference;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
@@ -455,23 +457,45 @@ public class VerifyOtpFragment extends Fragment {
         param.put("device_token", deviceToken);
         param.put("platform", Constant.PLATFORM);
 
-        NetworkAdaper.getNetworkServices().otpVerify(param, new Callback<OtpVerifyModel>() {
+        NetworkAdaper.getNetworkServices().otpVerifyNew(param, new Callback<OtpVerifyResponse>() {
 
             @Override
-            public void success(OtpVerifyModel mobResponse, Response response) {
+            public void success(OtpVerifyResponse otpVerifyResponse, Response response) {
 
                 if (!isAdded()) {
                     return;
                 }
 
                 ProgressDialogUtil.hideProgressDialog();
-                if (mobResponse.getSuccess()) {
-                    Toast.makeText(getActivity(), mobResponse.getMessage(), Toast.LENGTH_SHORT).show();
-                    if (listener != null) {
+                if (otpVerifyResponse.isSuccess()) {
+                    Toast.makeText(getActivity(), otpVerifyResponse.getMessage(), Toast.LENGTH_SHORT).show();
+                    // TODO - Write re-direct login in activity
+                    /*if (listener != null) {
                         listener.onOtpVerified();
+                    }*/
+
+                    if (otpVerifyResponse.getStore() == null) {
+                        return;
                     }
+
+                    if (otpVerifyResponse.getStore().size() > 0) {
+                        Bundle bundle = new Bundle();
+                        bundle.putParcelableArrayList(StoresActivity.STORES_LIST, (ArrayList<? extends Parcelable>) otpVerifyResponse.getStore());
+                        startActivity(StoresActivity.getStartIntent(getContext(), bundle));
+                        AnimUtil.slideFromRightAnim(getActivity());
+                        getActivity().finish();
+                    } else {
+                        AppPreference.getInstance().setLoggedIn(Constant.Mode.LOGGED_IN);
+                        AppPreference.getInstance().saveUser(otpVerifyResponse.getStore().get(0).getUserResponse());
+                        AppPreference.getInstance().saveStore(otpVerifyResponse.getStore().get(0).getStoreResponse());
+                        NetworkAdaper.setupRetrofitClient(NetworkAdaper.setBaseUrl(AppPreference.getInstance().getStoreId()));
+                        startActivity(DashboardActivity.getStartIntent(getContext()));
+                        AnimUtil.slideFromRightAnim(getActivity());
+                        getActivity().finish();
+                    }
+
                 } else {
-                    Toast.makeText(getActivity(), mobResponse.getMessage(), Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getActivity(), otpVerifyResponse.getMessage(), Toast.LENGTH_SHORT).show();
                     textViewResendOtp.setEnabled(true);
                     textViewResendOtp.setTextColor(getResources().getColor(R.color.colorPrimaryDark));
                 }
@@ -484,26 +508,6 @@ public class VerifyOtpFragment extends Fragment {
             }
         });
 
-    }
-
-    private void proceedToMobileOtpGeneration(MobResponseDetails data) {
-        Log.e("OTP", data.getOtp());
-        Fragment fragment = LoginFragmentOtp.newInstance(getActivity());
-        Bundle bundle = new Bundle();
-        bundle.putString("id", data.getId());
-        bundle.putString("phone", data.getPhone());
-        bundle.putString("name", data.getFullName());
-        bundle.putString("email", data.getEmail());
-        bundle.putString("otp", data.getOtp());
-        bundle.putString("status", data.getStatus());
-        fragment.setArguments(bundle);
-        FragmentTransaction ft = getFragmentManager().beginTransaction();
-        ft.setCustomAnimations(R.anim.right_to_center_slide,
-                R.anim.center_to_left_slide,
-                R.anim.left_to_center_slide,
-                R.anim.center_to_right_slide);
-        ft.replace(R.id.container, fragment);
-        ft.commit();
     }
 
     @Override

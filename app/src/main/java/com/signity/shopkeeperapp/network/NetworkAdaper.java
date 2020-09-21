@@ -16,23 +16,19 @@ import retrofit.client.OkClient;
  * Created by Rajinder on 5/10/15.
  */
 public class NetworkAdaper {
-    public static NetworkAdaper cInstance;
+    public static NetworkAdaper instance;
     public static ApiService apiService;
 
-
-    /* Static 'instance' method */
     public static NetworkAdaper getInstance() {
-        return cInstance;
+        return instance;
     }
 
     public static void initInstance(Context ctx) {
-
-        if (cInstance == null) {
-            cInstance = new NetworkAdaper();
+        if (instance == null) {
+            instance = new NetworkAdaper();
             String store_id = Util.loadPreferenceValue(ctx, Constant.STORE_ID);
             String url = setBaseUrl(store_id);
-            setupRetrofitClient(NetworkConstant.BASE);
-
+            setupRetrofitClient(url);
         }
     }
 
@@ -41,9 +37,10 @@ public class NetworkAdaper {
         client.setConnectTimeout(2, TimeUnit.MINUTES);
         client.setReadTimeout(2, TimeUnit.MINUTES);
 
-
         RestAdapter restAdapter = new RestAdapter.Builder()
-                .setClient(new OkClient(client)).setEndpoint(url).setLogLevel(RestAdapter.LogLevel.FULL)
+                .setClient(new OkClient(client))
+                .setEndpoint(url)
+                .setLogLevel(RestAdapter.LogLevel.FULL)
                 .build();
         apiService = restAdapter.create(ApiService.class);
     }
@@ -55,7 +52,7 @@ public class NetworkAdaper {
     public static String setBaseUrl(String store_id) {
         String url = "";
         if (store_id.equalsIgnoreCase("")) {
-            url = NetworkConstant.BASE + NetworkConstant.STORE_ID + NetworkConstant.APISTORE;
+            url = NetworkConstant.BASE + NetworkConstant.APISTORE;
         } else {
             url = NetworkConstant.BASE + "/" + store_id + NetworkConstant.APISTORE;
         }

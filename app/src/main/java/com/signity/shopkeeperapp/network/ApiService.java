@@ -14,6 +14,8 @@ import com.signity.shopkeeperapp.model.OtpVerifyModel;
 import com.signity.shopkeeperapp.model.ResponseForceUpdate;
 import com.signity.shopkeeperapp.model.SetOrdersModel;
 import com.signity.shopkeeperapp.model.StoresModel;
+import com.signity.shopkeeperapp.model.dashboard.StoreDashboardResponse;
+import com.signity.shopkeeperapp.model.verify.OtpVerifyResponse;
 
 import java.util.Map;
 
@@ -34,7 +36,7 @@ public interface ApiService {
 
     @FormUrlEncoded
     @POST("/storeCustomers")
-    void getCustomers(@FieldMap Map<String, String> parameters,Callback<CustomersModel> response);
+    void getCustomers(@FieldMap Map<String, String> parameters, Callback<CustomersModel> response);
 
     @FormUrlEncoded
     @POST("/getCustomer")
@@ -73,6 +75,10 @@ public interface ApiService {
     void otpVerify(@FieldMap Map<String, String> parameters, Callback<OtpVerifyModel> response);
 
     @FormUrlEncoded
+    @POST("/verifyOtp")
+    void otpVerifyNew(@FieldMap Map<String, String> parameters, Callback<OtpVerifyResponse> response);
+
+    @FormUrlEncoded
     @POST("/setStoreStatus")
     void setStoreStatus(@FieldMap Map<String, String> parameters, Callback<MobResponse> response);
 
@@ -91,6 +97,7 @@ public interface ApiService {
     @FormUrlEncoded
     @POST("/userLogin")
     void loginVerification(@FieldMap Map<String, String> parameters, Callback<LoginModel> response);
+
     @FormUrlEncoded
     @POST("/logout")
     void logout(@FieldMap Map<String, String> parameters, Callback<LoginModel> response);
@@ -106,6 +113,8 @@ public interface ApiService {
     @GET("/forceDownload")
     void forceDownload(Callback<ResponseForceUpdate> response);
 
-
+    @FormUrlEncoded
+    @POST("/storedashboard")
+    void storeDashboard(@FieldMap Map<String, Integer> parameters, Callback<StoreDashboardResponse> response);
 
 }

@@ -63,5 +63,32 @@ public class Constant {
     public static final String WRITE_SDCARD = Manifest.permission.WRITE_EXTERNAL_STORAGE;
     public static final String CALL = Manifest.permission.CALL_PHONE;
 
+    public enum Mode {
 
+        LOGGED_IN(0), NOT_LOGGED_IN(1);
+
+        private int type;
+
+        Mode(int type) {
+            this.type = type;
+        }
+
+        public int getType() {
+            return type;
+        }
+    }
+
+    public enum StoreDashboard {
+        TODAY(1), YESTERDAY(2), LAST_WEEK(7), LAST_MONTH(30);
+
+        private int days;
+
+        StoreDashboard(int days) {
+            this.days = days;
+        }
+
+        public int getDays() {
+            return days;
+        }
+    }
 }

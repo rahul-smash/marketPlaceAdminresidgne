@@ -17,7 +17,7 @@ public class NetworkConstant {
 
 
 
-     public static final String BASE = "https://stage.grocersapp.com/apistore_v3";     // TestingPupose Url
+     public static final String BASE = "https://stage.grocersapp.com";     // TestingPupose Url
 
 
 

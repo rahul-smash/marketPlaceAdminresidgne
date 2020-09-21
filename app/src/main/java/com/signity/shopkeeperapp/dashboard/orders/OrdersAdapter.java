@@ -129,11 +129,11 @@ public class OrdersAdapter extends RecyclerView.Adapter<OrdersAdapter.MyViewHold
             super(convertView);
             txt_Price = (TextView) convertView.findViewById(R.id.txt_Price);
             imgProduct = (ImageView) convertView.findViewById(R.id.imgProduct);
-            txtorderId = (TextView) convertView.findViewById(R.id.txtorderId);
-            txt_Name = (TextView) convertView.findViewById(R.id.txt_Name);
+            txtorderId = (TextView) convertView.findViewById(R.id.tv_store_address);
+            txt_Name = (TextView) convertView.findViewById(R.id.tv_store_name);
             txtDate = (TextView) convertView.findViewById(R.id.txtDate);
             txtStatus = (TextView) convertView.findViewById(R.id.txtStatus);
-            imgArrow = (ImageView) convertView.findViewById(R.id.imgArrow);
+            imgArrow = (ImageView) convertView.findViewById(R.id.iv_next_arrow);
             itemView_Parent = (ConstraintLayout) convertView.findViewById(R.id.itemView_Parent);
         }
 
