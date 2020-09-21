@@ -5,14 +5,25 @@ import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
 
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 
+import android.view.Window;
+import android.widget.Button;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.PopupWindow;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
@@ -20,10 +31,15 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.signity.shopkeeperapp.LogInModule.ChangePasswordActivity;
 import com.signity.shopkeeperapp.R;
 import com.signity.shopkeeperapp.adapter.RvActiveOrderAdapter;
 import com.signity.shopkeeperapp.adapter.RvGridSpacesItemDecoration;
 
+import com.signity.shopkeeperapp.dashboard.DashboardActivity;
+import com.signity.shopkeeperapp.home.MainActivity;
+import com.signity.shopkeeperapp.manage_stores.ManageStaffActivity;
+import com.signity.shopkeeperapp.model.DashBoardModelStoreDetail;
 import com.signity.shopkeeperapp.model.GetOrdersModel;
 import com.signity.shopkeeperapp.model.OrdersListModel;
 import com.signity.shopkeeperapp.network.NetworkAdaper;
@@ -63,7 +79,8 @@ public class OrdersFragment extends Fragment implements OrdersAdapter.OnItemClic
     private RelativeLayout parent;
 
     FloatingActionButton fab;
-
+    PopupWindow rightMenuPopUpWindow;
+    View topDot;
     public static OrdersFragment getInstance(Bundle bundle) {
         OrdersFragment fragment = new OrdersFragment();
         fragment.setArguments(bundle);
@@ -97,14 +114,15 @@ public class OrdersFragment extends Fragment implements OrdersAdapter.OnItemClic
         adapter.setOnItemClickListener(this);
         recyclerView.setAdapter(adapter);
         getAllOrdersMethod();
-       /* fab = (FloatingActionButton) rootView.findViewById(R.id.fab);
-        fab.setVisibility(View.VISIBLE);
-        fab.setOnClickListener(new View.OnClickListener() {
+
+        DashboardActivity.imgFilter.setVisibility(View.VISIBLE);
+        DashboardActivity.imgFilter.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                openPopupForFilter();
+                Log.i("@@clickEventMenu","Menu");
+                showPopUpMenu();
             }
-        });*/
+        });
         return rootView;
     }
 
@@ -199,5 +217,44 @@ public class OrdersFragment extends Fragment implements OrdersAdapter.OnItemClic
 
         }
     }
+    private void showPopUpMenu() {
+
+
+        LayoutInflater inflater = (LayoutInflater)getActivity(). getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        View layout = inflater.inflate(R.layout.right_menu_view_orders,
+                (ViewGroup)getActivity(). findViewById(R.id.popups));
+
+
+        rightMenuPopUpWindow = new PopupWindow(layout, LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT, true);
+
+        rightMenuPopUpWindow.setOutsideTouchable(true);
+        rightMenuPopUpWindow.setBackgroundDrawable(new ColorDrawable());
+        rightMenuPopUpWindow.setTouchInterceptor(new View.OnTouchListener() { // or whatever you want
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                if (event.getAction() == MotionEvent.ACTION_OUTSIDE) // here I want to close the pw when clicking outside it but at all this is just an example of how it works and you can implement the onTouch() or the onKey() you want
+                {
+                    rightMenuPopUpWindow.dismiss();
+                    return true;
+                }
+                return false;
+            }
+
+        });
+
+        float den = getActivity().getResources().getDisplayMetrics().density;
+        int offsetY = (int) (den * 5);
+        rightMenuPopUpWindow.showAsDropDown(DashboardActivity.imgFilter, 0, offsetY);
+
+
+
+
+
+
+
+    }
+
+
+
 
 }

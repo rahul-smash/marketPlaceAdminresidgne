@@ -38,7 +38,7 @@ public class DashboardActivity extends AppCompatActivity implements BottomNaviga
     private ActionBarDrawerToggle mDrawerToggle;
     private Toolbar toolbar;
     private TextView toolbarTitle;
-    ImageView imgFilter;
+   public static  ImageView imgFilter;
     private boolean doubleBackToExitPressedOnce;
 
     public static Intent getStartIntent(Context context) {
@@ -58,7 +58,7 @@ public class DashboardActivity extends AppCompatActivity implements BottomNaviga
     private void initViews() {
         bottomNavigationView = findViewById(R.id.bottomNavigationView);
         toolbar = findViewById(R.id.toolbar);
-      //  imgFilter=(ImageView)findViewById(R.id.imgFilter);
+       imgFilter=(ImageView)findViewById(R.id.imgFilter);
         drawerLayout = findViewById(R.id.drawer_layout);
         toolbarTitle = findViewById(R.id.tv_toolbar_dashboard);
         BadgeDrawable badgeDrawable = bottomNavigationView.getOrCreateBadge(R.id.action_bottom_orders);
@@ -128,18 +128,33 @@ public class DashboardActivity extends AppCompatActivity implements BottomNaviga
         menuItem.setChecked(true);
         switch (menuItem.getItemId()) {
             case R.id.action_bottom_home:
+                toolbarTitle.setText("Home");
+                imgFilter.setVisibility(View.GONE);
                 showFragment(HomeFragment.getInstance(null), HomeFragment.TAG);
                 break;
             case R.id.action_bottom_orders:
+                toolbarTitle.setText("Orders");
+                imgFilter.setVisibility(View.VISIBLE);
+
                 showFragment(OrdersFragment.getInstance(null), OrdersFragment.TAG);
                 break;
             case R.id.action_bottom_products:
+                toolbarTitle.setText("Products");
+                imgFilter.setVisibility(View.GONE);
+
+
                 showFragment(ProductsFragment.getInstance(null), ProductsFragment.TAG);
                 break;
             case R.id.action_bottom_categories:
+                toolbarTitle.setText("Categories");
+                imgFilter.setVisibility(View.GONE);
+
+
                 showFragment(CategoriesFragment.getInstance(null), CategoriesFragment.TAG);
                 break;
             case R.id.action_bottom_account:
+                toolbarTitle.setText("Account");
+
                 showFragment(AccountFragment.getInstance(null), AccountFragment.TAG);
                 break;
         }
