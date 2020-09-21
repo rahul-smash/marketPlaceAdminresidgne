@@ -71,7 +71,7 @@ public class SplashActivity extends Activity {
     private void startSplashModule() {
 
         Intent intent_home = new Intent(SplashActivity.this,
-                OrderDetailActivity.class);
+                DashboardActivity.class);
         startActivity(intent_home);
         AnimUtil.slideFromRightAnim(SplashActivity.this);
         finish();

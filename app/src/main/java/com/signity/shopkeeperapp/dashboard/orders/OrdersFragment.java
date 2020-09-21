@@ -218,7 +218,11 @@ public class OrdersFragment extends Fragment implements OrdersAdapter.OnItemClic
             Log.i("@@particular_click", "clcikEvent");
 
             Intent intent = new Intent(getActivity(), OrderDetailActivity.class);
-            startActivity(intent);
+            Bundle bundle = new Bundle();
+            bundle.putSerializable("object", order);
+            intent.putExtras(bundle);
+            context.startActivity(intent);
+            AnimUtil.slideFromRightAnim((Activity) context);
 
 
 
