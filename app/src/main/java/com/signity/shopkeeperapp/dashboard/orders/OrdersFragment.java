@@ -21,6 +21,8 @@ import android.widget.CompoundButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.PopupWindow;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -81,6 +83,7 @@ public class OrdersFragment extends Fragment implements OrdersAdapter.OnItemClic
     FloatingActionButton fab;
     PopupWindow rightMenuPopUpWindow;
     View topDot;
+
     public static OrdersFragment getInstance(Bundle bundle) {
         OrdersFragment fragment = new OrdersFragment();
         fragment.setArguments(bundle);
@@ -119,7 +122,7 @@ public class OrdersFragment extends Fragment implements OrdersAdapter.OnItemClic
         DashboardActivity.imgFilter.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Log.i("@@clickEventMenu","Menu");
+                Log.i("@@clickEventMenu", "Menu");
                 showPopUpMenu();
             }
         });
@@ -217,12 +220,13 @@ public class OrdersFragment extends Fragment implements OrdersAdapter.OnItemClic
 
         }
     }
+
     private void showPopUpMenu() {
 
 
-        LayoutInflater inflater = (LayoutInflater)getActivity(). getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        LayoutInflater inflater = (LayoutInflater) getActivity().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         View layout = inflater.inflate(R.layout.right_menu_view_orders,
-                (ViewGroup)getActivity(). findViewById(R.id.popups));
+                (ViewGroup) getActivity().findViewById(R.id.popups));
 
 
         rightMenuPopUpWindow = new PopupWindow(layout, LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT, true);
@@ -246,15 +250,57 @@ public class OrdersFragment extends Fragment implements OrdersAdapter.OnItemClic
         int offsetY = (int) (den * 5);
         rightMenuPopUpWindow.showAsDropDown(DashboardActivity.imgFilter, 0, offsetY);
 
+        final RadioGroup rdGroup=(RadioGroup)layout.findViewById(R.id.rdGroup);
+        RadioButton radioAllOrders = (RadioButton) layout.findViewById(R.id.radioAllOrders);
 
+        RadioButton radioPending = (RadioButton) layout.findViewById(R.id.radioPending);
+        RadioButton radioAccepted = (RadioButton) layout.findViewById(R.id.radioAccepted);
 
+        RadioButton radioShipped = (RadioButton) layout.findViewById(R.id.radioShipped);
 
+        RadioButton radioCancelled = (RadioButton)layout.findViewById(R.id.radioCancelled);
 
+        RadioButton radioDelivered = (RadioButton) layout.findViewById(R.id.radioDelivered);
 
+        rdGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
 
+            @Override
+            public void onCheckedChanged(RadioGroup group, int checkedId) {
+
+                View radioButton = rdGroup.findViewById(checkedId);
+                int index = rdGroup.indexOfChild(radioButton);
+
+                // Add logic here
+
+                switch (index) {
+                    case 0: // first button
+
+                        Toast.makeText(getActivity(), "Selected button number " + index, Toast.LENGTH_SHORT).show();
+                        break;
+                    case 1:
+
+                        Toast.makeText(getActivity(), "Selected button number " + index, Toast.LENGTH_SHORT).show();
+                        break;
+                    case 2:
+
+                        Toast.makeText(getActivity(), "Selected button number " + index, Toast.LENGTH_SHORT).show();
+                        break;
+                    case 3:
+
+                        Toast.makeText(getActivity(), "Selected button number " + index, Toast.LENGTH_SHORT).show();
+                        break;
+                    case 4:
+
+                        Toast.makeText(getActivity(), "Selected button number " + index, Toast.LENGTH_SHORT).show();
+                        break;
+                    case 5:
+
+                        Toast.makeText(getActivity(), "Selected button number " + index, Toast.LENGTH_SHORT).show();
+                        break;
+                }
+            }
+        });
     }
-
-
 
 
 }
