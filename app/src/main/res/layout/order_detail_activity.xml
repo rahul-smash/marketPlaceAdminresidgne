@@ -107,6 +107,7 @@
                     android:textSize="@dimen/text_normal" />
 
                 <TextView
+                    android:id="@+id/txtCartSavings"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_below="@+id/txtCartSaving"
@@ -167,15 +168,16 @@
                     android:orientation="vertical">
 
                     <ImageView
-                        android:layout_gravity="center"
+                        android:id="@+id/imgGuideMe"
                         android:layout_width="20dp"
                         android:layout_height="20dp"
+                        android:layout_gravity="center"
                         android:src="@drawable/ic_edit_profile" />
 
                     <TextView
-                        android:layout_gravity="center"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:layout_gravity="center"
                         android:text="Guide me"
                         android:textColor="@color/colorWhite"
                         android:textSize="@dimen/txt_order_detail" />
