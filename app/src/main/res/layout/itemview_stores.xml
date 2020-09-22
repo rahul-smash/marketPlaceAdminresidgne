@@ -32,7 +32,7 @@
             app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
-            android:id="@+id/tv_store_address"
+            android:id="@+id/tv_order_id"
             style="@style/AppTheme.TextView.Small"
             android:layout_width="0dp"
             android:layout_height="wrap_content"

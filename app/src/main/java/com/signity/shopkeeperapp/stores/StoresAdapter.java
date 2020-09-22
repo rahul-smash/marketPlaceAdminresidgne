@@ -62,7 +62,7 @@ public class StoresAdapter extends RecyclerView.Adapter<StoresAdapter.ViewHolder
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
             textViewStoreName = itemView.findViewById(R.id.tv_store_name);
-            textViewStoreAddress = itemView.findViewById(R.id.tv_store_address);
+            textViewStoreAddress = itemView.findViewById(R.id.tv_order_id);
         }
 
         public void bind(int positon) {

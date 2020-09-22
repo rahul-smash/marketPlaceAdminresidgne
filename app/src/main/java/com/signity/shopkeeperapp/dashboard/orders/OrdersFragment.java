@@ -1,57 +1,40 @@
 package com.signity.shopkeeperapp.dashboard.orders;
 
 import android.app.Activity;
-import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
-
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
-
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
-
-import android.view.Window;
-import android.widget.Button;
-import android.widget.CheckBox;
-import android.widget.CompoundButton;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.PopupWindow;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.RelativeLayout;
-import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import com.signity.shopkeeperapp.LogInModule.ChangePasswordActivity;
 import com.signity.shopkeeperapp.R;
-import com.signity.shopkeeperapp.adapter.RvActiveOrderAdapter;
 import com.signity.shopkeeperapp.adapter.RvGridSpacesItemDecoration;
-
-import com.signity.shopkeeperapp.dashboard.DashboardActivity;
-import com.signity.shopkeeperapp.home.MainActivity;
-import com.signity.shopkeeperapp.manage_stores.ManageStaffActivity;
-import com.signity.shopkeeperapp.model.DashBoardModelStoreDetail;
-import com.signity.shopkeeperapp.model.GetOrdersModel;
 import com.signity.shopkeeperapp.model.OrdersListModel;
+import com.signity.shopkeeperapp.model.orders.StoreOrdersReponse;
 import com.signity.shopkeeperapp.network.NetworkAdaper;
-import com.signity.shopkeeperapp.orders.AllOrderFragment;
-import com.signity.shopkeeperapp.orders.DueOrderActivity;
-import com.signity.shopkeeperapp.orders.DueOrderActivityWithoutUpdations;
 import com.signity.shopkeeperapp.util.AnimUtil;
 import com.signity.shopkeeperapp.util.Constant;
 import com.signity.shopkeeperapp.util.DialogUtils;
-import com.signity.shopkeeperapp.util.PrefManager;
 import com.signity.shopkeeperapp.util.ProgressDialogUtil;
 import com.signity.shopkeeperapp.util.Util;
 
@@ -66,23 +49,18 @@ import retrofit.client.Response;
 
 public class OrdersFragment extends Fragment implements OrdersAdapter.OnItemClickListener {
     public static final String TAG = "OrdersFragment";
-
+    List<OrdersListModel> orderListModel;
+    List<OrdersListModel> listOrderMain;
+    FloatingActionButton fab;
+    PopupWindow rightMenuPopUpWindow;
+    View topDot, view;
     private Context context;
     private RecyclerView recyclerView;
     private LinearLayoutManager mLinearLayoutManager;
     private RvGridSpacesItemDecoration decoration;
     private OrdersAdapter adapter;
-
-    List<OrdersListModel> orderListModel;
-    List<OrdersListModel> listOrderMain;
-
     private String type = null;
-
     private RelativeLayout parent;
-
-    FloatingActionButton fab;
-    PopupWindow rightMenuPopUpWindow;
-    View topDot;
 
     public static OrdersFragment getInstance(Bundle bundle) {
         OrdersFragment fragment = new OrdersFragment();
@@ -107,6 +85,7 @@ public class OrdersFragment extends Fragment implements OrdersAdapter.OnItemClic
         Log.i("@@AllOrderFragment", "AllOrderFragment");
         recyclerView = (RecyclerView) rootView.findViewById(R.id.rv_orders);
         parent = (RelativeLayout) rootView.findViewById(R.id.parent);
+        view = rootView.findViewById(R.id.view);
         mLinearLayoutManager = new LinearLayoutManager(getActivity());
         mLinearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
         int spacingInPixels = getResources().getDimensionPixelSize(R.dimen.grid_view_spacing);
@@ -116,19 +95,29 @@ public class OrdersFragment extends Fragment implements OrdersAdapter.OnItemClic
         adapter = new OrdersAdapter(context, orderListModel);
         adapter.setOnItemClickListener(this);
         recyclerView.setAdapter(adapter);
-        getAllOrdersMethod();
-
-        DashboardActivity.imgFilter.setVisibility(View.VISIBLE);
-        DashboardActivity.imgFilter.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Log.i("@@clickEventMenu", "Menu");
-                showPopUpMenu();
-            }
-        });
         return rootView;
     }
 
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        setHasOptionsMenu(true);
+    }
+
+    @Override
+    public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
+        super.onCreateOptionsMenu(menu, inflater);
+        inflater.inflate(R.menu.menu_orders, menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        if (item.getItemId() == R.id.action_filter) {
+            // TODO - Open Pop Window
+            showPopUpMenu();
+        }
+        return super.onOptionsItemSelected(item);
+    }
 
     /*Get all orders and Fileter on the basis of active shipped and delivered*/
 
@@ -149,13 +138,16 @@ public class OrdersFragment extends Fragment implements OrdersAdapter.OnItemClic
     public void getALLOrders() {
         ProgressDialogUtil.showProgressDialog(getActivity());
         Map<String, String> param = new HashMap<String, String>();
-        param.put("order_type", Constant.KEY_ALL);
+        param.put("order_type", "pending");
+        param.put("page", "1");
 
-        NetworkAdaper.getNetworkServices().getStoreOrders(param, new Callback<GetOrdersModel>() {
+        NetworkAdaper.getNetworkServices().getStoreOrdersNew(param, new Callback<StoreOrdersReponse>() {
             @Override
-            public void success(GetOrdersModel getValues, Response response) {
-                if (getValues.getSuccess()) {
-                    ProgressDialogUtil.hideProgressDialog();
+            public void success(StoreOrdersReponse getValues, Response response) {
+
+                ProgressDialogUtil.hideProgressDialog();
+
+                if (getValues.isSuccess()) {
                     if (getValues.getData().getOrders().size() > 0) {
                         recyclerView.setVisibility(View.VISIBLE);
                         List<OrdersListModel> list = new ArrayList<OrdersListModel>();
@@ -168,7 +160,6 @@ public class OrdersFragment extends Fragment implements OrdersAdapter.OnItemClic
                         recyclerView.setVisibility(View.GONE);
                     }
                 } else {
-                    ProgressDialogUtil.hideProgressDialog();
                     DialogUtils.showAlertDialog(getActivity(), Constant.APP_TITLE, getValues.getMessage());
                 }
             }
@@ -176,8 +167,7 @@ public class OrdersFragment extends Fragment implements OrdersAdapter.OnItemClic
             @Override
             public void failure(RetrofitError error) {
                 ProgressDialogUtil.hideProgressDialog();
-                DialogUtils.showAlertDialog(getActivity(),
-                        Constant.APP_TITLE, "Error Occurred, Try again later.");
+                DialogUtils.showAlertDialog(getActivity(), Constant.APP_TITLE, "Error Occurred, Try again later.");
             }
         });
     }
@@ -225,12 +215,10 @@ public class OrdersFragment extends Fragment implements OrdersAdapter.OnItemClic
             AnimUtil.slideFromRightAnim((Activity) context);
 
 
-
         }
     }
 
     private void showPopUpMenu() {
-
 
         LayoutInflater inflater = (LayoutInflater) getActivity().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         View layout = inflater.inflate(R.layout.right_menu_view_orders,
@@ -255,10 +243,10 @@ public class OrdersFragment extends Fragment implements OrdersAdapter.OnItemClic
         });
 
         float den = getActivity().getResources().getDisplayMetrics().density;
-        int offsetY = (int) (den * 5);
-        rightMenuPopUpWindow.showAsDropDown(DashboardActivity.imgFilter, 0, offsetY);
+        int offsetY = (int) (den * 2);
+        rightMenuPopUpWindow.showAsDropDown(view, offsetY, offsetY);
 
-        final RadioGroup rdGroup=(RadioGroup)layout.findViewById(R.id.rdGroup);
+        final RadioGroup rdGroup = (RadioGroup) layout.findViewById(R.id.rdGroup);
         RadioButton radioAllOrders = (RadioButton) layout.findViewById(R.id.radioAllOrders);
 
         RadioButton radioPending = (RadioButton) layout.findViewById(R.id.radioPending);
@@ -266,7 +254,7 @@ public class OrdersFragment extends Fragment implements OrdersAdapter.OnItemClic
 
         RadioButton radioShipped = (RadioButton) layout.findViewById(R.id.radioShipped);
 
-        RadioButton radioCancelled = (RadioButton)layout.findViewById(R.id.radioCancelled);
+        RadioButton radioCancelled = (RadioButton) layout.findViewById(R.id.radioCancelled);
 
         RadioButton radioDelivered = (RadioButton) layout.findViewById(R.id.radioDelivered);
 

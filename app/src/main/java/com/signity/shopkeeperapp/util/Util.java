@@ -17,6 +17,8 @@ import java.io.BufferedReader;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.text.DecimalFormat;
+import java.text.NumberFormat;
+import java.util.Currency;
 
 /**
  * Created by Rajinder on 30/9/15.
@@ -173,6 +175,13 @@ public class Util {
             return "";
         }
 
+    }
+
+    public static String getPriceWithCurrency(double price, String currency) {
+        NumberFormat format = NumberFormat.getCurrencyInstance();
+        format.setMaximumFractionDigits(2);
+        format.setCurrency(Currency.getInstance(currency));
+        return format.format(price);
     }
 
     public static String getDoubleValue(Object value) {
