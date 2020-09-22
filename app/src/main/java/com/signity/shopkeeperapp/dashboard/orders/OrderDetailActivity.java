@@ -192,6 +192,7 @@ public class OrderDetailActivity extends AppCompatActivity implements View.OnCli
         txtStausVal = (TextView) findViewById(R.id.txtStausVal);
         txtnoteValue = (TextView) findViewById(R.id.txtnoteValue);
         txtItems = (TextView) findViewById(R.id.mtxtItems);
+
         imgGuideMe = (CircleImageView) findViewById(R.id.imgGuideMe);
         // recyclerView = (ListView) findViewById(R.id.recyclerView);
         imgGuideMe.setOnClickListener(this);
