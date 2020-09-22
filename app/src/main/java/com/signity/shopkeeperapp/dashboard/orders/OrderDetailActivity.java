@@ -21,10 +21,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.constraintlayout.widget.ConstraintLayout;
-import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentActivity;
-import androidx.recyclerview.widget.RecyclerView;
+
 
 import com.signity.shopkeeperapp.R;
 import com.signity.shopkeeperapp.manage_stores.StaffListFragment;
@@ -81,7 +78,8 @@ public class OrderDetailActivity extends AppCompatActivity implements View.OnCli
     String time;
     ListView listDueOrderItems;
     OrderDetailAdapter adapter;
-Button backButton;
+    Button backButton;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -119,10 +117,12 @@ Button backButton;
         tax = ordersListModel.getTax();
         destinationLat = ordersListModel.getDestinationuser_lat();
         destinationLang = ordersListModel.getDestinationuser_lng();
-        Log.i("@@OrderListFragment---", "" + address + status + "DestingLAtLng" + destinationLat + destinationLang);
+        ordersListModel.getItems().size();
+        Log.i("@@OrderListFragment---", "" + address + status + "DestingLAtLng" + destinationLat + destinationLang + "----" + ordersListModel.getItems().size());
     }
 
     public void setOrderDetails() {
+        txtItems.setText(String.valueOf(ordersListModel.getItems().size()) + " Items ");
         txtDate.setText(time);
         txtAddress.setText(address);
         if (note.equalsIgnoreCase("") || note.equalsIgnoreCase(null)) {
@@ -133,7 +133,7 @@ Button backButton;
         }
         txtTotalPrice.setText(Util.getCurrency(getApplicationContext()) + "" + Util.getDoubleValue(ordersListModel.getTotal()));
         txtStausVal.setText(ordersListModel.getStatus());
-      //  txtItems.setText(listItem.size());
+        //  txtItems.setText(listItem.size());
         if (ordersListModel.getStatus().equalsIgnoreCase("1")) {
             txtStausVal.setText("Processing");
             txtStausVal.setBackgroundResource(R.drawable.bg_transaparent);
@@ -154,11 +154,12 @@ Button backButton;
             txtStausVal.setText("Cancelled");
             txtStausVal.setBackgroundResource(R.drawable.bg_transaparent);
         }
+
     }
 
     private void initview() {
         listDueOrderItems = (ListView) findViewById(R.id.recyclerView);
-        backButton=(Button)findViewById(R.id.backButton);
+        backButton = (Button) findViewById(R.id.backButton);
         btnCall = (Button) findViewById(R.id.btnCall);
         txtTotal = (TextView) findViewById(R.id.txtTotal);
         txtTotalPrice = (TextView) findViewById(R.id.txtTotalPrice);
@@ -167,9 +168,9 @@ Button backButton;
         txtDate = (TextView) findViewById(R.id.txtDate);
         txtStausVal = (TextView) findViewById(R.id.txtStausVal);
         txtnoteValue = (TextView) findViewById(R.id.txtnoteValue);
-        txtItems = (TextView) findViewById(R.id.txtItems);
+        txtItems = (TextView) findViewById(R.id.mtxtItems);
         imgGuideMe = (ImageView) findViewById(R.id.imgGuideMe);
-       // recyclerView = (ListView) findViewById(R.id.recyclerView);
+        // recyclerView = (ListView) findViewById(R.id.recyclerView);
         imgGuideMe.setOnClickListener(this);
         btnCall.setOnClickListener(this);
         backButton.setOnClickListener(this);
@@ -177,7 +178,7 @@ Button backButton;
 
     @Override
     public void onClick(View view) {
-        if(view==backButton){
+        if (view == backButton) {
             onBackPressed();
         }
         if (view == imgGuideMe) {
@@ -209,6 +210,7 @@ Button backButton;
         }
 
     }
+
     private void callAlert() {
         androidx.appcompat.app.AlertDialog.Builder adb = new androidx.appcompat.app.AlertDialog.Builder(OrderDetailActivity.this);
         adb.setTitle("Call " + phoneNumber + " ?");
@@ -226,6 +228,7 @@ Button backButton;
         });
         adb.show();
     }
+
     private void actionCall() {
 
         try {
@@ -345,33 +348,32 @@ Button backButton;
             Double itemsTotal = 0.00;
             itemsTotal = listItem.get(position).getPrice() * Integer.parseInt(listItem.get(position).getQuantity());
             holder.itemsTotal.setText("Total: " + Util.getCurrency(context) + "" + itemsTotal);
-
             holder.toggle.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
 
 
-                        if (item.getStatus().equalsIgnoreCase("2")) {
-                            callOrderItemStatus(item.getItemId(), "1");
+                    if (item.getStatus().equalsIgnoreCase("2")) {
+                        callOrderItemStatus(item.getItemId(), "1");
+                    } else {
+                        if (totalItemRejected == getCount() - 1) {
+                            String message = "Kindly Accept atleast one item to proceed or else Reject the Complete Order.";
+
+                            final DialogHandler dialogHandler = new DialogHandler(OrderDetailActivity.this);
+
+                            dialogHandler.setDialog(Constant.APP_TITLE, message);
+                            dialogHandler.setPostiveButton("OK", true)
+                                    .setOnClickListener(new View.OnClickListener() {
+                                        @Override
+                                        public void onClick(View view) {
+                                            dialogHandler.dismiss();
+                                        }
+                                    });
+
                         } else {
-                            if (totalItemRejected == getCount() - 1) {
-                                String message = "Kindly Accept atleast one item to proceed or else Reject the Complete Order.";
-
-                                final DialogHandler dialogHandler = new DialogHandler(getApplicationContext());
-
-                                dialogHandler.setDialog(Constant.APP_TITLE, message);
-                                dialogHandler.setPostiveButton("OK", true)
-                                        .setOnClickListener(new View.OnClickListener() {
-                                            @Override
-                                            public void onClick(View view) {
-                                                dialogHandler.dismiss();
-                                            }
-                                        });
-
-                            } else {
-                                callOrderItemStatus(item.getItemId(), "2");
-                            }
+                            callOrderItemStatus(item.getItemId(), "2");
                         }
+                    }
 
 
                 }
@@ -419,7 +421,7 @@ Button backButton;
                     OrdersListModel ordersListModelTemp = orderItemResponseModel.getOrdersListModel();
                     if (ordersListModelTemp != null) {
                         ordersListModel = ordersListModelTemp;
-                      //  updateView(ordersListModel);
+                        //  updateView(ordersListModel);
                     }
                 }
             }
