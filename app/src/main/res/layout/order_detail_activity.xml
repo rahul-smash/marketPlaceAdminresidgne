@@ -201,12 +201,12 @@
                 android:weightSum="1">
 
                 <TextView
-                    android:padding="3dp"
                     android:id="@+id/txtAddress"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="0.7"
                     android:maxLines="2"
+                    android:padding="3dp"
                     android:text="mohit gupta,main road,chandigarh place,17 sector"
                     android:textColor="@color/colorWhite"
                     android:textSize="@dimen/txt_order_detail" />
@@ -220,15 +220,12 @@
                     android:layout_weight="0.3"
                     android:orientation="vertical">
 
-                    <de.hdodenhof.circleimageview.CircleImageView
+                    <ImageView
                         android:id="@+id/imgGuideMe"
                         android:layout_width="25dp"
                         android:layout_height="25dp"
                         android:layout_gravity="center"
-                        android:src="@drawable/guidemeicon"
-                        app:civ_border_color="#726eaf"
-
-                        app:civ_border_width="2dp" />
+                        android:src="@drawable/guidemeicon" />
 
                     <TextView
                         android:layout_width="wrap_content"

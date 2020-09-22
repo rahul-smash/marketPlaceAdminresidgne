@@ -44,7 +44,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import de.hdodenhof.circleimageview.CircleImageView;
 import retrofit.Callback;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
@@ -54,8 +53,7 @@ import static android.content.Intent.ACTION_DIAL;
 public class OrderDetailActivity extends AppCompatActivity implements View.OnClickListener {
     TextView txtTotal, txtTotalPrice, txtCartSavings, txtAddress, txtDate, txtStausVal, txtnoteValue, txtItems;
     ListView recyclerView;
-    CircleImageView imgGuideMe;
-    Button btnCall;
+    ImageView imgGuideMe;
     String status;
     String getLat = "";
     String getLong = "";
@@ -85,12 +83,12 @@ public class OrderDetailActivity extends AppCompatActivity implements View.OnCli
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.order_detail_activity);
+        initview();
         setUpToolbar();
         prefManager = new PrefManager(getApplicationContext());
         Intent intent = this.getIntent();
         Bundle bundle = intent.getExtras();
         ordersListModel = (OrdersListModel) bundle.getSerializable("object");
-        initview();
         setUiData();
 
         setOrderDetails();
@@ -178,7 +176,6 @@ public class OrderDetailActivity extends AppCompatActivity implements View.OnCli
 
         listDueOrderItems = (ListView) findViewById(R.id.recyclerView);
         // backButton = (Button) findViewById(R.id.backButton);
-        btnCall = (Button) findViewById(R.id.btnCall);
         txtTotal = (TextView) findViewById(R.id.txtTotal);
         txtTotalPrice = (TextView) findViewById(R.id.txtTotalPrice);
         txtCartSavings = (TextView) findViewById(R.id.txtCartSavings);
@@ -188,10 +185,9 @@ public class OrderDetailActivity extends AppCompatActivity implements View.OnCli
         txtnoteValue = (TextView) findViewById(R.id.txtnoteValue);
         txtItems = (TextView) findViewById(R.id.mtxtItems);
 
-        imgGuideMe = (CircleImageView) findViewById(R.id.imgGuideMe);
+        imgGuideMe = (ImageView) findViewById(R.id.imgGuideMe);
         // recyclerView = (ListView) findViewById(R.id.recyclerView);
         imgGuideMe.setOnClickListener(this);
-        btnCall.setOnClickListener(this);
         //   backButton.setOnClickListener(this);
     }
 
@@ -218,13 +214,6 @@ public class OrderDetailActivity extends AppCompatActivity implements View.OnCli
                 openMap(getLat, getLong, destinationLat, destinationLang);
 
 
-            }
-        }
-        if (view == btnCall) {
-            if (phoneNumber.equalsIgnoreCase("")) {
-                DialogUtils.showAlertDialog(getApplicationContext(), Constant.APP_TITLE, "Sorry! phone number is not available.");
-            } else {
-                callAlert();
             }
         }
 
@@ -319,7 +308,11 @@ public class OrderDetailActivity extends AppCompatActivity implements View.OnCli
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
 
         if (item.getItemId() == R.id.action_call) {
-            Toast.makeText(getApplicationContext(), "Call", Toast.LENGTH_SHORT).show();
+            if (phoneNumber.equalsIgnoreCase("")) {
+                DialogUtils.showAlertDialog(getApplicationContext(), Constant.APP_TITLE, "Sorry! phone number is not available.");
+            } else {
+                callAlert();
+            }
         }
 
         if (item.getItemId() == android.R.id.home) {
