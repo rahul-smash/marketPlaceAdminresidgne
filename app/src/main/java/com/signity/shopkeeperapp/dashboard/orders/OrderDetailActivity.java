@@ -21,6 +21,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 
 
 import com.signity.shopkeeperapp.R;
@@ -79,6 +80,7 @@ public class OrderDetailActivity extends AppCompatActivity implements View.OnCli
     ListView listDueOrderItems;
     OrderDetailAdapter adapter;
     Button backButton;
+    private Toolbar toolbar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -93,8 +95,15 @@ public class OrderDetailActivity extends AppCompatActivity implements View.OnCli
 
         setOrderDetails();
         initListAdapter();
-
+        setUpToolbar();
     }
+    private void setUpToolbar() {
+        setSupportActionBar(toolbar);
+        getSupportActionBar().setHomeAsUpIndicator(R.drawable.backicon);
+        getSupportActionBar().setDisplayShowHomeEnabled(true);
+        getSupportActionBar().setDisplayShowTitleEnabled(false);
+    }
+
 
     private void initListAdapter() {
         adapter = new OrderDetailAdapter(getApplicationContext(), listItem);
@@ -158,6 +167,8 @@ public class OrderDetailActivity extends AppCompatActivity implements View.OnCli
     }
 
     private void initview() {
+        toolbar = findViewById(R.id.toolbar);
+
         listDueOrderItems = (ListView) findViewById(R.id.recyclerView);
         backButton = (Button) findViewById(R.id.backButton);
         btnCall = (Button) findViewById(R.id.btnCall);

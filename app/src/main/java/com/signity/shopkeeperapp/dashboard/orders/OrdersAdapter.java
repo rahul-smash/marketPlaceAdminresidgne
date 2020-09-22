@@ -74,7 +74,7 @@ public class OrdersAdapter extends RecyclerView.Adapter<OrdersAdapter.MyViewHold
 
         holder.txt_Price.setText(Util.getCurrency(context) + Util.getDoubleValue(order.getTotal()));
         holder.txt_Name.setText(order.getCustomerName());
-        holder.txtorderId.setText("Order- "+order.getDisplay_order_id());
+        holder.txtorderId.setText("Order- " + order.getDisplay_order_id());
         holder.txtDate.setText(order.getTime());
         if (order.getStatus().equalsIgnoreCase("1")) {
             holder.txtStatus.setText("Processing");
