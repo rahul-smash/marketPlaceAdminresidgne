@@ -151,7 +151,7 @@ public class OrdersFragment extends Fragment implements OrdersAdapter.OnItemClic
         Map<String, String> param = new HashMap<String, String>();
         param.put("order_type", Constant.KEY_ALL);
 
-        NetworkAdaper.getInstance().getNetworkServices().getStoreOrders(param, new Callback<GetOrdersModel>() {
+        NetworkAdaper.getNetworkServices().getStoreOrders(param, new Callback<GetOrdersModel>() {
             @Override
             public void success(GetOrdersModel getValues, Response response) {
                 if (getValues.getSuccess()) {

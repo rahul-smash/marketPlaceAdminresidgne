@@ -21,6 +21,7 @@ import com.signity.shopkeeperapp.model.dashboard.StoreDashboardResponse;
 import com.signity.shopkeeperapp.network.NetworkAdaper;
 import com.signity.shopkeeperapp.util.Constant;
 import com.signity.shopkeeperapp.util.DialogUtils;
+import com.signity.shopkeeperapp.util.prefs.AppPreference;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -169,6 +170,7 @@ public class HomeFragment extends Fragment implements HomeContentAdapter.HomeCon
         Toast.makeText(getContext(), homeItems.getTitle(), Toast.LENGTH_SHORT).show();
         switch (homeItems) {
             case ORDERS:
+                AppPreference.getInstance().clearAll();
                 break;
             case REVENUE:
                 break;

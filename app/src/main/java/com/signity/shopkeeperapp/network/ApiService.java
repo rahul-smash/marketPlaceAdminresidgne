@@ -15,6 +15,8 @@ import com.signity.shopkeeperapp.model.ResponseForceUpdate;
 import com.signity.shopkeeperapp.model.SetOrdersModel;
 import com.signity.shopkeeperapp.model.StoresModel;
 import com.signity.shopkeeperapp.model.dashboard.StoreDashboardResponse;
+import com.signity.shopkeeperapp.model.stores.StoresResponse;
+import com.signity.shopkeeperapp.model.verify.MobileOtpReponse;
 import com.signity.shopkeeperapp.model.verify.OtpVerifyResponse;
 
 import java.util.Map;
@@ -67,6 +69,10 @@ public interface ApiService {
     void moblieVerification(@FieldMap Map<String, String> parameters, Callback<MobResponseLogin> response);
 
     @FormUrlEncoded
+    @POST("/mobileVerification")
+    void moblieVerificationNew(@FieldMap Map<String, String> parameters, Callback<MobileOtpReponse> response);
+
+    @FormUrlEncoded
     @POST("/validateStaff")
     void validStaff(@FieldMap Map<String, String> parameters, Callback<MobResponseLogin> response);
 
@@ -89,6 +95,10 @@ public interface ApiService {
     @FormUrlEncoded
     @POST("/adminStores")
     void getAdminStores(@FieldMap Map<String, String> parameters, Callback<StoresModel> response);
+
+    @FormUrlEncoded
+    @POST("/adminStores")
+    void getAdminStoresNew(@FieldMap Map<String, String> parameters, Callback<StoresResponse> response);
 
     @FormUrlEncoded
     @POST("/storeStaff")

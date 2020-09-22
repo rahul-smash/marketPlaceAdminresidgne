@@ -20,7 +20,7 @@ public class StoresAdapter extends RecyclerView.Adapter<StoresAdapter.ViewHolder
 
     private Context context;
     private StoresAdapterListener listener;
-    private List<DataResponse> dataResponses = new ArrayList<>();
+    private List<StoreResponse> storeResponseList = new ArrayList<>();
 
     public StoresAdapter(Context context) {
         this.context = context;
@@ -40,15 +40,15 @@ public class StoresAdapter extends RecyclerView.Adapter<StoresAdapter.ViewHolder
 
     @Override
     public int getItemCount() {
-        return dataResponses.size();
+        return storeResponseList.size();
     }
 
     public void setListener(StoresAdapterListener listener) {
         this.listener = listener;
     }
 
-    public void setStoreResponseList(List<DataResponse> dataResponses) {
-        this.dataResponses = dataResponses;
+    public void setStoreResponseList(List<StoreResponse> dataResponses) {
+        this.storeResponseList = dataResponses;
         notifyDataSetChanged();
     }
 
@@ -68,7 +68,7 @@ public class StoresAdapter extends RecyclerView.Adapter<StoresAdapter.ViewHolder
 
         public void bind(int positon) {
 
-            StoreResponse storeResponse = dataResponses.get(positon).getStoreResponse();
+            StoreResponse storeResponse = storeResponseList.get(positon);
 
             textViewStoreName.setText(storeResponse.getStoreName());
             textViewStoreAddress.setText(storeResponse.getLocation());

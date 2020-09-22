@@ -163,4 +163,16 @@ public class AppPreference {
     public void setStoreType(String type) {
         mPrefs.edit().putString(PrefConstants.PREF_KEY_STORE_TYPE, type).apply();
     }
+
+    public String getDeviceToken() {
+        return mPrefs.getString(PrefConstants.PREF_KEY_DEVICE_TOKEN, "");
+    }
+
+    public void setDeviceToken(String type) {
+        mPrefs.edit().putString(PrefConstants.PREF_KEY_DEVICE_TOKEN, type).apply();
+    }
+
+    public void clearAll() {
+        mPrefs.edit().clear().apply();
+    }
 }

@@ -14,7 +14,7 @@ public class OtpVerifyResponse implements Serializable {
     private String message;
 
     @SerializedName("store")
-    private List<DataResponse> store;
+    private List<StoreResponse> store;
 
     @SerializedName("data")
     private String data;
@@ -35,11 +35,11 @@ public class OtpVerifyResponse implements Serializable {
         this.message = message;
     }
 
-    public List<DataResponse> getStore() {
+    public List<StoreResponse> getStore() {
         return store;
     }
 
-    public void setStore(List<DataResponse> store) {
+    public void setStore(List<StoreResponse> store) {
         this.store = store;
     }
 

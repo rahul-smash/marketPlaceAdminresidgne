@@ -3,8 +3,7 @@ package com.signity.shopkeeperapp.network;
 
 import android.content.Context;
 
-import com.signity.shopkeeperapp.util.Constant;
-import com.signity.shopkeeperapp.util.Util;
+import com.signity.shopkeeperapp.util.prefs.AppPreference;
 import com.squareup.okhttp.OkHttpClient;
 
 import java.util.concurrent.TimeUnit;
@@ -26,7 +25,7 @@ public class NetworkAdaper {
     public static void initInstance(Context ctx) {
         if (instance == null) {
             instance = new NetworkAdaper();
-            String store_id = Util.loadPreferenceValue(ctx, Constant.STORE_ID);
+            String store_id = AppPreference.getInstance().getStoreId();
             String url = setBaseUrl(store_id);
             setupRetrofitClient(url);
         }

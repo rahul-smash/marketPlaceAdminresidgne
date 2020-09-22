@@ -8,7 +8,6 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
 import android.os.CountDownTimer;
-import android.os.Parcelable;
 import android.provider.Settings;
 import android.text.Editable;
 import android.text.TextUtils;
@@ -34,19 +33,15 @@ import com.google.android.gms.tasks.Task;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.signity.shopkeeperapp.R;
 import com.signity.shopkeeperapp.classes.CustomTextWatcher;
-import com.signity.shopkeeperapp.dashboard.DashboardActivity;
-import com.signity.shopkeeperapp.model.MobResponseLogin;
+import com.signity.shopkeeperapp.model.verify.MobileOtpReponse;
 import com.signity.shopkeeperapp.model.verify.OtpVerifyResponse;
 import com.signity.shopkeeperapp.network.NetworkAdaper;
-import com.signity.shopkeeperapp.stores.StoresActivity;
-import com.signity.shopkeeperapp.util.AnimUtil;
 import com.signity.shopkeeperapp.util.Constant;
 import com.signity.shopkeeperapp.util.PrefManager;
 import com.signity.shopkeeperapp.util.ProgressDialogUtil;
 import com.signity.shopkeeperapp.util.Util;
 import com.signity.shopkeeperapp.util.prefs.AppPreference;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
@@ -417,21 +412,21 @@ public class VerifyOtpFragment extends Fragment {
         param.put("device_token", deviceToken);
         param.put("platform", Constant.PLATFORM);
 
-        NetworkAdaper.getNetworkServices().moblieVerification(param, new Callback<MobResponseLogin>() {
+        NetworkAdaper.getNetworkServices().moblieVerificationNew(param, new Callback<MobileOtpReponse>() {
 
             @Override
-            public void success(MobResponseLogin mobResponse, Response response) {
+            public void success(MobileOtpReponse mobileOtpReponse, Response response) {
 
                 if (!isAdded()) {
                     return;
                 }
 
                 ProgressDialogUtil.hideProgressDialog();
-                if (mobResponse.getSuccess()) {
+                if (mobileOtpReponse.getSuccess()) {
                     Toast.makeText(getActivity(), "OTP sent to your registered mobile", Toast.LENGTH_SHORT).show();
-                    setUpTimer();
+                    AppPreference.getInstance().saveUser(mobileOtpReponse.getData());
                 } else {
-                    Toast.makeText(getActivity(), mobResponse.getMessage(), Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getActivity(), mobileOtpReponse.getMessage(), Toast.LENGTH_SHORT).show();
                 }
             }
 
@@ -468,32 +463,21 @@ public class VerifyOtpFragment extends Fragment {
 
                 ProgressDialogUtil.hideProgressDialog();
                 if (otpVerifyResponse.isSuccess()) {
-                    Toast.makeText(getActivity(), otpVerifyResponse.getMessage(), Toast.LENGTH_SHORT).show();
-                    // TODO - Write re-direct login in activity
-                    /*if (listener != null) {
-                        listener.onOtpVerified();
-                    }*/
 
                     if (otpVerifyResponse.getStore() == null) {
                         return;
                     }
 
-                    if (otpVerifyResponse.getStore().size() > 0) {
-                        Bundle bundle = new Bundle();
-                        bundle.putParcelableArrayList(StoresActivity.STORES_LIST, (ArrayList<? extends Parcelable>) otpVerifyResponse.getStore());
-                        startActivity(StoresActivity.getStartIntent(getContext(), bundle));
-                        AnimUtil.slideFromRightAnim(getActivity());
-                        getActivity().finish();
-                    } else {
-                        AppPreference.getInstance().setLoggedIn(Constant.Mode.LOGGED_IN);
-                        AppPreference.getInstance().saveUser(otpVerifyResponse.getStore().get(0).getUserResponse());
-                        AppPreference.getInstance().saveStore(otpVerifyResponse.getStore().get(0).getStoreResponse());
-                        NetworkAdaper.setupRetrofitClient(NetworkAdaper.setBaseUrl(AppPreference.getInstance().getStoreId()));
-                        startActivity(DashboardActivity.getStartIntent(getContext()));
-                        AnimUtil.slideFromRightAnim(getActivity());
-                        getActivity().finish();
+                    if (listener != null) {
+                        if (otpVerifyResponse.getStore().size() > 1) {
+                            listener.onOtpVerified(true);
+                        } else {
+                            AppPreference.getInstance().setLoggedIn(Constant.Mode.LOGGED_IN);
+                            AppPreference.getInstance().saveStore(otpVerifyResponse.getStore().get(0));
+                            NetworkAdaper.setupRetrofitClient(NetworkAdaper.setBaseUrl(AppPreference.getInstance().getStoreId()));
+                            listener.onOtpVerified(false);
+                        }
                     }
-
                 } else {
                     Toast.makeText(getActivity(), otpVerifyResponse.getMessage(), Toast.LENGTH_SHORT).show();
                     textViewResendOtp.setEnabled(true);
@@ -545,7 +529,7 @@ public class VerifyOtpFragment extends Fragment {
     }
 
     public interface VerifyOtpListener {
-        void onOtpVerified();
+        void onOtpVerified(boolean chooseStore);
     }
 
 }

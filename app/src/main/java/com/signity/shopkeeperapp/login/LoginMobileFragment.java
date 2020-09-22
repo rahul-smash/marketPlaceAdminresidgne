@@ -8,7 +8,6 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.provider.Settings;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,22 +17,20 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentTransaction;
 
 import com.google.android.gms.auth.api.credentials.Credential;
 import com.google.android.gms.auth.api.credentials.Credentials;
 import com.google.android.gms.auth.api.credentials.HintRequest;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.signity.shopkeeperapp.R;
-import com.signity.shopkeeperapp.model.MobResponseDetails;
-import com.signity.shopkeeperapp.model.MobResponseLogin;
+import com.signity.shopkeeperapp.model.verify.MobileOtpReponse;
 import com.signity.shopkeeperapp.network.NetworkAdaper;
 import com.signity.shopkeeperapp.util.Constant;
 import com.signity.shopkeeperapp.util.DialogUtils;
 import com.signity.shopkeeperapp.util.PrefManager;
 import com.signity.shopkeeperapp.util.ProgressDialogUtil;
 import com.signity.shopkeeperapp.util.Util;
-import com.signity.shopkeeperapp.view.LoginFragmentOtp;
+import com.signity.shopkeeperapp.util.prefs.AppPreference;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -46,6 +43,7 @@ import static android.app.Activity.RESULT_OK;
 
 /**
  * Created by Rajesh on 12/10/15.
+ * Updated by ketan on 16/09/20.
  */
 public class LoginMobileFragment extends Fragment {
 
@@ -95,12 +93,12 @@ public class LoginMobileFragment extends Fragment {
             return;
         }
 
-        if (!Util.checkIntenetConnection(getContext())) {
+        if (!Util.checkIntenetConnection(requireContext())) {
             DialogUtils.showAlertDialog(getContext(), "Internet", "Please check your Internet Connection.");
             return;
         }
 
-        Util.savePreferenceValue(getContext(), Constant.LOGIN_USER_MOBILE_NUMBER, mobileNumber);
+        AppPreference.getInstance().setUserMobile(mobileNumber);
         requestOtp();
     }
 
@@ -164,50 +162,6 @@ public class LoginMobileFragment extends Fragment {
         }
     }
 
-//    private void getAdminStores() {
-//
-//        ProgressDialogUtil.showProgressDialog(getContext());
-//        String deviceId = Settings.Secure.getString(getContext().getApplicationContext().getContentResolver(), Settings.Secure.ANDROID_ID);
-//
-//        PrefManager prefManager = new PrefManager(getContext());
-//        String deviceToken = prefManager.getSharedValue(Constant.DEVICE_TOKEN);
-//
-//        Map<String, String> param = new HashMap<String, String>();
-//        param.put("mobile", mobileNumber);
-//        param.put("device_id", deviceId);
-//        param.put("device_token", deviceToken);
-//        param.put("platform", Constant.PLATFORM);
-//
-//        NetworkAdaper.getNetworkServices().getAdminStores(param, new Callback<StoresModel>() {
-//            @Override
-//            public void success(StoresModel mobResponse, Response response) {
-//
-//                if (!isVisible()) {
-//                    return;
-//                }
-//
-//                ProgressDialogUtil.hideProgressDialog();
-//
-//                if (mobResponse.getSuccess()) {
-//                    if (mobResponse.getStoresList().size() > 0) {
-//                        proceedToStoresListing(mobResponse);
-//                    } else {
-//                        Toast.makeText(getActivity(), "No store found", Toast.LENGTH_SHORT).show();
-//                    }
-//                } else {
-//                    Toast.makeText(getActivity(), mobResponse.getMessage(), Toast.LENGTH_SHORT).show();
-//                }
-//            }
-//
-//            @Override
-//            public void failure(RetrofitError error) {
-//                ProgressDialogUtil.hideProgressDialog();
-//                Toast.makeText(getActivity(), "Error!", Toast.LENGTH_SHORT).show();
-//            }
-//        });
-//
-//    }
-
     private void requestOtp() {
 
         ProgressDialogUtil.showProgressDialog(getActivity());
@@ -222,24 +176,24 @@ public class LoginMobileFragment extends Fragment {
         param.put("device_token", deviceToken);
         param.put("platform", Constant.PLATFORM);
 
-        NetworkAdaper.getNetworkServices().moblieVerification(param, new Callback<MobResponseLogin>() {
+        NetworkAdaper.getNetworkServices().moblieVerificationNew(param, new Callback<MobileOtpReponse>() {
 
             @Override
-            public void success(MobResponseLogin mobResponse, Response response) {
+            public void success(MobileOtpReponse mobileOtpReponse, Response response) {
 
                 if (!isAdded()) {
                     return;
                 }
 
                 ProgressDialogUtil.hideProgressDialog();
-                if (mobResponse.getSuccess()) {
+                if (mobileOtpReponse.getSuccess()) {
                     Toast.makeText(getActivity(), "OTP sent to your registered mobile", Toast.LENGTH_SHORT).show();
-                    Util.savePreferenceValue(getContext(), Constant.LOGIN_USER_MOBILE_NUMBER, mobileNumber);
+                    AppPreference.getInstance().saveUser(mobileOtpReponse.getData());
                     if (listener != null) {
                         listener.onOtpRequested();
                     }
                 } else {
-                    Toast.makeText(getActivity(), mobResponse.getMessage(), Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getActivity(), mobileOtpReponse.getMessage(), Toast.LENGTH_SHORT).show();
                 }
             }
 
@@ -250,42 +204,6 @@ public class LoginMobileFragment extends Fragment {
             }
         });
     }
-
-    private void proceedToMobileOtpGeneration(MobResponseDetails data) {
-        Log.e("OTP", data.getOtp());
-        Fragment fragment = LoginFragmentOtp.newInstance(getActivity());
-        Bundle bundle = new Bundle();
-        bundle.putString("id", data.getId());
-        bundle.putString("phone", data.getPhone());
-        bundle.putString("name", data.getFullName());
-        bundle.putString("email", data.getEmail());
-        bundle.putString("otp", data.getOtp());
-        bundle.putString("status", data.getStatus());
-        fragment.setArguments(bundle);
-        FragmentTransaction ft = getFragmentManager().beginTransaction();
-        ft.setCustomAnimations(R.anim.right_to_center_slide,
-                R.anim.center_to_left_slide,
-                R.anim.left_to_center_slide,
-                R.anim.center_to_right_slide);
-        ft.replace(R.id.container, fragment);
-        ft.commit();
-    }
-
-//    private void proceedToStoresListing(StoresModel data) {
-//        Fragment fragment = LoginFragmentStoresListing.newInstance(getActivity());
-//        LoginFragmentStoresListing.mStoresList = data.getStoresList();
-//        String phone = edtPhone.getText().toString();
-//        Bundle bundle = new Bundle();
-//        bundle.putString("phone", phone);
-//        fragment.setArguments(bundle);
-//        FragmentTransaction ft = getFragmentManager().beginTransaction();
-//        ft.setCustomAnimations(R.anim.right_to_center_slide,
-//                R.anim.center_to_left_slide,
-//                R.anim.left_to_center_slide,
-//                R.anim.center_to_right_slide);
-//        ft.replace(R.id.container, fragment);
-//        ft.commit();
-//    }
 
     @Override
     public void onResume() {

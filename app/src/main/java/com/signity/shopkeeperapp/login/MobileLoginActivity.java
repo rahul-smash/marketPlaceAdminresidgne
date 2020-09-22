@@ -11,6 +11,7 @@ import androidx.fragment.app.FragmentTransaction;
 
 import com.signity.shopkeeperapp.R;
 import com.signity.shopkeeperapp.dashboard.DashboardActivity;
+import com.signity.shopkeeperapp.stores.StoresActivity;
 import com.signity.shopkeeperapp.util.AnimUtil;
 
 /**
@@ -62,8 +63,16 @@ public class MobileLoginActivity extends AppCompatActivity implements LoginMobil
     }
 
     @Override
-    public void onOtpVerified() {
-        startActivity(DashboardActivity.getStartIntent(this));
+    public void onOtpVerified(boolean chooseStore) {
+        if (chooseStore) {
+            startActivity(StoresActivity.getStartIntent(this));
+        } else {
+            startActivity(DashboardActivity.getStartIntent(this));
+        }
+        runAnimation();
+    }
+
+    private void runAnimation() {
         AnimUtil.slideFromRightAnim(this);
         finish();
     }

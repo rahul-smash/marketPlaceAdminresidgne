@@ -27,8 +27,8 @@ public class MyApplication extends Application implements Application.ActivityLi
     }
 
     protected void initSingletons() {
-        NetworkAdaper.initInstance(getApplicationContext());
         AppPreference.createInstance(getApplicationContext());
+        NetworkAdaper.initInstance(getApplicationContext());
         DataAdapter.initInstance();
         DbAdapter.initInstance(this);
     }
