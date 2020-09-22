@@ -1,7 +1,9 @@
 package com.signity.shopkeeperapp.dashboard.orders;
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
@@ -16,6 +18,7 @@ import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.Switch;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintLayout;
@@ -30,6 +33,7 @@ import com.signity.shopkeeperapp.model.OrderItemResponseModel;
 import com.signity.shopkeeperapp.model.OrdersListModel;
 import com.signity.shopkeeperapp.network.NetworkAdaper;
 import com.signity.shopkeeperapp.orders.OrderDetailFragment;
+import com.signity.shopkeeperapp.util.AnimUtil;
 import com.signity.shopkeeperapp.util.Constant;
 import com.signity.shopkeeperapp.util.DialogHandler;
 import com.signity.shopkeeperapp.util.DialogUtils;
@@ -45,6 +49,8 @@ import java.util.Map;
 import retrofit.Callback;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
+
+import static android.content.Intent.ACTION_DIAL;
 
 public class OrderDetailActivity extends AppCompatActivity implements View.OnClickListener {
     TextView txtTotal, txtTotalPrice, txtCartSavings, txtAddress, txtDate, txtStausVal, txtnoteValue, txtItems;
@@ -75,7 +81,7 @@ public class OrderDetailActivity extends AppCompatActivity implements View.OnCli
     String time;
     ListView listDueOrderItems;
     OrderDetailAdapter adapter;
-
+Button backButton;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -128,11 +134,31 @@ public class OrderDetailActivity extends AppCompatActivity implements View.OnCli
         txtTotalPrice.setText(Util.getCurrency(getApplicationContext()) + "" + Util.getDoubleValue(ordersListModel.getTotal()));
         txtStausVal.setText(ordersListModel.getStatus());
       //  txtItems.setText(listItem.size());
+        if (ordersListModel.getStatus().equalsIgnoreCase("1")) {
+            txtStausVal.setText("Processing");
+            txtStausVal.setBackgroundResource(R.drawable.bg_transaparent);
+        } else if (ordersListModel.getStatus().equalsIgnoreCase("4")) {
+            txtStausVal.setText("Shipping");
+            txtStausVal.setBackgroundResource(R.drawable.bg_transaparent);
+        } else if (ordersListModel.getStatus().equalsIgnoreCase("5")) {
+            Log.i("@@DeleiverdOrder__", "order.getStatus()");
+            txtStausVal.setText("Delivered");
+            txtStausVal.setBackgroundResource(R.drawable.bg_transaparent);
+        } else if (ordersListModel.getStatus().equalsIgnoreCase("0")) {
+            txtStausVal.setText("Due Orders");
+            txtStausVal.setBackgroundResource(R.drawable.bg_transaparent);
+        } else if (ordersListModel.getStatus().equalsIgnoreCase("2")) {
+            txtStausVal.setText("Rejected");
+            txtStausVal.setBackgroundResource(R.drawable.bg_transaparent);
+        } else if (ordersListModel.getStatus().equalsIgnoreCase("6")) {
+            txtStausVal.setText("Cancelled");
+            txtStausVal.setBackgroundResource(R.drawable.bg_transaparent);
+        }
     }
 
     private void initview() {
         listDueOrderItems = (ListView) findViewById(R.id.recyclerView);
-
+        backButton=(Button)findViewById(R.id.backButton);
         btnCall = (Button) findViewById(R.id.btnCall);
         txtTotal = (TextView) findViewById(R.id.txtTotal);
         txtTotalPrice = (TextView) findViewById(R.id.txtTotalPrice);
@@ -146,11 +172,14 @@ public class OrderDetailActivity extends AppCompatActivity implements View.OnCli
        // recyclerView = (ListView) findViewById(R.id.recyclerView);
         imgGuideMe.setOnClickListener(this);
         btnCall.setOnClickListener(this);
-
+        backButton.setOnClickListener(this);
     }
 
     @Override
     public void onClick(View view) {
+        if(view==backButton){
+            onBackPressed();
+        }
         if (view == imgGuideMe) {
             if (getLat.equalsIgnoreCase("") || getLong.equalsIgnoreCase("") || destinationLat.equalsIgnoreCase("") || destinationLang.equalsIgnoreCase("")) {
                 Log.i("@@---1", "" + getLat);
@@ -172,9 +201,46 @@ public class OrderDetailActivity extends AppCompatActivity implements View.OnCli
             }
         }
         if (view == btnCall) {
-
+            if (phoneNumber.equalsIgnoreCase("")) {
+                DialogUtils.showAlertDialog(getApplicationContext(), Constant.APP_TITLE, "Sorry! phone number is not available.");
+            } else {
+                callAlert();
+            }
         }
 
+    }
+    private void callAlert() {
+        androidx.appcompat.app.AlertDialog.Builder adb = new androidx.appcompat.app.AlertDialog.Builder(OrderDetailActivity.this);
+        adb.setTitle("Call " + phoneNumber + " ?");
+        adb.setIcon(R.drawable.ic_launcher);
+        adb.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int which) {
+                actionCall();
+            }
+        });
+
+        adb.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.dismiss();
+            }
+        });
+        adb.show();
+    }
+    private void actionCall() {
+
+        try {
+            PackageManager pm = getPackageManager();
+            if (pm.hasSystemFeature(PackageManager.FEATURE_TELEPHONY)) {
+                Intent intent = new Intent(ACTION_DIAL);
+                intent.setData(Uri.parse("tel:" + phoneNumber));
+                startActivity(intent);
+                AnimUtil.slideFromRightAnim(OrderDetailActivity.this);
+            } else {
+                Toast.makeText(getApplicationContext(), "Your device is not supporting any calling feature", Toast.LENGTH_SHORT).show();
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     public void openMap(String src_lat, String src_ltg, String des_lat, String des_ltg) {

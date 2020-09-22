@@ -9,6 +9,7 @@ import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.signity.shopkeeperapp.R;
+import com.signity.shopkeeperapp.model.ItemListModel;
 import com.signity.shopkeeperapp.model.OrdersListModel;
 
 import android.util.Log;
@@ -94,6 +95,7 @@ public class OrdersAdapter extends RecyclerView.Adapter<OrdersAdapter.MyViewHold
             holder.txtStatus.setText("Cancelled");
             //holder.txtStatus.setBackgroundResource(R.drawable.shape_button_rejected);
         }
+
         holder.itemView_Parent.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -122,11 +124,12 @@ public class OrdersAdapter extends RecyclerView.Adapter<OrdersAdapter.MyViewHold
 
     class MyViewHolder extends RecyclerView.ViewHolder {
         ImageView imgProduct, imgArrow;
-        TextView txt_Name, txtStatus, txt_Price, txtorderId, txtDate;
+        TextView txt_Name, txtStatus, txt_Price, txtorderId, txtDate,txt_items;
         ConstraintLayout itemView_Parent;
 
         public MyViewHolder(final View convertView) {
             super(convertView);
+            txt_items=(TextView)convertView.findViewById(R.id.txt_items);
             txt_Price = (TextView) convertView.findViewById(R.id.txt_Price);
             imgProduct = (ImageView) convertView.findViewById(R.id.imgProduct);
             txtorderId = (TextView) convertView.findViewById(R.id.tv_store_address);
