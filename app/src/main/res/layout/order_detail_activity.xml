@@ -112,7 +112,7 @@
 
             <LinearLayout
                 android:id="@+id/llTotal"
-                android:layout_width="140dp"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentLeft="true"
                 android:layout_margin="8dp"
@@ -127,6 +127,7 @@
                     android:textSize="@dimen/text_normal" />
 
                 <TextView
+
                     android:id="@+id/txtTotalPrice"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -141,6 +142,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_margin="8dp"
+                android:layout_marginLeft="30dp"
                 android:layout_toRightOf="@+id/llTotal"
                 android:orientation="vertical">
 
@@ -149,7 +151,6 @@
 
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="5dp"
                     android:text="Cart Saving"
                     android:textColor="@color/colorWhite"
                     android:textSize="@dimen/text_normal" />
@@ -159,7 +160,9 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_below="@+id/txtCartSaving"
+                    android:layout_gravity="center"
                     android:layout_marginTop="5dp"
+                    android:gravity="center"
                     android:text="300"
                     android:textColor="@color/colorWhite"
                     android:textSize="@dimen/text_normal" />
@@ -198,6 +201,7 @@
                 android:weightSum="1">
 
                 <TextView
+                    android:padding="3dp"
                     android:id="@+id/txtAddress"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
@@ -208,21 +212,23 @@
                     android:textSize="@dimen/txt_order_detail" />
 
                 <LinearLayout
-
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_below="@+id/txtDeleiveryAddress"
+                    android:layout_gravity="left"
                     android:layout_marginBottom="-30dp"
-                    android:layout_weight="0.4"
+                    android:layout_weight="0.3"
                     android:orientation="vertical">
 
-                    <ImageView
+                    <de.hdodenhof.circleimageview.CircleImageView
                         android:id="@+id/imgGuideMe"
                         android:layout_width="25dp"
                         android:layout_height="25dp"
                         android:layout_gravity="center"
-                        android:padding="4dp"
-                        android:src="@drawable/guidemeicon" />
+                        android:src="@drawable/guidemeicon"
+                        app:civ_border_color="#726eaf"
+
+                        app:civ_border_width="2dp" />
 
                     <TextView
                         android:layout_width="wrap_content"

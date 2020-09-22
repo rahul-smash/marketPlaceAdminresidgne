@@ -44,6 +44,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import de.hdodenhof.circleimageview.CircleImageView;
 import retrofit.Callback;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
@@ -53,7 +54,7 @@ import static android.content.Intent.ACTION_DIAL;
 public class OrderDetailActivity extends AppCompatActivity implements View.OnClickListener {
     TextView txtTotal, txtTotalPrice, txtCartSavings, txtAddress, txtDate, txtStausVal, txtnoteValue, txtItems;
     ListView recyclerView;
-    ImageView imgGuideMe;
+    CircleImageView imgGuideMe;
     Button btnCall;
     String status;
     String getLat = "";
@@ -186,7 +187,8 @@ public class OrderDetailActivity extends AppCompatActivity implements View.OnCli
         txtStausVal = (TextView) findViewById(R.id.txtStausVal);
         txtnoteValue = (TextView) findViewById(R.id.txtnoteValue);
         txtItems = (TextView) findViewById(R.id.mtxtItems);
-        imgGuideMe = (ImageView) findViewById(R.id.imgGuideMe);
+
+        imgGuideMe = (CircleImageView) findViewById(R.id.imgGuideMe);
         // recyclerView = (ListView) findViewById(R.id.recyclerView);
         imgGuideMe.setOnClickListener(this);
         btnCall.setOnClickListener(this);
