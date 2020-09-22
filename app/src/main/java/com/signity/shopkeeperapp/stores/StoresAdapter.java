@@ -10,7 +10,6 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.signity.shopkeeperapp.R;
-import com.signity.shopkeeperapp.model.verify.DataResponse;
 import com.signity.shopkeeperapp.model.verify.StoreResponse;
 
 import java.util.ArrayList;
