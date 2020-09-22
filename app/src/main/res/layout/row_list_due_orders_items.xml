@@ -5,7 +5,9 @@
     android:layout_height="wrap_content"
     android:background="@color/colorWhite"
     android:clickable="true"
-    android:padding="10dp">
+    android:padding="10dp"
+    android:layout_marginTop="16dp"
+    android:layout_marginBottom="16dp">
 
 
     <ImageView
@@ -48,6 +50,8 @@
             android:text="gdgwssdgdsgdsgsdgsdgsdgsdgss"
             android:textSize="@dimen/text_small" />
 
+
+
         <TextView
             android:id="@+id/txtPrice"
             android:layout_width="wrap_content"
@@ -56,9 +60,21 @@
             android:layout_marginLeft="5dp"
             android:layout_marginTop="5dp"
             android:gravity="center"
-            android:text="Rs 500"
-            android:textSize="@dimen/text_small" />
+            android:text="2000"
+            android:textSize="@dimen/text_small"
+          />
 
+        <TextView
+            android:id="@+id/txtLblTotal"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/txtWeight"
+            android:layout_marginLeft="60dp"
+            android:layout_marginTop="5dp"
+            android:layout_toRightOf="@+id/txtLblQuantity"
+            android:gravity="center"
+            android:text="Total:"
+            android:textSize="@dimen/text_small" />
         <TextView
             android:id="@+id/txtLblQuantity"
             android:layout_width="wrap_content"
@@ -68,21 +84,7 @@
             android:layout_marginTop="5dp"
             android:gravity="center"
             android:text="Qtn:"
-            android:textSize="@dimen/text_small"
-          />
-
-        <TextView
-            android:id="@+id/txtLblTotal"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/txtPrice"
-            android:layout_marginLeft="15dp"
-            android:layout_marginTop="5dp"
-            android:layout_toRightOf="@+id/txtLblQuantity"
-            android:gravity="center"
-            android:text="Total:"
             android:textSize="@dimen/text_small" />
-
 
         <ImageButton
             android:id="@+id/toggle"

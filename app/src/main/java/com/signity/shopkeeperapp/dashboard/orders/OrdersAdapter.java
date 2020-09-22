@@ -11,6 +11,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.signity.shopkeeperapp.R;
 import com.signity.shopkeeperapp.model.ItemListModel;
 import com.signity.shopkeeperapp.model.OrdersListModel;
+import com.signity.shopkeeperapp.util.Util;
 
 import android.util.Log;
 import android.widget.ImageView;
@@ -71,9 +72,9 @@ public class OrdersAdapter extends RecyclerView.Adapter<OrdersAdapter.MyViewHold
         Log.i("@@ChangedOrderID", order.getDisplay_order_id());
 
 
-        holder.txt_Price.setText(order.getTotalAmount().toString());
+        holder.txt_Price.setText(Util.getCurrency(context) + Util.getDoubleValue(order.getTotal()));
         holder.txt_Name.setText(order.getCustomerName());
-        holder.txtorderId.setText(order.getDisplay_order_id());
+        holder.txtorderId.setText("Order- " + order.getDisplay_order_id());
         holder.txtDate.setText(order.getTime());
         if (order.getStatus().equalsIgnoreCase("1")) {
             holder.txtStatus.setText("Processing");
@@ -95,7 +96,7 @@ public class OrdersAdapter extends RecyclerView.Adapter<OrdersAdapter.MyViewHold
             holder.txtStatus.setText("Cancelled");
             //holder.txtStatus.setBackgroundResource(R.drawable.shape_button_rejected);
         }
-
+        holder.txt_items.setText(String.valueOf(order.getItems().size() + " Items "));
         holder.itemView_Parent.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -124,12 +125,12 @@ public class OrdersAdapter extends RecyclerView.Adapter<OrdersAdapter.MyViewHold
 
     class MyViewHolder extends RecyclerView.ViewHolder {
         ImageView imgProduct, imgArrow;
-        TextView txt_Name, txtStatus, txt_Price, txtorderId, txtDate,txt_items;
+        TextView txt_Name, txtStatus, txt_Price, txtorderId, txtDate, txt_items;
         ConstraintLayout itemView_Parent;
 
         public MyViewHolder(final View convertView) {
             super(convertView);
-            txt_items=(TextView)convertView.findViewById(R.id.txt_items);
+            txt_items = (TextView) convertView.findViewById(R.id.txt_items);
             txt_Price = (TextView) convertView.findViewById(R.id.txt_Price);
             imgProduct = (ImageView) convertView.findViewById(R.id.imgProduct);
             txtorderId = (TextView) convertView.findViewById(R.id.tv_store_address);
