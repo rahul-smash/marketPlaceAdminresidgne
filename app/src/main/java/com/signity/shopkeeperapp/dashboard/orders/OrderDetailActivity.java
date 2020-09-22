@@ -8,6 +8,9 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
@@ -20,6 +23,7 @@ import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
@@ -102,6 +106,13 @@ public class OrderDetailActivity extends AppCompatActivity implements View.OnCli
         getSupportActionBar().setHomeAsUpIndicator(R.drawable.backicon);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
         getSupportActionBar().setDisplayShowTitleEnabled(false);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                onBackPressed();
+            }
+        });
     }
 
 
@@ -170,7 +181,7 @@ public class OrderDetailActivity extends AppCompatActivity implements View.OnCli
         toolbar = findViewById(R.id.toolbar);
 
         listDueOrderItems = (ListView) findViewById(R.id.recyclerView);
-        backButton = (Button) findViewById(R.id.backButton);
+       // backButton = (Button) findViewById(R.id.backButton);
         btnCall = (Button) findViewById(R.id.btnCall);
         txtTotal = (TextView) findViewById(R.id.txtTotal);
         txtTotalPrice = (TextView) findViewById(R.id.txtTotalPrice);
@@ -184,14 +195,14 @@ public class OrderDetailActivity extends AppCompatActivity implements View.OnCli
         // recyclerView = (ListView) findViewById(R.id.recyclerView);
         imgGuideMe.setOnClickListener(this);
         btnCall.setOnClickListener(this);
-        backButton.setOnClickListener(this);
+     //   backButton.setOnClickListener(this);
     }
 
     @Override
     public void onClick(View view) {
-        if (view == backButton) {
+     /*   if (view == backButton) {
             onBackPressed();
-        }
+        }*/
         if (view == imgGuideMe) {
             if (getLat.equalsIgnoreCase("") || getLong.equalsIgnoreCase("") || destinationLat.equalsIgnoreCase("") || destinationLang.equalsIgnoreCase("")) {
                 Log.i("@@---1", "" + getLat);
@@ -447,4 +458,18 @@ public class OrderDetailActivity extends AppCompatActivity implements View.OnCli
 
     }
 
+  /*  @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.menu_home, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        if (item.getItemId() == R.id.action_notification) {
+            Toast.makeText(getApplicationContext(), "Notification", Toast.LENGTH_SHORT).show();
+        }
+        return super.onOptionsItemSelected(item);
+    }*/
 }
