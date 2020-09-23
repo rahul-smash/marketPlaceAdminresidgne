@@ -5,16 +5,14 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
-import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.android.material.chip.Chip;
 import com.signity.shopkeeperapp.R;
 import com.signity.shopkeeperapp.model.OrdersListModel;
-import com.signity.shopkeeperapp.util.Constant;
 import com.signity.shopkeeperapp.util.Util;
 import com.signity.shopkeeperapp.util.prefs.AppPreference;
 
@@ -22,13 +20,11 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
-
 public class HomeOrdersAdapter extends RecyclerView.Adapter<HomeOrdersAdapter.ViewHolder> {
 
     private static final String TAG = "DashboardOrdersAdapter";
     private Context context;
     private List<OrdersListModel> ordersListModels = new ArrayList<>();
-    private Constant.OrderStatus orderStatus = Constant.OrderStatus.ALL;
 
     public HomeOrdersAdapter(Context context) {
         this.context = context;
@@ -37,8 +33,22 @@ public class HomeOrdersAdapter extends RecyclerView.Adapter<HomeOrdersAdapter.Vi
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(context).inflate(R.layout.itemview_orders, parent, false);
-        return new ViewHolder(view);
+        ViewHolder viewHolder;
+        switch (viewType) {
+            case 1:
+                viewHolder = new ViewHolderAccepted(LayoutInflater.from(context).inflate(R.layout.itemview_orders_accepted, parent, false));
+                break;
+            case 4:
+                viewHolder = new ViewHolderShipped(LayoutInflater.from(context).inflate(R.layout.itemview_orders_shipped, parent, false));
+                break;
+            case 5:
+                viewHolder = new ViewHolderDelivered(LayoutInflater.from(context).inflate(R.layout.itemview_orders_delivered, parent, false));
+                break;
+            case 0:
+            default:
+                viewHolder = new ViewHolderPending(LayoutInflater.from(context).inflate(R.layout.itemview_orders_pending, parent, false));
+        }
+        return viewHolder;
     }
 
     @Override
@@ -46,8 +56,7 @@ public class HomeOrdersAdapter extends RecyclerView.Adapter<HomeOrdersAdapter.Vi
         holder.bind(position);
     }
 
-    public void setOrdersListModels(List<OrdersListModel> ordersListModels, Constant.OrderStatus orderStatus) {
-        this.orderStatus = orderStatus;
+    public void setOrdersListModels(List<OrdersListModel> ordersListModels) {
         this.ordersListModels = ordersListModels;
         notifyDataSetChanged();
     }
@@ -58,31 +67,32 @@ public class HomeOrdersAdapter extends RecyclerView.Adapter<HomeOrdersAdapter.Vi
     }
 
     @Override
+    public int getItemViewType(int position) {
+        OrdersListModel model = ordersListModels.get(position);
+        return Integer.parseInt(model.getStatus());
+    }
+
+    @Override
     public int getItemCount() {
         return ordersListModels.size();
     }
 
+    public enum OrderType {
+        ALL, PENDING, ACCEPTED, SHIPPED, DELIVERED
+    }
+
     class ViewHolder extends RecyclerView.ViewHolder {
         ImageView imageViewProduct;
-        TextView textViewName, textViewStatus, textViewPrice, textViewOrderId, textViewDateTime, textViewItemsCount;
-        ConstraintLayout itemView_Parent;
-        LinearLayout linearLayoutAccept, linearLayoutShipped, linearLayoutDelivered, linearLayoutStatus, getLinearLayoutStatusDelivered;
+        TextView textViewName, textViewPrice, textViewOrderId, textViewDateTime, textViewItemsCount;
 
         public ViewHolder(final View convertView) {
             super(convertView);
-            textViewItemsCount = (TextView) convertView.findViewById(R.id.tv_items_count);
-            textViewPrice = (TextView) convertView.findViewById(R.id.tv_order_price);
-            imageViewProduct = (ImageView) convertView.findViewById(R.id.iv_product);
-            textViewOrderId = (TextView) convertView.findViewById(R.id.tv_order_id);
-            textViewName = (TextView) convertView.findViewById(R.id.tv_store_name);
-            textViewDateTime = (TextView) convertView.findViewById(R.id.tv_order_date_time);
-            textViewStatus = (TextView) convertView.findViewById(R.id.tv_order_status);
-            itemView_Parent = (ConstraintLayout) convertView.findViewById(R.id.itemView_Parent);
-            linearLayoutAccept = (LinearLayout) convertView.findViewById(R.id.ll_accept);
-            linearLayoutShipped = (LinearLayout) convertView.findViewById(R.id.ll_shipped);
-            linearLayoutDelivered = (LinearLayout) convertView.findViewById(R.id.ll_delivered);
-            linearLayoutStatus = (LinearLayout) convertView.findViewById(R.id.ll_status);
-            getLinearLayoutStatusDelivered = (LinearLayout) convertView.findViewById(R.id.ll_status_delivered);
+            textViewItemsCount = convertView.findViewById(R.id.tv_items_count);
+            textViewPrice = convertView.findViewById(R.id.tv_order_price);
+            imageViewProduct = convertView.findViewById(R.id.iv_product);
+            textViewOrderId = convertView.findViewById(R.id.tv_order_id);
+            textViewName = convertView.findViewById(R.id.tv_store_name);
+            textViewDateTime = convertView.findViewById(R.id.tv_order_date_time);
         }
 
         public void bind(int position) {
@@ -96,30 +106,102 @@ public class HomeOrdersAdapter extends RecyclerView.Adapter<HomeOrdersAdapter.Vi
             textViewItemsCount.setText(String.format("%s %s", ordersModel.getItems().size(), itemText));
             textViewPrice.setText(String.format(Locale.getDefault(), "%s", Util.getPriceWithCurrency(ordersModel.getTotal(), AppPreference.getInstance().getCurrency())));
             textViewDateTime.setText(ordersModel.getTime());
+        }
+    }
 
-            switch (orderStatus) {
-                case ALL:
-                    break;
-                case PENDING:
-                    linearLayoutAccept.setVisibility(View.VISIBLE);
-                    linearLayoutDelivered.setVisibility(View.GONE);
-                    linearLayoutShipped.setVisibility(View.GONE);
-                    break;
-                case ACCEPTED:
-                    linearLayoutAccept.setVisibility(View.GONE);
-                    linearLayoutDelivered.setVisibility(View.GONE);
-                    linearLayoutShipped.setVisibility(View.VISIBLE);
-                    break;
-                case SHIPPED:
-                    linearLayoutAccept.setVisibility(View.GONE);
-                    linearLayoutDelivered.setVisibility(View.VISIBLE);
-                    linearLayoutShipped.setVisibility(View.GONE);
-                    break;
-                case DELIVERD:
-                    linearLayoutStatus.setVisibility(View.GONE);
-                    getLinearLayoutStatusDelivered.setVisibility(View.VISIBLE);
-                    break;
-            }
+    class ViewHolderPending extends ViewHolder {
+        Chip chipAccept;
+        Chip chipReject;
+
+        public ViewHolderPending(final View convertView) {
+            super(convertView);
+            chipAccept = convertView.findViewById(R.id.chip_accept);
+            chipReject = convertView.findViewById(R.id.chip_reject);
+        }
+
+        @Override
+        public void bind(int position) {
+            super.bind(position);
+            chipAccept.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+
+                }
+            });
+            chipReject.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+
+                }
+            });
+        }
+    }
+
+    class ViewHolderAccepted extends ViewHolder {
+        Chip chipShip;
+        Chip chipReject;
+
+        public ViewHolderAccepted(final View convertView) {
+            super(convertView);
+            chipShip = convertView.findViewById(R.id.chip_ship);
+            chipReject = convertView.findViewById(R.id.chip_reject);
+        }
+
+        @Override
+        public void bind(int position) {
+            super.bind(position);
+            chipShip.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+
+                }
+            });
+            chipReject.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+
+                }
+            });
+        }
+    }
+
+    class ViewHolderShipped extends ViewHolder {
+        Chip chipDeliver;
+        Chip chipReject;
+
+        public ViewHolderShipped(final View convertView) {
+            super(convertView);
+            chipDeliver = convertView.findViewById(R.id.chip_deliver);
+            chipReject = convertView.findViewById(R.id.chip_reject);
+        }
+
+        @Override
+        public void bind(int position) {
+            super.bind(position);
+            chipDeliver.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+
+                }
+            });
+            chipReject.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+
+                }
+            });
+        }
+    }
+
+    class ViewHolderDelivered extends ViewHolder {
+
+        public ViewHolderDelivered(final View convertView) {
+            super(convertView);
+        }
+
+        @Override
+        public void bind(int position) {
+            super.bind(position);
         }
     }
 }

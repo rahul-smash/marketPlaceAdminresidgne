@@ -1,20 +1,18 @@
 package com.signity.shopkeeperapp.dashboard.orders;
 
 import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
+import android.widget.TextView;
 
-import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.signity.shopkeeperapp.R;
 import com.signity.shopkeeperapp.model.OrdersListModel;
 import com.signity.shopkeeperapp.util.Util;
-
-import android.util.Log;
-import android.widget.ImageView;
-import android.widget.TextView;
 
 import java.util.List;
 
@@ -25,23 +23,8 @@ public class OrdersAdapter extends RecyclerView.Adapter<OrdersAdapter.MyViewHold
 
     // Define listener member variable
     private static OrdersAdapter.OnItemClickListener listener;
-
-    // Define the listener interface
-    public interface OnItemClickListener {
-        void onItemClick(View itemView, int position, OrdersListModel order);
-    }
-
-    // Define the method that allows the parent activity or fragment to define the listener
-    public void setOnItemClickListener(OrdersAdapter.OnItemClickListener listener) {
-        this.listener = listener;
-    }
-
-
     private final LayoutInflater mInflater;
-
-
     private Context context;
-
     /*Data */
     private List<OrdersListModel> listOrder;
 
@@ -52,6 +35,11 @@ public class OrdersAdapter extends RecyclerView.Adapter<OrdersAdapter.MyViewHold
         this.mInflater = LayoutInflater.from(context);
     }
 
+    // Define the method that allows the parent activity or fragment to define the listener
+    public void setOnItemClickListener(OrdersAdapter.OnItemClickListener listener) {
+        this.listener = listener;
+    }
+
     public void updateListItem(List<OrdersListModel> listOrder) {
         this.listOrder = listOrder;
         notifyDataSetChanged();
@@ -59,7 +47,7 @@ public class OrdersAdapter extends RecyclerView.Adapter<OrdersAdapter.MyViewHold
 
     @Override
     public OrdersAdapter.MyViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View view = mInflater.inflate(R.layout.itemview_orders, parent, false);
+        View view = mInflater.inflate(R.layout.itemview_orders_pending, parent, false);
         OrdersAdapter.MyViewHolder holder = new OrdersAdapter.MyViewHolder(view);
         return holder;
     }
@@ -96,7 +84,7 @@ public class OrdersAdapter extends RecyclerView.Adapter<OrdersAdapter.MyViewHold
             //holder.txtStatus.setBackgroundResource(R.drawable.shape_button_rejected);
         }
         holder.txt_items.setText(String.valueOf(order.getItems().size() + " Items "));
-        holder.itemView_Parent.setOnClickListener(new View.OnClickListener() {
+        holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 // Triggers click upwards to the adapter on click
@@ -121,11 +109,14 @@ public class OrdersAdapter extends RecyclerView.Adapter<OrdersAdapter.MyViewHold
         return listOrder.size();
     }
 
+    // Define the listener interface
+    public interface OnItemClickListener {
+        void onItemClick(View itemView, int position, OrdersListModel order);
+    }
 
     class MyViewHolder extends RecyclerView.ViewHolder {
         ImageView imgProduct, imgArrow;
         TextView txt_Name, txtStatus, txt_Price, txtorderId, txtDate, txt_items;
-        ConstraintLayout itemView_Parent;
 
         public MyViewHolder(final View convertView) {
             super(convertView);
@@ -137,7 +128,6 @@ public class OrdersAdapter extends RecyclerView.Adapter<OrdersAdapter.MyViewHold
             txtDate = (TextView) convertView.findViewById(R.id.tv_order_date_time);
             txtStatus = (TextView) convertView.findViewById(R.id.tv_order_status);
             imgArrow = (ImageView) convertView.findViewById(R.id.iv_next_arrow);
-            itemView_Parent = (ConstraintLayout) convertView.findViewById(R.id.itemView_Parent);
         }
 
     }

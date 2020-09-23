@@ -221,74 +221,97 @@
 
                 </LinearLayout>
 
-                <com.google.android.material.chip.ChipGroup
-                    android:id="@+id/chip_group"
+                <HorizontalScrollView
+                    android:id="@+id/horizontal_scroll_chip"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="16dp"
-                    android:layout_marginTop="8dp"
-                    android:layout_marginEnd="16dp"
-                    app:chipSpacing="8dp"
+                    android:scrollbars="none"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintHorizontal_bias="0.5"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/textView51"
-                    app:singleLine="true"
-                    app:singleSelection="true">
+                    app:layout_constraintTop_toBottomOf="@+id/textView51">
 
-                    <com.google.android.material.chip.Chip
-                        android:id="@+id/chip_all"
-                        style="@style/Widget.MaterialComponents.Chip.Choice"
+                    <com.google.android.material.chip.ChipGroup
+                        android:id="@+id/chip_group"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="All"
-                        app:chipBackgroundColor="@color/colorBackgroundChips"
-                        app:chipStrokeColor="@color/colorPrimaryDark"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toBottomOf="@+id/textView51"
-                        app:textEndPadding="16dp"
-                        app:textStartPadding="16dp" />
+                        android:layout_marginStart="16dp"
+                        android:layout_marginEnd="16dp"
+                        android:layout_marginRight="16dp"
+                        app:chipSpacing="8dp"
+                        app:singleLine="true"
+                        app:singleSelection="true">
 
-                    <com.google.android.material.chip.Chip
-                        android:id="@+id/chip_pending"
-                        style="@style/Widget.MaterialComponents.Chip.Choice"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Pending"
-                        app:chipBackgroundColor="@color/colorBackgroundChips"
-                        app:chipStrokeColor="@color/colorPrimaryDark"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toBottomOf="@+id/textView51"
-                        app:textEndPadding="16dp"
-                        app:textStartPadding="16dp" />
+                        <com.google.android.material.chip.Chip
+                            android:id="@+id/chip_all"
+                            style="@style/Widget.MaterialComponents.Chip.Choice"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="All"
+                            app:chipBackgroundColor="@color/colorBackgroundChips"
+                            app:chipStrokeColor="@color/colorPrimaryDark"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toBottomOf="@+id/textView51"
+                            app:textEndPadding="16dp"
+                            app:textStartPadding="16dp" />
 
-                    <com.google.android.material.chip.Chip
-                        android:id="@+id/chip_accepted"
-                        style="@style/Widget.MaterialComponents.Chip.Choice"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Accepted"
-                        app:chipBackgroundColor="@color/colorBackgroundChips"
-                        app:chipStrokeColor="@color/colorPrimaryDark"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toBottomOf="@+id/textView51"
-                        app:textEndPadding="16dp"
-                        app:textStartPadding="16dp" />
+                        <com.google.android.material.chip.Chip
+                            android:id="@+id/chip_pending"
+                            style="@style/Widget.MaterialComponents.Chip.Choice"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Pending"
+                            app:chipBackgroundColor="@color/colorBackgroundChips"
+                            app:chipStrokeColor="@color/colorPrimaryDark"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toBottomOf="@+id/textView51"
+                            app:textEndPadding="16dp"
+                            app:textStartPadding="16dp" />
 
-                </com.google.android.material.chip.ChipGroup>
+                        <com.google.android.material.chip.Chip
+                            android:id="@+id/chip_accepted"
+                            style="@style/Widget.MaterialComponents.Chip.Choice"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Accepted"
+                            app:chipBackgroundColor="@color/colorBackgroundChips"
+                            app:chipStrokeColor="@color/colorPrimaryDark"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toBottomOf="@+id/textView51"
+                            app:textEndPadding="16dp"
+                            app:textStartPadding="16dp" />
 
-                <androidx.recyclerview.widget.RecyclerView
-                    android:id="@+id/rv_order_status"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginBottom="16dp"
-                    android:minHeight="120dp"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintHorizontal_bias="0.5"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/chip_group"
-                    tools:listitem="@layout/itemview_orders" />
+                        <com.google.android.material.chip.Chip
+                            android:id="@+id/chip_shipped"
+                            style="@style/Widget.MaterialComponents.Chip.Choice"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Shipped"
+                            app:chipBackgroundColor="@color/colorBackgroundChips"
+                            app:chipStrokeColor="@color/colorPrimaryDark"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toBottomOf="@+id/textView51"
+                            app:textEndPadding="16dp"
+                            app:textStartPadding="16dp" />
+
+                        <com.google.android.material.chip.Chip
+                            android:id="@+id/chip_delivered"
+                            style="@style/Widget.MaterialComponents.Chip.Choice"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginEnd="32dp"
+                            android:layout_marginRight="32dp"
+                            android:text="Delivered"
+                            app:chipBackgroundColor="@color/colorBackgroundChips"
+                            app:chipStrokeColor="@color/colorPrimaryDark"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toBottomOf="@+id/textView51"
+                            app:textEndPadding="16dp"
+                            app:textStartPadding="16dp" />
+
+                    </com.google.android.material.chip.ChipGroup>
+
+                </HorizontalScrollView>
 
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/rv_orders"
@@ -300,8 +323,20 @@
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintHorizontal_bias="0.5"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/chip_group"
-                    tools:listitem="@layout/itemview_orders" />
+                    app:layout_constraintTop_toBottomOf="@+id/horizontal_scroll_chip"
+                    tools:listitem="@layout/itemview_orders_pending" />
+
+                <androidx.core.widget.ContentLoadingProgressBar
+                    android:id="@+id/content_progress"
+                    style="@style/Widget.AppCompat.ProgressBar"
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
+                    android:layout_marginTop="24dp"
+                    android:indeterminate="true"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintHorizontal_bias="0.5"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/horizontal_scroll_chip" />
 
             </androidx.constraintlayout.widget.ConstraintLayout>
 

@@ -90,4 +90,40 @@
         <item name="android:textAppearance">@style/TextAppearance.AppCompat.Small</item>
     </style>
 
+    <style name="AppTheme.Chip.Small" parent="Widget.MaterialComponents.Chip.Action">
+        <item name="chipMinHeight">30dp</item>
+        <item name="chipIconSize">18dp</item>
+        <item name="chipStrokeWidth">1.5dp</item>
+        <item name="android:textAppearance">@style/TextAppearance.AppCompat.Small</item>
+        <item name="rippleColor">@android:color/transparent</item>
+    </style>
+
+    <style name="AppTheme.Chip.Small.Reject" parent="AppTheme.Chip.Small">
+        <item name="android:textColor">@color/colorRejectGrey</item>
+        <item name="chipStrokeColor">@color/colorRejectGrey</item>
+        <item name="chipBackgroundColor">@color/colorBackground</item>
+        <item name="chipIcon">@drawable/rejecticon</item>
+    </style>
+
+    <style name="AppTheme.Chip.Small.Accept" parent="AppTheme.Chip.Small">
+        <item name="android:textColor">@color/colorAccept</item>
+        <item name="chipStrokeColor">@color/colorAccept</item>
+        <item name="chipBackgroundColor">@color/colorWhite</item>
+        <item name="chipIcon">@drawable/accepticon</item>
+    </style>
+
+    <style name="AppTheme.Chip.Small.Ship" parent="AppTheme.Chip.Small">
+        <item name="android:textColor">@color/colorShipped</item>
+        <item name="chipStrokeColor">@color/colorShipped</item>
+        <item name="chipBackgroundColor">@color/colorWhite</item>
+        <item name="chipIcon">@drawable/accepticon</item>
+    </style>
+
+    <style name="AppTheme.Chip.Small.Deliver" parent="AppTheme.Chip.Small">
+        <item name="android:textColor">@color/colorPrimary</item>
+        <item name="chipStrokeColor">@color/colorPrimary</item>
+        <item name="chipBackgroundColor">@color/colorWhite</item>
+        <item name="chipIcon">@drawable/accepticon</item>
+    </style>
+
 </resources>

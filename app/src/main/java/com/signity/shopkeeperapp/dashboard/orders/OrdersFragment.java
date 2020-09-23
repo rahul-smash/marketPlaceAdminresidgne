@@ -18,7 +18,6 @@ import android.widget.PopupWindow;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.RelativeLayout;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -58,7 +57,7 @@ public class OrdersFragment extends Fragment implements OrdersAdapter.OnItemClic
     private RecyclerView recyclerView;
     private LinearLayoutManager mLinearLayoutManager;
     private RvGridSpacesItemDecoration decoration;
-    private OrdersAdapter adapter;
+    private HomeOrdersAdapter adapter;
     private String type = null;
     private RelativeLayout parent;
 
@@ -92,8 +91,7 @@ public class OrdersFragment extends Fragment implements OrdersAdapter.OnItemClic
         decoration = new RvGridSpacesItemDecoration(spacingInPixels);
         recyclerView.setLayoutManager(mLinearLayoutManager);
         recyclerView.addItemDecoration(decoration);
-        adapter = new OrdersAdapter(context, orderListModel);
-        adapter.setOnItemClickListener(this);
+        adapter = new HomeOrdersAdapter(context);
         recyclerView.setAdapter(adapter);
         return rootView;
     }
@@ -102,6 +100,7 @@ public class OrdersFragment extends Fragment implements OrdersAdapter.OnItemClic
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         setHasOptionsMenu(true);
+        getAllOrdersMethod(HomeOrdersAdapter.OrderType.ALL);
     }
 
     @Override
@@ -121,9 +120,9 @@ public class OrdersFragment extends Fragment implements OrdersAdapter.OnItemClic
 
     /*Get all orders and Fileter on the basis of active shipped and delivered*/
 
-    public void getAllOrdersMethod() {
+    public void getAllOrdersMethod(final HomeOrdersAdapter.OrderType orderType) {
         if (Util.checkIntenetConnection(getActivity())) {
-            getALLOrders();
+            getALLOrders(orderType);
         } else {
             DialogUtils.showAlertDialog(getActivity(), "Internet", "Please check your Internet Connection.");
         }
@@ -132,13 +131,12 @@ public class OrdersFragment extends Fragment implements OrdersAdapter.OnItemClic
     @Override
     public void onResume() {
         super.onResume();
-        getAllOrdersMethod();
     }
 
-    public void getALLOrders() {
+    public void getALLOrders(final HomeOrdersAdapter.OrderType orderType) {
         ProgressDialogUtil.showProgressDialog(getActivity());
         Map<String, String> param = new HashMap<String, String>();
-        param.put("order_type", "pending");
+        param.put("order_type", orderType.name().toLowerCase());
         param.put("page", "1");
 
         NetworkAdaper.getNetworkServices().getStoreOrdersNew(param, new Callback<StoreOrdersReponse>() {
@@ -154,7 +152,7 @@ public class OrdersFragment extends Fragment implements OrdersAdapter.OnItemClic
                         list.addAll(getValues.getData().getOrders());
                         listOrderMain = list;
                         orderListModel = getValues.getData().getOrders();
-                        adapter.updateListItem(orderListModel);
+                        adapter.setOrdersListModels(orderListModel);
 
                     } else {
                         recyclerView.setVisibility(View.GONE);
@@ -187,7 +185,7 @@ public class OrdersFragment extends Fragment implements OrdersAdapter.OnItemClic
             }
         }
 
-        adapter.updateListItem(orderListModel);
+        adapter.setOrdersListModels(orderListModel);
     }
 
 
@@ -270,28 +268,21 @@ public class OrdersFragment extends Fragment implements OrdersAdapter.OnItemClic
 
                 switch (index) {
                     case 0: // first button
-
-                        Toast.makeText(getActivity(), "Selected button number " + index, Toast.LENGTH_SHORT).show();
+                        getAllOrdersMethod(HomeOrdersAdapter.OrderType.ALL);
                         break;
                     case 1:
-
-                        Toast.makeText(getActivity(), "Selected button number " + index, Toast.LENGTH_SHORT).show();
+                        getAllOrdersMethod(HomeOrdersAdapter.OrderType.PENDING);
                         break;
                     case 2:
-
-                        Toast.makeText(getActivity(), "Selected button number " + index, Toast.LENGTH_SHORT).show();
+                        getAllOrdersMethod(HomeOrdersAdapter.OrderType.ACCEPTED);
                         break;
                     case 3:
-
-                        Toast.makeText(getActivity(), "Selected button number " + index, Toast.LENGTH_SHORT).show();
+                        getAllOrdersMethod(HomeOrdersAdapter.OrderType.SHIPPED);
                         break;
                     case 4:
-
-                        Toast.makeText(getActivity(), "Selected button number " + index, Toast.LENGTH_SHORT).show();
                         break;
                     case 5:
-
-                        Toast.makeText(getActivity(), "Selected button number " + index, Toast.LENGTH_SHORT).show();
+                        getAllOrdersMethod(HomeOrdersAdapter.OrderType.DELIVERED);
                         break;
                 }
             }
