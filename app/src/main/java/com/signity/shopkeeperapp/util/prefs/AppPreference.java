@@ -100,8 +100,9 @@ public class AppPreference {
         setStoreType(storeResponse.getType());
     }
 
+    // TODO - Default Currency is INR
     public String getCurrency() {
-        return mPrefs.getString(PrefConstants.PREF_KEY_STORE_CURRENCY, "");
+        return mPrefs.getString(PrefConstants.PREF_KEY_STORE_CURRENCY, "INR");
     }
 
     public void setCurrency(String currency) {

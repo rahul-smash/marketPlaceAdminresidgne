@@ -91,4 +91,9 @@ public class Constant {
             return days;
         }
     }
+
+    public enum OrderStatus {
+        ALL, PENDING, ACCEPTED, SHIPPED, DELIVERD
+    }
+
 }

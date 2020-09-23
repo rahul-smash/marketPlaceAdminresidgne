@@ -19,7 +19,6 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
-import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -27,14 +26,11 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
-
 import com.signity.shopkeeperapp.R;
-import com.signity.shopkeeperapp.manage_stores.StaffListFragment;
 import com.signity.shopkeeperapp.model.ItemListModel;
 import com.signity.shopkeeperapp.model.OrderItemResponseModel;
 import com.signity.shopkeeperapp.model.OrdersListModel;
 import com.signity.shopkeeperapp.network.NetworkAdaper;
-import com.signity.shopkeeperapp.orders.OrderDetailFragment;
 import com.signity.shopkeeperapp.util.AnimUtil;
 import com.signity.shopkeeperapp.util.Constant;
 import com.signity.shopkeeperapp.util.DialogHandler;
@@ -48,7 +44,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import de.hdodenhof.circleimageview.CircleImageView;
 import retrofit.Callback;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
@@ -58,10 +53,7 @@ import static android.content.Intent.ACTION_DIAL;
 public class OrderDetailActivity extends AppCompatActivity implements View.OnClickListener {
     TextView txtTotal, txtTotalPrice, txtCartSavings, txtAddress, txtDate, txtStausVal, txtnoteValue, txtItems;
     ListView recyclerView;
-    CircleImageView imgGuideMe;
-    Button btnCall;
-    private OrdersListModel ordersListModel;
-    private PrefManager prefManager;
+    ImageView imgGuideMe;
     String status;
     String getLat = "";
     String getLong = "";
@@ -70,11 +62,9 @@ public class OrderDetailActivity extends AppCompatActivity implements View.OnCli
     String phoneNumber;
     String type = "";
     List<ItemListModel> listItem;
-
     String userId = "";
     String orderId = "";
     String orderStatus = "";
-
     String note = "";
     String address = "";
     Double total = 0.00;
@@ -85,23 +75,26 @@ public class OrderDetailActivity extends AppCompatActivity implements View.OnCli
     ListView listDueOrderItems;
     OrderDetailAdapter adapter;
     Button backButton;
+    private OrdersListModel ordersListModel;
+    private PrefManager prefManager;
     private Toolbar toolbar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.order_detail_activity);
+        initview();
+        setUpToolbar();
         prefManager = new PrefManager(getApplicationContext());
         Intent intent = this.getIntent();
         Bundle bundle = intent.getExtras();
         ordersListModel = (OrdersListModel) bundle.getSerializable("object");
-        initview();
         setUiData();
 
         setOrderDetails();
         initListAdapter();
-        setUpToolbar();
     }
+
     private void setUpToolbar() {
         setSupportActionBar(toolbar);
         getSupportActionBar().setHomeAsUpIndicator(R.drawable.backicon);
@@ -182,22 +175,20 @@ public class OrderDetailActivity extends AppCompatActivity implements View.OnCli
         toolbar = findViewById(R.id.toolbar);
 
         listDueOrderItems = (ListView) findViewById(R.id.recyclerView);
-       // backButton = (Button) findViewById(R.id.backButton);
-        btnCall = (Button) findViewById(R.id.btnCall);
+        // backButton = (Button) findViewById(R.id.backButton);
         txtTotal = (TextView) findViewById(R.id.txtTotal);
         txtTotalPrice = (TextView) findViewById(R.id.txtTotalPrice);
         txtCartSavings = (TextView) findViewById(R.id.txtCartSavings);
         txtAddress = (TextView) findViewById(R.id.txtAddress);
-        txtDate = (TextView) findViewById(R.id.txtDate);
+        txtDate = (TextView) findViewById(R.id.tv_order_date_time);
         txtStausVal = (TextView) findViewById(R.id.txtStausVal);
         txtnoteValue = (TextView) findViewById(R.id.txtnoteValue);
         txtItems = (TextView) findViewById(R.id.mtxtItems);
 
-        imgGuideMe = (CircleImageView) findViewById(R.id.imgGuideMe);
+        imgGuideMe = (ImageView) findViewById(R.id.imgGuideMe);
         // recyclerView = (ListView) findViewById(R.id.recyclerView);
         imgGuideMe.setOnClickListener(this);
-        btnCall.setOnClickListener(this);
-     //   backButton.setOnClickListener(this);
+        //   backButton.setOnClickListener(this);
     }
 
     @Override
@@ -223,13 +214,6 @@ public class OrderDetailActivity extends AppCompatActivity implements View.OnCli
                 openMap(getLat, getLong, destinationLat, destinationLang);
 
 
-            }
-        }
-        if (view == btnCall) {
-            if (phoneNumber.equalsIgnoreCase("")) {
-                DialogUtils.showAlertDialog(getApplicationContext(), Constant.APP_TITLE, "Sorry! phone number is not available.");
-            } else {
-                callAlert();
             }
         }
 
@@ -280,6 +264,63 @@ public class OrderDetailActivity extends AppCompatActivity implements View.OnCli
         }
     }
 
+    private void callOrderItemStatus(String itemID, String status) {
+
+        ProgressDialogUtil.showProgressDialog(OrderDetailActivity.this);
+        Map<String, String> param = new HashMap<String, String>();
+        param.put("user_id", ordersListModel.getUserId());
+        param.put("order_id", ordersListModel.getOrderId());
+        param.put("item_ids", itemID);
+        param.put("item_status", status);
+
+        NetworkAdaper.getInstance().getNetworkServices().setOrderItemStatus(param, new Callback<OrderItemResponseModel>() {
+            @Override
+            public void success(OrderItemResponseModel orderItemResponseModel, Response response) {
+                ProgressDialogUtil.hideProgressDialog();
+                if (orderItemResponseModel.getSuccess() != null ? orderItemResponseModel.getSuccess() : false) {
+                    prefManager.storeSharedValue(Constant.REFERESH_DATA_REQURIED, "1");
+                    OrdersListModel ordersListModelTemp = orderItemResponseModel.getOrdersListModel();
+                    if (ordersListModelTemp != null) {
+                        ordersListModel = ordersListModelTemp;
+                        //  updateView(ordersListModel);
+                    }
+                }
+            }
+
+            @Override
+            public void failure(RetrofitError error) {
+                ProgressDialogUtil.hideProgressDialog();
+                DialogUtils.showAlertDialog(getApplicationContext(),
+                        Constant.APP_TITLE, "Error Occurred, Try again later.");
+            }
+        });
+
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.menu_orders_detail, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+
+        if (item.getItemId() == R.id.action_call) {
+            if (phoneNumber.equalsIgnoreCase("")) {
+                DialogUtils.showAlertDialog(getApplicationContext(), Constant.APP_TITLE, "Sorry! phone number is not available.");
+            } else {
+                callAlert();
+            }
+        }
+
+        if (item.getItemId() == android.R.id.home) {
+            finish();
+        }
+
+        return super.onOptionsItemSelected(item);
+    }
 
     /* Listadapter   */
     class OrderDetailAdapter extends BaseAdapter {
@@ -426,52 +467,4 @@ public class OrderDetailActivity extends AppCompatActivity implements View.OnCli
             RelativeLayout parent;
         }
     }
-
-    private void callOrderItemStatus(String itemID, String status) {
-
-        ProgressDialogUtil.showProgressDialog(OrderDetailActivity.this);
-        Map<String, String> param = new HashMap<String, String>();
-        param.put("user_id", ordersListModel.getUserId());
-        param.put("order_id", ordersListModel.getOrderId());
-        param.put("item_ids", itemID);
-        param.put("item_status", status);
-
-        NetworkAdaper.getInstance().getNetworkServices().setOrderItemStatus(param, new Callback<OrderItemResponseModel>() {
-            @Override
-            public void success(OrderItemResponseModel orderItemResponseModel, Response response) {
-                ProgressDialogUtil.hideProgressDialog();
-                if (orderItemResponseModel.getSuccess() != null ? orderItemResponseModel.getSuccess() : false) {
-                    prefManager.storeSharedValue(Constant.REFERESH_DATA_REQURIED, "1");
-                    OrdersListModel ordersListModelTemp = orderItemResponseModel.getOrdersListModel();
-                    if (ordersListModelTemp != null) {
-                        ordersListModel = ordersListModelTemp;
-                        //  updateView(ordersListModel);
-                    }
-                }
-            }
-
-            @Override
-            public void failure(RetrofitError error) {
-                ProgressDialogUtil.hideProgressDialog();
-                DialogUtils.showAlertDialog(getApplicationContext(),
-                        Constant.APP_TITLE, "Error Occurred, Try again later.");
-            }
-        });
-
-    }
-
-  /*  @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        MenuInflater inflater = getMenuInflater();
-        inflater.inflate(R.menu.menu_home, menu);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-        if (item.getItemId() == R.id.action_notification) {
-            Toast.makeText(getApplicationContext(), "Notification", Toast.LENGTH_SHORT).show();
-        }
-        return super.onOptionsItemSelected(item);
-    }*/
 }

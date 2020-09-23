@@ -10,7 +10,6 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.signity.shopkeeperapp.R;
-import com.signity.shopkeeperapp.model.verify.DataResponse;
 import com.signity.shopkeeperapp.model.verify.StoreResponse;
 
 import java.util.ArrayList;
@@ -63,7 +62,7 @@ public class StoresAdapter extends RecyclerView.Adapter<StoresAdapter.ViewHolder
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
             textViewStoreName = itemView.findViewById(R.id.tv_store_name);
-            textViewStoreAddress = itemView.findViewById(R.id.tv_store_address);
+            textViewStoreAddress = itemView.findViewById(R.id.tv_order_id);
         }
 
         public void bind(int positon) {
