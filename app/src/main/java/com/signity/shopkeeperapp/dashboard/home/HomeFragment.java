@@ -1,15 +1,19 @@
 package com.signity.shopkeeperapp.dashboard.home;
 
 import android.content.Context;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
+import android.widget.PopupWindow;
+import android.widget.RadioGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -51,6 +55,7 @@ public class HomeFragment extends Fragment implements HomeContentAdapter.HomeCon
     private ChipGroup chipGroup;
     private HomeFragmentListener listener;
     private int notificationCount = 12;
+    LinearLayout llToday;
 
     public static HomeFragment getInstance(Bundle bundle) {
         HomeFragment fragment = new HomeFragment();
@@ -94,7 +99,7 @@ public class HomeFragment extends Fragment implements HomeContentAdapter.HomeCon
     @Override
     public void onResume() {
         super.onResume();
-        storeDashboard();
+        storeDashboard(Constant.StoreDashboard.TODAY);
     }
 
     public void getOrders(final HomeOrdersAdapter.OrderType orderType) {
@@ -122,9 +127,9 @@ public class HomeFragment extends Fragment implements HomeContentAdapter.HomeCon
         });
     }
 
-    public void storeDashboard() {
+    public void storeDashboard(Constant.StoreDashboard typeofDay) {
         Map<String, Integer> param = new HashMap<String, Integer>();
-        param.put("days_filder", Constant.StoreDashboard.TODAY.getDays());
+        param.put("days_filder", typeofDay.getDays());
 
         NetworkAdaper.getNetworkServices().storeDashboard(param, new Callback<StoreDashboardResponse>() {
             @Override
@@ -158,6 +163,7 @@ public class HomeFragment extends Fragment implements HomeContentAdapter.HomeCon
     }
 
     private void init(View view) {
+        llToday = view.findViewById(R.id.llToday);
         recyclerViewContent = view.findViewById(R.id.rv_content);
         recyclerViewOrders = view.findViewById(R.id.rv_orders);
         linearLayoutViewAllOrders = view.findViewById(R.id.ll_view_all_orders);
@@ -165,7 +171,73 @@ public class HomeFragment extends Fragment implements HomeContentAdapter.HomeCon
         progressBar = view.findViewById(R.id.content_progress);
         Chip allChip = view.findViewById(R.id.chip_all);
         allChip.setChecked(true);
+        llToday.setOnClickListener(new View.OnClickListener() {
+                                       @Override
+                                       public void onClick(View view) {
+                                           Log.i("@@Today_event", "click_open");
+                                           LayoutInflater inflater = (LayoutInflater) getActivity().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+                                           View layout = inflater.inflate(R.layout.popup_view_today,
+                                                   (ViewGroup) getActivity().findViewById(R.id.popups));
 
+
+                                           final PopupWindow rightMenuPopUpWindow = new PopupWindow(layout, LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT, true);
+
+                                           rightMenuPopUpWindow.setOutsideTouchable(true);
+                                           rightMenuPopUpWindow.setBackgroundDrawable(new ColorDrawable());
+                                           rightMenuPopUpWindow.setTouchInterceptor(new View.OnTouchListener() { // or whatever you want
+                                               @Override
+                                               public boolean onTouch(View v, MotionEvent event) {
+                                                   if (event.getAction() == MotionEvent.ACTION_OUTSIDE) // here I want to close the pw when clicking outside it but at all this is just an example of how it works and you can implement the onTouch() or the onKey() you want
+                                                   {
+                                                       rightMenuPopUpWindow.dismiss();
+                                                       return true;
+                                                   }
+                                                   return false;
+                                               }
+
+                                           });
+
+                                           float den = getActivity().getResources().getDisplayMetrics().density;
+                                           int offsetY = (int) (den * 2);
+                                           rightMenuPopUpWindow.showAsDropDown(view, offsetY, offsetY);
+
+                                           final RadioGroup rdGroup = (RadioGroup) layout.findViewById(R.id.rdGroup);
+
+                                           rdGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+
+                                               @Override
+                                               public void onCheckedChanged(RadioGroup group, int checkedId) {
+
+                                                   View radioButton = rdGroup.findViewById(checkedId);
+                                                   int index = rdGroup.indexOfChild(radioButton);
+
+                                                   // Add logic here
+
+                                                   switch (index) {
+                                                       case 0: // first button
+
+                                                           Toast.makeText(getActivity(), "Selected button number " + index, Toast.LENGTH_SHORT).show();
+                                                           storeDashboard(Constant.StoreDashboard.TODAY);
+
+                                                           break;
+                                                       case 1:
+
+                                                           Toast.makeText(getActivity(), "Selected button number " + index, Toast.LENGTH_SHORT).show();
+                                                           storeDashboard(Constant.StoreDashboard.YESTERDAY);
+                                                           break;
+                                                       case 2:
+                                                           storeDashboard(Constant.StoreDashboard.LAST_WEEK);
+
+                                                           Toast.makeText(getActivity(), "Selected button number " + index, Toast.LENGTH_SHORT).show();
+                                                           break;
+
+                                                   }
+                                               }
+                                           });
+                                       }
+
+                                   }
+        );
         chipGroup.setOnCheckedChangeListener(new ChipGroup.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(ChipGroup group, int checkedId) {
