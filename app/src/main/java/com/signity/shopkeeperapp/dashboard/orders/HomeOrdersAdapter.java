@@ -22,12 +22,19 @@ import java.util.Locale;
 
 public class HomeOrdersAdapter extends RecyclerView.Adapter<HomeOrdersAdapter.ViewHolder> {
 
-    private static final String TAG = "DashboardOrdersAdapter";
+    private static final String TAG = "HomeOrdersAdapter";
     private Context context;
     private List<OrdersListModel> ordersListModels = new ArrayList<>();
+    private OrdersListener listener;
+    private boolean showImages;
 
-    public HomeOrdersAdapter(Context context) {
+    public HomeOrdersAdapter(Context context, boolean showImages) {
         this.context = context;
+        this.showImages = showImages;
+    }
+
+    public void setListener(OrdersListener listener) {
+        this.listener = listener;
     }
 
     @NonNull
@@ -52,8 +59,16 @@ public class HomeOrdersAdapter extends RecyclerView.Adapter<HomeOrdersAdapter.Vi
     }
 
     @Override
-    public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull final ViewHolder holder, int position) {
         holder.bind(position);
+        holder.itemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (listener != null) {
+                    listener.onClickOrder(holder.getAdapterPosition());
+                }
+            }
+        });
     }
 
     public void setOrdersListModels(List<OrdersListModel> ordersListModels) {
@@ -77,8 +92,35 @@ public class HomeOrdersAdapter extends RecyclerView.Adapter<HomeOrdersAdapter.Vi
         return ordersListModels.size();
     }
 
+    public void removeItem(int position) {
+        ordersListModels.remove(position);
+        notifyItemRemoved(position);
+    }
+
     public enum OrderType {
-        ALL, PENDING, ACCEPTED, SHIPPED, DELIVERED
+        ALL(9), PENDING(0), ACCEPTED(1), SHIPPED(4), DELIVERED(5), REJECTED(2);
+
+        private int statusId;
+
+        OrderType(int statusId) {
+            this.statusId = statusId;
+        }
+
+        public int getStatusId() {
+            return statusId;
+        }
+    }
+
+    public interface OrdersListener {
+        void onClickOrder(int position);
+
+        void onRejectOrder(int position);
+
+        void onAcceptOrder(int position);
+
+        void onShipOrder(int position);
+
+        void onDeliverOrder(int position);
     }
 
     class ViewHolder extends RecyclerView.ViewHolder {
@@ -99,6 +141,7 @@ public class HomeOrdersAdapter extends RecyclerView.Adapter<HomeOrdersAdapter.Vi
 
             OrdersListModel ordersModel = ordersListModels.get(position);
 
+            imageViewProduct.setVisibility(showImages ? View.VISIBLE : View.GONE);
             textViewName.setText(ordersModel.getCustomerName());
             textViewOrderId.setText(String.format("Order- %s", ordersModel.getOrderId()));
 
@@ -125,13 +168,17 @@ public class HomeOrdersAdapter extends RecyclerView.Adapter<HomeOrdersAdapter.Vi
             chipAccept.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-
+                    if (listener != null) {
+                        listener.onAcceptOrder(getAdapterPosition());
+                    }
                 }
             });
             chipReject.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-
+                    if (listener != null) {
+                        listener.onRejectOrder(getAdapterPosition());
+                    }
                 }
             });
         }
@@ -153,13 +200,17 @@ public class HomeOrdersAdapter extends RecyclerView.Adapter<HomeOrdersAdapter.Vi
             chipShip.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-
+                    if (listener != null) {
+                        listener.onShipOrder(getAdapterPosition());
+                    }
                 }
             });
             chipReject.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-
+                    if (listener != null) {
+                        listener.onRejectOrder(getAdapterPosition());
+                    }
                 }
             });
         }
@@ -181,13 +232,17 @@ public class HomeOrdersAdapter extends RecyclerView.Adapter<HomeOrdersAdapter.Vi
             chipDeliver.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-
+                    if (listener != null) {
+                        listener.onDeliverOrder(getAdapterPosition());
+                    }
                 }
             });
             chipReject.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-
+                    if (listener != null) {
+                        listener.onRejectOrder(getAdapterPosition());
+                    }
                 }
             });
         }

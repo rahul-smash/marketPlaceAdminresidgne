@@ -7,7 +7,6 @@ import android.os.Handler;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
-import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -25,11 +24,8 @@ import androidx.fragment.app.FragmentTransaction;
 import com.google.android.material.badge.BadgeDrawable;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.signity.shopkeeperapp.R;
-import com.signity.shopkeeperapp.dashboard.account.AccountFragment;
-import com.signity.shopkeeperapp.dashboard.categories.CategoriesFragment;
 import com.signity.shopkeeperapp.dashboard.home.HomeFragment;
 import com.signity.shopkeeperapp.dashboard.orders.OrdersFragment;
-import com.signity.shopkeeperapp.dashboard.products.ProductsFragment;
 
 public class DashboardActivity extends AppCompatActivity implements BottomNavigationView.OnNavigationItemSelectedListener, HomeFragment.HomeFragmentListener {
 
@@ -134,15 +130,15 @@ public class DashboardActivity extends AppCompatActivity implements BottomNaviga
                 break;
             case R.id.action_bottom_products:
                 toolbarTitle.setText("Products");
-                showFragment(ProductsFragment.getInstance(null), ProductsFragment.TAG);
+                Toast.makeText(this, "Coming Soon!", Toast.LENGTH_SHORT).show();
                 break;
             case R.id.action_bottom_categories:
                 toolbarTitle.setText("Categories");
-                showFragment(CategoriesFragment.getInstance(null), CategoriesFragment.TAG);
+                Toast.makeText(this, "Coming Soon!", Toast.LENGTH_SHORT).show();
                 break;
             case R.id.action_bottom_account:
                 toolbarTitle.setText("Account");
-                showFragment(AccountFragment.getInstance(null), AccountFragment.TAG);
+                Toast.makeText(this, "Coming Soon!", Toast.LENGTH_SHORT).show();
                 break;
         }
         return false;

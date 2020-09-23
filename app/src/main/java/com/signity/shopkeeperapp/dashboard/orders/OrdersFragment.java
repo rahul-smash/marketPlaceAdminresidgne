@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
+import android.os.Handler;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -18,7 +19,9 @@ import android.widget.PopupWindow;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.RelativeLayout;
+import android.widget.Toast;
 
+import androidx.annotation.IdRes;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
@@ -29,6 +32,7 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.signity.shopkeeperapp.R;
 import com.signity.shopkeeperapp.adapter.RvGridSpacesItemDecoration;
 import com.signity.shopkeeperapp.model.OrdersListModel;
+import com.signity.shopkeeperapp.model.SetOrdersModel;
 import com.signity.shopkeeperapp.model.orders.StoreOrdersReponse;
 import com.signity.shopkeeperapp.network.NetworkAdaper;
 import com.signity.shopkeeperapp.util.AnimUtil;
@@ -36,6 +40,7 @@ import com.signity.shopkeeperapp.util.Constant;
 import com.signity.shopkeeperapp.util.DialogUtils;
 import com.signity.shopkeeperapp.util.ProgressDialogUtil;
 import com.signity.shopkeeperapp.util.Util;
+import com.signity.shopkeeperapp.util.prefs.AppPreference;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -46,9 +51,9 @@ import retrofit.Callback;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
 
-public class OrdersFragment extends Fragment implements OrdersAdapter.OnItemClickListener {
+public class OrdersFragment extends Fragment implements OrdersAdapter.OnItemClickListener, HomeOrdersAdapter.OrdersListener {
     public static final String TAG = "OrdersFragment";
-    List<OrdersListModel> orderListModel;
+    List<OrdersListModel> orderListModel = new ArrayList<>();
     List<OrdersListModel> listOrderMain;
     FloatingActionButton fab;
     PopupWindow rightMenuPopUpWindow;
@@ -60,6 +65,9 @@ public class OrdersFragment extends Fragment implements OrdersAdapter.OnItemClic
     private HomeOrdersAdapter adapter;
     private String type = null;
     private RelativeLayout parent;
+    private HomeOrdersAdapter.OrderType orderTypeFilter = HomeOrdersAdapter.OrderType.ALL;
+    @IdRes
+    private int checkedId;
 
     public static OrdersFragment getInstance(Bundle bundle) {
         OrdersFragment fragment = new OrdersFragment();
@@ -67,14 +75,10 @@ public class OrdersFragment extends Fragment implements OrdersAdapter.OnItemClic
         return fragment;
     }
 
-
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         context = getActivity();
-        if (orderListModel == null) {
-            orderListModel = new ArrayList<>();
-        }
     }
 
     @Nullable
@@ -91,7 +95,8 @@ public class OrdersFragment extends Fragment implements OrdersAdapter.OnItemClic
         decoration = new RvGridSpacesItemDecoration(spacingInPixels);
         recyclerView.setLayoutManager(mLinearLayoutManager);
         recyclerView.addItemDecoration(decoration);
-        adapter = new HomeOrdersAdapter(context);
+        adapter = new HomeOrdersAdapter(context, true);
+        adapter.setListener(this);
         recyclerView.setAdapter(adapter);
         return rootView;
     }
@@ -100,7 +105,7 @@ public class OrdersFragment extends Fragment implements OrdersAdapter.OnItemClic
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         setHasOptionsMenu(true);
-        getAllOrdersMethod(HomeOrdersAdapter.OrderType.ALL);
+        getAllOrdersMethod();
     }
 
     @Override
@@ -112,7 +117,6 @@ public class OrdersFragment extends Fragment implements OrdersAdapter.OnItemClic
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         if (item.getItemId() == R.id.action_filter) {
-            // TODO - Open Pop Window
             showPopUpMenu();
         }
         return super.onOptionsItemSelected(item);
@@ -120,9 +124,9 @@ public class OrdersFragment extends Fragment implements OrdersAdapter.OnItemClic
 
     /*Get all orders and Fileter on the basis of active shipped and delivered*/
 
-    public void getAllOrdersMethod(final HomeOrdersAdapter.OrderType orderType) {
+    public void getAllOrdersMethod() {
         if (Util.checkIntenetConnection(getActivity())) {
-            getALLOrders(orderType);
+            getALLOrders();
         } else {
             DialogUtils.showAlertDialog(getActivity(), "Internet", "Please check your Internet Connection.");
         }
@@ -133,10 +137,10 @@ public class OrdersFragment extends Fragment implements OrdersAdapter.OnItemClic
         super.onResume();
     }
 
-    public void getALLOrders(final HomeOrdersAdapter.OrderType orderType) {
+    public void getALLOrders() {
         ProgressDialogUtil.showProgressDialog(getActivity());
         Map<String, String> param = new HashMap<String, String>();
-        param.put("order_type", orderType.name().toLowerCase());
+        param.put("order_type", orderTypeFilter.name().toLowerCase());
         param.put("page", "1");
 
         NetworkAdaper.getNetworkServices().getStoreOrdersNew(param, new Callback<StoreOrdersReponse>() {
@@ -219,9 +223,7 @@ public class OrdersFragment extends Fragment implements OrdersAdapter.OnItemClic
     private void showPopUpMenu() {
 
         LayoutInflater inflater = (LayoutInflater) getActivity().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        View layout = inflater.inflate(R.layout.right_menu_view_orders,
-                (ViewGroup) getActivity().findViewById(R.id.popups));
-
+        View layout = inflater.inflate(R.layout.popwindow_orders_filter, null, false);
 
         rightMenuPopUpWindow = new PopupWindow(layout, LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT, true);
 
@@ -242,7 +244,7 @@ public class OrdersFragment extends Fragment implements OrdersAdapter.OnItemClic
 
         float den = getActivity().getResources().getDisplayMetrics().density;
         int offsetY = (int) (den * 2);
-        rightMenuPopUpWindow.showAsDropDown(view, offsetY, offsetY);
+        rightMenuPopUpWindow.showAsDropDown(view, 0, 0);
 
         final RadioGroup rdGroup = (RadioGroup) layout.findViewById(R.id.rdGroup);
         RadioButton radioAllOrders = (RadioButton) layout.findViewById(R.id.radioAllOrders);
@@ -252,9 +254,25 @@ public class OrdersFragment extends Fragment implements OrdersAdapter.OnItemClic
 
         RadioButton radioShipped = (RadioButton) layout.findViewById(R.id.radioShipped);
 
-        RadioButton radioCancelled = (RadioButton) layout.findViewById(R.id.radioCancelled);
-
         RadioButton radioDelivered = (RadioButton) layout.findViewById(R.id.radioDelivered);
+
+        switch (checkedId) {
+            case R.id.radioPending:
+                radioPending.setChecked(true);
+                break;
+            case R.id.radioAccepted:
+                radioAccepted.setChecked(true);
+                break;
+            case R.id.radioShipped:
+                radioShipped.setChecked(true);
+                break;
+            case R.id.radioDelivered:
+                radioDelivered.setChecked(true);
+                break;
+            case R.id.radioAllOrders:
+            default:
+                radioAllOrders.setChecked(true);
+        }
 
         rdGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
 
@@ -264,30 +282,95 @@ public class OrdersFragment extends Fragment implements OrdersAdapter.OnItemClic
                 View radioButton = rdGroup.findViewById(checkedId);
                 int index = rdGroup.indexOfChild(radioButton);
 
+                OrdersFragment.this.checkedId = checkedId;
                 // Add logic here
 
                 switch (index) {
                     case 0: // first button
-                        getAllOrdersMethod(HomeOrdersAdapter.OrderType.ALL);
+                        orderTypeFilter = HomeOrdersAdapter.OrderType.ALL;
                         break;
                     case 1:
-                        getAllOrdersMethod(HomeOrdersAdapter.OrderType.PENDING);
+                        orderTypeFilter = HomeOrdersAdapter.OrderType.PENDING;
                         break;
                     case 2:
-                        getAllOrdersMethod(HomeOrdersAdapter.OrderType.ACCEPTED);
+                        orderTypeFilter = HomeOrdersAdapter.OrderType.ACCEPTED;
                         break;
                     case 3:
-                        getAllOrdersMethod(HomeOrdersAdapter.OrderType.SHIPPED);
+                        orderTypeFilter = HomeOrdersAdapter.OrderType.SHIPPED;
                         break;
                     case 4:
-                        break;
-                    case 5:
-                        getAllOrdersMethod(HomeOrdersAdapter.OrderType.DELIVERED);
+                        orderTypeFilter = HomeOrdersAdapter.OrderType.DELIVERED;
                         break;
                 }
+                getAllOrdersMethod();
+
+                new Handler().postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        rightMenuPopUpWindow.dismiss();
+                    }
+                }, 700);
             }
         });
     }
 
+    private void updateOrderStatus(HomeOrdersAdapter.OrderType orderStatus, String orderId, final int position) {
+        ProgressDialogUtil.showProgressDialog(getActivity());
+        Map<String, String> param = new HashMap<String, String>();
+        param.put("user_id", AppPreference.getInstance().getUserId());
+        param.put("order_status", String.valueOf(orderStatus.getStatusId()));
+        param.put("order_ids", orderId);
 
+        NetworkAdaper.getNetworkServices().setOrderStatus(param, new Callback<SetOrdersModel>() {
+            @Override
+            public void success(SetOrdersModel getValues, Response response) {
+
+                ProgressDialogUtil.hideProgressDialog();
+                if (getValues.getSuccess()) {
+                    getALLOrders();
+                } else {
+                    Toast.makeText(getContext(), getValues.getMessage(), Toast.LENGTH_SHORT).show();
+                }
+
+            }
+
+            @Override
+            public void failure(RetrofitError error) {
+                ProgressDialogUtil.hideProgressDialog();
+            }
+        });
+    }
+
+    @Override
+    public void onClickOrder(int position) {
+        OrdersListModel order = orderListModel.get(position);
+        Bundle bundle = new Bundle();
+        bundle.putSerializable(OrderDetailActivity.ORDER_OBJECT, order);
+        startActivity(OrderDetailActivity.getStartIntent(getContext(), bundle));
+        AnimUtil.slideFromRightAnim(getActivity());
+    }
+
+    @Override
+    public void onRejectOrder(int position) {
+        OrdersListModel order = orderListModel.get(position);
+        updateOrderStatus(HomeOrdersAdapter.OrderType.REJECTED, order.getOrderId(), position);
+    }
+
+    @Override
+    public void onAcceptOrder(int position) {
+        OrdersListModel order = orderListModel.get(position);
+        updateOrderStatus(HomeOrdersAdapter.OrderType.ACCEPTED, order.getOrderId(), position);
+    }
+
+    @Override
+    public void onShipOrder(int position) {
+        OrdersListModel order = orderListModel.get(position);
+        updateOrderStatus(HomeOrdersAdapter.OrderType.SHIPPED, order.getOrderId(), position);
+    }
+
+    @Override
+    public void onDeliverOrder(int position) {
+        OrdersListModel order = orderListModel.get(position);
+        updateOrderStatus(HomeOrdersAdapter.OrderType.DELIVERED, order.getOrderId(), position);
+    }
 }
