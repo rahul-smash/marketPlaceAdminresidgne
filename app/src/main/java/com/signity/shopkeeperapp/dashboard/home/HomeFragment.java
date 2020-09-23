@@ -3,6 +3,7 @@ package com.signity.shopkeeperapp.dashboard.home;
 import android.content.Context;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -12,7 +13,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.PopupWindow;
-import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -98,7 +98,7 @@ public class HomeFragment extends Fragment implements HomeContentAdapter.HomeCon
     @Override
     public void onResume() {
         super.onResume();
-        storeDashboard();
+        storeDashboard(Constant.StoreDashboard.TODAY);
     }
 
     public void getOrders(final Constant.OrderStatus orderStatus) {
@@ -125,9 +125,9 @@ public class HomeFragment extends Fragment implements HomeContentAdapter.HomeCon
         });
     }
 
-    public void storeDashboard() {
+    public void storeDashboard(Constant.StoreDashboard typeofDay) {
         Map<String, Integer> param = new HashMap<String, Integer>();
-        param.put("days_filder", Constant.StoreDashboard.TODAY.getDays());
+        param.put("days_filder", typeofDay.getDays());
 
         NetworkAdaper.getNetworkServices().storeDashboard(param, new Callback<StoreDashboardResponse>() {
             @Override
@@ -169,6 +169,7 @@ public class HomeFragment extends Fragment implements HomeContentAdapter.HomeCon
         llToday.setOnClickListener(new View.OnClickListener() {
                                        @Override
                                        public void onClick(View view) {
+                                           Log.i("@@Today_event", "click_open");
                                            LayoutInflater inflater = (LayoutInflater) getActivity().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
                                            View layout = inflater.inflate(R.layout.popup_view_today,
                                                    (ViewGroup) getActivity().findViewById(R.id.popups));
@@ -211,12 +212,16 @@ public class HomeFragment extends Fragment implements HomeContentAdapter.HomeCon
                                                        case 0: // first button
 
                                                            Toast.makeText(getActivity(), "Selected button number " + index, Toast.LENGTH_SHORT).show();
+                                                           storeDashboard(Constant.StoreDashboard.TODAY);
+
                                                            break;
                                                        case 1:
 
                                                            Toast.makeText(getActivity(), "Selected button number " + index, Toast.LENGTH_SHORT).show();
+                                                           storeDashboard(Constant.StoreDashboard.YESTERDAY);
                                                            break;
                                                        case 2:
+                                                           storeDashboard(Constant.StoreDashboard.LAST_WEEK);
 
                                                            Toast.makeText(getActivity(), "Selected button number " + index, Toast.LENGTH_SHORT).show();
                                                            break;
