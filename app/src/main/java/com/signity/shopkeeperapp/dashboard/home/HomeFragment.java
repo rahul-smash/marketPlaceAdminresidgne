@@ -216,19 +216,19 @@ public class HomeFragment extends Fragment implements HomeContentAdapter.HomeCon
                                                    switch (index) {
                                                        case 0: // first button
 
-                                                           Toast.makeText(getActivity(), "Selected button number " + index, Toast.LENGTH_SHORT).show();
+                                                          // Toast.makeText(getActivity(), "Selected button number " + index, Toast.LENGTH_SHORT).show();
                                                            storeDashboard(Constant.StoreDashboard.TODAY);
 
                                                            break;
                                                        case 1:
 
-                                                           Toast.makeText(getActivity(), "Selected button number " + index, Toast.LENGTH_SHORT).show();
+                                                           //Toast.makeText(getActivity(), "Selected button number " + index, Toast.LENGTH_SHORT).show();
                                                            storeDashboard(Constant.StoreDashboard.YESTERDAY);
                                                            break;
                                                        case 2:
                                                            storeDashboard(Constant.StoreDashboard.LAST_WEEK);
 
-                                                           Toast.makeText(getActivity(), "Selected button number " + index, Toast.LENGTH_SHORT).show();
+                                                           //Toast.makeText(getActivity(), "Selected button number " + index, Toast.LENGTH_SHORT).show();
                                                            break;
 
                                                    }

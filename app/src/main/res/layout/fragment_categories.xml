@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/relative"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
+        android:orientation="vertical">
+
+        <ImageView
+            android:id="@+id/imagelogos"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:layout_gravity="center"
+            android:src="@drawable/ic_audio"
+            android:visibility="gone" />
+
+        <TextView
+            android:id="@+id/txtEtiom"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/imagelogos"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="15dp"
+            android:gravity="center"
+            android:padding="6dp"
+            android:text="Etiam tempor volutpot"
+            android:textSize="@dimen/text_normal" />
+
+        <TextView
+            android:id="@+id/txtData"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/imagelogos"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="15dp"
+            android:gravity="center"
+            android:padding="6dp"
+            android:text="Aliquam soladales lacinia nibh vitae.Phasellues ellifend ente agent fringlla "
+            android:textSize="@dimen/text_normal" />
+
+        <TextView
+            android:id="@+id/txtAddCategory"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:layout_gravity="center"
+            android:layout_marginLeft="40dp"
+            android:layout_marginTop="80dp"
+            android:layout_marginRight="40dp"
+            android:background="@drawable/shape_button_apply"
+            android:gravity="center"
+            android:padding="4dp"
+            android:text="Add new Category"
+            android:textColor="@color/colorWhite"
+            android:textSize="@dimen/text_normal" />
+    </LinearLayout>
+</RelativeLayout>
