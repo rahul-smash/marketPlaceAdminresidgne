@@ -7,7 +7,6 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -120,8 +119,11 @@ public class HomeFragment extends Fragment implements HomeContentAdapter.HomeCon
 
     private void setUpStoreData() {
         String storeUrl = AppPreference.getInstance().getStoreUrl();
-        String[] arr = storeUrl.split("//");
-        textViewStoreUrl.setText(arr[1]);
+
+        if (!TextUtils.isEmpty(storeUrl)) {
+            String[] arr = storeUrl.split("//");
+            textViewStoreUrl.setText(arr[1]);
+        }
 
         String storeName = AppPreference.getInstance().getStoreName();
         textViewStoreName.setText(storeName);
@@ -134,13 +136,19 @@ public class HomeFragment extends Fragment implements HomeContentAdapter.HomeCon
     }
 
     public void getOrders(final HomeOrdersAdapter.OrderType orderType) {
-        Map<String, String> param = new HashMap<String, String>();
+        Map<String, Object> param = new HashMap<>();
         param.put("order_type", orderType.getSlug());
+        param.put("page", 1);
+        param.put("pagesize", 10);
 
         progressBar.show();
         NetworkAdaper.getNetworkServices().getDashbaordStoreOrders(param, new Callback<StoreOrdersReponse>() {
             @Override
             public void success(StoreOrdersReponse ordersReponse, Response response) {
+
+                if (!isAdded()) {
+                    return;
+                }
 
                 progressBar.hide();
                 if (ordersReponse.isSuccess()) {
@@ -154,7 +162,6 @@ public class HomeFragment extends Fragment implements HomeContentAdapter.HomeCon
             @Override
             public void failure(RetrofitError error) {
                 progressBar.hide();
-                Log.d(TAG, "failure: " + error.getMessage());
             }
         });
     }
@@ -439,6 +446,10 @@ public class HomeFragment extends Fragment implements HomeContentAdapter.HomeCon
         NetworkAdaper.getNetworkServices().setOrderStatus(param, new Callback<SetOrdersModel>() {
             @Override
             public void success(SetOrdersModel getValues, Response response) {
+
+                if (!isAdded()) {
+                    return;
+                }
 
                 ProgressDialogUtil.hideProgressDialog();
                 if (getValues.getSuccess()) {
