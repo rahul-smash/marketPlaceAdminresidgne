@@ -250,4 +250,13 @@ public class Util {
     public static float pxFromDp(final Context context, final float dp) {
         return dp * context.getResources().getDisplayMetrics().density;
     }
+
+    public static String getCurrencySymbol(String currencyCode) {
+        try {
+            Currency currency = Currency.getInstance(currencyCode);
+            return currency.getSymbol();
+        } catch (Exception e) {
+            return currencyCode;
+        }
+    }
 }

@@ -26,5 +26,6 @@ public final class PrefConstants {
     public static final String PREF_KEY_STORE_LATITUDE = "PREF_KEY_STORE_LATITUDE";
     public static final String PREF_KEY_STORE_LONGITUDE = "PREF_KEY_STORE_LONGITUDE";
     public static final String PREF_KEY_STORE_TYPE = "PREF_KEY_STORE_TYPE";
+    public static final String PREF_KEY_STORE_URL = "PREF_KEY_STORE_URL";
 
 }

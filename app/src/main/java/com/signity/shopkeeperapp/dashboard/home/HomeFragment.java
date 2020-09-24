@@ -1,9 +1,12 @@
 package com.signity.shopkeeperapp.dashboard.home;
 
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.drawable.ColorDrawable;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -58,6 +61,8 @@ public class HomeFragment extends Fragment implements HomeContentAdapter.HomeCon
     public static final String TAG = "HomeFragment";
     private TextView textViewNotificationCount;
     private TextView textViewOverView;
+    private TextView textViewStoreUrl;
+    private TextView textViewStoreName;
     private RecyclerView recyclerViewContent;
     private RecyclerView recyclerViewOrders;
     private HomeContentAdapter homeContentAdapter;
@@ -65,7 +70,7 @@ public class HomeFragment extends Fragment implements HomeContentAdapter.HomeCon
     private LinearLayout linearLayoutViewAllOrders;
     private ContentLoadingProgressBar progressBar;
     private ChipGroup chipGroup;
-    private LinearLayout linearLayoutOverview;
+    private LinearLayout linearLayoutOverview, linearLayoutShare;
 
     private HomeFragmentListener listener;
     private List<OrdersListModel> ordersListModels = new ArrayList<>();
@@ -109,7 +114,17 @@ public class HomeFragment extends Fragment implements HomeContentAdapter.HomeCon
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         setUpAdapter();
+        setUpStoreData();
         getOrders(HomeOrdersAdapter.OrderType.ALL);
+    }
+
+    private void setUpStoreData() {
+        String storeUrl = AppPreference.getInstance().getStoreUrl();
+        String[] arr = storeUrl.split("//");
+        textViewStoreUrl.setText(arr[1]);
+
+        String storeName = AppPreference.getInstance().getStoreName();
+        textViewStoreName.setText(storeName);
     }
 
     @Override
@@ -120,7 +135,7 @@ public class HomeFragment extends Fragment implements HomeContentAdapter.HomeCon
 
     public void getOrders(final HomeOrdersAdapter.OrderType orderType) {
         Map<String, String> param = new HashMap<String, String>();
-        param.put("order_type", orderType.name().toLowerCase());
+        param.put("order_type", orderType.getSlug());
 
         progressBar.show();
         NetworkAdaper.getNetworkServices().getDashbaordStoreOrders(param, new Callback<StoreOrdersReponse>() {
@@ -186,8 +201,11 @@ public class HomeFragment extends Fragment implements HomeContentAdapter.HomeCon
 
     private void init(View view) {
         linearLayoutOverview = view.findViewById(R.id.ll_overview);
+        linearLayoutShare = view.findViewById(R.id.ll_share);
         recyclerViewContent = view.findViewById(R.id.rv_content);
         recyclerViewOrders = view.findViewById(R.id.rv_orders);
+        textViewStoreUrl = view.findViewById(R.id.tv_store_url);
+        textViewStoreName = view.findViewById(R.id.tv_store_name);
         linearLayoutViewAllOrders = view.findViewById(R.id.ll_view_all_orders);
         chipGroup = view.findViewById(R.id.chip_group);
         progressBar = view.findViewById(R.id.content_progress);
@@ -233,6 +251,39 @@ public class HomeFragment extends Fragment implements HomeContentAdapter.HomeCon
                 }
             }
         });
+
+        textViewStoreUrl.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                openWebsite();
+            }
+        });
+
+        linearLayoutShare.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                openWebsiteShare();
+            }
+        });
+    }
+
+    private void openWebsite() {
+        String website = AppPreference.getInstance().getStoreUrl();
+        if (TextUtils.isEmpty(website)) {
+            Toast.makeText(getContext(), "Url not available", Toast.LENGTH_SHORT).show();
+            return;
+        }
+        Intent i = new Intent(Intent.ACTION_VIEW, Uri.parse(website));
+        startActivity(i);
+    }
+
+    private void openWebsiteShare() {
+        String website = AppPreference.getInstance().getStoreUrl();
+        if (TextUtils.isEmpty(website)) {
+            Toast.makeText(getContext(), "Url not available", Toast.LENGTH_SHORT).show();
+            return;
+        }
+        shareIntent(website, "Share website");
     }
 
     private void showOverViewPopMenu() {
@@ -290,23 +341,15 @@ public class HomeFragment extends Fragment implements HomeContentAdapter.HomeCon
                 HomeFragment.this.checkedId = checkedId;
                 // Add logic here
                 switch (index) {
-                    case 0: // first button
-
-                        Toast.makeText(getActivity(), "Selected button number " + index, Toast.LENGTH_SHORT).show();
+                    case 0:
                         storeDashboard(Constant.StoreDashboard.TODAY);
-
                         break;
                     case 1:
-
-                        Toast.makeText(getActivity(), "Selected button number " + index, Toast.LENGTH_SHORT).show();
                         storeDashboard(Constant.StoreDashboard.YESTERDAY);
                         break;
                     case 2:
                         storeDashboard(Constant.StoreDashboard.LAST_WEEK);
-
-                        Toast.makeText(getActivity(), "Selected button number " + index, Toast.LENGTH_SHORT).show();
                         break;
-
                 }
 
                 new Handler().postDelayed(new Runnable() {
@@ -356,7 +399,7 @@ public class HomeFragment extends Fragment implements HomeContentAdapter.HomeCon
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         if (item.getItemId() == R.id.action_notification) {
-            Toast.makeText(getContext(), "Notification", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getContext(), "Coming Soon!", Toast.LENGTH_SHORT).show();
         }
         return super.onOptionsItemSelected(item);
     }
@@ -444,6 +487,16 @@ public class HomeFragment extends Fragment implements HomeContentAdapter.HomeCon
     public void onDeliverOrder(int position) {
         OrdersListModel order = ordersListModels.get(position);
         updateOrderStatus(HomeOrdersAdapter.OrderType.DELIVERED, order.getOrderId(), position);
+    }
+
+    private void shareIntent(String extra, String shareTitle) {
+        Intent sendIntent = new Intent();
+        sendIntent.setAction(Intent.ACTION_SEND);
+        sendIntent.putExtra(Intent.EXTRA_TEXT, extra);
+        sendIntent.setType("text/plain");
+
+        Intent shareIntent = Intent.createChooser(sendIntent, shareTitle);
+        startActivity(shareIntent);
     }
 
     public interface HomeFragmentListener {

@@ -28,4 +28,8 @@ public class ProgressDialogUtil {
             pDialog = null;
         }
     }
+
+    public static boolean isProgressLoading() {
+        return pDialog != null && pDialog.isShowing();
+    }
 }

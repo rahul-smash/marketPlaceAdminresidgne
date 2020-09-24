@@ -9,8 +9,8 @@ public class StoreResponse implements Parcelable {
 
     public static final Creator<StoreResponse> CREATOR = new Creator<StoreResponse>() {
         @Override
-        public StoreResponse createFromParcel(Parcel in) {
-            return new StoreResponse(in);
+        public StoreResponse createFromParcel(Parcel source) {
+            return new StoreResponse(source);
         }
 
         @Override
@@ -102,50 +102,64 @@ public class StoreResponse implements Parcelable {
     private String created;
     @SerializedName("modified")
     private String modified;
+    @SerializedName("store_url")
+    private String storeUrl;
+
+    public StoreResponse() {
+    }
 
     protected StoreResponse(Parcel in) {
-        id = in.readString();
-        apiKey = in.readString();
-        storeName = in.readString();
-        location = in.readString();
-        city = in.readString();
-        state = in.readString();
-        country = in.readString();
-        timezone = in.readString();
-        zipcode = in.readString();
-        lat = in.readString();
-        lng = in.readString();
-        contactPerson = in.readString();
-        contactNumber = in.readString();
-        contactEmail = in.readString();
-        aboutUs = in.readString();
-        termConditions = in.readString();
-        privacyPolicy = in.readString();
-        refundPolicy = in.readString();
-        otpSkip = in.readString();
-        version = in.readString();
-        currency = in.readString();
-        showCurrency = in.readString();
-        appShareLink = in.readString();
-        androidShareLink = in.readString();
-        iphoneShareLink = in.readString();
-        theme = in.readString();
-        webTheme = in.readString();
-        pwaTheme = in.readString();
-        type = in.readString();
-        catType = in.readString();
-        storeLogo = in.readString();
-        favIcon = in.readString();
-        appIcon = in.readString();
-        bannerTime = in.readString();
-        webCache = in.readString();
-        scoMetaTitle = in.readString();
-        scoMetaDescription = in.readString();
-        scoMetaKeywords = in.readString();
-        payment = in.readString();
-        paymentEmailCount = in.readString();
-        created = in.readString();
-        modified = in.readString();
+        this.id = in.readString();
+        this.apiKey = in.readString();
+        this.storeName = in.readString();
+        this.location = in.readString();
+        this.city = in.readString();
+        this.state = in.readString();
+        this.country = in.readString();
+        this.timezone = in.readString();
+        this.zipcode = in.readString();
+        this.lat = in.readString();
+        this.lng = in.readString();
+        this.contactPerson = in.readString();
+        this.contactNumber = in.readString();
+        this.contactEmail = in.readString();
+        this.aboutUs = in.readString();
+        this.termConditions = in.readString();
+        this.privacyPolicy = in.readString();
+        this.refundPolicy = in.readString();
+        this.otpSkip = in.readString();
+        this.version = in.readString();
+        this.currency = in.readString();
+        this.showCurrency = in.readString();
+        this.appShareLink = in.readString();
+        this.androidShareLink = in.readString();
+        this.iphoneShareLink = in.readString();
+        this.theme = in.readString();
+        this.webTheme = in.readString();
+        this.pwaTheme = in.readString();
+        this.type = in.readString();
+        this.catType = in.readString();
+        this.storeLogo = in.readString();
+        this.favIcon = in.readString();
+        this.appIcon = in.readString();
+        this.bannerTime = in.readString();
+        this.webCache = in.readString();
+        this.scoMetaTitle = in.readString();
+        this.scoMetaDescription = in.readString();
+        this.scoMetaKeywords = in.readString();
+        this.payment = in.readString();
+        this.paymentEmailCount = in.readString();
+        this.created = in.readString();
+        this.modified = in.readString();
+        this.storeUrl = in.readString();
+    }
+
+    public String getStoreUrl() {
+        return storeUrl;
+    }
+
+    public void setStoreUrl(String storeUrl) {
+        this.storeUrl = storeUrl;
     }
 
     public String getId() {
@@ -540,47 +554,48 @@ public class StoreResponse implements Parcelable {
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
-        dest.writeString(id);
-        dest.writeString(apiKey);
-        dest.writeString(storeName);
-        dest.writeString(location);
-        dest.writeString(city);
-        dest.writeString(state);
-        dest.writeString(country);
-        dest.writeString(timezone);
-        dest.writeString(zipcode);
-        dest.writeString(lat);
-        dest.writeString(lng);
-        dest.writeString(contactPerson);
-        dest.writeString(contactNumber);
-        dest.writeString(contactEmail);
-        dest.writeString(aboutUs);
-        dest.writeString(termConditions);
-        dest.writeString(privacyPolicy);
-        dest.writeString(refundPolicy);
-        dest.writeString(otpSkip);
-        dest.writeString(version);
-        dest.writeString(currency);
-        dest.writeString(showCurrency);
-        dest.writeString(appShareLink);
-        dest.writeString(androidShareLink);
-        dest.writeString(iphoneShareLink);
-        dest.writeString(theme);
-        dest.writeString(webTheme);
-        dest.writeString(pwaTheme);
-        dest.writeString(type);
-        dest.writeString(catType);
-        dest.writeString(storeLogo);
-        dest.writeString(favIcon);
-        dest.writeString(appIcon);
-        dest.writeString(bannerTime);
-        dest.writeString(webCache);
-        dest.writeString(scoMetaTitle);
-        dest.writeString(scoMetaDescription);
-        dest.writeString(scoMetaKeywords);
-        dest.writeString(payment);
-        dest.writeString(paymentEmailCount);
-        dest.writeString(created);
-        dest.writeString(modified);
+        dest.writeString(this.id);
+        dest.writeString(this.apiKey);
+        dest.writeString(this.storeName);
+        dest.writeString(this.location);
+        dest.writeString(this.city);
+        dest.writeString(this.state);
+        dest.writeString(this.country);
+        dest.writeString(this.timezone);
+        dest.writeString(this.zipcode);
+        dest.writeString(this.lat);
+        dest.writeString(this.lng);
+        dest.writeString(this.contactPerson);
+        dest.writeString(this.contactNumber);
+        dest.writeString(this.contactEmail);
+        dest.writeString(this.aboutUs);
+        dest.writeString(this.termConditions);
+        dest.writeString(this.privacyPolicy);
+        dest.writeString(this.refundPolicy);
+        dest.writeString(this.otpSkip);
+        dest.writeString(this.version);
+        dest.writeString(this.currency);
+        dest.writeString(this.showCurrency);
+        dest.writeString(this.appShareLink);
+        dest.writeString(this.androidShareLink);
+        dest.writeString(this.iphoneShareLink);
+        dest.writeString(this.theme);
+        dest.writeString(this.webTheme);
+        dest.writeString(this.pwaTheme);
+        dest.writeString(this.type);
+        dest.writeString(this.catType);
+        dest.writeString(this.storeLogo);
+        dest.writeString(this.favIcon);
+        dest.writeString(this.appIcon);
+        dest.writeString(this.bannerTime);
+        dest.writeString(this.webCache);
+        dest.writeString(this.scoMetaTitle);
+        dest.writeString(this.scoMetaDescription);
+        dest.writeString(this.scoMetaKeywords);
+        dest.writeString(this.payment);
+        dest.writeString(this.paymentEmailCount);
+        dest.writeString(this.created);
+        dest.writeString(this.modified);
+        dest.writeString(this.storeUrl);
     }
 }

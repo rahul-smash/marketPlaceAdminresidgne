@@ -30,7 +30,7 @@
                 app:layout_constraintTop_toTopOf="parent" />
 
             <TextView
-                android:id="@+id/textviewname"
+                android:id="@+id/tv_store_name"
                 style="@style/AppTheme.TextView.Medium"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -55,7 +55,7 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.5"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/textviewname">
+                app:layout_constraintTop_toBottomOf="@+id/tv_store_name">
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -77,6 +77,7 @@
                         android:text="Lorem Ipsum is simply dummy text of the printing and typesetting industry." />
 
                     <TextView
+                        android:id="@+id/tv_store_url"
                         style="@style/AppTheme.TextView.Medium"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
@@ -90,6 +91,7 @@
             </com.google.android.material.card.MaterialCardView>
 
             <LinearLayout
+                android:id="@+id/ll_share"
                 android:layout_width="40dp"
                 android:layout_height="40dp"
                 android:layout_marginEnd="16dp"

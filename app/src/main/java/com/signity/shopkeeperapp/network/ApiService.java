@@ -53,7 +53,7 @@ public interface ApiService {
 
     @FormUrlEncoded
     @POST("/storeDashboardOrders")
-    void getStoreOrdersNew(@FieldMap Map<String, String> parameters, Callback<StoreOrdersReponse> response);
+    void getStoreOrdersNew(@FieldMap Map<String, Object> parameters, Callback<StoreOrdersReponse> response);
 
     @FormUrlEncoded
     @POST("/storeDashboardOrders")

@@ -1,12 +1,9 @@
 package com.signity.shopkeeperapp.dashboard.orders;
 
-import android.app.Activity;
 import android.content.Context;
-import android.content.Intent;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.os.Handler;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -18,7 +15,6 @@ import android.widget.LinearLayout;
 import android.widget.PopupWindow;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
-import android.widget.RelativeLayout;
 import android.widget.Toast;
 
 import androidx.annotation.IdRes;
@@ -28,15 +24,12 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.signity.shopkeeperapp.R;
-import com.signity.shopkeeperapp.adapter.RvGridSpacesItemDecoration;
 import com.signity.shopkeeperapp.model.OrdersListModel;
 import com.signity.shopkeeperapp.model.SetOrdersModel;
 import com.signity.shopkeeperapp.model.orders.StoreOrdersReponse;
 import com.signity.shopkeeperapp.network.NetworkAdaper;
 import com.signity.shopkeeperapp.util.AnimUtil;
-import com.signity.shopkeeperapp.util.Constant;
 import com.signity.shopkeeperapp.util.DialogUtils;
 import com.signity.shopkeeperapp.util.ProgressDialogUtil;
 import com.signity.shopkeeperapp.util.Util;
@@ -51,23 +44,43 @@ import retrofit.Callback;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
 
-public class OrdersFragment extends Fragment implements OrdersAdapter.OnItemClickListener, HomeOrdersAdapter.OrdersListener {
+public class OrdersFragment extends Fragment implements HomeOrdersAdapter.OrdersListener {
     public static final String TAG = "OrdersFragment";
-    List<OrdersListModel> orderListModel = new ArrayList<>();
-    List<OrdersListModel> listOrderMain;
-    FloatingActionButton fab;
-    PopupWindow rightMenuPopUpWindow;
-    View topDot, view;
-    private Context context;
-    private RecyclerView recyclerView;
-    private LinearLayoutManager mLinearLayoutManager;
-    private RvGridSpacesItemDecoration decoration;
-    private HomeOrdersAdapter adapter;
-    private String type = null;
-    private RelativeLayout parent;
+
+    private List<OrdersListModel> orderListModel = new ArrayList<>();
+    private PopupWindow rightMenuPopUpWindow;
+    private View hiddenView;
+    private RecyclerView recyclerViewOrders;
+    private HomeOrdersAdapter ordersAdapter;
     private HomeOrdersAdapter.OrderType orderTypeFilter = HomeOrdersAdapter.OrderType.ALL;
+    private LinearLayoutManager layoutManager;
     @IdRes
     private int checkedId;
+    private int pageSize = 10, currentPageNumber = 1, start, totalOrders;
+    private RecyclerView.OnScrollListener recyclerViewOnScrollListener = new RecyclerView.OnScrollListener() {
+        @Override
+        public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
+            super.onScrollStateChanged(recyclerView, newState);
+        }
+
+        @Override
+        public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+            super.onScrolled(recyclerView, dx, dy);
+            int visibleItemCount = layoutManager.getChildCount();
+            int totalItemCount = layoutManager.getItemCount();
+            int firstVisibleItemPosition = layoutManager.findFirstVisibleItemPosition();
+
+            if (!isLoading()) {
+                if ((visibleItemCount + firstVisibleItemPosition) >= totalItemCount
+                        && firstVisibleItemPosition >= 0 && totalItemCount >= pageSize) {
+                    if (start < totalOrders) {
+                        currentPageNumber++;
+                        getAllOrdersMethod();
+                    }
+                }
+            }
+        }
+    };
 
     public static OrdersFragment getInstance(Bundle bundle) {
         OrdersFragment fragment = new OrdersFragment();
@@ -78,32 +91,42 @@ public class OrdersFragment extends Fragment implements OrdersAdapter.OnItemClic
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        context = getActivity();
     }
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View rootView = inflater.inflate(R.layout.fragment_orders, container, false);
-        Log.i("@@AllOrderFragment", "AllOrderFragment");
-        recyclerView = (RecyclerView) rootView.findViewById(R.id.rv_orders);
-        parent = (RelativeLayout) rootView.findViewById(R.id.parent);
-        view = rootView.findViewById(R.id.view);
-        mLinearLayoutManager = new LinearLayoutManager(getActivity());
-        mLinearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
-        int spacingInPixels = getResources().getDimensionPixelSize(R.dimen.grid_view_spacing);
-        decoration = new RvGridSpacesItemDecoration(spacingInPixels);
-        recyclerView.setLayoutManager(mLinearLayoutManager);
-        recyclerView.addItemDecoration(decoration);
-        adapter = new HomeOrdersAdapter(context, true);
-        adapter.setListener(this);
-        recyclerView.setAdapter(adapter);
-        return rootView;
+        return inflater.inflate(R.layout.fragment_orders, container, false);
+    }
+
+    @Override
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        setUpAdapter();
+    }
+
+    private void setUpAdapter() {
+        layoutManager = new LinearLayoutManager(getActivity());
+        recyclerViewOrders.setLayoutManager(layoutManager);
+        ordersAdapter = new HomeOrdersAdapter(getContext(), false);
+        ordersAdapter.setListener(this);
+        recyclerViewOrders.setAdapter(ordersAdapter);
+        recyclerViewOrders.addOnScrollListener(recyclerViewOnScrollListener);
+    }
+
+    private void initView(View rootView) {
+        recyclerViewOrders = rootView.findViewById(R.id.rv_orders);
+        hiddenView = rootView.findViewById(R.id.view);
+    }
+
+    public boolean isLoading() {
+        return ProgressDialogUtil.isProgressLoading();
     }
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        initView(view);
         setHasOptionsMenu(true);
         getAllOrdersMethod();
     }
@@ -122,14 +145,14 @@ public class OrdersFragment extends Fragment implements OrdersAdapter.OnItemClic
         return super.onOptionsItemSelected(item);
     }
 
-    /*Get all orders and Fileter on the basis of active shipped and delivered*/
-
     public void getAllOrdersMethod() {
-        if (Util.checkIntenetConnection(getActivity())) {
-            getALLOrders();
-        } else {
+
+        if (!Util.checkIntenetConnection(getContext())) {
             DialogUtils.showAlertDialog(getActivity(), "Internet", "Please check your Internet Connection.");
+            return;
         }
+
+        getALLOrders();
     }
 
     @Override
@@ -139,9 +162,10 @@ public class OrdersFragment extends Fragment implements OrdersAdapter.OnItemClic
 
     public void getALLOrders() {
         ProgressDialogUtil.showProgressDialog(getActivity());
-        Map<String, String> param = new HashMap<String, String>();
-        param.put("order_type", orderTypeFilter.name().toLowerCase());
-        param.put("page", "1");
+        Map<String, Object> param = new HashMap<>();
+        param.put("order_type", orderTypeFilter.getSlug());
+        param.put("page", currentPageNumber);
+        param.put("pagesize", pageSize);
 
         NetworkAdaper.getNetworkServices().getStoreOrdersNew(param, new Callback<StoreOrdersReponse>() {
             @Override
@@ -150,74 +174,21 @@ public class OrdersFragment extends Fragment implements OrdersAdapter.OnItemClic
                 ProgressDialogUtil.hideProgressDialog();
 
                 if (getValues.isSuccess()) {
-                    if (getValues.getData().getOrders().size() > 0) {
-                        recyclerView.setVisibility(View.VISIBLE);
-                        List<OrdersListModel> list = new ArrayList<OrdersListModel>();
-                        list.addAll(getValues.getData().getOrders());
-                        listOrderMain = list;
-                        orderListModel = getValues.getData().getOrders();
-                        adapter.setOrdersListModels(orderListModel);
+                    start += pageSize;
+                    orderListModel = getValues.getData().getOrders();
+                    totalOrders = getValues.getData().getOrdersTotal();
 
-                    } else {
-                        recyclerView.setVisibility(View.GONE);
-                    }
+                    ordersAdapter.setOrderTypeFilter(orderTypeFilter);
+                    ordersAdapter.addOrdersListModels(orderListModel);
                 } else {
-                    DialogUtils.showAlertDialog(getActivity(), Constant.APP_TITLE, getValues.getMessage());
                 }
             }
 
             @Override
             public void failure(RetrofitError error) {
                 ProgressDialogUtil.hideProgressDialog();
-                DialogUtils.showAlertDialog(getActivity(), Constant.APP_TITLE, "Error Occurred, Try again later.");
             }
         });
-    }
-
-
-    private void filterResult(String statusDue, String statusActive, String statusShipped, String statusAll) {
-        orderListModel.clear();
-        if (statusAll.equalsIgnoreCase("all")) {
-            statusDue = "0";
-            statusActive = "1";
-            statusShipped = "4";
-        }
-        for (OrdersListModel order : listOrderMain) {
-            if (order.getStatus().equalsIgnoreCase(statusDue) || order.getStatus().equalsIgnoreCase(statusActive) ||
-                    order.getStatus().equalsIgnoreCase(statusShipped)) {
-                orderListModel.add(order);
-            }
-        }
-
-        adapter.setOrdersListModels(orderListModel);
-    }
-
-
-    private List<OrdersListModel> getSortedList(List<OrdersListModel> orders) {
-        List<OrdersListModel> list = new ArrayList<>();
-        for (OrdersListModel order : orders) {
-            if (order.getStatus().equalsIgnoreCase("0") || order.getStatus().equalsIgnoreCase("1") || order.getStatus().equalsIgnoreCase("4")) {
-                list.add(order);
-            }
-        }
-        return list;
-    }
-
-
-    @Override
-    public void onItemClick(View itemView, int position, OrdersListModel order) {
-        if (order != null) {
-            Log.i("@@particular_click", "clcikEvent");
-
-            Intent intent = new Intent(getActivity(), OrderDetailActivity.class);
-            Bundle bundle = new Bundle();
-            bundle.putSerializable("object", order);
-            intent.putExtras(bundle);
-            context.startActivity(intent);
-            AnimUtil.slideFromRightAnim((Activity) context);
-
-
-        }
     }
 
     private void showPopUpMenu() {
@@ -244,7 +215,7 @@ public class OrdersFragment extends Fragment implements OrdersAdapter.OnItemClic
 
         float den = getActivity().getResources().getDisplayMetrics().density;
         int offsetY = (int) (den * 2);
-        rightMenuPopUpWindow.showAsDropDown(view, 0, 0);
+        rightMenuPopUpWindow.showAsDropDown(hiddenView, 0, 0);
 
         final RadioGroup rdGroup = (RadioGroup) layout.findViewById(R.id.rdGroup);
         RadioButton radioAllOrders = (RadioButton) layout.findViewById(R.id.radioAllOrders);
@@ -283,6 +254,7 @@ public class OrdersFragment extends Fragment implements OrdersAdapter.OnItemClic
                 int index = rdGroup.indexOfChild(radioButton);
 
                 OrdersFragment.this.checkedId = checkedId;
+                currentPageNumber = 1;
                 // Add logic here
 
                 switch (index) {
@@ -327,7 +299,7 @@ public class OrdersFragment extends Fragment implements OrdersAdapter.OnItemClic
 
                 ProgressDialogUtil.hideProgressDialog();
                 if (getValues.getSuccess()) {
-                    getALLOrders();
+                    ordersAdapter.removeItem(position);
                 } else {
                     Toast.makeText(getContext(), getValues.getMessage(), Toast.LENGTH_SHORT).show();
                 }
@@ -343,7 +315,7 @@ public class OrdersFragment extends Fragment implements OrdersAdapter.OnItemClic
 
     @Override
     public void onClickOrder(int position) {
-        OrdersListModel order = orderListModel.get(position);
+        OrdersListModel order = ordersAdapter.getOrdersListModels().get(position);
         Bundle bundle = new Bundle();
         bundle.putSerializable(OrderDetailActivity.ORDER_OBJECT, order);
         startActivity(OrderDetailActivity.getStartIntent(getContext(), bundle));
@@ -352,25 +324,25 @@ public class OrdersFragment extends Fragment implements OrdersAdapter.OnItemClic
 
     @Override
     public void onRejectOrder(int position) {
-        OrdersListModel order = orderListModel.get(position);
+        OrdersListModel order = ordersAdapter.getOrdersListModels().get(position);
         updateOrderStatus(HomeOrdersAdapter.OrderType.REJECTED, order.getOrderId(), position);
     }
 
     @Override
     public void onAcceptOrder(int position) {
-        OrdersListModel order = orderListModel.get(position);
+        OrdersListModel order = ordersAdapter.getOrdersListModels().get(position);
         updateOrderStatus(HomeOrdersAdapter.OrderType.ACCEPTED, order.getOrderId(), position);
     }
 
     @Override
     public void onShipOrder(int position) {
-        OrdersListModel order = orderListModel.get(position);
+        OrdersListModel order = ordersAdapter.getOrdersListModels().get(position);
         updateOrderStatus(HomeOrdersAdapter.OrderType.SHIPPED, order.getOrderId(), position);
     }
 
     @Override
     public void onDeliverOrder(int position) {
-        OrdersListModel order = orderListModel.get(position);
+        OrdersListModel order = ordersAdapter.getOrdersListModels().get(position);
         updateOrderStatus(HomeOrdersAdapter.OrderType.DELIVERED, order.getOrderId(), position);
     }
 }

@@ -12,7 +12,7 @@ public class DataReponse implements Serializable {
     private String ordersType;
 
     @SerializedName("orders_total")
-    private String ordersTotal;
+    private int ordersTotal;
 
     @SerializedName("orders")
     private List<OrdersListModel> orders;
@@ -28,11 +28,11 @@ public class DataReponse implements Serializable {
         this.ordersType = ordersType;
     }
 
-    public String getOrdersTotal() {
+    public int getOrdersTotal() {
         return ordersTotal;
     }
 
-    public void setOrdersTotal(String ordersTotal) {
+    public void setOrdersTotal(int ordersTotal) {
         this.ordersTotal = ordersTotal;
     }
 

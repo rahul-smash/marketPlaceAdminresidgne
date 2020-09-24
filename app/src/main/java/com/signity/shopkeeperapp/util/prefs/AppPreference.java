@@ -98,6 +98,7 @@ public class AppPreference {
         setLongitude(storeResponse.getLng());
         setCurrency(storeResponse.getCurrency());
         setStoreType(storeResponse.getType());
+        setStoreUrl(storeResponse.getStoreUrl());
     }
 
     // TODO - Default Currency is INR
@@ -163,6 +164,14 @@ public class AppPreference {
 
     public void setStoreType(String type) {
         mPrefs.edit().putString(PrefConstants.PREF_KEY_STORE_TYPE, type).apply();
+    }
+
+    public String getStoreUrl() {
+        return mPrefs.getString(PrefConstants.PREF_KEY_STORE_URL, "");
+    }
+
+    public void setStoreUrl(String url) {
+        mPrefs.edit().putString(PrefConstants.PREF_KEY_STORE_URL, url).apply();
     }
 
     public String getDeviceToken() {

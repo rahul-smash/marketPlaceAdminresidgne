@@ -11,6 +11,8 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.signity.shopkeeperapp.R;
 import com.signity.shopkeeperapp.model.dashboard.DataResponse;
+import com.signity.shopkeeperapp.util.Util;
+import com.signity.shopkeeperapp.util.prefs.AppPreference;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -97,7 +99,8 @@ public class HomeContentAdapter extends RecyclerView.Adapter<HomeContentAdapter.
                     textViewDetail.setText(orderCount);
                     break;
                 case REVENUE:
-                    textViewDetail.setText(data.getOutstanding());
+                    String revenue = data.getOutstanding() == null ? "0" : data.getOutstanding();
+                    textViewDetail.setText(String.format("%s%s", Util.getCurrencySymbol(AppPreference.getInstance().getCurrency()), revenue));
                     break;
                 case ALL_CUSTOMERS:
                     String totalCustomers = String.format(Locale.getDefault(), "%d", data.getCustomers());

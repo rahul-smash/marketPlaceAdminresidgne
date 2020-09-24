@@ -25,6 +25,7 @@ public class HomeOrdersAdapter extends RecyclerView.Adapter<HomeOrdersAdapter.Vi
     private static final String TAG = "HomeOrdersAdapter";
     private Context context;
     private List<OrdersListModel> ordersListModels = new ArrayList<>();
+    private HomeOrdersAdapter.OrderType orderTypeFilter = HomeOrdersAdapter.OrderType.ALL;
     private OrdersListener listener;
     private boolean showImages;
 
@@ -71,6 +72,22 @@ public class HomeOrdersAdapter extends RecyclerView.Adapter<HomeOrdersAdapter.Vi
         });
     }
 
+    public void setOrderTypeFilter(OrderType orderTypeFilter) {
+        if (this.orderTypeFilter != orderTypeFilter){
+            ordersListModels.clear();
+        }
+        this.orderTypeFilter = orderTypeFilter;
+    }
+
+    public void addOrdersListModels(List<OrdersListModel> ordersListModels) {
+        this.ordersListModels.addAll(ordersListModels);
+        notifyDataSetChanged();
+    }
+
+    public List<OrdersListModel> getOrdersListModels() {
+        return ordersListModels;
+    }
+
     public void setOrdersListModels(List<OrdersListModel> ordersListModels) {
         this.ordersListModels = ordersListModels;
         notifyDataSetChanged();
@@ -98,12 +115,18 @@ public class HomeOrdersAdapter extends RecyclerView.Adapter<HomeOrdersAdapter.Vi
     }
 
     public enum OrderType {
-        ALL(9), PENDING(0), ACCEPTED(1), SHIPPED(4), DELIVERED(5), REJECTED(2);
+        ALL(9, "all"), PENDING(0, "pending"), ACCEPTED(1, "active"), SHIPPED(4, "shipped"), DELIVERED(5, "delivered"), REJECTED(2, "rejected");
 
         private int statusId;
+        private String slug;
 
-        OrderType(int statusId) {
+        OrderType(int statusId, String slug) {
             this.statusId = statusId;
+            this.slug = slug;
+        }
+
+        public String getSlug() {
+            return slug;
         }
 
         public int getStatusId() {
