@@ -37,7 +37,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
-import com.signity.shopkeeperapp.Categories.CategoriesFragment;
 import com.signity.shopkeeperapp.LogInModule.ChangePasswordActivity;
 import com.signity.shopkeeperapp.LogInModule.LogInOptionsActivity;
 import com.signity.shopkeeperapp.ManageVolume.ManageVolumeActivity;
@@ -549,7 +548,7 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
 
                 textTitle.setText(title[8]);
                 fragmentName = title[8];
-                replace(CategoriesFragment.newInstance(this));
+            //    replace(CategoriesFragment.newInstance(this));
                 toggleSlidingMenu();
 
                 break;

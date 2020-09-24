@@ -3,6 +3,7 @@ package com.signity.shopkeeperapp.dashboard.home;
 import android.content.Context;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
+import android.os.Handler;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -13,10 +14,12 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.PopupWindow;
+import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.IdRes;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.widget.ContentLoadingProgressBar;
@@ -30,22 +33,31 @@ import com.google.android.material.chip.ChipGroup;
 import com.signity.shopkeeperapp.R;
 import com.signity.shopkeeperapp.dashboard.DashboardActivity;
 import com.signity.shopkeeperapp.dashboard.orders.HomeOrdersAdapter;
+import com.signity.shopkeeperapp.dashboard.orders.OrderDetailActivity;
+import com.signity.shopkeeperapp.model.OrdersListModel;
+import com.signity.shopkeeperapp.model.SetOrdersModel;
 import com.signity.shopkeeperapp.model.dashboard.StoreDashboardResponse;
 import com.signity.shopkeeperapp.model.orders.StoreOrdersReponse;
 import com.signity.shopkeeperapp.network.NetworkAdaper;
+import com.signity.shopkeeperapp.util.AnimUtil;
 import com.signity.shopkeeperapp.util.Constant;
+import com.signity.shopkeeperapp.util.ProgressDialogUtil;
+import com.signity.shopkeeperapp.util.prefs.AppPreference;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import retrofit.Callback;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
 
-public class HomeFragment extends Fragment implements HomeContentAdapter.HomeContentAdapterListener {
+public class HomeFragment extends Fragment implements HomeContentAdapter.HomeContentAdapterListener, HomeOrdersAdapter.OrdersListener {
 
     public static final String TAG = "HomeFragment";
     private TextView textViewNotificationCount;
+    private TextView textViewOverView;
     private RecyclerView recyclerViewContent;
     private RecyclerView recyclerViewOrders;
     private HomeContentAdapter homeContentAdapter;
@@ -53,9 +65,13 @@ public class HomeFragment extends Fragment implements HomeContentAdapter.HomeCon
     private LinearLayout linearLayoutViewAllOrders;
     private ContentLoadingProgressBar progressBar;
     private ChipGroup chipGroup;
+    private LinearLayout linearLayoutOverview;
+
     private HomeFragmentListener listener;
+    private List<OrdersListModel> ordersListModels = new ArrayList<>();
     private int notificationCount = 12;
-    LinearLayout llToday;
+    @IdRes
+    private int checkedId;
 
     public static HomeFragment getInstance(Bundle bundle) {
         HomeFragment fragment = new HomeFragment();
@@ -113,7 +129,8 @@ public class HomeFragment extends Fragment implements HomeContentAdapter.HomeCon
 
                 progressBar.hide();
                 if (ordersReponse.isSuccess()) {
-                    homeOrdersAdapter.setOrdersListModels(ordersReponse.getData().getOrders());
+                    ordersListModels = ordersReponse.getData().getOrders();
+                    homeOrdersAdapter.setOrdersListModels(ordersListModels);
                 } else {
 
                 }
@@ -127,8 +144,8 @@ public class HomeFragment extends Fragment implements HomeContentAdapter.HomeCon
         });
     }
 
-    public void storeDashboard(Constant.StoreDashboard typeofDay) {
-        Map<String, Integer> param = new HashMap<String, Integer>();
+    public void storeDashboard(final Constant.StoreDashboard typeofDay) {
+        Map<String, Integer> param = new HashMap<>();
         param.put("days_filder", typeofDay.getDays());
 
         NetworkAdaper.getNetworkServices().storeDashboard(param, new Callback<StoreDashboardResponse>() {
@@ -141,7 +158,11 @@ public class HomeFragment extends Fragment implements HomeContentAdapter.HomeCon
 
                 if (storeDashboardResponse.isSuccess()) {
                     homeContentAdapter.setUpData(storeDashboardResponse.getData());
+                    if (textViewOverView != null) {
+                        textViewOverView.setText(typeofDay.getTitle());
+                    }
                 } else {
+                    Toast.makeText(getContext(), storeDashboardResponse.getMessage(), Toast.LENGTH_SHORT).show();
                 }
             }
 
@@ -157,87 +178,30 @@ public class HomeFragment extends Fragment implements HomeContentAdapter.HomeCon
         recyclerViewContent.setLayoutManager(new GridLayoutManager(getContext(), 2));
         recyclerViewContent.setAdapter(homeContentAdapter);
 
-        homeOrdersAdapter = new HomeOrdersAdapter(getContext());
+        homeOrdersAdapter = new HomeOrdersAdapter(getContext(), false);
+        homeOrdersAdapter.setListener(this);
         recyclerViewOrders.setAdapter(homeOrdersAdapter);
         recyclerViewOrders.setLayoutManager(new LinearLayoutManager(getContext()));
     }
 
     private void init(View view) {
-        llToday = view.findViewById(R.id.llToday);
+        linearLayoutOverview = view.findViewById(R.id.ll_overview);
         recyclerViewContent = view.findViewById(R.id.rv_content);
         recyclerViewOrders = view.findViewById(R.id.rv_orders);
         linearLayoutViewAllOrders = view.findViewById(R.id.ll_view_all_orders);
         chipGroup = view.findViewById(R.id.chip_group);
         progressBar = view.findViewById(R.id.content_progress);
+        textViewOverView = view.findViewById(R.id.tv_overview);
         Chip allChip = view.findViewById(R.id.chip_all);
         allChip.setChecked(true);
-        llToday.setOnClickListener(new View.OnClickListener() {
-                                       @Override
-                                       public void onClick(View view) {
-                                           Log.i("@@Today_event", "click_open");
-                                           LayoutInflater inflater = (LayoutInflater) getActivity().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-                                           View layout = inflater.inflate(R.layout.popup_view_today,
-                                                   (ViewGroup) getActivity().findViewById(R.id.popups));
 
+        linearLayoutOverview.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showOverViewPopMenu();
+            }
+        });
 
-                                           final PopupWindow rightMenuPopUpWindow = new PopupWindow(layout, LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT, true);
-
-                                           rightMenuPopUpWindow.setOutsideTouchable(true);
-                                           rightMenuPopUpWindow.setBackgroundDrawable(new ColorDrawable());
-                                           rightMenuPopUpWindow.setTouchInterceptor(new View.OnTouchListener() { // or whatever you want
-                                               @Override
-                                               public boolean onTouch(View v, MotionEvent event) {
-                                                   if (event.getAction() == MotionEvent.ACTION_OUTSIDE) // here I want to close the pw when clicking outside it but at all this is just an example of how it works and you can implement the onTouch() or the onKey() you want
-                                                   {
-                                                       rightMenuPopUpWindow.dismiss();
-                                                       return true;
-                                                   }
-                                                   return false;
-                                               }
-
-                                           });
-
-                                           float den = getActivity().getResources().getDisplayMetrics().density;
-                                           int offsetY = (int) (den * 2);
-                                           rightMenuPopUpWindow.showAsDropDown(view, offsetY, offsetY);
-
-                                           final RadioGroup rdGroup = (RadioGroup) layout.findViewById(R.id.rdGroup);
-
-                                           rdGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
-
-                                               @Override
-                                               public void onCheckedChanged(RadioGroup group, int checkedId) {
-
-                                                   View radioButton = rdGroup.findViewById(checkedId);
-                                                   int index = rdGroup.indexOfChild(radioButton);
-
-                                                   // Add logic here
-
-                                                   switch (index) {
-                                                       case 0: // first button
-
-                                                          // Toast.makeText(getActivity(), "Selected button number " + index, Toast.LENGTH_SHORT).show();
-                                                           storeDashboard(Constant.StoreDashboard.TODAY);
-
-                                                           break;
-                                                       case 1:
-
-                                                           //Toast.makeText(getActivity(), "Selected button number " + index, Toast.LENGTH_SHORT).show();
-                                                           storeDashboard(Constant.StoreDashboard.YESTERDAY);
-                                                           break;
-                                                       case 2:
-                                                           storeDashboard(Constant.StoreDashboard.LAST_WEEK);
-
-                                                           //Toast.makeText(getActivity(), "Selected button number " + index, Toast.LENGTH_SHORT).show();
-                                                           break;
-
-                                                   }
-                                               }
-                                           });
-                                       }
-
-                                   }
-        );
         chipGroup.setOnCheckedChangeListener(new ChipGroup.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(ChipGroup group, int checkedId) {
@@ -267,6 +231,90 @@ public class HomeFragment extends Fragment implements HomeContentAdapter.HomeCon
                 if (listener != null) {
                     listener.onClickViewAllOrders();
                 }
+            }
+        });
+    }
+
+    private void showOverViewPopMenu() {
+
+        View layout = LayoutInflater.from(getContext()).inflate(R.layout.popwindow_overview, null, false);
+        final PopupWindow popupWindowOverView = new PopupWindow(layout, LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT, true);
+
+        popupWindowOverView.setOutsideTouchable(true);
+        popupWindowOverView.setBackgroundDrawable(new ColorDrawable());
+        popupWindowOverView.setTouchInterceptor(new View.OnTouchListener() { // or whatever you want
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                if (event.getAction() == MotionEvent.ACTION_OUTSIDE) // here I want to close the pw when clicking outside it but at all this is just an example of how it works and you can implement the onTouch() or the onKey() you want
+                {
+                    popupWindowOverView.dismiss();
+                    return true;
+                }
+                return false;
+            }
+
+        });
+
+        float den = getActivity().getResources().getDisplayMetrics().density;
+        int offsetY = (int) (den * 2);
+        popupWindowOverView.showAsDropDown(linearLayoutOverview, 0, 0);
+
+        final RadioGroup rdGroup = (RadioGroup) layout.findViewById(R.id.rdGroup);
+
+        RadioButton radioToday = (RadioButton) layout.findViewById(R.id.radioToday);
+
+        RadioButton radioYesterday = (RadioButton) layout.findViewById(R.id.radioYesterday);
+
+        RadioButton radioDays = (RadioButton) layout.findViewById(R.id.radioDays);
+
+        switch (checkedId) {
+            case R.id.radioYesterday:
+                radioYesterday.setChecked(true);
+                break;
+            case R.id.radioDays:
+                radioDays.setChecked(true);
+                break;
+            case R.id.radioToday:
+            default:
+                radioToday.setChecked(true);
+        }
+
+        rdGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+
+            @Override
+            public void onCheckedChanged(RadioGroup group, int checkedId) {
+
+                View radioButton = rdGroup.findViewById(checkedId);
+                int index = rdGroup.indexOfChild(radioButton);
+
+                HomeFragment.this.checkedId = checkedId;
+                // Add logic here
+                switch (index) {
+                    case 0: // first button
+
+                        Toast.makeText(getActivity(), "Selected button number " + index, Toast.LENGTH_SHORT).show();
+                        storeDashboard(Constant.StoreDashboard.TODAY);
+
+                        break;
+                    case 1:
+
+                        Toast.makeText(getActivity(), "Selected button number " + index, Toast.LENGTH_SHORT).show();
+                        storeDashboard(Constant.StoreDashboard.YESTERDAY);
+                        break;
+                    case 2:
+                        storeDashboard(Constant.StoreDashboard.LAST_WEEK);
+
+                        Toast.makeText(getActivity(), "Selected button number " + index, Toast.LENGTH_SHORT).show();
+                        break;
+
+                }
+
+                new Handler().postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        popupWindowOverView.dismiss();
+                    }
+                }, 700);
             }
         });
     }
@@ -336,6 +384,66 @@ public class HomeFragment extends Fragment implements HomeContentAdapter.HomeCon
             case TOTAL_PRODUCT:
                 break;
         }
+    }
+
+    private void updateOrderStatus(HomeOrdersAdapter.OrderType orderStatus, String orderId, final int position) {
+        ProgressDialogUtil.showProgressDialog(getActivity());
+        Map<String, String> param = new HashMap<String, String>();
+        param.put("user_id", AppPreference.getInstance().getUserId());
+        param.put("order_status", String.valueOf(orderStatus.getStatusId()));
+        param.put("order_ids", orderId);
+
+        NetworkAdaper.getNetworkServices().setOrderStatus(param, new Callback<SetOrdersModel>() {
+            @Override
+            public void success(SetOrdersModel getValues, Response response) {
+
+                ProgressDialogUtil.hideProgressDialog();
+                if (getValues.getSuccess()) {
+                    homeOrdersAdapter.removeItem(position);
+                } else {
+                    Toast.makeText(getContext(), getValues.getMessage(), Toast.LENGTH_SHORT).show();
+                }
+
+            }
+
+            @Override
+            public void failure(RetrofitError error) {
+                ProgressDialogUtil.hideProgressDialog();
+            }
+        });
+    }
+
+    @Override
+    public void onClickOrder(int position) {
+        OrdersListModel ordersListModel = ordersListModels.get(position);
+        Bundle bundle = new Bundle();
+        bundle.putSerializable(OrderDetailActivity.ORDER_OBJECT, ordersListModel);
+        startActivity(OrderDetailActivity.getStartIntent(getContext(), bundle));
+        AnimUtil.slideFromRightAnim(getActivity());
+    }
+
+    @Override
+    public void onRejectOrder(int position) {
+        OrdersListModel order = ordersListModels.get(position);
+        updateOrderStatus(HomeOrdersAdapter.OrderType.REJECTED, order.getOrderId(), position);
+    }
+
+    @Override
+    public void onAcceptOrder(int position) {
+        OrdersListModel order = ordersListModels.get(position);
+        updateOrderStatus(HomeOrdersAdapter.OrderType.ACCEPTED, order.getOrderId(), position);
+    }
+
+    @Override
+    public void onShipOrder(int position) {
+        OrdersListModel order = ordersListModels.get(position);
+        updateOrderStatus(HomeOrdersAdapter.OrderType.SHIPPED, order.getOrderId(), position);
+    }
+
+    @Override
+    public void onDeliverOrder(int position) {
+        OrdersListModel order = ordersListModels.get(position);
+        updateOrderStatus(HomeOrdersAdapter.OrderType.DELIVERED, order.getOrderId(), position);
     }
 
     public interface HomeFragmentListener {

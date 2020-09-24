@@ -79,21 +79,23 @@ public class Constant {
     }
 
     public enum StoreDashboard {
-        TODAY(1), YESTERDAY(2), LAST_WEEK(7), LAST_MONTH(30);
+        TODAY(1, "Today"), YESTERDAY(2, "Yesterday"), LAST_WEEK(7, "Last Week"), LAST_MONTH(30, "Last Month");
 
         private int days;
+        private String title;
 
-        StoreDashboard(int days) {
+        StoreDashboard(int days, String title) {
             this.days = days;
+            this.title = title;
         }
 
         public int getDays() {
             return days;
         }
-    }
 
-    public enum OrderStatus {
-        ALL, PENDING, ACCEPTED, SHIPPED, DELIVERD
+        public String getTitle() {
+            return title;
+        }
     }
 
 }

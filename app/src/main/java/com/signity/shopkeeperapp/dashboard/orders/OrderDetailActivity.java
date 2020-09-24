@@ -51,6 +51,8 @@ import retrofit.client.Response;
 import static android.content.Intent.ACTION_DIAL;
 
 public class OrderDetailActivity extends AppCompatActivity implements View.OnClickListener {
+
+    public static final String ORDER_OBJECT = "OrderObject";
     TextView txtTotal, txtTotalPrice, txtCartSavings, txtAddress, txtDate, txtStausVal, txtnoteValue, txtItems;
     ListView recyclerView;
     ImageView imgGuideMe;
@@ -79,20 +81,35 @@ public class OrderDetailActivity extends AppCompatActivity implements View.OnCli
     private PrefManager prefManager;
     private Toolbar toolbar;
 
+    public static Intent getStartIntent(Context context) {
+        return new Intent(context, OrderDetailActivity.class);
+    }
+
+    public static Intent getStartIntent(Context context, Bundle bundle) {
+        Intent intent = new Intent(context, OrderDetailActivity.class);
+        intent.putExtras(bundle);
+        return intent;
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.order_detail_activity);
+        getExtra();
         initview();
         setUpToolbar();
         prefManager = new PrefManager(getApplicationContext());
-        Intent intent = this.getIntent();
-        Bundle bundle = intent.getExtras();
-        ordersListModel = (OrdersListModel) bundle.getSerializable("object");
         setUiData();
 
         setOrderDetails();
         initListAdapter();
+    }
+
+    private void getExtra() {
+        Bundle bundle = getIntent().getExtras();
+        if (bundle != null) {
+            ordersListModel = (OrdersListModel) bundle.getSerializable(ORDER_OBJECT);
+        }
     }
 
     private void setUpToolbar() {
@@ -105,6 +122,7 @@ public class OrderDetailActivity extends AppCompatActivity implements View.OnCli
             @Override
             public void onClick(View v) {
                 onBackPressed();
+                AnimUtil.slideFromLeftAnim(OrderDetailActivity.this);
             }
         });
     }
