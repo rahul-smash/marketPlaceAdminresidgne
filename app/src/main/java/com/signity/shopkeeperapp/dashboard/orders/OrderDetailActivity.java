@@ -15,15 +15,15 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.Button;
-import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.ListView;
-import android.widget.RelativeLayout;
+import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.SwitchCompat;
 import androidx.appcompat.widget.Toolbar;
 
 import com.signity.shopkeeperapp.R;
@@ -38,10 +38,12 @@ import com.signity.shopkeeperapp.util.DialogUtils;
 import com.signity.shopkeeperapp.util.PrefManager;
 import com.signity.shopkeeperapp.util.ProgressDialogUtil;
 import com.signity.shopkeeperapp.util.Util;
+import com.signity.shopkeeperapp.util.prefs.AppPreference;
 import com.squareup.picasso.Picasso;
 
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 
 import retrofit.Callback;
@@ -168,23 +170,17 @@ public class OrderDetailActivity extends AppCompatActivity implements View.OnCli
         //  txtItems.setText(listItem.size());
         if (ordersListModel.getStatus().equalsIgnoreCase("1")) {
             txtStausVal.setText("Processing");
-            txtStausVal.setBackgroundResource(R.drawable.bg_transaparent);
         } else if (ordersListModel.getStatus().equalsIgnoreCase("4")) {
             txtStausVal.setText("Shipping");
-            txtStausVal.setBackgroundResource(R.drawable.bg_transaparent);
         } else if (ordersListModel.getStatus().equalsIgnoreCase("5")) {
             Log.i("@@DeleiverdOrder__", "order.getStatus()");
             txtStausVal.setText("Delivered");
-            txtStausVal.setBackgroundResource(R.drawable.bg_transaparent);
         } else if (ordersListModel.getStatus().equalsIgnoreCase("0")) {
             txtStausVal.setText("Due Orders");
-            txtStausVal.setBackgroundResource(R.drawable.bg_transaparent);
         } else if (ordersListModel.getStatus().equalsIgnoreCase("2")) {
             txtStausVal.setText("Rejected");
-            txtStausVal.setBackgroundResource(R.drawable.bg_transaparent);
         } else if (ordersListModel.getStatus().equalsIgnoreCase("6")) {
             txtStausVal.setText("Cancelled");
-            txtStausVal.setBackgroundResource(R.drawable.bg_transaparent);
         }
 
     }
@@ -379,15 +375,14 @@ public class OrderDetailActivity extends AppCompatActivity implements View.OnCli
             if (convertView == null) {
                 holder = new OrderDetailAdapter.ViewHolder();
                 convertView = inflater
-                        .inflate(R.layout.row_list_due_orders_items, null);
-                holder.itemImage = (ImageView) convertView.findViewById(R.id.itemImage);
-                holder.itemName = (TextView) convertView.findViewById(R.id.txtItemName);
-                holder.itemPrice = (TextView) convertView.findViewById(R.id.txtPrice);
-                holder.itemQuantiy = (TextView) convertView.findViewById(R.id.txtLblQuantity);
-                holder.txtWeight = (TextView) convertView.findViewById(R.id.txtWeight);
-                holder.itemsTotal = (TextView) convertView.findViewById(R.id.txtLblTotal);
-                holder.toggle = (ImageButton) convertView.findViewById(R.id.toggle);
-                holder.parent = (RelativeLayout) convertView.findViewById(R.id.parent);
+                        .inflate(R.layout.itemview_order_detail, null);
+                holder.itemImage = (ImageView) convertView.findViewById(R.id.iv_product_image);
+                holder.itemName = (TextView) convertView.findViewById(R.id.tv_product_name);
+                holder.itemPrice = (TextView) convertView.findViewById(R.id.tv_product_price);
+                holder.itemQuantiy = (TextView) convertView.findViewById(R.id.tv_product_quantity);
+                holder.txtWeight = (TextView) convertView.findViewById(R.id.tv_product_weight);
+                holder.itemsTotal = (TextView) convertView.findViewById(R.id.tv_product_total);
+                holder.toggle = convertView.findViewById(R.id.switch_product);
                 convertView.setTag(holder);
             } else {
                 holder = (OrderDetailAdapter.ViewHolder) convertView.getTag();
@@ -397,7 +392,7 @@ public class OrderDetailActivity extends AppCompatActivity implements View.OnCli
             final ItemListModel item = listItem.get(position);
             Log.i("@@OrderDetailFrag", "-----" + item.getName());
             holder.itemName.setText(item.getName());
-            holder.itemPrice.setText("Price: " + Util.getCurrency(context) + "" + item.getPrice());
+            holder.itemPrice.setText(String.format(Locale.getDefault(), "Price: %s", Util.getPriceWithCurrency(item.getPrice(), AppPreference.getInstance().getCurrency())));
             holder.itemQuantiy.setText("Qty: " + item.getQuantity());
             Log.i("@@OrderDetailag___000", "-----" + item.getImage());
 
@@ -430,7 +425,7 @@ public class OrderDetailActivity extends AppCompatActivity implements View.OnCli
 
             Double itemsTotal = 0.00;
             itemsTotal = listItem.get(position).getPrice() * Integer.parseInt(listItem.get(position).getQuantity());
-            holder.itemsTotal.setText("Total: " + Util.getCurrency(context) + "" + itemsTotal);
+            holder.itemsTotal.setText(String.format(Locale.getDefault(), "Price: %s", Util.getPriceWithCurrency(itemsTotal, AppPreference.getInstance().getCurrency())));
             holder.toggle.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
@@ -480,9 +475,7 @@ public class OrderDetailActivity extends AppCompatActivity implements View.OnCli
             TextView txtWeight;
             TextView itemQuantiy;
             TextView itemsTotal;
-            ImageButton toggle;
-
-            RelativeLayout parent;
+            Switch toggle;
         }
     }
 }

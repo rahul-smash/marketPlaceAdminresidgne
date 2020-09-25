@@ -10,7 +10,7 @@
     android:padding="16dp">
 
     <ImageView
-        android:id="@+id/imageView3"
+        android:id="@+id/iv_product_image"
         android:layout_width="70dp"
         android:layout_height="70dp"
         android:adjustViewBounds="true"
@@ -20,29 +20,29 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
-        android:id="@+id/textView"
+        android:id="@+id/tv_product_name"
         style="@style/AppTheme.TextView.Medium"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
         android:layout_marginLeft="16dp"
         android:text="Coconut Cookies"
-        app:layout_constraintStart_toEndOf="@+id/imageView3"
+        app:layout_constraintStart_toEndOf="@+id/iv_product_image"
         app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
-        android:id="@+id/textView2"
+        android:id="@+id/tv_product_weight"
         style="@style/AppTheme.TextView.Small"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
         android:layout_marginLeft="16dp"
         android:text="Weight: 200 gm"
-        app:layout_constraintStart_toEndOf="@+id/imageView3"
-        app:layout_constraintTop_toBottomOf="@+id/textView" />
+        app:layout_constraintStart_toEndOf="@+id/iv_product_image"
+        app:layout_constraintTop_toBottomOf="@+id/tv_product_name" />
 
     <TextView
-        android:id="@+id/textView4"
+        android:id="@+id/tv_product_price"
         style="@style/AppTheme.TextView.Small"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -51,11 +51,11 @@
         android:layout_marginTop="4dp"
         android:text="Price: Rs.900"
         app:layout_constraintHorizontal_chainStyle="spread_inside"
-        app:layout_constraintStart_toEndOf="@+id/imageView3"
-        app:layout_constraintTop_toBottomOf="@+id/textView2" />
+        app:layout_constraintStart_toEndOf="@+id/iv_product_image"
+        app:layout_constraintTop_toBottomOf="@+id/tv_product_weight" />
 
     <TextView
-        android:id="@+id/textView55"
+        android:id="@+id/tv_product_total"
         style="@style/AppTheme.TextView.Small"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -64,11 +64,11 @@
         android:layout_marginTop="4dp"
         android:text="Total: Rs.900"
         app:layout_constraintHorizontal_chainStyle="spread_inside"
-        app:layout_constraintStart_toEndOf="@+id/textView4"
-        app:layout_constraintTop_toBottomOf="@+id/textView2" />
+        app:layout_constraintStart_toEndOf="@+id/tv_product_price"
+        app:layout_constraintTop_toBottomOf="@+id/tv_product_weight" />
 
     <TextView
-        android:id="@+id/textView222"
+        android:id="@+id/tv_product_quantity"
         style="@style/AppTheme.TextView.Small"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
@@ -76,8 +76,8 @@
         android:layout_marginLeft="16dp"
         android:layout_marginTop="4dp"
         android:text="Qty: 1"
-        app:layout_constraintStart_toEndOf="@+id/imageView3"
-        app:layout_constraintTop_toBottomOf="@+id/textView4" />
+        app:layout_constraintStart_toEndOf="@+id/iv_product_image"
+        app:layout_constraintTop_toBottomOf="@+id/tv_product_price" />
 
     <LinearLayout
         android:layout_width="wrap_content"
@@ -89,18 +89,16 @@
         app:layout_constraintTop_toTopOf="parent">
 
         <Switch
-
-            style="@style/Widget.AppCompat.CompoundButton.Switch"
+            android:id="@+id/switch_product"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" />
 
         <TextView
-            android:id="@+id/textView122"
+            android:id="@+id/tv_product_status"
             style="@style/AppTheme.TextView.Small"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Accept" />
-
 
     </LinearLayout>
 
