@@ -165,8 +165,10 @@ public class CategoriesFragment extends Fragment  {
                     start += pageSize;
 
                     categoryData=getCategoryResponse.getData();
+                    Log.i("@@------",""+categoryData.size());
                     if (categoryData != null && categoryData.size() != 0) {
                         setUpAdapter();
+
                     } else {
                         //TODO:- Show Message
                         Toast.makeText(getActivity(),"Data not Found!",Toast.LENGTH_SHORT).show();

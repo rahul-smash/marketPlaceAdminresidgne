@@ -69,6 +69,7 @@ public class CategoriesAdapter extends RecyclerView.Adapter<CategoriesAdapter.My
         Log.i("@@CatregoriesData", "-------" + mData.size());
         String subCategoryImage = mData.get(position).getImage();
         String txtCategoriesName = mData.get(position).getTitle();
+        String subCategoryTotal=mData.get(position).getSubCategoryTotal().toString();
         try {
             if (subCategoryImage != null && !subCategoryImage.isEmpty()) {
                 Picasso.with(context).load(subCategoryImage).resize(50, 50).centerInside()
@@ -81,18 +82,22 @@ public class CategoriesAdapter extends RecyclerView.Adapter<CategoriesAdapter.My
         }
         holder.txtCategoriesName.setText(txtCategoriesName);
 
+        holder.txtSubcategoryTotal.setText(subCategoryTotal);
+      //  holder.txtPriority.setText("Priority :" +mData.get(position).get );
     }
 
 
     class MyViewHolder extends RecyclerView.ViewHolder {
 
         ImageView imageCategory;
-        TextView txtCategoriesName;
+        TextView txtCategoriesName,txtSubcategoryTotal,txtPriority;
 
         public MyViewHolder(final View convertView) {
             super(convertView);
+            txtPriority=convertView.findViewById(R.id.txtPriority);
             imageCategory = (ImageView) convertView.findViewById(R.id.imageCategory);
             txtCategoriesName = convertView.findViewById(R.id.txtCategoriesName);
+            txtSubcategoryTotal=convertView.findViewById(R.id.txtSubcategoryTotal);
             convertView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
