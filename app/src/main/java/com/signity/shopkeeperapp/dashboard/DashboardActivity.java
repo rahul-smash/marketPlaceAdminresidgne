@@ -24,6 +24,7 @@ import androidx.fragment.app.FragmentTransaction;
 import com.google.android.material.badge.BadgeDrawable;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.signity.shopkeeperapp.R;
+import com.signity.shopkeeperapp.dashboard.Products.ProductFragment;
 import com.signity.shopkeeperapp.dashboard.categories.CategoriesFragment;
 import com.signity.shopkeeperapp.dashboard.home.HomeFragment;
 import com.signity.shopkeeperapp.dashboard.orders.OrdersFragment;
@@ -132,7 +133,8 @@ public class DashboardActivity extends AppCompatActivity implements BottomNaviga
                 break;
             case R.id.action_bottom_products:
                 toolbarTitle.setText("Products");
-                Toast.makeText(this, "Coming Soon!", Toast.LENGTH_SHORT).show();
+                showFragment(ProductFragment.getInstance(null), ProductFragment.TAG);
+
                 break;
             case R.id.action_bottom_categories:
                 toolbarTitle.setText("Categories");
