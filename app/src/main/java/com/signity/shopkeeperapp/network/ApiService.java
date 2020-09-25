@@ -141,4 +141,7 @@ public interface ApiService {
     @FormUrlEncoded
     @POST("/getCategories")
     void getCategories(@FieldMap Map<String, Object> parameters, Callback<GetCategoryResponse> response);
+    @FormUrlEncoded
+    @POST("/getAllProducts")
+    void getAllProducts(@FieldMap Map<String, Object> parameters, Callback<GetCategoryResponse> response);
 }

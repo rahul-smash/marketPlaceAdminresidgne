@@ -145,7 +145,7 @@ public class ProductFragment extends Fragment implements View.OnClickListener {
             return;
         }
 
-        getCategoriesApi();
+        getProductApi();
     }
 
     @Override
@@ -153,13 +153,15 @@ public class ProductFragment extends Fragment implements View.OnClickListener {
         super.onResume();
     }
 
-    public void getCategoriesApi() {
+    public void getProductApi() {
         ProgressDialogUtil.showProgressDialog(getActivity());
         Map<String, Object> param = new HashMap<>();
         param.put("page", currentPageNumber);
-        param.put("pagesize", pageSize);
+        param.put("pagelength", pageSize);
+        param.put("cat_id", "0");
+        param.put("sub_cat_ids", "0");
 
-        NetworkAdaper.getNetworkServices().getCategories(param, new Callback<GetCategoryResponse>() {
+        NetworkAdaper.getNetworkServices().getAllProducts(param, new Callback<GetCategoryResponse>() {
             @Override
             public void success(GetCategoryResponse getCategoryResponse, Response response) {
 
