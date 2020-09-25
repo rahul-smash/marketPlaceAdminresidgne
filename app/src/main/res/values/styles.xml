@@ -84,6 +84,10 @@
         <item name="android:textAppearance">@style/TextAppearance.AppCompat.Small</item>
     </style>
 
+    <style name="AppTheme.TextView.Tiny" parent="AppTheme.TextView.Small">
+        <item name="android:textSize">10sp</item>
+    </style>
+
     <style name="AppTheme.TextView.Small.BottomNavigation" parent="Widget.AppCompat.TextView">
         <item name="android:textColor">@color/colorTextGrey</item>
         <item name="android:textSize">10sp</item>

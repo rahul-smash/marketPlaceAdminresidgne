@@ -32,6 +32,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.chip.Chip;
 import com.google.android.material.chip.ChipGroup;
+import com.signity.shopkeeperapp.Categories.AddCategoryActivity;
 import com.signity.shopkeeperapp.R;
 import com.signity.shopkeeperapp.dashboard.DashboardActivity;
 import com.signity.shopkeeperapp.dashboard.orders.HomeOrdersAdapter;
@@ -426,6 +427,8 @@ public class HomeFragment extends Fragment implements HomeContentAdapter.HomeCon
         Toast.makeText(getContext(), homeItems.getTitle(), Toast.LENGTH_SHORT).show();
         switch (homeItems) {
             case ORDERS:
+                startActivity(AddCategoryActivity.getStartIntent(getContext()));
+                AnimUtil.slideFromRightAnim(getActivity());
                 break;
             case REVENUE:
                 break;

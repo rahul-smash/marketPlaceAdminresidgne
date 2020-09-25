@@ -29,58 +29,6 @@
 
         </androidx.appcompat.widget.Toolbar>
     </com.google.android.material.appbar.AppBarLayout>
-    <!--<RelativeLayout
-        android:id="@+id/header"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_above="@+id/ll_top_view"
-        android:background="@color/colorHeader">
-
-        <Button
-            android:id="@+id/backButton"
-            android:layout_width="48dp"
-            android:layout_height="wrap_content"
-            android:layout_alignParentLeft="true"
-            android:layout_centerVertical="true"
-            android:layout_marginTop="5dp"
-            android:layout_marginBottom="5dp"
-            android:background="@android:color/transparent"
-            android:contentDescription=""
-            android:drawableLeft="@drawable/ic_back_white"
-            android:paddingLeft="5dp"
-            android:visibility="visible" />
-
-        <TextView
-            android:id="@+id/textTitle"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:layout_centerHorizontal="true"
-            android:layout_centerVertical="true"
-            android:layout_marginLeft="5dp"
-            android:layout_marginRight="5dp"
-            android:layout_toLeftOf="@+id/addUser"
-            android:layout_toRightOf="@+id/backButton"
-            android:gravity="left"
-            android:singleLine="true"
-            android:text="OrderDetail"
-            android:textColor="@color/colorWhite"
-            android:textSize="@dimen/text_xxlarge"
-            android:visibility="visible" />
-
-        <Button
-            android:id="@+id/btnCall"
-            android:layout_width="48dp"
-            android:layout_height="wrap_content"
-            android:layout_alignParentRight="true"
-            android:layout_centerVertical="true"
-            android:layout_marginBottom="5dp"
-            android:layout_marginTop="5dp"
-            android:background="@android:color/transparent"
-            android:contentDescription=""
-            android:drawableLeft="@drawable/ic_call"
-            android:paddingLeft="5dp"
-            android:visibility="visible" />
-    </RelativeLayout>-->
 
     <LinearLayout
         android:id="@+id/ll_top_view"
