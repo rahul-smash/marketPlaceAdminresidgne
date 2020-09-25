@@ -1,5 +1,6 @@
 package com.signity.shopkeeperapp.network;
 
+import com.signity.shopkeeperapp.model.Categories.GetCategoryResponse;
 import com.signity.shopkeeperapp.model.CustomersModel;
 import com.signity.shopkeeperapp.model.DashBoardModel;
 import com.signity.shopkeeperapp.model.EnquiriesModel;
@@ -137,5 +138,7 @@ public interface ApiService {
     @FormUrlEncoded
     @POST("/storedashboard")
     void storeDashboard(@FieldMap Map<String, Integer> parameters, Callback<StoreDashboardResponse> response);
-
+    @FormUrlEncoded
+    @POST("/getCategories")
+    void getCategories(@FieldMap Map<String, Object> parameters, Callback<GetCategoryResponse> response);
 }

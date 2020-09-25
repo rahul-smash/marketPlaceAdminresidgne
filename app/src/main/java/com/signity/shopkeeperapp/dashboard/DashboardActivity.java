@@ -110,6 +110,7 @@ public class DashboardActivity extends AppCompatActivity implements BottomNaviga
     @Override
     protected void onDestroy() {
         super.onDestroy();
+
     }
 
     @Override
@@ -135,7 +136,7 @@ public class DashboardActivity extends AppCompatActivity implements BottomNaviga
                 break;
             case R.id.action_bottom_categories:
                 toolbarTitle.setText("Categories");
-                Toast.makeText(this, "Coming Soon!", Toast.LENGTH_SHORT).show();
+          //      Toast.makeText(this, "Coming Soon!", Toast.LENGTH_SHORT).show();
                 showFragment(CategoriesFragment.getInstance(null), CategoriesFragment.TAG);
 
                 break;
