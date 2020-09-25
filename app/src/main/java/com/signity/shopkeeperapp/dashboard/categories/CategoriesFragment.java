@@ -54,13 +54,13 @@ import retrofit.Callback;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
 
-public class CategoriesFragment extends Fragment  {
+public class CategoriesFragment extends Fragment implements View.OnClickListener {
     public static final String TAG = "CategoriesFragment";
     private List<GetCategoryData> categoryData = new ArrayList<>();
     CategoriesAdapter categoriesAdapter;
     private RecyclerView recyclerViewCategories;
     private LinearLayoutManager layoutManager;
-
+    TextView txtAddCategory;
     private int pageSize = 10, currentPageNumber = 1, start, totalOrders;
     private RecyclerView.OnScrollListener recyclerViewOnScrollListener = new RecyclerView.OnScrollListener() {
         @Override
@@ -105,6 +105,19 @@ public class CategoriesFragment extends Fragment  {
     }
 
     @Override
+    public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
+        super.onCreateOptionsMenu(menu, inflater);
+        inflater.inflate(R.menu.menu_category, menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        if (item.getItemId() == R.id.action_publish) {
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+    @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         setUpAdapter();
@@ -119,7 +132,9 @@ public class CategoriesFragment extends Fragment  {
     }
 
     private void initView(View rootView) {
+        txtAddCategory = rootView.findViewById(R.id.txtAddCategory);
         recyclerViewCategories = rootView.findViewById(R.id.recyclerViewCategories);
+        txtAddCategory.setOnClickListener(this);
     }
 
     public boolean isLoading() {
@@ -129,6 +144,8 @@ public class CategoriesFragment extends Fragment  {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        setHasOptionsMenu(true);
+
         initView(view);
         getAllOrdersMethod();
     }
@@ -164,14 +181,14 @@ public class CategoriesFragment extends Fragment  {
                 if (getCategoryResponse.getSuccess()) {
                     start += pageSize;
 
-                    categoryData=getCategoryResponse.getData();
-                    Log.i("@@------",""+categoryData.size());
+                    categoryData = getCategoryResponse.getData();
+                    Log.i("@@------", "" + categoryData.size());
                     if (categoryData != null && categoryData.size() != 0) {
                         setUpAdapter();
 
                     } else {
                         //TODO:- Show Message
-                        Toast.makeText(getActivity(),"Data not Found!",Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getActivity(), "Data not Found!", Toast.LENGTH_SHORT).show();
                     }
 
                 } else {
@@ -186,8 +203,10 @@ public class CategoriesFragment extends Fragment  {
     }
 
 
+    @Override
+    public void onClick(View view) {
+        if (view == txtAddCategory) {
 
-
-
-
+        }
+    }
 }
