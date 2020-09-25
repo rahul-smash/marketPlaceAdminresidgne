@@ -1,3 +1,4 @@
+/*
 package com.signity.shopkeeperapp.dashboard.products;
 
 import android.os.Bundle;
@@ -55,3 +56,4 @@ public class ProductsFragment extends Fragment {
         super.onDestroy();
     }
 }
+*/

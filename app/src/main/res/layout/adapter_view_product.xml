@@ -1,0 +1,141 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/parent"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginTop="16dp"
+    android:layout_marginBottom="16dp"
+    android:background="@color/colorWhite"
+    android:clickable="true"
+    android:padding="10dp">
+
+
+    <ImageView
+        android:id="@+id/imageCategory"
+        android:layout_width="60dp"
+        android:layout_height="60dp"
+        android:scaleType="fitXY"
+        android:src="@drawable/ic_launcher"
+        android:visibility="visible" />
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="2dp"
+        android:layout_toEndOf="@+id/itemImage"
+        android:layout_toRightOf="@+id/imageCategory">
+
+        <TextView
+            android:id="@+id/txtCategoriesName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_marginLeft="5dp"
+            android:layout_toLeftOf="@+id/toggle"
+            android:maxLines="2"
+            android:text="Sappharie Butter cookies"
+            android:textColor="@color/colorTextDark"
+            android:textSize="@dimen/text_normal" />
+
+
+        <TextView
+            android:id="@+id/txtTypesprodutcs"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/txtCategoriesName"
+            android:layout_marginLeft="5dp"
+            android:layout_marginTop="5dp"
+            android:gravity="center"
+            android:text="Cookies: Butter Cookies"
+            android:textSize="@dimen/text_small" />
+
+
+        <TextView
+            android:id="@+id/txtVarient"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/txtTypesprodutcs"
+            android:layout_marginLeft="5dp"
+            android:layout_marginTop="5dp"
+            android:gravity="center"
+            android:text="Varients :4"
+            android:textSize="@dimen/text_small" />
+
+        <TextView
+            android:id="@+id/txtLblTotal"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/txtTypesprodutcs"
+            android:layout_marginLeft="30dp"
+            android:layout_marginTop="5dp"
+            android:layout_toRightOf="@+id/txtVarient"
+            android:gravity="center"
+            android:text="QTY:"
+            android:textSize="@dimen/text_small" />
+
+
+        <LinearLayout
+            android:layout_marginTop="20dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:gravity="center"
+            android:orientation="vertical">
+
+            <ImageView
+                android:id="@+id/imageSettings"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/moreicon" />
+
+            <Switch
+                style="@style/Widget.AppCompat.CompoundButton.Switch"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Enable"
+                android:textColor="@color/colorTextGrey"
+                android:textSize="@dimen/text_normal" />
+
+        </LinearLayout>
+
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/imageCategory"
+        android:layout_marginTop="10dp">
+
+        <TextView
+
+            android:id="@+id/txtLblQuantity"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp"
+            android:layout_marginTop="10dp"
+            android:gravity="center"
+            android:text="3500"
+            android:textSize="@dimen/text_small" />
+
+        <TextView
+
+            android:id="@+id/txtDiscountPrice"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="30dp"
+            android:layout_marginTop="10dp"
+            android:layout_toRightOf="@+id/txtLblQuantity"
+            android:gravity="center"
+            android:text=" 450"
+            android:textSize="@dimen/text_small" />
+
+    </RelativeLayout>
+
+</RelativeLayout>
+

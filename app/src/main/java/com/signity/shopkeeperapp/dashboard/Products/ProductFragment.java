@@ -1,26 +1,16 @@
-package com.signity.shopkeeperapp.dashboard.categories;
+package com.signity.shopkeeperapp.dashboard.Products;
 
-import android.content.Context;
-import android.content.Intent;
-import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
-import android.os.Handler;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.LinearLayout;
-import android.widget.PopupWindow;
-import android.widget.RadioButton;
-import android.widget.RadioGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import androidx.annotation.IdRes;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
@@ -28,22 +18,14 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.signity.shopkeeperapp.R;
-import com.signity.shopkeeperapp.dashboard.DashboardActivity;
-import com.signity.shopkeeperapp.dashboard.home.HomeFragment;
-import com.signity.shopkeeperapp.dashboard.orders.OrderDetailActivity;
-import com.signity.shopkeeperapp.dashboard.orders.OrdersFragment;
+import com.signity.shopkeeperapp.dashboard.categories.CategoriesAdapter;
+import com.signity.shopkeeperapp.dashboard.categories.CategoriesFragment;
 import com.signity.shopkeeperapp.model.Categories.GetCategoryData;
 import com.signity.shopkeeperapp.model.Categories.GetCategoryResponse;
-import com.signity.shopkeeperapp.model.OrdersListModel;
-import com.signity.shopkeeperapp.model.SetOrdersModel;
-import com.signity.shopkeeperapp.model.orders.StoreOrdersReponse;
 import com.signity.shopkeeperapp.network.NetworkAdaper;
-import com.signity.shopkeeperapp.orders.DueOrderActivity;
-import com.signity.shopkeeperapp.util.AnimUtil;
 import com.signity.shopkeeperapp.util.DialogUtils;
 import com.signity.shopkeeperapp.util.ProgressDialogUtil;
 import com.signity.shopkeeperapp.util.Util;
-import com.signity.shopkeeperapp.util.prefs.AppPreference;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -54,11 +36,11 @@ import retrofit.Callback;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
 
-public class CategoriesFragment extends Fragment implements View.OnClickListener {
-    public static final String TAG = "CategoriesFragment";
+public class ProductFragment extends Fragment implements View.OnClickListener {
+    public static final String TAG = "ProductFragment";
     private List<GetCategoryData> categoryData = new ArrayList<>();
-    CategoriesAdapter categoriesAdapter;
-    private RecyclerView recyclerViewCategories;
+    ProductsAdapter categoriesAdapter;
+    private RecyclerView recyclerViewProduct;
     private LinearLayoutManager layoutManager;
     TextView txtAddCategory;
     private int pageSize = 10, currentPageNumber = 1, start, totalOrders;
@@ -87,8 +69,8 @@ public class CategoriesFragment extends Fragment implements View.OnClickListener
         }
     };
 
-    public static CategoriesFragment getInstance(Bundle bundle) {
-        CategoriesFragment fragment = new CategoriesFragment();
+    public static ProductFragment getInstance(Bundle bundle) {
+        ProductFragment fragment = new ProductFragment();
         fragment.setArguments(bundle);
         return fragment;
     }
@@ -101,19 +83,23 @@ public class CategoriesFragment extends Fragment implements View.OnClickListener
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.fragment_add_category, container, false);
+        return inflater.inflate(R.layout.fragment_product, container, false);
     }
 
     @Override
     public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
         super.onCreateOptionsMenu(menu, inflater);
-        inflater.inflate(R.menu.menu_category, menu);
+        inflater.inflate(R.menu.menu_products, menu);
     }
 
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-        if (item.getItemId() == R.id.action_publish) {
-            Toast.makeText(getActivity(),"Pending work!",Toast.LENGTH_SHORT).show();
+        if (item.getItemId() == R.id.action_saerch) {
+            Toast.makeText(getActivity(),"pending work!",Toast.LENGTH_SHORT).show();
+        }
+        if (item.getItemId() == R.id.action_filter) {
+            Toast.makeText(getActivity(),"pending work!",Toast.LENGTH_SHORT).show();
+
         }
         return super.onOptionsItemSelected(item);
     }
@@ -126,15 +112,15 @@ public class CategoriesFragment extends Fragment implements View.OnClickListener
 
     private void setUpAdapter() {
         layoutManager = new LinearLayoutManager(getActivity());
-        recyclerViewCategories.setLayoutManager(layoutManager);
-        categoriesAdapter = new CategoriesAdapter(getContext(), categoryData);
-        recyclerViewCategories.setAdapter(categoriesAdapter);
-        recyclerViewCategories.addOnScrollListener(recyclerViewOnScrollListener);
+        recyclerViewProduct.setLayoutManager(layoutManager);
+        categoriesAdapter = new ProductsAdapter(getContext(), categoryData);
+        recyclerViewProduct.setAdapter(categoriesAdapter);
+        recyclerViewProduct.addOnScrollListener(recyclerViewOnScrollListener);
     }
 
     private void initView(View rootView) {
         txtAddCategory = rootView.findViewById(R.id.txtAddCategory);
-        recyclerViewCategories = rootView.findViewById(R.id.recyclerViewCategories);
+        recyclerViewProduct = rootView.findViewById(R.id.recyclerViewProduct);
         txtAddCategory.setOnClickListener(this);
     }
 
@@ -159,7 +145,7 @@ public class CategoriesFragment extends Fragment implements View.OnClickListener
             return;
         }
 
-        getCategoriesApi();
+        getProductApi();
     }
 
     @Override
@@ -167,13 +153,15 @@ public class CategoriesFragment extends Fragment implements View.OnClickListener
         super.onResume();
     }
 
-    public void getCategoriesApi() {
+    public void getProductApi() {
         ProgressDialogUtil.showProgressDialog(getActivity());
         Map<String, Object> param = new HashMap<>();
         param.put("page", currentPageNumber);
-        param.put("pagesize", pageSize);
+        param.put("pagelength", pageSize);
+        param.put("cat_id", "0");
+        param.put("sub_cat_ids", "0");
 
-        NetworkAdaper.getNetworkServices().getCategories(param, new Callback<GetCategoryResponse>() {
+        NetworkAdaper.getNetworkServices().getAllProducts(param, new Callback<GetCategoryResponse>() {
             @Override
             public void success(GetCategoryResponse getCategoryResponse, Response response) {
 
@@ -207,8 +195,8 @@ public class CategoriesFragment extends Fragment implements View.OnClickListener
     @Override
     public void onClick(View view) {
         if (view == txtAddCategory) {
-            Toast.makeText(getActivity(),"Pending work!",Toast.LENGTH_SHORT).show();
 
         }
     }
 }
+

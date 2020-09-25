@@ -20,7 +20,7 @@
             android:orientation="vertical">
 
             <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/recyclerViewCategories"
+                android:id="@+id/recyclerViewProduct"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent" />
         </LinearLayout>
@@ -46,7 +46,7 @@
                 android:background="@drawable/shape_button_apply"
                 android:gravity="center"
                 android:padding="2dp"
-                android:text="Add new Category"
+                android:text="Add new Product"
                 android:textColor="@color/colorWhite"
                 android:textSize="@dimen/text_normal" />
         </LinearLayout>
