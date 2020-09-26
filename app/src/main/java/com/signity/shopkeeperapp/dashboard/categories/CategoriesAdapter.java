@@ -132,6 +132,7 @@ public class CategoriesAdapter extends RecyclerView.Adapter<CategoriesAdapter.My
                     @Override
                     public void onClick(View view) {
                         Toast.makeText(context, "Pending work!", Toast.LENGTH_SHORT).show();
+
                     }
                 });
             }
