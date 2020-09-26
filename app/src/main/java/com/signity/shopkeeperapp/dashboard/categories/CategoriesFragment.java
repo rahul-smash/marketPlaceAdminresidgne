@@ -54,7 +54,7 @@ import retrofit.Callback;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
 
-public class CategoriesFragment extends Fragment implements View.OnClickListener {
+public class CategoriesFragment extends Fragment implements View.OnClickListener, CategoriesAdapter.OnItemClickListener {
     public static final String TAG = "CategoriesFragment";
     private List<GetCategoryData> categoryData = new ArrayList<>();
     CategoriesAdapter categoriesAdapter;
@@ -113,7 +113,7 @@ public class CategoriesFragment extends Fragment implements View.OnClickListener
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         if (item.getItemId() == R.id.action_publish) {
-            Toast.makeText(getActivity(),"Pending work!",Toast.LENGTH_SHORT).show();
+            Toast.makeText(getActivity(), "Pending work!", Toast.LENGTH_SHORT).show();
         }
         return super.onOptionsItemSelected(item);
     }
@@ -130,6 +130,8 @@ public class CategoriesFragment extends Fragment implements View.OnClickListener
         categoriesAdapter = new CategoriesAdapter(getContext(), categoryData);
         recyclerViewCategories.setAdapter(categoriesAdapter);
         recyclerViewCategories.addOnScrollListener(recyclerViewOnScrollListener);
+        categoriesAdapter.setOnItemClickListener(this);
+
     }
 
     private void initView(View rootView) {
@@ -207,8 +209,16 @@ public class CategoriesFragment extends Fragment implements View.OnClickListener
     @Override
     public void onClick(View view) {
         if (view == txtAddCategory) {
-            Toast.makeText(getActivity(),"Pending work!",Toast.LENGTH_SHORT).show();
+            Toast.makeText(getActivity(), "Pending work!", Toast.LENGTH_SHORT).show();
 
+        }
+    }
+
+
+    @Override
+    public void onItemClick(View itemView, int position, GetCategoryData categoryData) {
+        if (categoryData!= null) {
+            Toast.makeText(getActivity(), "Pending work!"+categoryData.getTitle(), Toast.LENGTH_SHORT).show();
         }
     }
 }

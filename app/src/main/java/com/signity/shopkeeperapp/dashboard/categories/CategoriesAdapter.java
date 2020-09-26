@@ -8,11 +8,14 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.signity.shopkeeperapp.R;
+import com.signity.shopkeeperapp.adapter.RvActiveOrderAdapter;
 import com.signity.shopkeeperapp.model.Categories.GetCategoryData;
 import com.signity.shopkeeperapp.model.Categories.SubCategory;
+import com.signity.shopkeeperapp.model.OrdersListModel;
 import com.squareup.picasso.Picasso;
 
 import java.text.ParseException;
@@ -23,26 +26,30 @@ import java.util.TimeZone;
 
 public class CategoriesAdapter extends RecyclerView.Adapter<CategoriesAdapter.MyViewHolder> {
 
-
-    // Define listener member variable
-    private static OnItemClickListener listener;
-
-    // Define the listener interface
-    public interface OnItemClickListener {
-        void onItemClick(View itemView, int position);
-    }
-
-    // Define the method that allows the parent activity or fragment to define the listener
-    public void setOnItemClickListener(OnItemClickListener listener) {
-        this.listener = listener;
-    }
-
-
     private List<GetCategoryData> mData;
     private LayoutInflater mInflater;
     MyViewHolder holder;
 
     Context context;
+
+    // Define listener member variable
+    // Define listener member variable
+    private static CategoriesAdapter.OnItemClickListener listener;
+
+    // Define the method that allows the parent activity or fragment to define the listener
+    public void setOnItemClickListener(CategoriesAdapter.OnItemClickListener listener) {
+        this.listener = listener;
+    }
+
+
+    // Define the listener interface
+    public interface OnItemClickListener {
+        void onItemClick(View itemView, int position, GetCategoryData categoryData);
+    }
+
+
+
+
 
     public CategoriesAdapter(Context context, List<GetCategoryData> data) {
         this.mData = data;
@@ -65,9 +72,12 @@ public class CategoriesAdapter extends RecyclerView.Adapter<CategoriesAdapter.My
 
 
     @Override
-    public void onBindViewHolder(MyViewHolder holder, int position) {
+    public void onBindViewHolder(final CategoriesAdapter.MyViewHolder holder, final int position) {
+
         Log.i("@@CatregoriesData", "-------" + mData.size());
+        final GetCategoryData getCategoryData = mData.get(position);
         String subCategoryImage = mData.get(position).getImage();
+
         String txtCategoriesName = mData.get(position).getTitle();
         String subCategoryTotal = mData.get(position).getSubCategoryTotal().toString();
         try {
@@ -87,7 +97,16 @@ public class CategoriesAdapter extends RecyclerView.Adapter<CategoriesAdapter.My
         holder.imageSettings.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
+                if (listener != null)
+                    listener.onItemClick(holder.imageSettings, position, getCategoryData);
+            }
+        });
+        holder.parent.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // Triggers click upwards to the adapter on click
+                if (listener != null)
+                    listener.onItemClick(holder.parent, position, getCategoryData);
             }
         });
     }
@@ -97,22 +116,17 @@ public class CategoriesAdapter extends RecyclerView.Adapter<CategoriesAdapter.My
 
         ImageView imageCategory, imageSettings;
         TextView txtCategoriesName, txtSubcategoryTotal, txtPriority;
+        ConstraintLayout parent;
 
         public MyViewHolder(final View convertView) {
             super(convertView);
+            parent = convertView.findViewById(R.id.parent);
             imageSettings = convertView.findViewById(R.id.imageSettings);
             txtPriority = convertView.findViewById(R.id.txtPriority);
             imageCategory = (ImageView) convertView.findViewById(R.id.imageCategory);
             txtCategoriesName = convertView.findViewById(R.id.txtCategoriesName);
             txtSubcategoryTotal = convertView.findViewById(R.id.txtSubcategoryTotal);
-            convertView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    // Triggers click upwards to the adapter on click
-                    if (listener != null)
-                        listener.onItemClick(convertView, getLayoutPosition());
-                }
-            });
+
         }
 
     }
