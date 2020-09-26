@@ -1,21 +1,31 @@
 package com.signity.shopkeeperapp.dashboard.categories;
 
 import android.content.Context;
+import android.graphics.drawable.ColorDrawable;
+import android.os.Handler;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.PopupWindow;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.signity.shopkeeperapp.R;
 import com.signity.shopkeeperapp.adapter.RvActiveOrderAdapter;
+import com.signity.shopkeeperapp.dashboard.home.HomeFragment;
 import com.signity.shopkeeperapp.model.Categories.GetCategoryData;
 import com.signity.shopkeeperapp.model.Categories.SubCategory;
 import com.signity.shopkeeperapp.model.OrdersListModel;
+import com.signity.shopkeeperapp.util.Constant;
 import com.squareup.picasso.Picasso;
 
 import java.text.ParseException;
@@ -46,9 +56,6 @@ public class CategoriesAdapter extends RecyclerView.Adapter<CategoriesAdapter.My
     public interface OnItemClickListener {
         void onItemClick(View itemView, int position, GetCategoryData categoryData);
     }
-
-
-
 
 
     public CategoriesAdapter(Context context, List<GetCategoryData> data) {
@@ -97,8 +104,36 @@ public class CategoriesAdapter extends RecyclerView.Adapter<CategoriesAdapter.My
         holder.imageSettings.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (listener != null)
-                    listener.onItemClick(holder.imageSettings, position, getCategoryData);
+                showOverViewPopMenu();
+
+                View layout = LayoutInflater.from(context).inflate(R.layout.popup_delete, null, false);
+                final PopupWindow popupWindowOverView = new PopupWindow(layout, LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT, true);
+
+                popupWindowOverView.setOutsideTouchable(true);
+                popupWindowOverView.setBackgroundDrawable(new ColorDrawable());
+                popupWindowOverView.setTouchInterceptor(new View.OnTouchListener() { // or whatever you want
+                    @Override
+                    public boolean onTouch(View v, MotionEvent event) {
+                        if (event.getAction() == MotionEvent.ACTION_OUTSIDE) // here I want to close the pw when clicking outside it but at all this is just an example of how it works and you can implement the onTouch() or the onKey() you want
+                        {
+                            popupWindowOverView.dismiss();
+                            return true;
+                        }
+                        return false;
+                    }
+
+                });
+
+                float den = context.getResources().getDisplayMetrics().density;
+                int offsetY = (int) (den * 2);
+                popupWindowOverView.showAsDropDown(view, 0, 0);
+                LinearLayout popups = layout.findViewById(R.id.popups);
+                popups.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        Toast.makeText(context, "Pending work!", Toast.LENGTH_SHORT).show();
+                    }
+                });
             }
         });
         holder.parent.setOnClickListener(new View.OnClickListener() {
@@ -128,6 +163,40 @@ public class CategoriesAdapter extends RecyclerView.Adapter<CategoriesAdapter.My
             txtSubcategoryTotal = convertView.findViewById(R.id.txtSubcategoryTotal);
 
         }
+
+    }
+
+    private void showOverViewPopMenu() {
+
+        View layout = LayoutInflater.from(context).inflate(R.layout.popup_delete, null, false);
+        final PopupWindow popupWindowOverView = new PopupWindow(layout, LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT, true);
+
+        popupWindowOverView.setOutsideTouchable(true);
+        popupWindowOverView.setBackgroundDrawable(new ColorDrawable());
+        popupWindowOverView.setTouchInterceptor(new View.OnTouchListener() { // or whatever you want
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                if (event.getAction() == MotionEvent.ACTION_OUTSIDE) // here I want to close the pw when clicking outside it but at all this is just an example of how it works and you can implement the onTouch() or the onKey() you want
+                {
+                    popupWindowOverView.dismiss();
+                    return true;
+                }
+                return false;
+            }
+
+        });
+
+        float den = context.getResources().getDisplayMetrics().density;
+        int offsetY = (int) (den * 2);
+        popupWindowOverView.showAsDropDown(holder.imageSettings, 0, 0);
+        LinearLayout popups = layout.findViewById(R.id.popups);
+        popups.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Toast.makeText(context, "Pending work!", Toast.LENGTH_SHORT).show();
+            }
+        });
+
 
     }
 
