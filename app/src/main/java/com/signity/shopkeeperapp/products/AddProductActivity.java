@@ -9,8 +9,6 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -18,17 +16,11 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.app.ActivityCompat;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.textfield.TextInputEditText;
 import com.signity.shopkeeperapp.R;
 import com.signity.shopkeeperapp.categories.SubCategoryAdapter;
-import com.signity.shopkeeperapp.model.category.SubCategoryModel;
 import com.signity.shopkeeperapp.util.AnimUtil;
-
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Created by ketan on 25/09/20.
@@ -38,13 +30,8 @@ public class AddProductActivity extends AppCompatActivity implements SubCategory
     private static final String TAG = "AddProductActivity";
     private static final int REQUEST_PERMISSION = 1001;
     private static final int REQUEST_IMAGE_GET = 2002;
-    private RecyclerView recyclerViewSubCategory;
-    private SubCategoryAdapter subCategoryAdapter;
-    private TextInputEditText textInputEditTextCategoryName;
-    private ImageView imageViewCategory;
-    private LinearLayout linearLayoutAddCategoryImage;
     private Toolbar toolbar;
-    private List<SubCategoryModel> subCategoryModels = new ArrayList<>();
+    private TextInputEditText editTextCategory;
 
     public static Intent getStartIntent(Context context) {
         return new Intent(context, AddProductActivity.class);
@@ -68,23 +55,16 @@ public class AddProductActivity extends AppCompatActivity implements SubCategory
     }
 
     private void setUpAdapter() {
-        subCategoryAdapter = new SubCategoryAdapter(this);
-        subCategoryAdapter.setListener(this);
-        recyclerViewSubCategory.setLayoutManager(new LinearLayoutManager(this));
-        recyclerViewSubCategory.setAdapter(subCategoryAdapter);
     }
 
     private void initView() {
-        recyclerViewSubCategory = findViewById(R.id.rv_add_sub_category);
-        textInputEditTextCategoryName = findViewById(R.id.edt_category_name);
-        imageViewCategory = findViewById(R.id.iv_category);
-        linearLayoutAddCategoryImage = findViewById(R.id.ll_add_category_image);
         toolbar = findViewById(R.id.toolbar);
+        editTextCategory = findViewById(R.id.edt_category);
 
-        linearLayoutAddCategoryImage.setOnClickListener(new View.OnClickListener() {
+        editTextCategory.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                getGalleryImage();
+                Toast.makeText(AddProductActivity.this, "Category", Toast.LENGTH_SHORT).show();
             }
         });
     }

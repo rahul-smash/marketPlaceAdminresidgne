@@ -32,8 +32,8 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.chip.Chip;
 import com.google.android.material.chip.ChipGroup;
-import com.signity.shopkeeperapp.categories.AddCategoryActivity;
 import com.signity.shopkeeperapp.R;
+import com.signity.shopkeeperapp.categories.AddCategoryActivity;
 import com.signity.shopkeeperapp.dashboard.DashboardActivity;
 import com.signity.shopkeeperapp.dashboard.orders.HomeOrdersAdapter;
 import com.signity.shopkeeperapp.dashboard.orders.OrderDetailActivity;
@@ -42,6 +42,7 @@ import com.signity.shopkeeperapp.model.SetOrdersModel;
 import com.signity.shopkeeperapp.model.dashboard.StoreDashboardResponse;
 import com.signity.shopkeeperapp.model.orders.StoreOrdersReponse;
 import com.signity.shopkeeperapp.network.NetworkAdaper;
+import com.signity.shopkeeperapp.products.AddProductActivity;
 import com.signity.shopkeeperapp.util.AnimUtil;
 import com.signity.shopkeeperapp.util.Constant;
 import com.signity.shopkeeperapp.util.ProgressDialogUtil;
@@ -431,6 +432,8 @@ public class HomeFragment extends Fragment implements HomeContentAdapter.HomeCon
                 AnimUtil.slideFromRightAnim(getActivity());
                 break;
             case REVENUE:
+                startActivity(AddProductActivity.getStartIntent(getContext()));
+                AnimUtil.slideFromRightAnim(getActivity());
                 break;
             case ALL_CUSTOMERS:
                 break;

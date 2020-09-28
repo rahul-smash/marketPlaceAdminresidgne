@@ -67,7 +67,7 @@ public class ProductsAdapter extends RecyclerView.Adapter<ProductsAdapter.MyView
     public void onBindViewHolder(final ProductsAdapter.MyViewHolder holder, final int position) {
         Log.i("@@ProductData", "-------" + mData.size());
         final GetProductData getProductData = mData.get(position);
-        String subProductImage = mData.get(position).getImage();
+        String subProductImage = mData.get(position).getImage10080();
         Log.i("-----------------", "" + subProductImage);
         try {
             if (subProductImage != null && !subProductImage.isEmpty()) {
@@ -83,14 +83,14 @@ public class ProductsAdapter extends RecyclerView.Adapter<ProductsAdapter.MyView
         String categoryIds = mData.get(position).getCategoryIds().toString();
 
         holder.txtProductName.setText(mData.get(position).getTitle());
-    /*    List<Variant> varientData = mData.get(position).getVariants();
-        Log.i("@@@____", "" + varientData.toString());*/
-       /* Variant variantData = varientData.get(position);
+        List<Variant> varientData = mData.get(position).getVariants();
+        Log.i("@@@____", "" + varientData.toString());
+        Variant variantData = varientData.get(0);
 
 
         holder.txtVarient.setText(variantData.getMrpPrice().toString());
         holder.txtWeight.setText(variantData.getWeight().toString());
-        holder.txtDiscountPrice.setText(variantData.getDiscount().toString());*/
+        holder.txtDiscountPrice.setText(variantData.getDiscount().toString());
         holder.imageSettings.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
