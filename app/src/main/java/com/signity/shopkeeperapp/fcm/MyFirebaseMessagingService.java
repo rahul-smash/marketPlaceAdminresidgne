@@ -14,17 +14,20 @@ import android.graphics.BitmapFactory;
 import android.media.RingtoneManager;
 import android.net.Uri;
 import android.os.Build;
+import android.util.Log;
+
 import androidx.core.app.NotificationCompat;
 import androidx.core.app.NotificationManagerCompat;
-import android.util.Log;
 
 import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
-import com.signity.shopkeeperapp.Notifications.NotificationsDetailActivity;
 import com.signity.shopkeeperapp.R;
 import com.signity.shopkeeperapp.SplashActivity;
 import com.signity.shopkeeperapp.app.DataAdapter;
+import com.signity.shopkeeperapp.notifications.NotificationActivity;
 import com.signity.shopkeeperapp.util.PrefManager;
+
+import java.util.Random;
 
 
 public class MyFirebaseMessagingService extends FirebaseMessagingService {
@@ -145,16 +148,15 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
 
 
         } else {
-            intent = new Intent(this, NotificationsDetailActivity.class);
+            intent = new Intent(this, NotificationActivity.class);
             pendingIntent = PendingIntent.getActivity(this, 0 /* Request code */, intent,
                     PendingIntent.FLAG_ONE_SHOT);
 
         }
-        pendingIntent = PendingIntent.getActivity(this, 0 /* Request code */, intent,
-                PendingIntent.FLAG_ONE_SHOT);
+        pendingIntent = PendingIntent.getActivity(this, 0 /* Request code */, intent, PendingIntent.FLAG_ONE_SHOT);
         Uri defaultSoundUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
 
-        final int NOTIFY_ID = 1002;
+        final int NOTIFY_ID = new Random().nextInt(1000);
         int importance = NotificationManager.IMPORTANCE_HIGH;
         NotificationCompat.Builder builder;
         NotificationManager notifManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);

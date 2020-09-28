@@ -255,6 +255,7 @@ public class OrdersFragment extends Fragment implements HomeOrdersAdapter.Orders
 
                 OrdersFragment.this.checkedId = checkedId;
                 currentPageNumber = 1;
+                start = 0;
                 // Add logic here
 
                 switch (index) {

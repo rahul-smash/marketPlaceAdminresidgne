@@ -1,4 +1,4 @@
-package com.signity.shopkeeperapp.Notifications;
+package com.signity.shopkeeperapp.notifications;
 
 import android.app.Activity;
 import android.content.pm.ActivityInfo;

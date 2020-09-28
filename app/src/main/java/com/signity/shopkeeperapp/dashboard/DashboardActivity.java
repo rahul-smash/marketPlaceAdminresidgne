@@ -7,6 +7,7 @@ import android.os.Handler;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -23,20 +24,26 @@ import androidx.fragment.app.FragmentTransaction;
 
 import com.google.android.material.badge.BadgeDrawable;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.signity.shopkeeperapp.BuildConfig;
 import com.signity.shopkeeperapp.R;
-import com.signity.shopkeeperapp.dashboard.Products.ProductFragment;
-import com.signity.shopkeeperapp.dashboard.categories.CategoriesFragment;
 import com.signity.shopkeeperapp.dashboard.home.HomeFragment;
 import com.signity.shopkeeperapp.dashboard.orders.OrdersFragment;
+import com.signity.shopkeeperapp.stores.StoresActivity;
+import com.signity.shopkeeperapp.util.prefs.AppPreference;
 
-public class DashboardActivity extends AppCompatActivity implements BottomNavigationView.OnNavigationItemSelectedListener, HomeFragment.HomeFragmentListener {
+public class DashboardActivity extends AppCompatActivity implements BottomNavigationView.OnNavigationItemSelectedListener, HomeFragment.HomeFragmentListener, NavDrawerAdapter.NavigationListener {
 
     public BottomNavigationView bottomNavigationView;
     private DrawerLayout drawerLayout;
     private ActionBarDrawerToggle mDrawerToggle;
     private Toolbar toolbar;
-    private TextView toolbarTitle;
+    private TextView textViewToolbarTitle;
+    private TextView textViewNavigationTitle;
+    private TextView textViewAppVersion;
     private boolean doubleBackToExitPressedOnce;
+    private NavDrawerAdapter navDrawerAdapter;
+    private ListView listViewNavigation;
+    private int navSelectedId;
 
     public static Intent getStartIntent(Context context) {
         return new Intent(context, DashboardActivity.class);
@@ -48,19 +55,39 @@ public class DashboardActivity extends AppCompatActivity implements BottomNaviga
         setContentView(R.layout.activity_dashboard);
         initViews();
         setUpToolbar();
+        setUpStoreData();
+        setUpNavigationAdapter();
         setUpDrawerToggle();
         setUpBottomNavigation();
+    }
+
+    private void setUpStoreData() {
+        String storeName = AppPreference.getInstance().getStoreName();
+        textViewNavigationTitle.setText(storeName);
+        textViewAppVersion.setText(String.format("Version %s", BuildConfig.VERSION_NAME));
+    }
+
+    private void setUpNavigationAdapter() {
+        navDrawerAdapter = new NavDrawerAdapter(this, this);
+        listViewNavigation.setAdapter(navDrawerAdapter);
+        listViewNavigation.setDivider(null);
     }
 
     private void initViews() {
         bottomNavigationView = findViewById(R.id.bottomNavigationView);
         toolbar = findViewById(R.id.toolbar);
         drawerLayout = findViewById(R.id.drawer_layout);
-        toolbarTitle = findViewById(R.id.tv_toolbar_dashboard);
+        textViewToolbarTitle = findViewById(R.id.tv_toolbar_dashboard);
+        listViewNavigation = findViewById(R.id.lv_navigation);
+        textViewNavigationTitle = findViewById(R.id.tv_store_name_nav);
+        textViewAppVersion = findViewById(R.id.tv_app_version);
+    }
+
+    private void createOrdersBadge() {
         BadgeDrawable badgeDrawable = bottomNavigationView.getOrCreateBadge(R.id.action_bottom_orders);
         badgeDrawable.setBackgroundColor(getResources().getColor(R.color.colorBadge));
         badgeDrawable.setBadgeTextColor(getResources().getColor(R.color.colorTextDark));
-        badgeDrawable.setNumber(20);
+        badgeDrawable.setNumber(0);
         badgeDrawable.setVisible(true);
     }
 
@@ -79,6 +106,7 @@ public class DashboardActivity extends AppCompatActivity implements BottomNaviga
     }
 
     private void setUpBottomNavigation() {
+//        createOrdersBadge();
         bottomNavigationView.setItemIconTintList(null);
         bottomNavigationView.setItemHorizontalTranslationEnabled(false);
         bottomNavigationView.setOnNavigationItemSelectedListener(this);
@@ -117,34 +145,39 @@ public class DashboardActivity extends AppCompatActivity implements BottomNaviga
     @Override
     protected void onResume() {
         super.onResume();
+        navDrawerAdapter.setSelectedId(navSelectedId);
     }
 
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
-        menuItem.setChecked(true);
         switch (menuItem.getItemId()) {
             case R.id.action_bottom_home:
-                toolbarTitle.setText("");
+                navSelectedId = 0;
+                navDrawerAdapter.setSelectedId(navSelectedId);
+                textViewToolbarTitle.setText("");
+                menuItem.setChecked(true);
                 showFragment(HomeFragment.getInstance(null), HomeFragment.TAG);
                 break;
             case R.id.action_bottom_orders:
-                toolbarTitle.setText("Orders");
+                navSelectedId = 1;
+                navDrawerAdapter.setSelectedId(navSelectedId);
+                textViewToolbarTitle.setText("Orders");
+                menuItem.setChecked(true);
                 showFragment(OrdersFragment.getInstance(null), OrdersFragment.TAG);
                 break;
             case R.id.action_bottom_products:
-                toolbarTitle.setText("Products");
-                showFragment(ProductFragment.getInstance(null), ProductFragment.TAG);
-
+                Toast.makeText(this, "Coming Soon!", Toast.LENGTH_SHORT).show();
+//                toolbarTitle.setText("Products");
+//                showFragment(ProductFragment.getInstance(null), ProductFragment.TAG);
                 break;
             case R.id.action_bottom_categories:
-                toolbarTitle.setText("Categories");
-          //      Toast.makeText(this, "Coming Soon!", Toast.LENGTH_SHORT).show();
-                showFragment(CategoriesFragment.getInstance(null), CategoriesFragment.TAG);
-
+                Toast.makeText(this, "Coming Soon!", Toast.LENGTH_SHORT).show();
+//                toolbarTitle.setText("Categories");
+//                showFragment(CategoriesFragment.getInstance(null), CategoriesFragment.TAG);
                 break;
             case R.id.action_bottom_account:
-                toolbarTitle.setText("Account");
                 Toast.makeText(this, "Coming Soon!", Toast.LENGTH_SHORT).show();
+//                toolbarTitle.setText("Account");
                 break;
         }
         return false;
@@ -190,5 +223,24 @@ public class DashboardActivity extends AppCompatActivity implements BottomNaviga
     @Override
     public void onClickViewAllOrders() {
         bottomNavigationView.setSelectedItemId(R.id.action_bottom_orders);
+    }
+
+    @Override
+    public void onClickNavigation(NavDrawerAdapter.NavigationItems navigationItems) {
+        switch (navigationItems) {
+            case DASHBOARD:
+                bottomNavigationView.setSelectedItemId(R.id.action_bottom_home);
+                break;
+            case ORDERS:
+                bottomNavigationView.setSelectedItemId(R.id.action_bottom_orders);
+                break;
+            case PRODUCTS:
+                Toast.makeText(this, "Coming Soon!", Toast.LENGTH_SHORT).show();
+                break;
+            case SWITCH_STORE:
+                startActivity(StoresActivity.getStartIntent(DashboardActivity.this));
+                break;
+        }
+        toggleDrawer();
     }
 }
