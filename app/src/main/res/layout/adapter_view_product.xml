@@ -20,14 +20,14 @@
         android:visibility="visible" />
 
     <RelativeLayout
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginLeft="2dp"
         android:layout_toEndOf="@+id/itemImage"
         android:layout_toRightOf="@+id/imageCategory">
 
         <TextView
-            android:id="@+id/txtCategoriesName"
+            android:id="@+id/txtProductName"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentLeft="true"
@@ -40,10 +40,10 @@
 
 
         <TextView
-            android:id="@+id/txtTypesprodutcs"
+            android:id="@+id/txtProductType"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/txtCategoriesName"
+            android:layout_below="@+id/txtProductName"
             android:layout_marginLeft="5dp"
             android:layout_marginTop="5dp"
             android:gravity="center"
@@ -55,7 +55,7 @@
             android:id="@+id/txtVarient"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/txtTypesprodutcs"
+            android:layout_below="@+id/txtProductType"
             android:layout_marginLeft="5dp"
             android:layout_marginTop="5dp"
             android:gravity="center"
@@ -63,10 +63,10 @@
             android:textSize="@dimen/text_small" />
 
         <TextView
-            android:id="@+id/txtLblTotal"
+            android:id="@+id/txtWeight"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/txtTypesprodutcs"
+            android:layout_below="@+id/txtProductType"
             android:layout_marginLeft="30dp"
             android:layout_marginTop="5dp"
             android:layout_toRightOf="@+id/txtVarient"
@@ -75,36 +75,38 @@
             android:textSize="@dimen/text_small" />
 
 
-        <LinearLayout
-            android:layout_marginTop="20dp"
+    </RelativeLayout>
+
+    <LinearLayout
+        android:id="@+id/lineatSettingsView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_marginTop="5dp"
+        android:gravity="center"
+        android:orientation="vertical">
+
+        <ImageView
+            android:id="@+id/imageSettings"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentRight="true"
-            android:gravity="center"
-            android:orientation="vertical">
+            android:padding="6dp"
+            android:src="@drawable/moreicon" />
 
-            <ImageView
-                android:id="@+id/imageSettings"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:src="@drawable/moreicon" />
+        <Switch
+            style="@style/Widget.AppCompat.CompoundButton.Switch"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp" />
 
-            <Switch
-                style="@style/Widget.AppCompat.CompoundButton.Switch"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="10dp" />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Enable"
+            android:textColor="@color/colorTextGrey"
+            android:textSize="@dimen/text_normal" />
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Enable"
-                android:textColor="@color/colorTextGrey"
-                android:textSize="@dimen/text_normal" />
-
-        </LinearLayout>
-
-    </RelativeLayout>
+    </LinearLayout>
 
     <RelativeLayout
         android:layout_width="match_parent"

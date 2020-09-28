@@ -13,6 +13,9 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.signity.shopkeeperapp.R;
 import com.signity.shopkeeperapp.dashboard.categories.CategoriesAdapter;
 import com.signity.shopkeeperapp.model.Categories.GetCategoryData;
+import com.signity.shopkeeperapp.model.Product.GetProductData;
+import com.signity.shopkeeperapp.model.Product.SelectedVariant;
+import com.signity.shopkeeperapp.model.Product.Variant;
 import com.squareup.picasso.Picasso;
 
 import java.util.List;
@@ -25,7 +28,7 @@ public class ProductsAdapter extends RecyclerView.Adapter<ProductsAdapter.MyView
 
     // Define the listener interface
     public interface OnItemClickListener {
-        void onItemClick(View itemView, int position);
+        void onItemClick(View itemView, int position, GetProductData productData);
     }
 
     // Define the method that allows the parent activity or fragment to define the listener
@@ -34,13 +37,13 @@ public class ProductsAdapter extends RecyclerView.Adapter<ProductsAdapter.MyView
     }
 
 
-    private List<GetCategoryData> mData;
+    private List<GetProductData> mData;
     private LayoutInflater mInflater;
     ProductsAdapter.MyViewHolder holder;
 
     Context context;
 
-    public ProductsAdapter(Context context, List<GetCategoryData> data) {
+    public ProductsAdapter(Context context, List<GetProductData> data) {
         this.mData = data;
         this.mInflater = LayoutInflater.from(context);
         this.context = context;
@@ -61,14 +64,39 @@ public class ProductsAdapter extends RecyclerView.Adapter<ProductsAdapter.MyView
 
 
     @Override
-    public void onBindViewHolder(ProductsAdapter.MyViewHolder holder, int position) {
-        Log.i("@@CatregoriesData", "-------" + mData.size());
+    public void onBindViewHolder(final ProductsAdapter.MyViewHolder holder, final int position) {
+        Log.i("@@ProductData", "-------" + mData.size());
+        final GetProductData getProductData = mData.get(position);
+        String subProductImage = mData.get(position).getImage();
+        Log.i("-----------------", "" + subProductImage);
+        try {
+            if (subProductImage != null && !subProductImage.isEmpty()) {
 
-        //  holder.txtPriority.setText("Priority :" +mData.get(position).get );
+                Picasso.with(context).load(subProductImage).centerInside()
+                        .error(R.mipmap.ic_launcher).placeholder(R.drawable.ic_launcher).into(holder.imageCategory);
+            } else {
+                holder.imageCategory.setImageResource(R.mipmap.ic_launcher);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        String categoryIds = mData.get(position).getCategoryIds().toString();
+
+        holder.txtProductName.setText(mData.get(position).getTitle());
+    /*    List<Variant> varientData = mData.get(position).getVariants();
+        Log.i("@@@____", "" + varientData.toString());*/
+       /* Variant variantData = varientData.get(position);
+
+
+        holder.txtVarient.setText(variantData.getMrpPrice().toString());
+        holder.txtWeight.setText(variantData.getWeight().toString());
+        holder.txtDiscountPrice.setText(variantData.getDiscount().toString());*/
         holder.imageSettings.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View view) {
-
+            public void onClick(View v) {
+                // Triggers click upwards to the adapter on click
+                if (listener != null)
+                    listener.onItemClick(holder.imageSettings, position, getProductData);
             }
         });
     }
@@ -77,20 +105,19 @@ public class ProductsAdapter extends RecyclerView.Adapter<ProductsAdapter.MyView
     class MyViewHolder extends RecyclerView.ViewHolder {
 
         ImageView imageCategory, imageSettings;
-        TextView txtCategoriesName, txtSubcategoryTotal, txtPriority;
+        TextView txtProductName, txtProductType, txtPriority, txtVarient, txtWeight, txtLblQuantity, txtDiscountPrice;
 
         public MyViewHolder(final View convertView) {
             super(convertView);
             imageSettings = convertView.findViewById(R.id.imageSettings);
+            txtProductName = convertView.findViewById(R.id.txtProductName);
+            txtProductType = convertView.findViewById(R.id.txtProductType);
+            txtPriority = convertView.findViewById(R.id.txtPriority);
+            txtVarient = convertView.findViewById(R.id.txtVarient);
+            txtWeight = convertView.findViewById(R.id.txtWeight);
+            txtLblQuantity = convertView.findViewById(R.id.txtLblQuantity);
+            txtDiscountPrice = convertView.findViewById(R.id.txtDiscountPrice);
 
-            convertView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    // Triggers click upwards to the adapter on click
-                    if (listener != null)
-                        listener.onItemClick(convertView, getLayoutPosition());
-                }
-            });
         }
 
     }
