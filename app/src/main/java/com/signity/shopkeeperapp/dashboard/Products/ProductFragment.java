@@ -22,6 +22,8 @@ import com.signity.shopkeeperapp.dashboard.categories.CategoriesAdapter;
 import com.signity.shopkeeperapp.dashboard.categories.CategoriesFragment;
 import com.signity.shopkeeperapp.model.Categories.GetCategoryData;
 import com.signity.shopkeeperapp.model.Categories.GetCategoryResponse;
+import com.signity.shopkeeperapp.model.Product.GetProductData;
+import com.signity.shopkeeperapp.model.Product.GetProductResponse;
 import com.signity.shopkeeperapp.network.NetworkAdaper;
 import com.signity.shopkeeperapp.util.DialogUtils;
 import com.signity.shopkeeperapp.util.ProgressDialogUtil;
@@ -36,9 +38,9 @@ import retrofit.Callback;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
 
-public class ProductFragment extends Fragment implements View.OnClickListener {
+public class ProductFragment extends Fragment implements View.OnClickListener,ProductsAdapter.OnItemClickListener{
     public static final String TAG = "ProductFragment";
-    private List<GetCategoryData> categoryData = new ArrayList<>();
+    private List<GetProductData> categoryData = new ArrayList<>();
     ProductsAdapter categoriesAdapter;
     private RecyclerView recyclerViewProduct;
     private LinearLayoutManager layoutManager;
@@ -161,16 +163,16 @@ public class ProductFragment extends Fragment implements View.OnClickListener {
         param.put("cat_id", "0");
         param.put("sub_cat_ids", "0");
 
-        NetworkAdaper.getNetworkServices().getAllProducts(param, new Callback<GetCategoryResponse>() {
+        NetworkAdaper.getNetworkServices().getAllProducts(param, new Callback<GetProductResponse>() {
             @Override
-            public void success(GetCategoryResponse getCategoryResponse, Response response) {
+            public void success(GetProductResponse getProductResponse, Response response) {
 
                 ProgressDialogUtil.hideProgressDialog();
 
-                if (getCategoryResponse.getSuccess()) {
+                if (getProductResponse.getSuccess()) {
                     start += pageSize;
 
-                    categoryData = getCategoryResponse.getData();
+                    categoryData = getProductResponse.getData();
                     Log.i("@@------", "" + categoryData.size());
                     if (categoryData != null && categoryData.size() != 0) {
                         setUpAdapter();
@@ -181,6 +183,8 @@ public class ProductFragment extends Fragment implements View.OnClickListener {
                     }
 
                 } else {
+                    Toast.makeText(getActivity(), "Data not Found!", Toast.LENGTH_SHORT).show();
+
                 }
             }
 
@@ -197,6 +201,11 @@ public class ProductFragment extends Fragment implements View.OnClickListener {
         if (view == txtAddCategory) {
 
         }
+    }
+
+    @Override
+    public void onItemClick(View itemView, int position, GetProductData productData) {
+
     }
 }
 

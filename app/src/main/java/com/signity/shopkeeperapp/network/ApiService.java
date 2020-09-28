@@ -12,6 +12,7 @@ import com.signity.shopkeeperapp.model.MobResponse;
 import com.signity.shopkeeperapp.model.MobResponseLogin;
 import com.signity.shopkeeperapp.model.OrderItemResponseModel;
 import com.signity.shopkeeperapp.model.OtpVerifyModel;
+import com.signity.shopkeeperapp.model.Product.GetProductResponse;
 import com.signity.shopkeeperapp.model.ResponseForceUpdate;
 import com.signity.shopkeeperapp.model.SetOrdersModel;
 import com.signity.shopkeeperapp.model.StoresModel;
@@ -143,5 +144,5 @@ public interface ApiService {
     void getCategories(@FieldMap Map<String, Object> parameters, Callback<GetCategoryResponse> response);
     @FormUrlEncoded
     @POST("/getAllProducts")
-    void getAllProducts(@FieldMap Map<String, Object> parameters, Callback<GetCategoryResponse> response);
+    void getAllProducts(@FieldMap Map<String, Object> parameters, Callback<GetProductResponse> response);
 }

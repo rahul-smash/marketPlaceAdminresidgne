@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:background="@color/colorBackgroundGrey">
 
-    <FrameLayout
+    <LinearLayout
         android:id="@+id/linearMain"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -27,13 +27,12 @@
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="50dp"
             android:layout_below="@+id/linearRecycle"
             android:layout_gravity="bottom"
             android:layout_marginLeft="60dp"
-            android:layout_marginTop="15dp"
+            android:layout_marginTop="-85dp"
             android:layout_marginRight="60dp"
-            android:layout_marginBottom="40dp"
             android:orientation="vertical">
 
             <TextView
@@ -50,5 +49,5 @@
                 android:textColor="@color/colorWhite"
                 android:textSize="@dimen/text_normal" />
         </LinearLayout>
-    </FrameLayout>
+    </LinearLayout>
 </RelativeLayout>
