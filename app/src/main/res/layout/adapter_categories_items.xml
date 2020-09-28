@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/parent"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_marginStart="16dp"
     android:layout_marginTop="16dp"
     android:layout_marginEnd="16dp"
     android:background="@drawable/item_background_rounded"
-    android:padding="16dp"
-    android:id="@+id/parent">
+    android:padding="16dp">
 
     <ImageView
         android:id="@+id/imageCategory"
@@ -16,9 +16,7 @@
         android:layout_height="70dp"
         android:adjustViewBounds="true"
         android:scaleType="fitCenter"
-        android:src="@drawable/ic_launcher"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        android:src="@drawable/ic_launcher" />
 
     <TextView
         android:id="@+id/txtCategoriesName"
@@ -27,40 +25,37 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
         android:layout_marginLeft="16dp"
-        android:text="Coconut Cookies"
-        app:layout_constraintStart_toEndOf="@+id/imageCategory"
-        app:layout_constraintTop_toTopOf="parent" />
+        android:layout_toRightOf="@+id/imageCategory"
+        android:text="Coconut Cookies" />
 
     <TextView
         android:id="@+id/txtSubcategoryTotal"
         style="@style/AppTheme.TextView.Small"
-        android:layout_width="0dp"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_below="@+id/txtCategoriesName"
         android:layout_marginStart="16dp"
         android:layout_marginLeft="16dp"
-        android:text="ButterCookies"
-        app:layout_constraintStart_toEndOf="@+id/imageCategory"
-        app:layout_constraintTop_toBottomOf="@+id/txtCategoriesName" />
+        android:layout_toRightOf="@+id/imageCategory"
+        android:text="ButterCookies" />
 
     <TextView
         android:id="@+id/txtPriority"
         style="@style/AppTheme.TextView.Small"
-        android:layout_width="0dp"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_below="@+id/txtSubcategoryTotal"
         android:layout_marginStart="16dp"
         android:layout_marginLeft="16dp"
-        android:text="priority"
-        app:layout_constraintStart_toEndOf="@+id/imageCategory"
-        app:layout_constraintTop_toBottomOf="@+id/txtSubcategoryTotal" />
+        android:layout_toRightOf="@+id/imageCategory"
+        android:text="priority" />
 
     <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
         android:gravity="center"
-        android:orientation="vertical"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+        android:orientation="vertical">
 
         <ImageView
             android:id="@+id/imageSettings"
@@ -77,4 +72,4 @@
 
     </LinearLayout>
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+</RelativeLayout>
