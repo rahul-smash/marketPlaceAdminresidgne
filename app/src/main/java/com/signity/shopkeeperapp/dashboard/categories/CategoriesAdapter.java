@@ -13,6 +13,7 @@ import android.widget.LinearLayout;
 import android.widget.PopupWindow;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -104,7 +105,7 @@ public class CategoriesAdapter extends RecyclerView.Adapter<CategoriesAdapter.My
         holder.imageSettings.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                showOverViewPopMenu();
+               // showOverViewPopMenu();
 
                 View layout = LayoutInflater.from(context).inflate(R.layout.popup_delete, null, false);
                 final PopupWindow popupWindowOverView = new PopupWindow(layout, LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT, true);
@@ -131,18 +132,26 @@ public class CategoriesAdapter extends RecyclerView.Adapter<CategoriesAdapter.My
                 popups.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        Toast.makeText(context, "Pending work!", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(context, "Pending work Delete!", Toast.LENGTH_SHORT).show();
 
                     }
                 });
             }
         });
-        holder.parent.setOnClickListener(new View.OnClickListener() {
+        holder.relativeView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 // Triggers click upwards to the adapter on click
                 if (listener != null)
-                    listener.onItemClick(holder.parent, position, getCategoryData);
+                    listener.onItemClick(holder.relativeView, position, getCategoryData);
+            }
+        });
+        holder.imageCategory.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // Triggers click upwards to the adapter on click
+                if (listener != null)
+                    listener.onItemClick(holder.imageCategory, position, getCategoryData);
             }
         });
     }
@@ -152,11 +161,11 @@ public class CategoriesAdapter extends RecyclerView.Adapter<CategoriesAdapter.My
 
         ImageView imageCategory, imageSettings;
         TextView txtCategoriesName, txtSubcategoryTotal, txtPriority;
-        ConstraintLayout parent;
+        RelativeLayout relativeView;
 
         public MyViewHolder(final View convertView) {
             super(convertView);
-            parent = convertView.findViewById(R.id.parent);
+            relativeView = convertView.findViewById(R.id.relativeView);
             imageSettings = convertView.findViewById(R.id.imageSettings);
             txtPriority = convertView.findViewById(R.id.txtPriority);
             imageCategory = (ImageView) convertView.findViewById(R.id.imageCategory);

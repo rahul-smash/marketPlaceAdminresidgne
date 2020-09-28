@@ -18,37 +18,42 @@
         android:scaleType="fitCenter"
         android:src="@drawable/ic_launcher" />
 
-    <TextView
-        android:id="@+id/txtCategoriesName"
-        style="@style/AppTheme.TextView.Medium"
+    <RelativeLayout
+        android:id="@+id/relativeView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:layout_marginLeft="16dp"
-        android:layout_toRightOf="@+id/imageCategory"
-        android:text="Coconut Cookies" />
+        android:layout_toRightOf="@+id/imageCategory">
 
-    <TextView
-        android:id="@+id/txtSubcategoryTotal"
-        style="@style/AppTheme.TextView.Small"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/txtCategoriesName"
-        android:layout_marginStart="16dp"
-        android:layout_marginLeft="16dp"
-        android:layout_toRightOf="@+id/imageCategory"
-        android:text="ButterCookies" />
 
-    <TextView
-        android:id="@+id/txtPriority"
-        style="@style/AppTheme.TextView.Small"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/txtSubcategoryTotal"
-        android:layout_marginStart="16dp"
-        android:layout_marginLeft="16dp"
-        android:layout_toRightOf="@+id/imageCategory"
-        android:text="priority" />
+        <TextView
+            android:id="@+id/txtCategoriesName"
+            style="@style/AppTheme.TextView.Medium"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginLeft="16dp"
+            android:text="Coconut Cookies" />
+
+        <TextView
+            android:id="@+id/txtSubcategoryTotal"
+            style="@style/AppTheme.TextView.Small"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/txtCategoriesName"
+            android:layout_marginStart="16dp"
+            android:layout_marginLeft="16dp"
+            android:text="ButterCookies" />
+
+        <TextView
+            android:id="@+id/txtPriority"
+            style="@style/AppTheme.TextView.Small"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/txtSubcategoryTotal"
+            android:layout_marginStart="16dp"
+            android:layout_marginLeft="16dp"
+            android:text="priority" />
+    </RelativeLayout>
 
     <LinearLayout
         android:layout_width="wrap_content"
@@ -58,6 +63,7 @@
         android:orientation="vertical">
 
         <ImageView
+            android:padding="4dp"
             android:id="@+id/imageSettings"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
