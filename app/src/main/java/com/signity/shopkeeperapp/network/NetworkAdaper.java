@@ -33,8 +33,8 @@ public class NetworkAdaper {
 
     public static void setupRetrofitClient(String url) {
         OkHttpClient client = new OkHttpClient();
-        client.setConnectTimeout(40, TimeUnit.SECONDS);
-        client.setReadTimeout(40, TimeUnit.SECONDS);
+        client.setConnectTimeout(1, TimeUnit.MINUTES);
+        client.setReadTimeout(1, TimeUnit.MINUTES);
 
         RestAdapter restAdapter = new RestAdapter.Builder()
                 .setClient(new OkClient(client))
