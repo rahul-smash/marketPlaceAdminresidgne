@@ -1,4 +1,4 @@
-package com.signity.shopkeeperapp.Categories;
+package com.signity.shopkeeperapp.categories;
 
 import android.Manifest;
 import android.app.Activity;

@@ -1,4 +1,4 @@
-package com.signity.shopkeeperapp.Categories;
+package com.signity.shopkeeperapp.categories;
 
 import android.content.Context;
 import android.view.LayoutInflater;
