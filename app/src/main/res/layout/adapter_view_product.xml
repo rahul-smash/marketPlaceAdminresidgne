@@ -88,7 +88,7 @@
 
         <ImageView
             android:id="@+id/imageSettings"
-            android:layout_width="wrap_content"
+            android:layout_width="28dp"
             android:layout_height="wrap_content"
             android:padding="6dp"
             android:src="@drawable/moreicon" />
@@ -114,14 +114,24 @@
         android:layout_below="@+id/imageCategory"
         android:layout_marginTop="10dp">
 
+        <View
+            android:id="@+id/divider"
+            android:layout_width="30dp"
+            android:layout_height="1dp"
+            android:layout_alignLeft="@+id/txtLblQuantity"
+            android:layout_centerInParent="true"
+            android:layout_centerVertical="true"
+            android:layout_marginTop="14dp"
+            android:background="@color/divider"
+            android:visibility="visible" />
+
         <TextView
 
             android:id="@+id/txtLblQuantity"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="10dp"
-            android:layout_marginTop="10dp"
-            android:gravity="center"
+            android:gravity="top"
             android:text="3500"
             android:textSize="@dimen/text_small" />
 
@@ -131,9 +141,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="30dp"
-            android:layout_marginTop="10dp"
             android:layout_toRightOf="@+id/txtLblQuantity"
-            android:gravity="center"
+            android:gravity="top"
             android:text=" 450"
             android:textSize="@dimen/text_small" />
 
