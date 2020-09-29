@@ -18,6 +18,9 @@ import com.signity.shopkeeperapp.model.SetOrdersModel;
 import com.signity.shopkeeperapp.model.StoresModel;
 import com.signity.shopkeeperapp.model.dashboard.StoreDashboardResponse;
 
+import com.signity.shopkeeperapp.model.notification.DataResponse;
+import com.signity.shopkeeperapp.model.notification.NotificationModel;
+import com.signity.shopkeeperapp.model.notification.NotificationResponse;
 import com.signity.shopkeeperapp.model.orders.StoreOrdersReponse;
 import com.signity.shopkeeperapp.model.stores.StoresResponse;
 import com.signity.shopkeeperapp.model.verify.MobileOtpReponse;
@@ -56,6 +59,10 @@ public interface ApiService {
     @FormUrlEncoded
     @POST("/storeDashboardOrders")
     void getStoreOrdersNew(@FieldMap Map<String, Object> parameters, Callback<StoreOrdersReponse> response);
+
+    @FormUrlEncoded
+    @POST("/getStoreNotification")
+    void getStoreNotification(@FieldMap Map<String, Object> parameters, Callback<NotificationModel> response);
 
     @FormUrlEncoded
     @POST("/storeDashboardOrders")

@@ -69,7 +69,7 @@ public class NavDrawerAdapter extends BaseAdapter {
         boolean isSelected = position == selectedId;
 
         view.setVisibility(isSelected ? View.VISIBLE : View.GONE);
-        constraintLayoutNavItem.setBackgroundColor(ResourcesCompat.getColor(context.getResources(), isSelected ? R.color.colorBackgroundGrey : R.color.colorWhite, null));
+        constraintLayoutNavItem.setBackgroundColor(ResourcesCompat.getColor(context.getResources(), isSelected ? R.color.colorBackgroundGrey : android.R.color.transparent, null));
 
         convertView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -86,10 +86,10 @@ public class NavDrawerAdapter extends BaseAdapter {
     }
 
     public enum NavigationItems {
-        DASHBOARD("Dashboard", R.drawable.ordericonon),
-        ORDERS("Orders", R.drawable.ordericonon),
-        PRODUCTS("Products", R.drawable.ordericonon),
-        SWITCH_STORE("Switch Store", R.drawable.ordericonon);
+        DASHBOARD("Dashboard", R.drawable.dashboardicon),
+        ORDERS("Orders", R.drawable.ordersicon),
+        PRODUCTS("Products", R.drawable.producticon),
+        SWITCH_STORE("Switch Store", R.drawable.switchstoreicon);
 
         private String title;
         @DrawableRes

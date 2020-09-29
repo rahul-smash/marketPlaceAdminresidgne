@@ -52,6 +52,9 @@ public class HomeOrdersAdapter extends RecyclerView.Adapter<HomeOrdersAdapter.Vi
             case 5:
                 viewHolder = new ViewHolderDelivered(LayoutInflater.from(context).inflate(R.layout.itemview_orders_delivered, parent, false));
                 break;
+            case 2:
+                viewHolder = new ViewHolderRejected(LayoutInflater.from(context).inflate(R.layout.itemview_orders_rejected, parent, false));
+                break;
             case 0:
             default:
                 viewHolder = new ViewHolderPending(LayoutInflater.from(context).inflate(R.layout.itemview_orders_pending, parent, false));
@@ -73,7 +76,7 @@ public class HomeOrdersAdapter extends RecyclerView.Adapter<HomeOrdersAdapter.Vi
     }
 
     public void setOrderTypeFilter(OrderType orderTypeFilter) {
-        if (this.orderTypeFilter != orderTypeFilter){
+        if (this.orderTypeFilter != orderTypeFilter) {
             ordersListModels.clear();
         }
         this.orderTypeFilter = orderTypeFilter;
@@ -274,6 +277,18 @@ public class HomeOrdersAdapter extends RecyclerView.Adapter<HomeOrdersAdapter.Vi
     class ViewHolderDelivered extends ViewHolder {
 
         public ViewHolderDelivered(final View convertView) {
+            super(convertView);
+        }
+
+        @Override
+        public void bind(int position) {
+            super.bind(position);
+        }
+    }
+
+    class ViewHolderRejected extends ViewHolder {
+
+        public ViewHolderRejected(final View convertView) {
             super(convertView);
         }
 

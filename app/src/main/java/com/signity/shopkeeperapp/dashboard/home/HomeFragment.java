@@ -140,7 +140,7 @@ public class HomeFragment extends Fragment implements HomeContentAdapter.HomeCon
         Map<String, Object> param = new HashMap<>();
         param.put("order_type", orderType.getSlug());
         param.put("page", 1);
-        param.put("pagesize", 10);
+        param.put("pagelength", 10);
 
         progressBar.show();
         NetworkAdaper.getNetworkServices().getDashbaordStoreOrders(param, new Callback<StoreOrdersReponse>() {

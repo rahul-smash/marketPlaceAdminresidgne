@@ -10,6 +10,8 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.signity.shopkeeperapp.R;
+import com.signity.shopkeeperapp.model.notification.NotificationResponse;
+import com.signity.shopkeeperapp.util.Util;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -18,7 +20,7 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
 
     private Context context;
     private NotificationAdapterListener listener;
-    private List<String> notificationList = new ArrayList<>();
+    private List<NotificationResponse> notificationList = new ArrayList<>();
 
     public NotificationAdapter(Context context) {
         this.context = context;
@@ -38,15 +40,19 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
 
     @Override
     public int getItemCount() {
-        return 10;
+        return notificationList.size();
     }
 
     public void setListener(NotificationAdapterListener listener) {
         this.listener = listener;
     }
 
-    public void setNotificationList(List<String> dataResponses) {
-        this.notificationList = dataResponses;
+    public List<NotificationResponse> getNotificationList() {
+        return notificationList;
+    }
+
+    public void setNotificationList(List<NotificationResponse> dataResponses) {
+        this.notificationList.addAll(dataResponses);
         notifyDataSetChanged();
     }
 
@@ -56,16 +62,35 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
 
     public class ViewHolder extends RecyclerView.ViewHolder {
 
-        TextView textViewStoreName, textViewStoreAddress;
+        TextView textViewTag, textViewTitle, textViewMessage, textViewDate, textViewTime;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
-            textViewStoreName = itemView.findViewById(R.id.tv_store_name);
-            textViewStoreAddress = itemView.findViewById(R.id.tv_order_id);
+            textViewTag = itemView.findViewById(R.id.tv_notification_tag);
+            textViewTitle = itemView.findViewById(R.id.tv_notification_title);
+            textViewMessage = itemView.findViewById(R.id.tv_notification_message);
+            textViewDate = itemView.findViewById(R.id.tv_notification_date);
+            textViewTime = itemView.findViewById(R.id.tv_notification_time);
         }
 
         public void bind(int positon) {
 
+            NotificationResponse notificationResponse = notificationList.get(positon);
+
+            textViewTag.setText(notificationResponse.getType());
+            textViewTitle.setText(notificationResponse.getType());
+            textViewMessage.setText(notificationResponse.getMessage());
+            textViewDate.setText(Util.getOrderDate(notificationResponse.getCreated()));
+            textViewTime.setText(Util.getOrderTime(notificationResponse.getCreated()));
+
+            itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (listener != null) {
+                        listener.onClickNotification(getAdapterPosition());
+                    }
+                }
+            });
         }
     }
 }

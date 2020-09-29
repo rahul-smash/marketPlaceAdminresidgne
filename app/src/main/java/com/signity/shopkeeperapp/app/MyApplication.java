@@ -5,6 +5,10 @@ import android.app.Application;
 import android.os.Bundle;
 import android.util.Log;
 
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.FirebaseApp;
+import com.google.firebase.iid.FirebaseInstanceId;
+import com.google.firebase.iid.InstanceIdResult;
 import com.signity.shopkeeperapp.network.NetworkAdaper;
 import com.signity.shopkeeperapp.util.PrefManager;
 import com.signity.shopkeeperapp.util.prefs.AppPreference;
@@ -21,8 +25,10 @@ public class MyApplication extends Application implements Application.ActivityLi
     @Override
     public void onCreate() {
         super.onCreate();
+        FirebaseApp.initializeApp(this);
         prefManager = new PrefManager(this);
         initSingletons();
+        saveDeviceToken();
         registerActivityLifecycleCallbacks(this);
     }
 
@@ -81,5 +87,18 @@ public class MyApplication extends Application implements Application.ActivityLi
 
     }
 
+    private void saveDeviceToken() {
+        try {
+            FirebaseInstanceId.getInstance().getInstanceId().addOnSuccessListener(new OnSuccessListener<InstanceIdResult>() {
+                @Override
+                public void onSuccess(InstanceIdResult instanceIdResult) {
+                    AppPreference.getInstance().setDeviceToken(instanceIdResult.getToken());
+                    Log.d("TAG", "onSuccess: " + instanceIdResult.getToken());
+                }
+            });
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
 
 }

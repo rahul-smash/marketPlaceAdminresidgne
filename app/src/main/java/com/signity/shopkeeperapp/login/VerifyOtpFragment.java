@@ -37,7 +37,6 @@ import com.signity.shopkeeperapp.model.verify.MobileOtpReponse;
 import com.signity.shopkeeperapp.model.verify.OtpVerifyResponse;
 import com.signity.shopkeeperapp.network.NetworkAdaper;
 import com.signity.shopkeeperapp.util.Constant;
-import com.signity.shopkeeperapp.util.PrefManager;
 import com.signity.shopkeeperapp.util.ProgressDialogUtil;
 import com.signity.shopkeeperapp.util.Util;
 import com.signity.shopkeeperapp.util.prefs.AppPreference;
@@ -403,8 +402,7 @@ public class VerifyOtpFragment extends Fragment {
         String deviceId = Settings.Secure.getString(getActivity().getApplicationContext().getContentResolver(), Settings.Secure.ANDROID_ID);
         String mobile = Util.loadPreferenceValue(getContext(), Constant.LOGIN_USER_MOBILE_NUMBER);
 
-        PrefManager prefManager = new PrefManager(getContext());
-        String deviceToken = prefManager.getSharedValue(Constant.DEVICE_TOKEN);
+        String deviceToken = AppPreference.getInstance().getDeviceToken();
 
         Map<String, String> param = new HashMap<String, String>();
         param.put("phone", mobile);
@@ -442,8 +440,8 @@ public class VerifyOtpFragment extends Fragment {
         ProgressDialogUtil.showProgressDialog(getActivity());
 
         String deviceId = Settings.Secure.getString(getActivity().getApplicationContext().getContentResolver(), Settings.Secure.ANDROID_ID);
-        String mobile = Util.loadPreferenceValue(getContext(), Constant.LOGIN_USER_MOBILE_NUMBER);
-        String deviceToken = Util.loadPreferenceValue(getActivity(), Constant.DEVICE_TOKEN);
+        String mobile = AppPreference.getInstance().getUserMobile();
+        String deviceToken = AppPreference.getInstance().getDeviceToken();
 
         Map<String, String> param = new HashMap<String, String>();
         param.put("phone", mobile);

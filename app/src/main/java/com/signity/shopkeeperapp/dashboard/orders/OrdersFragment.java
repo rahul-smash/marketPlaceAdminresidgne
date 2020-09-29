@@ -74,7 +74,6 @@ public class OrdersFragment extends Fragment implements HomeOrdersAdapter.Orders
                 if ((visibleItemCount + firstVisibleItemPosition) >= totalItemCount
                         && firstVisibleItemPosition >= 0 && totalItemCount >= pageSize) {
                     if (start < totalOrders) {
-                        currentPageNumber++;
                         getAllOrdersMethod();
                     }
                 }
@@ -165,7 +164,7 @@ public class OrdersFragment extends Fragment implements HomeOrdersAdapter.Orders
         Map<String, Object> param = new HashMap<>();
         param.put("order_type", orderTypeFilter.getSlug());
         param.put("page", currentPageNumber);
-        param.put("pagesize", pageSize);
+        param.put("pagelength", pageSize);
 
         NetworkAdaper.getNetworkServices().getStoreOrdersNew(param, new Callback<StoreOrdersReponse>() {
             @Override
@@ -174,6 +173,7 @@ public class OrdersFragment extends Fragment implements HomeOrdersAdapter.Orders
                 ProgressDialogUtil.hideProgressDialog();
 
                 if (getValues.isSuccess()) {
+                    currentPageNumber++;
                     start += pageSize;
                     orderListModel = getValues.getData().getOrders();
                     totalOrders = getValues.getData().getOrdersTotal();

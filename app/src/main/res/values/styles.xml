@@ -133,14 +133,14 @@
         <item name="android:textColor">@color/colorShipped</item>
         <item name="chipStrokeColor">@color/colorShipped</item>
         <item name="chipBackgroundColor">@color/colorWhite</item>
-        <item name="chipIcon">@drawable/accepticon</item>
+        <item name="chipIcon">@drawable/shippedicon</item>
     </style>
 
     <style name="AppTheme.Chip.Small.Deliver" parent="AppTheme.Chip.Small">
         <item name="android:textColor">@color/colorPrimary</item>
         <item name="chipStrokeColor">@color/colorPrimary</item>
         <item name="chipBackgroundColor">@color/colorWhite</item>
-        <item name="chipIcon">@drawable/accepticon</item>
+        <item name="chipIcon">@drawable/deliveredicon</item>
     </style>
 
 </resources>

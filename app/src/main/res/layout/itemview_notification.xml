@@ -18,7 +18,7 @@
             android:id="@+id/iv_notification_icon"
             android:layout_width="42dp"
             android:layout_height="42dp"
-            android:src="@drawable/addimageicon"
+            android:src="@drawable/transactionicon"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
@@ -43,6 +43,7 @@
             android:layout_marginEnd="16dp"
             android:maxLines="1"
             android:text="You have received "
+            android:visibility="gone"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@+id/iv_notification_icon"
             app:layout_constraintTop_toBottomOf="@+id/tv_notification_tag" />
@@ -54,6 +55,7 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="16dp"
             android:layout_marginEnd="16dp"
+            android:ellipsize="end"
             android:maxLines="2"
             android:text="You have received one appointment request for 12-01-2020 at 9am from Neha"
             app:layout_constraintEnd_toEndOf="parent"
@@ -65,7 +67,7 @@
             android:layout_width="14dp"
             android:layout_height="14dp"
             android:layout_marginTop="8dp"
-            android:src="@drawable/addimageicon"
+            android:src="@drawable/dateicon"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="@+id/tv_notification_message"
             app:layout_constraintTop_toBottomOf="@+id/tv_notification_message" />
@@ -77,7 +79,7 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
             android:layout_marginLeft="8dp"
-            android:text="13 Dec,2019"
+            android:text=""
             app:layout_constraintBottom_toBottomOf="@+id/iv_calendar"
             app:layout_constraintStart_toEndOf="@+id/iv_calendar"
             app:layout_constraintTop_toTopOf="@+id/iv_calendar" />
@@ -89,7 +91,7 @@
             android:layout_height="14dp"
             android:layout_marginStart="8dp"
             android:layout_marginLeft="8dp"
-            android:src="@drawable/addimageicon"
+            android:src="@drawable/timeicon"
             app:layout_constraintBottom_toBottomOf="@+id/view_dot"
             app:layout_constraintStart_toEndOf="@+id/view_dot"
             app:layout_constraintTop_toTopOf="@+id/view_dot" />
@@ -101,7 +103,7 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
             android:layout_marginLeft="8dp"
-            android:text="09:10 AM"
+            android:text=""
             app:layout_constraintBottom_toBottomOf="@+id/iv_clock"
             app:layout_constraintStart_toEndOf="@+id/iv_clock"
             app:layout_constraintTop_toTopOf="@+id/iv_clock" />

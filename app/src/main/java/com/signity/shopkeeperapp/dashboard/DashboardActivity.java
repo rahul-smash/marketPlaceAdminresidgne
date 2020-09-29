@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
@@ -33,6 +34,7 @@ import com.signity.shopkeeperapp.util.prefs.AppPreference;
 
 public class DashboardActivity extends AppCompatActivity implements BottomNavigationView.OnNavigationItemSelectedListener, HomeFragment.HomeFragmentListener, NavDrawerAdapter.NavigationListener {
 
+    private static final String TAG = "DashboardActivity";
     public BottomNavigationView bottomNavigationView;
     private DrawerLayout drawerLayout;
     private ActionBarDrawerToggle mDrawerToggle;
@@ -59,6 +61,8 @@ public class DashboardActivity extends AppCompatActivity implements BottomNaviga
         setUpNavigationAdapter();
         setUpDrawerToggle();
         setUpBottomNavigation();
+
+        Log.d(TAG, "onCreate: " + AppPreference.getInstance().getDeviceToken());
     }
 
     private void setUpStoreData() {

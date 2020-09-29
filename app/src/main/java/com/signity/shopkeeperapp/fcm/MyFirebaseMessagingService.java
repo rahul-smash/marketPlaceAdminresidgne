@@ -26,6 +26,7 @@ import com.signity.shopkeeperapp.SplashActivity;
 import com.signity.shopkeeperapp.app.DataAdapter;
 import com.signity.shopkeeperapp.notifications.NotificationActivity;
 import com.signity.shopkeeperapp.util.PrefManager;
+import com.signity.shopkeeperapp.util.prefs.AppPreference;
 
 import java.util.Random;
 
@@ -187,6 +188,12 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
         NotificationManagerCompat notificationManager = NotificationManagerCompat.from(this);
         Notification notificationOreo = builder.build();
         notificationManager.notify(NOTIFY_ID, notificationOreo);
+    }
+
+    @Override
+    public void onNewToken(String token) {
+        Log.d(TAG, "Refreshed token: " + token);
+        AppPreference.getInstance().setDeviceToken(token);
     }
 
 }

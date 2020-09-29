@@ -32,7 +32,6 @@ import com.signity.shopkeeperapp.model.OrdersListModel;
 import com.signity.shopkeeperapp.network.NetworkAdaper;
 import com.signity.shopkeeperapp.util.AnimUtil;
 import com.signity.shopkeeperapp.util.Constant;
-import com.signity.shopkeeperapp.util.DialogHandler;
 import com.signity.shopkeeperapp.util.DialogUtils;
 import com.signity.shopkeeperapp.util.PrefManager;
 import com.signity.shopkeeperapp.util.ProgressDialogUtil;
@@ -164,7 +163,9 @@ public class OrderDetailActivity extends AppCompatActivity implements View.OnCli
         } else {
             txtnoteValue.setText(note);
         }
-        txtTotalPrice.setText(Util.getCurrency(getApplicationContext()) + "" + Util.getDoubleValue(ordersListModel.getTotal()));
+
+        txtTotalPrice.setText(Util.getPriceWithCurrency(ordersListModel.getTotal(), AppPreference.getInstance().getCurrency()));
+        txtCartSavings.setText(Util.getPriceWithCurrency(ordersListModel.getDiscount(), AppPreference.getInstance().getCurrency()));
         txtStausVal.setText(ordersListModel.getStatus());
         //  txtItems.setText(listItem.size());
         if (ordersListModel.getStatus().equalsIgnoreCase("1")) {
@@ -172,10 +173,9 @@ public class OrderDetailActivity extends AppCompatActivity implements View.OnCli
         } else if (ordersListModel.getStatus().equalsIgnoreCase("4")) {
             txtStausVal.setText("Shipping");
         } else if (ordersListModel.getStatus().equalsIgnoreCase("5")) {
-            Log.i("@@DeleiverdOrder__", "order.getStatus()");
             txtStausVal.setText("Delivered");
         } else if (ordersListModel.getStatus().equalsIgnoreCase("0")) {
-            txtStausVal.setText("Due Orders");
+            txtStausVal.setText("Pending");
         } else if (ordersListModel.getStatus().equalsIgnoreCase("2")) {
             txtStausVal.setText("Rejected");
         } else if (ordersListModel.getStatus().equalsIgnoreCase("6")) {
@@ -286,16 +286,17 @@ public class OrderDetailActivity extends AppCompatActivity implements View.OnCli
         param.put("item_ids", itemID);
         param.put("item_status", status);
 
-        NetworkAdaper.getInstance().getNetworkServices().setOrderItemStatus(param, new Callback<OrderItemResponseModel>() {
+        NetworkAdaper.getNetworkServices().setOrderItemStatus(param, new Callback<OrderItemResponseModel>() {
             @Override
             public void success(OrderItemResponseModel orderItemResponseModel, Response response) {
                 ProgressDialogUtil.hideProgressDialog();
-                if (orderItemResponseModel.getSuccess() != null ? orderItemResponseModel.getSuccess() : false) {
+                if (orderItemResponseModel.getSuccess()) {
                     prefManager.storeSharedValue(Constant.REFERESH_DATA_REQURIED, "1");
                     OrdersListModel ordersListModelTemp = orderItemResponseModel.getOrdersListModel();
                     if (ordersListModelTemp != null) {
                         ordersListModel = ordersListModelTemp;
-                        //  updateView(ordersListModel);
+                        setOrderDetails();
+                        adapter.setListItem(ordersListModel.getItems());
                     }
                 }
             }
@@ -303,8 +304,6 @@ public class OrderDetailActivity extends AppCompatActivity implements View.OnCli
             @Override
             public void failure(RetrofitError error) {
                 ProgressDialogUtil.hideProgressDialog();
-                DialogUtils.showAlertDialog(getApplicationContext(),
-                        Constant.APP_TITLE, "Error Occurred, Try again later.");
             }
         });
 
@@ -335,6 +334,10 @@ public class OrderDetailActivity extends AppCompatActivity implements View.OnCli
         return super.onOptionsItemSelected(item);
     }
 
+    public void updateListItem(List<ItemListModel> listItem) {
+        this.listItem = listItem;
+    }
+
     /* Listadapter   */
     class OrderDetailAdapter extends BaseAdapter {
 
@@ -350,6 +353,11 @@ public class OrderDetailActivity extends AppCompatActivity implements View.OnCli
             this.context = context;
             this.listItem = listItem;
 
+        }
+
+        public void setListItem(List<ItemListModel> listItem) {
+            this.listItem = listItem;
+            notifyDataSetChanged();
         }
 
         @Override
@@ -381,12 +389,12 @@ public class OrderDetailActivity extends AppCompatActivity implements View.OnCli
                 holder.itemQuantiy = (TextView) convertView.findViewById(R.id.tv_product_quantity);
                 holder.txtWeight = (TextView) convertView.findViewById(R.id.tv_product_weight);
                 holder.itemsTotal = (TextView) convertView.findViewById(R.id.tv_product_total);
+                holder.itemsStatus = (TextView) convertView.findViewById(R.id.tv_product_status);
                 holder.toggle = convertView.findViewById(R.id.switch_product);
                 convertView.setTag(holder);
             } else {
                 holder = (OrderDetailAdapter.ViewHolder) convertView.getTag();
             }
-
 
             final ItemListModel item = listItem.get(position);
             Log.i("@@OrderDetailFrag", "-----" + item.getName());
@@ -394,6 +402,10 @@ public class OrderDetailActivity extends AppCompatActivity implements View.OnCli
             holder.itemPrice.setText(String.format(Locale.getDefault(), "Price: %s", Util.getPriceWithCurrency(item.getPrice(), AppPreference.getInstance().getCurrency())));
             holder.itemQuantiy.setText("Qty: " + item.getQuantity());
             Log.i("@@OrderDetailag___000", "-----" + item.getImage());
+
+            if (!ordersListModel.getStatus().equals("0")) {
+                holder.toggle.setEnabled(false);
+            }
 
             if (item.getImage() != null && !item.getImage().isEmpty()) {
                 Log.i("@@ImageShowing", "-----" + item.getImage());
@@ -416,10 +428,12 @@ public class OrderDetailActivity extends AppCompatActivity implements View.OnCli
             }
             if (item.getStatus().equalsIgnoreCase("2")) {
                 totalItemRejected = totalItemRejected + 1;
-                holder.toggle.setSelected(false);
+                holder.toggle.setChecked(false);
+                holder.itemsStatus.setText("Reject");
             } else {
                 totalItemSelected = totalItemSelected + 1;
-                holder.toggle.setSelected(true);
+                holder.toggle.setChecked(true);
+                holder.itemsStatus.setText("Accept");
             }
 
             Double itemsTotal = 0.00;
@@ -428,43 +442,16 @@ public class OrderDetailActivity extends AppCompatActivity implements View.OnCli
             holder.toggle.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-
-
                     if (item.getStatus().equalsIgnoreCase("2")) {
                         callOrderItemStatus(item.getItemId(), "1");
                     } else {
-                        if (totalItemRejected == getCount() - 1) {
-                            String message = "Kindly Accept atleast one item to proceed or else Reject the Complete Order.";
-
-                            final DialogHandler dialogHandler = new DialogHandler(OrderDetailActivity.this);
-
-                            dialogHandler.setDialog(Constant.APP_TITLE, message);
-                            dialogHandler.setPostiveButton("OK", true)
-                                    .setOnClickListener(new View.OnClickListener() {
-                                        @Override
-                                        public void onClick(View view) {
-                                            dialogHandler.dismiss();
-                                        }
-                                    });
-
-                        } else {
-                            callOrderItemStatus(item.getItemId(), "2");
-                        }
+                        callOrderItemStatus(item.getItemId(), "2");
                     }
-
-
                 }
             });
 
 
             return convertView;
-        }
-
-        public void updateListItem(List<ItemListModel> listItem) {
-            this.listItem = listItem;
-            totalItemSelected = 0;
-            totalItemRejected = 0;
-            notifyDataSetChanged();
         }
 
         class ViewHolder {
@@ -474,6 +461,7 @@ public class OrderDetailActivity extends AppCompatActivity implements View.OnCli
             TextView txtWeight;
             TextView itemQuantiy;
             TextView itemsTotal;
+            TextView itemsStatus;
             Switch toggle;
         }
     }

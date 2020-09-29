@@ -18,7 +18,11 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Currency;
+import java.util.Date;
+import java.util.Locale;
 
 /**
  * Created by Rajinder on 30/9/15.
@@ -258,5 +262,39 @@ public class Util {
         } catch (Exception e) {
             return currencyCode;
         }
+    }
+
+    public static String getOrderTime(String time) {
+        String output = "";
+
+        SimpleDateFormat inputFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault());
+        SimpleDateFormat outputFormat = new SimpleDateFormat("hh:mm a", Locale.getDefault());
+        try {
+            Date date = inputFormat.parse(time);
+            if (date != null) {
+                output = outputFormat.format(date);
+            }
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+
+        return output;
+    }
+
+    public static String getOrderDate(String format) {
+        String output = "";
+
+        SimpleDateFormat inputFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault());
+        SimpleDateFormat outputFormat = new SimpleDateFormat("dd MMM, yyyy", Locale.getDefault());
+        try {
+            Date date = inputFormat.parse(format);
+            if (date != null) {
+                output = outputFormat.format(date);
+            }
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+
+        return output;
     }
 }

@@ -167,8 +167,7 @@ public class LoginMobileFragment extends Fragment {
         ProgressDialogUtil.showProgressDialog(getActivity());
         String deviceId = Settings.Secure.getString(getActivity().getApplicationContext().getContentResolver(), Settings.Secure.ANDROID_ID);
 
-        PrefManager prefManager = new PrefManager(getContext());
-        String deviceToken = prefManager.getSharedValue(Constant.DEVICE_TOKEN);
+        String deviceToken = AppPreference.getInstance().getDeviceToken();
 
         Map<String, String> param = new HashMap<String, String>();
         param.put("phone", mobileNumber);
