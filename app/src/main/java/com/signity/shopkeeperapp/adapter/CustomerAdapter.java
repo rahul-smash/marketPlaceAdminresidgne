@@ -38,6 +38,7 @@ public class CustomerAdapter extends BaseAdapter implements Filterable {
         this.inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
     }
 
+
     @Override
     public long getItemId(int i) {
         return i;
