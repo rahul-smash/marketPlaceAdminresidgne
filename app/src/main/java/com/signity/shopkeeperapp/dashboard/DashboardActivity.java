@@ -2,8 +2,10 @@ package com.signity.shopkeeperapp.dashboard;
 
 import android.content.Context;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
@@ -27,10 +29,21 @@ import com.google.android.material.badge.BadgeDrawable;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.signity.shopkeeperapp.BuildConfig;
 import com.signity.shopkeeperapp.R;
+import com.signity.shopkeeperapp.dashboard.Products.ProductFragment;
+import com.signity.shopkeeperapp.dashboard.account.AccountFragment;
+import com.signity.shopkeeperapp.dashboard.categories.CategoriesFragment;
 import com.signity.shopkeeperapp.dashboard.home.HomeFragment;
 import com.signity.shopkeeperapp.dashboard.orders.OrdersFragment;
+import com.signity.shopkeeperapp.model.ModelForceUpdate;
+import com.signity.shopkeeperapp.model.ResponseForceUpdate;
+import com.signity.shopkeeperapp.network.NetworkAdaper;
 import com.signity.shopkeeperapp.stores.StoresActivity;
+import com.signity.shopkeeperapp.util.DialogHandler;
 import com.signity.shopkeeperapp.util.prefs.AppPreference;
+
+import retrofit.Callback;
+import retrofit.RetrofitError;
+import retrofit.client.Response;
 
 public class DashboardActivity extends AppCompatActivity implements BottomNavigationView.OnNavigationItemSelectedListener, HomeFragment.HomeFragmentListener, NavDrawerAdapter.NavigationListener {
 
@@ -61,8 +74,6 @@ public class DashboardActivity extends AppCompatActivity implements BottomNaviga
         setUpNavigationAdapter();
         setUpDrawerToggle();
         setUpBottomNavigation();
-
-        Log.d(TAG, "onCreate: " + AppPreference.getInstance().getDeviceToken());
     }
 
     private void setUpStoreData() {
@@ -150,38 +161,38 @@ public class DashboardActivity extends AppCompatActivity implements BottomNaviga
     protected void onResume() {
         super.onResume();
         navDrawerAdapter.setSelectedId(navSelectedId);
+        checkForceDownload();
     }
 
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
+        menuItem.setChecked(true);
         switch (menuItem.getItemId()) {
             case R.id.action_bottom_home:
                 navSelectedId = 0;
                 navDrawerAdapter.setSelectedId(navSelectedId);
                 textViewToolbarTitle.setText("");
-                menuItem.setChecked(true);
                 showFragment(HomeFragment.getInstance(null), HomeFragment.TAG);
                 break;
             case R.id.action_bottom_orders:
                 navSelectedId = 1;
                 navDrawerAdapter.setSelectedId(navSelectedId);
                 textViewToolbarTitle.setText("Orders");
-                menuItem.setChecked(true);
                 showFragment(OrdersFragment.getInstance(null), OrdersFragment.TAG);
                 break;
             case R.id.action_bottom_products:
-                Toast.makeText(this, "Coming Soon!", Toast.LENGTH_SHORT).show();
-//                toolbarTitle.setText("Products");
-//                showFragment(ProductFragment.getInstance(null), ProductFragment.TAG);
+                navSelectedId = 2;
+                navDrawerAdapter.setSelectedId(navSelectedId);
+                textViewToolbarTitle.setText("Products");
+                showFragment(ProductFragment.getInstance(null), ProductFragment.TAG);
                 break;
             case R.id.action_bottom_categories:
-                Toast.makeText(this, "Coming Soon!", Toast.LENGTH_SHORT).show();
-//                toolbarTitle.setText("Categories");
-//                showFragment(CategoriesFragment.getInstance(null), CategoriesFragment.TAG);
+                textViewToolbarTitle.setText("Categories");
+                showFragment(CategoriesFragment.getInstance(null), CategoriesFragment.TAG);
                 break;
             case R.id.action_bottom_account:
-                Toast.makeText(this, "Coming Soon!", Toast.LENGTH_SHORT).show();
-//                toolbarTitle.setText("Account");
+                textViewToolbarTitle.setText("Account");
+                showFragment(AccountFragment.getInstance(null), AccountFragment.TAG);
                 break;
         }
         return false;
@@ -239,12 +250,102 @@ public class DashboardActivity extends AppCompatActivity implements BottomNaviga
                 bottomNavigationView.setSelectedItemId(R.id.action_bottom_orders);
                 break;
             case PRODUCTS:
-                Toast.makeText(this, "Coming Soon!", Toast.LENGTH_SHORT).show();
+                bottomNavigationView.setSelectedItemId(R.id.action_bottom_products);
                 break;
             case SWITCH_STORE:
                 startActivity(StoresActivity.getStartIntent(DashboardActivity.this));
                 break;
         }
         toggleDrawer();
+    }
+
+    private void checkForceDownload() {
+        NetworkAdaper.getNetworkServices().forceDownload(new Callback<ResponseForceUpdate>() {
+            @Override
+            public void success(ResponseForceUpdate responseForceUpdate, Response response) {
+                if (responseForceUpdate != null && responseForceUpdate.getSuccess()) {
+                    try {
+                        ModelForceUpdate forceUpdate = responseForceUpdate.getData().get(0);
+                        checkForceUpdate(forceUpdate);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+
+            @Override
+            public void failure(RetrofitError error) {
+            }
+        });
+    }
+
+    private void checkForceUpdate(ModelForceUpdate forceUpdate) {
+
+        String currentVersion;
+        String playStoreVersion;
+        if (forceUpdate != null) {
+            currentVersion = BuildConfig.VERSION_NAME;
+            playStoreVersion = forceUpdate.getAndroidAppVerison();
+
+            if (!TextUtils.isEmpty(playStoreVersion)) {
+                try {
+                    double playVersion = Double.parseDouble(playStoreVersion);
+
+                    double appVersion = Double.parseDouble(currentVersion);
+                    Log.i("@@playversion", "" + playVersion);
+                    Log.i("@@appVersion", "" + appVersion);
+
+                    if (playVersion > appVersion) {
+                        openDialogForVersion(forceUpdate);
+                    }
+                } catch (NumberFormatException e) {
+                    e.printStackTrace();
+                }
+            }
+
+        }
+
+    }
+
+    private void openDialogForVersion(ModelForceUpdate forceUpdate) {
+        if (forceUpdate.getForceDownload() != null) {
+            final DialogHandler dialogHandler = new DialogHandler(this);
+            dialogHandler.setDialog("APPLICATION UPDATE", forceUpdate.getForceDownloadMessage());
+            if (forceUpdate.getForceDownload().equalsIgnoreCase("1")) {
+                dialogHandler.setCancelable(false);
+                dialogHandler.setPostiveButton("Update", true).setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        openPlayStoreLink();
+                        dialogHandler.dismiss();
+                    }
+
+                });
+            } else {
+                dialogHandler.setNegativeButton("Cancel", true).setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        dialogHandler.dismiss();
+                    }
+                });
+                dialogHandler.setPostiveButton("Update", true).setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        openPlayStoreLink();
+                        dialogHandler.dismiss();
+                    }
+                });
+            }
+        }
+    }
+
+    private void openPlayStoreLink() {
+        final String appPackageName = BuildConfig.APPLICATION_ID; // getPackageName() from Context or Activity object
+        Log.i("@@openPlayStoreLink", "" + appPackageName);
+        try {
+            startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id=" + appPackageName)));
+        } catch (android.content.ActivityNotFoundException anfe) {
+            startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("http://play.google.com/store/apps/details?id=" + appPackageName)));
+        }
     }
 }

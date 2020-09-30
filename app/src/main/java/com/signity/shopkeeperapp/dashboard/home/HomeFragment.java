@@ -33,6 +33,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.google.android.material.chip.Chip;
 import com.google.android.material.chip.ChipGroup;
 import com.signity.shopkeeperapp.R;
+import com.signity.shopkeeperapp.adapter.SpacesItemDecoration;
 import com.signity.shopkeeperapp.dashboard.DashboardActivity;
 import com.signity.shopkeeperapp.dashboard.orders.HomeOrdersAdapter;
 import com.signity.shopkeeperapp.dashboard.orders.OrderDetailActivity;
@@ -45,6 +46,7 @@ import com.signity.shopkeeperapp.notifications.NotificationActivity;
 import com.signity.shopkeeperapp.util.AnimUtil;
 import com.signity.shopkeeperapp.util.Constant;
 import com.signity.shopkeeperapp.util.ProgressDialogUtil;
+import com.signity.shopkeeperapp.util.Util;
 import com.signity.shopkeeperapp.util.prefs.AppPreference;
 
 import java.util.ArrayList;
@@ -74,9 +76,11 @@ public class HomeFragment extends Fragment implements HomeContentAdapter.HomeCon
 
     private HomeFragmentListener listener;
     private List<OrdersListModel> ordersListModels = new ArrayList<>();
-    private int notificationCount = 12;
+    private int notificationCount;
     @IdRes
     private int checkedId;
+    private HomeOrdersAdapter.OrderType orderType = HomeOrdersAdapter.OrderType.ALL;
+    private Constant.StoreDashboard typeofDay = Constant.StoreDashboard.TODAY;
 
     public static HomeFragment getInstance(Bundle bundle) {
         HomeFragment fragment = new HomeFragment();
@@ -115,7 +119,6 @@ public class HomeFragment extends Fragment implements HomeContentAdapter.HomeCon
         super.onActivityCreated(savedInstanceState);
         setUpAdapter();
         setUpStoreData();
-        getOrders(HomeOrdersAdapter.OrderType.ALL);
     }
 
     private void setUpStoreData() {
@@ -133,10 +136,11 @@ public class HomeFragment extends Fragment implements HomeContentAdapter.HomeCon
     @Override
     public void onResume() {
         super.onResume();
-        storeDashboard(Constant.StoreDashboard.TODAY);
+        storeDashboard();
+        getOrders();
     }
 
-    public void getOrders(final HomeOrdersAdapter.OrderType orderType) {
+    public void getOrders() {
         Map<String, Object> param = new HashMap<>();
         param.put("order_type", orderType.getSlug());
         param.put("page", 1);
@@ -167,7 +171,7 @@ public class HomeFragment extends Fragment implements HomeContentAdapter.HomeCon
         });
     }
 
-    public void storeDashboard(final Constant.StoreDashboard typeofDay) {
+    public void storeDashboard() {
         Map<String, Integer> param = new HashMap<>();
         param.put("days_filder", typeofDay.getDays());
 
@@ -205,6 +209,7 @@ public class HomeFragment extends Fragment implements HomeContentAdapter.HomeCon
         homeOrdersAdapter.setListener(this);
         recyclerViewOrders.setAdapter(homeOrdersAdapter);
         recyclerViewOrders.setLayoutManager(new LinearLayoutManager(getContext()));
+        recyclerViewOrders.addItemDecoration(new SpacesItemDecoration((int) Util.pxFromDp(getContext(), 16)));
     }
 
     private void init(View view) {
@@ -233,21 +238,22 @@ public class HomeFragment extends Fragment implements HomeContentAdapter.HomeCon
             public void onCheckedChanged(ChipGroup group, int checkedId) {
                 switch (checkedId) {
                     case R.id.chip_all:
-                        getOrders(HomeOrdersAdapter.OrderType.ALL);
+                        orderType = HomeOrdersAdapter.OrderType.ALL;
                         break;
                     case R.id.chip_pending:
-                        getOrders(HomeOrdersAdapter.OrderType.PENDING);
+                        orderType = HomeOrdersAdapter.OrderType.PENDING;
                         break;
                     case R.id.chip_accepted:
-                        getOrders(HomeOrdersAdapter.OrderType.ACCEPTED);
+                        orderType = HomeOrdersAdapter.OrderType.ACCEPTED;
                         break;
                     case R.id.chip_shipped:
-                        getOrders(HomeOrdersAdapter.OrderType.SHIPPED);
+                        orderType = HomeOrdersAdapter.OrderType.SHIPPED;
                         break;
                     case R.id.chip_delivered:
-                        getOrders(HomeOrdersAdapter.OrderType.DELIVERED);
+                        orderType = HomeOrdersAdapter.OrderType.DELIVERED;
                         break;
                 }
+                getOrders();
             }
         });
 
@@ -345,20 +351,19 @@ public class HomeFragment extends Fragment implements HomeContentAdapter.HomeCon
 
                 View radioButton = rdGroup.findViewById(checkedId);
                 int index = rdGroup.indexOfChild(radioButton);
-
                 HomeFragment.this.checkedId = checkedId;
-                // Add logic here
                 switch (index) {
                     case 0:
-                        storeDashboard(Constant.StoreDashboard.TODAY);
+                        typeofDay = Constant.StoreDashboard.TODAY;
                         break;
                     case 1:
-                        storeDashboard(Constant.StoreDashboard.YESTERDAY);
+                        typeofDay = Constant.StoreDashboard.YESTERDAY;
                         break;
                     case 2:
-                        storeDashboard(Constant.StoreDashboard.LAST_WEEK);
+                        typeofDay = Constant.StoreDashboard.LAST_WEEK;
                         break;
                 }
+                storeDashboard();
 
                 new Handler().postDelayed(new Runnable() {
                     @Override

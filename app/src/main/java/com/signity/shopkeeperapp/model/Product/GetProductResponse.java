@@ -11,7 +11,7 @@ public class GetProductResponse {
     private Boolean success;
     @SerializedName("total")
     @Expose
-    private String total;
+    private int total;
     @SerializedName("page")
     @Expose
     private Integer page;
@@ -27,11 +27,11 @@ public class GetProductResponse {
         this.success = success;
     }
 
-    public String getTotal() {
+    public int getTotal() {
         return total;
     }
 
-    public void setTotal(String total) {
+    public void setTotal(int total) {
         this.total = total;
     }
 

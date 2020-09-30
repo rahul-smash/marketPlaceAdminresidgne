@@ -4,18 +4,21 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
+import com.google.android.material.textfield.TextInputEditText;
 import com.signity.shopkeeperapp.R;
+import com.signity.shopkeeperapp.util.prefs.AppPreference;
 
 public class AccountFragment extends Fragment {
 
     public static final String TAG = "AccountFragment";
-    TextView textView;
+    private TextInputEditText textInputEditTextName;
+    private TextInputEditText textInputEditTextEmail;
+    private TextInputEditText textInputEditTextNumber;
 
     public static AccountFragment getInstance(Bundle bundle) {
         AccountFragment fragment = new AccountFragment();
@@ -35,14 +38,27 @@ public class AccountFragment extends Fragment {
     }
 
     private void initViews(View view) {
-        textView = view.findViewById(R.id.textview);
-        textView.setText(TAG);
+        textInputEditTextName = view.findViewById(R.id.edt_user_name);
+        textInputEditTextEmail = view.findViewById(R.id.edt_user_email);
+        textInputEditTextNumber = view.findViewById(R.id.edt_user_number);
+    }
+
+    @Override
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        setUpData();
+    }
+
+    private void setUpData() {
+        textInputEditTextName.setText(AppPreference.getInstance().getUserName());
+        textInputEditTextEmail.setText(AppPreference.getInstance().getUserEmail());
+        textInputEditTextNumber.setText(AppPreference.getInstance().getUserMobile());
     }
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.fragment_home, container, false);
+        return inflater.inflate(R.layout.fragment_account, container, false);
     }
 
     @Override

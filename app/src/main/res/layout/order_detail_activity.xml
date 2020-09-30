@@ -211,8 +211,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Status"
-                    android:textColor="@color/colorWhite"
-                    android:textSize="12sp" />
+                    android:textColor="@color/colorWhite" />
             </LinearLayout>
 
         </LinearLayout>
@@ -259,7 +258,9 @@
             android:layout_alignParentStart="true"
             android:layout_alignParentLeft="true"
             android:layout_alignParentTop="true"
-            android:layout_margin="16dp"
+            android:layout_marginStart="16dp"
+            android:layout_marginLeft="16dp"
+            android:layout_marginTop="16dp"
             android:text="2 items" />
 
         <ListView
@@ -268,10 +269,10 @@
             android:layout_height="match_parent"
             android:layout_below="@+id/mtxtItems"
             android:layout_marginLeft="16dp"
-            android:layout_marginTop="4dp"
+            android:layout_marginTop="16dp"
             android:layout_marginRight="16dp"
             android:divider="@android:color/transparent"
-            android:dividerHeight="6dp"
+            android:dividerHeight="16dp"
             android:scrollbars="none" />
     </RelativeLayout>
 

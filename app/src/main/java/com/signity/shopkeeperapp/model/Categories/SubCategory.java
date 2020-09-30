@@ -31,6 +31,16 @@ public class SubCategory {
     @SerializedName("image_300_200")
     @Expose
     private String image300200;
+    @Expose(serialize = false, deserialize = false)
+    private String categoryName;
+
+    public String getCategoryName() {
+        return categoryName;
+    }
+
+    public void setCategoryName(String categoryName) {
+        this.categoryName = categoryName;
+    }
 
     public String getId() {
         return id;

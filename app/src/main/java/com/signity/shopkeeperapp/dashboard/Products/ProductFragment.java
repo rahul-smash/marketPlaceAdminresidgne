@@ -1,14 +1,13 @@
 package com.signity.shopkeeperapp.dashboard.Products;
 
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
+import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -18,10 +17,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.signity.shopkeeperapp.R;
-import com.signity.shopkeeperapp.dashboard.categories.CategoriesAdapter;
-import com.signity.shopkeeperapp.dashboard.categories.CategoriesFragment;
-import com.signity.shopkeeperapp.model.Categories.GetCategoryData;
-import com.signity.shopkeeperapp.model.Categories.GetCategoryResponse;
+import com.signity.shopkeeperapp.adapter.RvGridSpacesItemDecoration;
 import com.signity.shopkeeperapp.model.Product.GetProductData;
 import com.signity.shopkeeperapp.model.Product.GetProductResponse;
 import com.signity.shopkeeperapp.network.NetworkAdaper;
@@ -38,13 +34,13 @@ import retrofit.Callback;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
 
-public class ProductFragment extends Fragment implements View.OnClickListener,ProductsAdapter.OnItemClickListener{
+public class ProductFragment extends Fragment implements View.OnClickListener, ProductsAdapter.OnItemClickListener {
     public static final String TAG = "ProductFragment";
+    private ProductsAdapter categoriesAdapter;
+    private LinearLayout linearLayoutAddProduct;
     private List<GetProductData> categoryData = new ArrayList<>();
-    ProductsAdapter categoriesAdapter;
     private RecyclerView recyclerViewProduct;
     private LinearLayoutManager layoutManager;
-    TextView txtAddCategory;
     private int pageSize = 10, currentPageNumber = 1, start, totalOrders;
     private RecyclerView.OnScrollListener recyclerViewOnScrollListener = new RecyclerView.OnScrollListener() {
         @Override
@@ -63,7 +59,6 @@ public class ProductFragment extends Fragment implements View.OnClickListener,Pr
                 if ((visibleItemCount + firstVisibleItemPosition) >= totalItemCount
                         && firstVisibleItemPosition >= 0 && totalItemCount >= pageSize) {
                     if (start < totalOrders) {
-                        currentPageNumber++;
                         getAllOrdersMethod();
                     }
                 }
@@ -97,10 +92,9 @@ public class ProductFragment extends Fragment implements View.OnClickListener,Pr
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         if (item.getItemId() == R.id.action_saerch) {
-            Toast.makeText(getActivity(),"pending work!",Toast.LENGTH_SHORT).show();
+
         }
         if (item.getItemId() == R.id.action_filter) {
-            Toast.makeText(getActivity(),"pending work!",Toast.LENGTH_SHORT).show();
 
         }
         return super.onOptionsItemSelected(item);
@@ -115,15 +109,16 @@ public class ProductFragment extends Fragment implements View.OnClickListener,Pr
     private void setUpAdapter() {
         layoutManager = new LinearLayoutManager(getActivity());
         recyclerViewProduct.setLayoutManager(layoutManager);
-        categoriesAdapter = new ProductsAdapter(getContext(), categoryData);
+        categoriesAdapter = new ProductsAdapter(getContext());
         recyclerViewProduct.setAdapter(categoriesAdapter);
         recyclerViewProduct.addOnScrollListener(recyclerViewOnScrollListener);
+        recyclerViewProduct.addItemDecoration(new RvGridSpacesItemDecoration((int) Util.pxFromDp(getContext(), 16)));
     }
 
     private void initView(View rootView) {
-        txtAddCategory = rootView.findViewById(R.id.txtAddCategory);
+        linearLayoutAddProduct = rootView.findViewById(R.id.ll_add_product);
         recyclerViewProduct = rootView.findViewById(R.id.recyclerViewProduct);
-        txtAddCategory.setOnClickListener(this);
+        linearLayoutAddProduct.setOnClickListener(this);
     }
 
     public boolean isLoading() {
@@ -170,15 +165,13 @@ public class ProductFragment extends Fragment implements View.OnClickListener,Pr
                 ProgressDialogUtil.hideProgressDialog();
 
                 if (getProductResponse.getSuccess()) {
+                    currentPageNumber++;
                     start += pageSize;
-
+                    totalOrders = getProductResponse.getTotal();
                     categoryData = getProductResponse.getData();
-                    Log.i("@@------", "" + categoryData.size());
                     if (categoryData != null && categoryData.size() != 0) {
-                        setUpAdapter();
-
+                        categoriesAdapter.setmData(categoryData);
                     } else {
-                        //TODO:- Show Message
                         Toast.makeText(getActivity(), "Data not Found!", Toast.LENGTH_SHORT).show();
                     }
 
@@ -198,8 +191,8 @@ public class ProductFragment extends Fragment implements View.OnClickListener,Pr
 
     @Override
     public void onClick(View view) {
-        if (view == txtAddCategory) {
-
+        if (view == linearLayoutAddProduct) {
+            Toast.makeText(getContext(), "Coming Soon!", Toast.LENGTH_SHORT).show();
         }
     }
 

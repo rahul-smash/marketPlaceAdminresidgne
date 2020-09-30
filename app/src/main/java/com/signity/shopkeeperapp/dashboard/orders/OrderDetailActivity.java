@@ -407,15 +407,9 @@ public class OrderDetailActivity extends AppCompatActivity implements View.OnCli
                 holder.toggle.setEnabled(false);
             }
 
-            if (item.getImage() != null && !item.getImage().isEmpty()) {
-                Log.i("@@ImageShowing", "-----" + item.getImage());
-
-                Picasso.with(getApplicationContext()).load(item.getImage()).resize(50, 50).error(R.mipmap.ic_launcher).into(holder.itemImage);
-                holder.itemImage.setVisibility(View.VISIBLE);
-
+            if (item.getImageSmall() != null && !item.getImageSmall().isEmpty()) {
+                Picasso.with(OrderDetailActivity.this).load(item.getImageSmall()).error(R.mipmap.ic_launcher).into(holder.itemImage);
             } else {
-                holder.itemImage.setVisibility(View.VISIBLE);
-
                 holder.itemImage.setImageResource(R.mipmap.ic_launcher);
             }
             /*if ((item.getWeight() != null && !(item.getWeight().isEmpty())) *//*&& (item.getUnitType() != null && !(item.getUnitType()
@@ -438,7 +432,7 @@ public class OrderDetailActivity extends AppCompatActivity implements View.OnCli
 
             Double itemsTotal = 0.00;
             itemsTotal = listItem.get(position).getPrice() * Integer.parseInt(listItem.get(position).getQuantity());
-            holder.itemsTotal.setText(String.format(Locale.getDefault(), "Price: %s", Util.getPriceWithCurrency(itemsTotal, AppPreference.getInstance().getCurrency())));
+            holder.itemsTotal.setText(String.format(Locale.getDefault(), "Total: %s", Util.getPriceWithCurrency(itemsTotal, AppPreference.getInstance().getCurrency())));
             holder.toggle.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {

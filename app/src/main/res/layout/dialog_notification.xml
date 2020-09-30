@@ -119,7 +119,7 @@
             android:layout_height="5dp"
             android:layout_marginStart="8dp"
             android:layout_marginLeft="8dp"
-            android:background="@drawable/shape_primary_dark_rounded"
+            android:background="@drawable/shape_grey_dot"
             app:layout_constraintBottom_toBottomOf="@+id/tv_notification_date"
             app:layout_constraintStart_toEndOf="@+id/tv_notification_date"
             app:layout_constraintTop_toTopOf="@+id/tv_notification_date" />

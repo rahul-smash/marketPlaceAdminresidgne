@@ -19,5 +19,7 @@
     <string name="layout_notification_detail_no">No</string>
     <string name="layout_notification_detail_confirm">Message</string>
     <string name="dialog_title">Message</string>
+    <string name="share_sell">Share &amp; Sell!</string>
+    <string name="home_blurb">Invite your customers to place orders from your eStore using the link below. Happy Selling.</string>
 
 </resources>

@@ -1,6 +1,7 @@
 package com.signity.shopkeeperapp.dashboard.Products;
 
 import android.content.Context;
+import android.graphics.Paint;
 import android.graphics.drawable.ColorDrawable;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -10,70 +11,60 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.PopupWindow;
+import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.signity.shopkeeperapp.R;
-import com.signity.shopkeeperapp.dashboard.categories.CategoriesAdapter;
-import com.signity.shopkeeperapp.model.Categories.GetCategoryData;
 import com.signity.shopkeeperapp.model.Product.GetProductData;
-import com.signity.shopkeeperapp.model.Product.SelectedVariant;
 import com.signity.shopkeeperapp.model.Product.Variant;
+import com.signity.shopkeeperapp.util.Util;
+import com.signity.shopkeeperapp.util.prefs.AppPreference;
 import com.squareup.picasso.Picasso;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 public class ProductsAdapter extends RecyclerView.Adapter<ProductsAdapter.MyViewHolder> {
 
 
     // Define listener member variable
-    private static ProductsAdapter.OnItemClickListener listener;
+    private ProductsAdapter.OnItemClickListener listener;
+    private Context context;
+    private List<GetProductData> mData = new ArrayList<>();
 
-    // Define the listener interface
-    public interface OnItemClickListener {
-        void onItemClick(View itemView, int position, GetProductData productData);
+    public ProductsAdapter(Context context) {
+        this.context = context;
     }
 
-    // Define the method that allows the parent activity or fragment to define the listener
     public void setOnItemClickListener(ProductsAdapter.OnItemClickListener listener) {
         this.listener = listener;
     }
 
-
-    private List<GetProductData> mData;
-    private LayoutInflater mInflater;
-    ProductsAdapter.MyViewHolder holder;
-
-    Context context;
-
-    public ProductsAdapter(Context context, List<GetProductData> data) {
-        this.mData = data;
-        this.mInflater = LayoutInflater.from(context);
-        this.context = context;
+    public void setmData(List<GetProductData> mData) {
+        this.mData.addAll(mData);
+        notifyDataSetChanged();
     }
 
     @Override
     public ProductsAdapter.MyViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View view = mInflater.inflate(R.layout.adapter_view_product, parent, false);
-        holder = new ProductsAdapter.MyViewHolder(view);
-        return holder;
+        View view = LayoutInflater.from(context).inflate(R.layout.itemview_products, parent, false);
+        return new ProductsAdapter.MyViewHolder(view);
     }
 
     @Override
     public int getItemCount() {
-        Log.i("_____CategorySize", "" + mData.size());
         return mData.size();
     }
-
 
     @Override
     public void onBindViewHolder(final ProductsAdapter.MyViewHolder holder, final int position) {
         Log.i("@@ProductData", "-------" + mData.size());
         final GetProductData getProductData = mData.get(position);
-        String subProductImage = mData.get(position).getImage();
-        Log.i("-----------------", "" + subProductImage);
+        String subProductImage = mData.get(position).getImage10080();
         try {
             if (subProductImage != null && !subProductImage.isEmpty()) {
 
@@ -85,80 +76,85 @@ public class ProductsAdapter extends RecyclerView.Adapter<ProductsAdapter.MyView
         } catch (Exception e) {
             e.printStackTrace();
         }
-        String categoryIds = mData.get(position).getCategoryIds().toString();
+        String categoryIds = mData.get(position).getCategoryIds();
 
         holder.txtProductName.setText(mData.get(position).getTitle());
-        List<Variant> varientData = mData.get(position).getVariants();
-        Log.i("@@@____", "" + varientData.toString());
-        Variant variantData = varientData.get(0);
+        List<Variant> varientDataList = mData.get(position).getVariants();
+        Log.i("@@@____", "" + varientDataList.toString());
+        Variant variantData = varientDataList.get(0);
 
+        holder.switchProduct.setChecked(getProductData.getStatus().equals("1"));
 
-        holder.txtVarient.setText(variantData.getMrpPrice().toString());
-        holder.txtWeight.setText(variantData.getWeight().toString());
-        holder.txtDiscountPrice.setText(variantData.getDiscount().toString());
-      /*  holder.imageSettings.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                // Triggers click upwards to the adapter on click
-                if (listener != null)
-                    listener.onItemClick(holder.imageSettings, position, getProductData);
-            }
-        });*/
+        holder.txtVarient.setText(String.format(Locale.getDefault(), "Variants - %d", varientDataList.size()));
+        holder.txtWeight.setText(String.format("Qty - %s%s", variantData.getWeight(), variantData.getUnitType()));
+        holder.txtDiscountPrice.setText(Util.getPriceWithCurrency(Double.parseDouble(variantData.getPrice()), AppPreference.getInstance().getCurrency()));
+        holder.txtPrice.setText(Util.getPriceWithCurrency(Double.parseDouble(variantData.getMrpPrice()), AppPreference.getInstance().getCurrency()));
+        holder.txtPrice.setPaintFlags(holder.txtPrice.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
         holder.imageSettings.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 // Triggers click upwards to the adapter on click
-                View layout = LayoutInflater.from(context).inflate(R.layout.popup_product_items, null, false);
-                final PopupWindow popupWindowOverView = new PopupWindow(layout, LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT, true);
+//                popmenu(v);
+            }
+        });
+    }
 
-                popupWindowOverView.setOutsideTouchable(true);
-                popupWindowOverView.setBackgroundDrawable(new ColorDrawable());
-                popupWindowOverView.setTouchInterceptor(new View.OnTouchListener() { // or whatever you want
-                    @Override
-                    public boolean onTouch(View v, MotionEvent event) {
-                        if (event.getAction() == MotionEvent.ACTION_OUTSIDE) // here I want to close the pw when clicking outside it but at all this is just an example of how it works and you can implement the onTouch() or the onKey() you want
-                        {
-                            popupWindowOverView.dismiss();
-                            return true;
-                        }
-                        return false;
-                    }
+    private void popmenu(View v) {
+        View layout = LayoutInflater.from(context).inflate(R.layout.popup_product_items, null, false);
+        final PopupWindow popupWindowOverView = new PopupWindow(layout, LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT, true);
 
-                });
+        popupWindowOverView.setOutsideTouchable(true);
+        popupWindowOverView.setBackgroundDrawable(new ColorDrawable());
+        popupWindowOverView.setTouchInterceptor(new View.OnTouchListener() { // or whatever you want
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                if (event.getAction() == MotionEvent.ACTION_OUTSIDE) // here I want to close the pw when clicking outside it but at all this is just an example of how it works and you can implement the onTouch() or the onKey() you want
+                {
+                    popupWindowOverView.dismiss();
+                    return true;
+                }
+                return false;
+            }
 
-                float den = context.getResources().getDisplayMetrics().density;
-                int offsetY = (int) (den * 2);
-                popupWindowOverView.showAsDropDown(v, 0, 0);
-                LinearLayout popups = layout.findViewById(R.id.popups);
-                popups.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        Toast.makeText(context, "Pending work Delete!", Toast.LENGTH_SHORT).show();
+        });
 
-                    }
-                });
+        float den = context.getResources().getDisplayMetrics().density;
+        int offsetY = (int) (den * 2);
+        popupWindowOverView.showAsDropDown(v, 0, 0);
+        LinearLayout popups = layout.findViewById(R.id.popups);
+        popups.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Toast.makeText(context, "Pending work Delete!", Toast.LENGTH_SHORT).show();
+
             }
         });
     }
 
 
+    // Define the listener interface
+    public interface OnItemClickListener {
+        void onItemClick(View itemView, int position, GetProductData productData);
+    }
+
     class MyViewHolder extends RecyclerView.ViewHolder {
 
+        Switch switchProduct;
         ImageView imageCategory, imageSettings;
-        TextView txtProductName, txtProductType, txtPriority, txtVarient, txtWeight, txtLblQuantity, txtDiscountPrice;
+        TextView txtProductName, txtProductType, txtPrice, txtVarient, txtWeight, txtLblQuantity, txtDiscountPrice;
 
         public MyViewHolder(final View convertView) {
             super(convertView);
-            imageCategory=convertView.findViewById(R.id.imageCategory);
-            imageSettings = convertView.findViewById(R.id.imageSettings);
-            txtProductName = convertView.findViewById(R.id.txtProductName);
-            txtProductType = convertView.findViewById(R.id.txtProductType);
-            txtPriority = convertView.findViewById(R.id.txtPriority);
-            txtVarient = convertView.findViewById(R.id.txtVarient);
-            txtWeight = convertView.findViewById(R.id.txtWeight);
+            imageCategory = convertView.findViewById(R.id.iv_product_image);
+            imageSettings = convertView.findViewById(R.id.iv_more);
+            txtProductName = convertView.findViewById(R.id.tv_product_name);
+            txtProductType = convertView.findViewById(R.id.tv_subcategory_name);
+            txtVarient = convertView.findViewById(R.id.tv_product_variant);
+            txtWeight = convertView.findViewById(R.id.tv_product_quantity);
             txtLblQuantity = convertView.findViewById(R.id.txtLblQuantity);
-            txtDiscountPrice = convertView.findViewById(R.id.txtDiscountPrice);
-
+            txtDiscountPrice = convertView.findViewById(R.id.tv_product_price_final);
+            txtPrice = convertView.findViewById(R.id.tv_product_price);
+            switchProduct = convertView.findViewById(R.id.switch_product);
         }
 
     }

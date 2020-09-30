@@ -11,7 +11,40 @@ public class GetCategoryResponse {
     private Boolean success;
     @SerializedName("data")
     @Expose
-    private List<GetCategoryData> data = null;
+    private List<GetCategoryData> data;
+
+    @SerializedName("category_total")
+    private int total;
+
+    @SerializedName("page")
+    private int page;
+
+    @SerializedName("pagelength")
+    private int pagelength;
+
+    public int getTotal() {
+        return total;
+    }
+
+    public void setTotal(int total) {
+        this.total = total;
+    }
+
+    public int getPage() {
+        return page;
+    }
+
+    public void setPage(int page) {
+        this.page = page;
+    }
+
+    public int getPagelength() {
+        return pagelength;
+    }
+
+    public void setPagelength(int pagelength) {
+        this.pagelength = pagelength;
+    }
 
     public Boolean getSuccess() {
         return success;

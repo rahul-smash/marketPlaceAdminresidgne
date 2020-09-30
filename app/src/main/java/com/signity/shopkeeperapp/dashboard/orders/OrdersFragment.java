@@ -25,6 +25,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.signity.shopkeeperapp.R;
+import com.signity.shopkeeperapp.adapter.SpacesItemDecoration;
 import com.signity.shopkeeperapp.model.OrdersListModel;
 import com.signity.shopkeeperapp.model.SetOrdersModel;
 import com.signity.shopkeeperapp.model.orders.StoreOrdersReponse;
@@ -111,6 +112,7 @@ public class OrdersFragment extends Fragment implements HomeOrdersAdapter.Orders
         ordersAdapter.setListener(this);
         recyclerViewOrders.setAdapter(ordersAdapter);
         recyclerViewOrders.addOnScrollListener(recyclerViewOnScrollListener);
+        recyclerViewOrders.addItemDecoration(new SpacesItemDecoration((int) Util.pxFromDp(getContext(), 16)));
     }
 
     private void initView(View rootView) {

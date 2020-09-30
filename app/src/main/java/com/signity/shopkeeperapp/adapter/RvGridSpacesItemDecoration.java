@@ -1,8 +1,9 @@
 package com.signity.shopkeeperapp.adapter;
 
 import android.graphics.Rect;
-import androidx.recyclerview.widget.RecyclerView;
 import android.view.View;
+
+import androidx.recyclerview.widget.RecyclerView;
 
 /**
  * Created by rajesh on 26/4/16.
@@ -15,17 +16,15 @@ public class RvGridSpacesItemDecoration extends RecyclerView.ItemDecoration {
     }
 
     @Override
-    public void getItemOffsets(Rect outRect, View view,
-                               RecyclerView parent, RecyclerView.State state) {
+    public void getItemOffsets(Rect outRect, View view, RecyclerView parent, RecyclerView.State state) {
         outRect.left = space;
         outRect.right = space;
-        outRect.bottom = space;
+        outRect.bottom = 0;
         outRect.top = space;
 
-//        // Add top margin only for the first item to avoid double space between items
-//        if (parent.getChildLayoutPosition(view) == 0) {
-//        } else {
-//            outRect.top = 0;
-//        }
+        // Add top margin only for the first item to avoid double space between items
+        if (parent.getChildLayoutPosition(view) == parent.getAdapter().getItemCount() - 1) {
+            outRect.bottom = space * 4;
+        }
     }
 }
