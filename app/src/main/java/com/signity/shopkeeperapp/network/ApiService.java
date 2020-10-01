@@ -1,6 +1,7 @@
 package com.signity.shopkeeperapp.network;
 
 import com.signity.shopkeeperapp.model.Categories.GetCategoryResponse;
+import com.signity.shopkeeperapp.model.CategoryStatus.CategoryStatus;
 import com.signity.shopkeeperapp.model.CustomersModel;
 import com.signity.shopkeeperapp.model.DashBoardModel;
 import com.signity.shopkeeperapp.model.EnquiriesModel;
@@ -163,4 +164,8 @@ public interface ApiService {
     @FormUrlEncoded
     @POST("/setCategory")
     void addCategory(@FieldMap Map<String, String> parameters, Callback<String> response);
+
+    @FormUrlEncoded
+    @POST("/setCategoryStatus")
+    void setCategoryStatus(@FieldMap Map<String, Object> parameters, Callback<CategoryStatus> response);
 }

@@ -1,13 +1,18 @@
 package com.signity.shopkeeperapp.dashboard.Products;
 
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
+import android.widget.PopupWindow;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -18,6 +23,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.signity.shopkeeperapp.R;
 import com.signity.shopkeeperapp.adapter.RvGridSpacesItemDecoration;
+import com.signity.shopkeeperapp.dashboard.categories.CategoriesAdapter;
 import com.signity.shopkeeperapp.model.Product.GetProductData;
 import com.signity.shopkeeperapp.model.Product.GetProductResponse;
 import com.signity.shopkeeperapp.network.NetworkAdaper;
@@ -42,6 +48,8 @@ public class ProductFragment extends Fragment implements View.OnClickListener, P
     private RecyclerView recyclerViewProduct;
     private LinearLayoutManager layoutManager;
     private int pageSize = 10, currentPageNumber = 1, start, totalOrders;
+    View hiddenView;
+
     private RecyclerView.OnScrollListener recyclerViewOnScrollListener = new RecyclerView.OnScrollListener() {
         @Override
         public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
@@ -95,6 +103,8 @@ public class ProductFragment extends Fragment implements View.OnClickListener, P
 
         }
         if (item.getItemId() == R.id.action_filter) {
+            showOverViewPopMenu();
+
 
         }
         return super.onOptionsItemSelected(item);
@@ -116,6 +126,7 @@ public class ProductFragment extends Fragment implements View.OnClickListener, P
     }
 
     private void initView(View rootView) {
+        hiddenView = rootView.findViewById(R.id.view);
         linearLayoutAddProduct = rootView.findViewById(R.id.ll_add_product);
         recyclerViewProduct = rootView.findViewById(R.id.recyclerViewProduct);
         linearLayoutAddProduct.setOnClickListener(this);
@@ -200,5 +211,47 @@ public class ProductFragment extends Fragment implements View.OnClickListener, P
     public void onItemClick(View itemView, int position, GetProductData productData) {
 
     }
+
+    private void showOverViewPopMenu() {
+
+        View layout = LayoutInflater.from(getActivity()).inflate(R.layout.popup_product_filters, null, false);
+        final PopupWindow popupWindowOverView = new PopupWindow(layout, LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT, true);
+
+        popupWindowOverView.setOutsideTouchable(true);
+
+        popupWindowOverView.setBackgroundDrawable(new ColorDrawable());
+        popupWindowOverView.setTouchInterceptor(new View.OnTouchListener() { // or whatever you want
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                if (event.getAction() == MotionEvent.ACTION_OUTSIDE) // here I want to close the pw when clicking outside it but at all this is just an example of how it works and you can implement the onTouch() or the onKey() you want
+                {
+                    popupWindowOverView.dismiss();
+                    return true;
+                }
+                return false;
+            }
+
+        });
+
+        float den = getActivity().getResources().getDisplayMetrics().density;
+        int offsetY = (int) (den * 2);
+        popupWindowOverView.showAtLocation(layout, Gravity.TOP, 0, 0);
+        TextView txtSelectCategory = layout.findViewById(R.id.txtSelectCategory);
+        txtSelectCategory.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+            }
+        });
+        TextView txtSubCategory = layout.findViewById(R.id.txtSubCategory);
+        txtSubCategory.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+            }
+        });
+    }
+
+
 }
 
