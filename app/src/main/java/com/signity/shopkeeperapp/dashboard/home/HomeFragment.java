@@ -430,7 +430,6 @@ public class HomeFragment extends Fragment implements HomeContentAdapter.HomeCon
 
     @Override
     public void onClickItem(HomeContentAdapter.HomeItems homeItems) {
-        Toast.makeText(getContext(), homeItems.getTitle(), Toast.LENGTH_SHORT).show();
         switch (homeItems) {
             case ORDERS:
 //                startActivity(AddCategoryActivity.getStartIntent(getContext()));
