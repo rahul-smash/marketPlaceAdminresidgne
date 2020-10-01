@@ -18,6 +18,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.ToggleButton;
+
 import com.signity.shopkeeperapp.R;
 import com.signity.shopkeeperapp.model.ItemListModel;
 import com.signity.shopkeeperapp.model.OrdersListModel;
@@ -53,7 +54,8 @@ public class CanceledOrdersItemsListActivity extends Activity implements View.On
     String userId = "";
     String orderId = "";
     private OrdersListModel ordersListModel;
-Button btnGuidMe;
+    Button btnGuidMe;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -91,7 +93,7 @@ Button btnGuidMe;
 
     private void addHeaderToList() {
         View headerView = getLayoutInflater().inflate(R.layout.layout_header_order_detail_address, null);
-        btnGuidMe=(Button)headerView.findViewById(R.id.btnGuidMe);
+        btnGuidMe = (Button) headerView.findViewById(R.id.btnGuidMe);
         btnGuidMe.setVisibility(View.GONE);
         mDeliveryAddress = (TextView) headerView.findViewById(R.id.txtDeliveryAddress);
         mNote = (TextView) headerView.findViewById(R.id.txtNote);
@@ -183,12 +185,12 @@ Button btnGuidMe;
         adb.show();
     }
 
-  /*  private void actionCall() {
-        Intent callIntent = new Intent(Intent.ACTION_CALL);
-        callIntent.setData(Uri.parse("tel:" + phoneNumber));
-        startActivity(callIntent);
-        AnimUtil.slideFromLeftAnim(this);
-    }*/
+    /*  private void actionCall() {
+          Intent callIntent = new Intent(Intent.ACTION_CALL);
+          callIntent.setData(Uri.parse("tel:" + phoneNumber));
+          startActivity(callIntent);
+          AnimUtil.slideFromLeftAnim(this);
+      }*/
     private void actionCall() {
 
         try {
