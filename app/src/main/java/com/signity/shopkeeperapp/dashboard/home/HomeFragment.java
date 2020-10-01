@@ -297,7 +297,10 @@ public class HomeFragment extends Fragment implements HomeContentAdapter.HomeCon
             Toast.makeText(getContext(), "Url not available", Toast.LENGTH_SHORT).show();
             return;
         }
-        shareIntent(website, "Share website");
+        String text = String.format("Enjoy your favorite food in the comfort of your home by ordering from %s, online. Click %s. Order now!",
+                AppPreference.getInstance().getStoreName(),
+                website);
+        shareIntent(text, "Share website");
     }
 
     private void showOverViewPopMenu() {
@@ -432,16 +435,17 @@ public class HomeFragment extends Fragment implements HomeContentAdapter.HomeCon
     public void onClickItem(HomeContentAdapter.HomeItems homeItems) {
         switch (homeItems) {
             case ORDERS:
-//                startActivity(AddCategoryActivity.getStartIntent(getContext()));
-//                AnimUtil.slideFromRightAnim(getActivity());
-                break;
-            case REVENUE:
-//                startActivity(AddProductActivity.getStartIntent(getContext()));
-//                AnimUtil.slideFromRightAnim(getActivity());
+            case TOTAL_SALES:
+                if (listener != null) {
+                    listener.onClickViewAllOrders();
+                }
                 break;
             case ALL_CUSTOMERS:
                 break;
             case TOTAL_PRODUCT:
+                if (listener != null) {
+                    listener.onClickViewProducts();
+                }
                 break;
         }
     }
@@ -522,5 +526,7 @@ public class HomeFragment extends Fragment implements HomeContentAdapter.HomeCon
 
     public interface HomeFragmentListener {
         void onClickViewAllOrders();
+
+        void onClickViewProducts();
     }
 }

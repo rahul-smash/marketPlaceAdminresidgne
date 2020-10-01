@@ -241,6 +241,11 @@ public class DashboardActivity extends AppCompatActivity implements BottomNaviga
     }
 
     @Override
+    public void onClickViewProducts() {
+        bottomNavigationView.setSelectedItemId(R.id.action_bottom_products);
+    }
+
+    @Override
     public void onClickNavigation(NavDrawerAdapter.NavigationItems navigationItems) {
         switch (navigationItems) {
             case DASHBOARD:

@@ -1,10 +1,15 @@
 package com.signity.shopkeeperapp.categories;
 
 import android.content.Context;
+import android.text.TextUtils;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.EditorInfo;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
@@ -13,6 +18,7 @@ import com.google.android.material.card.MaterialCardView;
 import com.google.android.material.textfield.TextInputEditText;
 import com.signity.shopkeeperapp.R;
 import com.signity.shopkeeperapp.model.category.SubCategoryModel;
+import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -72,6 +78,10 @@ public class SubCategoryAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
         this.listener = listener;
     }
 
+    public List<SubCategoryModel> getSubCategoryModels() {
+        return subCategoryModels;
+    }
+
     public interface SubCategoryAdapterListner {
         void onAddImage(int position);
     }
@@ -79,15 +89,52 @@ public class SubCategoryAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
     class SubCategoryViewHolder extends RecyclerView.ViewHolder {
         TextInputEditText textInputEditTextSubCategoryName;
         LinearLayout linearLayoutAddImage;
+        ImageView imageViewSubCategoryImage;
 
         public SubCategoryViewHolder(final View view) {
             super(view);
             linearLayoutAddImage = view.findViewById(R.id.ll_add_sub_category_image);
+            imageViewSubCategoryImage = view.findViewById(R.id.iv_sub_category);
             textInputEditTextSubCategoryName = view.findViewById(R.id.edt_sub_category_name);
         }
 
         public void bind(int position) {
 
+            final SubCategoryModel subCategory = subCategoryModels.get(position);
+
+            try {
+                String categoryImageUrl = subCategory.getSubCategoryImage();
+                if (!TextUtils.isEmpty(categoryImageUrl)) {
+                    imageViewSubCategoryImage.setVisibility(View.VISIBLE);
+                    String imageUrl = String.format("https://s3.amazonaws.com/store-asset/%s", categoryImageUrl);
+                    Picasso.with(context)
+                            .load(imageUrl)
+                            .into(imageViewSubCategoryImage);
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
+            textInputEditTextSubCategoryName.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+                @Override
+                public void onFocusChange(View v, boolean hasFocus) {
+                    if (!hasFocus) {
+                        String subCatName = textInputEditTextSubCategoryName.getText().toString().trim();
+                        subCategory.setSubCategoryName(subCatName);
+                    }
+                }
+            });
+
+            textInputEditTextSubCategoryName.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+                @Override
+                public boolean onEditorAction(TextView textView, int i, KeyEvent keyEvent) {
+                    if (i == EditorInfo.IME_ACTION_DONE) {
+                        String subCatName = textInputEditTextSubCategoryName.getText().toString().trim();
+                        subCategory.setSubCategoryName(subCatName);
+                    }
+                    return false;
+                }
+            });
 
             linearLayoutAddImage.setOnClickListener(new View.OnClickListener() {
                 @Override

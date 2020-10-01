@@ -6,26 +6,26 @@ import com.google.gson.annotations.SerializedName;
 public class SubCategoryModel {
 
     @Expose
-    @SerializedName("sub_category_name")
+    @SerializedName("title")
     private String subCategoryName;
 
     @Expose
-    @SerializedName("sub_category_image")
+    @SerializedName("image")
     private String subCategoryImage;
 
-    public String getCategoryName() {
+    public String getSubCategoryName() {
         return subCategoryName;
     }
 
-    public void setCategoryName(String categoryName) {
-        this.subCategoryName = categoryName;
+    public void setSubCategoryName(String subCategoryName) {
+        this.subCategoryName = subCategoryName;
     }
 
-    public String getCategoryImage() {
+    public String getSubCategoryImage() {
         return subCategoryImage;
     }
 
-    public void setCategoryImage(String categoryImage) {
-        this.subCategoryImage = categoryImage;
+    public void setSubCategoryImage(String subCategoryImage) {
+        this.subCategoryImage = subCategoryImage;
     }
 }

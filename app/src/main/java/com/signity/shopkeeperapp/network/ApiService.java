@@ -17,10 +17,8 @@ import com.signity.shopkeeperapp.model.ResponseForceUpdate;
 import com.signity.shopkeeperapp.model.SetOrdersModel;
 import com.signity.shopkeeperapp.model.StoresModel;
 import com.signity.shopkeeperapp.model.dashboard.StoreDashboardResponse;
-
-import com.signity.shopkeeperapp.model.notification.DataResponse;
+import com.signity.shopkeeperapp.model.image.ImageUploadResponse;
 import com.signity.shopkeeperapp.model.notification.NotificationModel;
-import com.signity.shopkeeperapp.model.notification.NotificationResponse;
 import com.signity.shopkeeperapp.model.orders.StoreOrdersReponse;
 import com.signity.shopkeeperapp.model.stores.StoresResponse;
 import com.signity.shopkeeperapp.model.verify.MobileOtpReponse;
@@ -32,7 +30,10 @@ import retrofit.Callback;
 import retrofit.http.FieldMap;
 import retrofit.http.FormUrlEncoded;
 import retrofit.http.GET;
+import retrofit.http.Multipart;
 import retrofit.http.POST;
+import retrofit.http.Part;
+import retrofit.mime.TypedFile;
 
 /**
  * Created by rajesh on 5/10/15.
@@ -146,10 +147,20 @@ public interface ApiService {
     @FormUrlEncoded
     @POST("/storedashboard")
     void storeDashboard(@FieldMap Map<String, Integer> parameters, Callback<StoreDashboardResponse> response);
+
     @FormUrlEncoded
     @POST("/getCategories")
     void getCategories(@FieldMap Map<String, Object> parameters, Callback<GetCategoryResponse> response);
+
     @FormUrlEncoded
     @POST("/getAllProducts")
     void getAllProducts(@FieldMap Map<String, Object> parameters, Callback<GetProductResponse> response);
+
+    @Multipart
+    @POST("/uploadImages")
+    void uploadImage(@Part("image") TypedFile file, Callback<ImageUploadResponse> response);
+
+    @FormUrlEncoded
+    @POST("/setCategory")
+    void addCategory(@FieldMap Map<String, String> parameters, Callback<String> response);
 }

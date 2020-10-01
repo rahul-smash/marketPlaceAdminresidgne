@@ -59,7 +59,7 @@ public class HomeContentAdapter extends RecyclerView.Adapter<HomeContentAdapter.
 
     public enum HomeItems {
 
-        ORDERS("Orders"), REVENUE("Revenue"),
+        ORDERS("Orders"), TOTAL_SALES("Total Sales"),
         ALL_CUSTOMERS("All Customers"), TOTAL_PRODUCT("Total Products");
 
         private String title;
@@ -98,7 +98,7 @@ public class HomeContentAdapter extends RecyclerView.Adapter<HomeContentAdapter.
                     String orderCount = String.format(Locale.getDefault(), "%d", data.getTotalOrders());
                     textViewDetail.setText(orderCount);
                     break;
-                case REVENUE:
+                case TOTAL_SALES:
                     String revenue = data.getOutstanding() == null ? "0" : data.getOutstanding();
                     textViewDetail.setText(String.format("%s%s", Util.getCurrencySymbol(AppPreference.getInstance().getCurrency()), revenue));
                     break;

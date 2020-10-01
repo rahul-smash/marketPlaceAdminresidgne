@@ -8,7 +8,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -18,10 +17,12 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.signity.shopkeeperapp.R;
 import com.signity.shopkeeperapp.adapter.RvGridSpacesItemDecoration;
+import com.signity.shopkeeperapp.categories.AddCategoryActivity;
 import com.signity.shopkeeperapp.model.Categories.GetCategoryData;
 import com.signity.shopkeeperapp.model.Categories.GetCategoryResponse;
 import com.signity.shopkeeperapp.model.Categories.SubCategory;
 import com.signity.shopkeeperapp.network.NetworkAdaper;
+import com.signity.shopkeeperapp.util.AnimUtil;
 import com.signity.shopkeeperapp.util.DialogUtils;
 import com.signity.shopkeeperapp.util.ProgressDialogUtil;
 import com.signity.shopkeeperapp.util.Util;
@@ -119,7 +120,8 @@ public class CategoriesFragment extends Fragment implements CategoriesAdapter.Ca
         linearLayoutAddCategory.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(getContext(), "Coming Soon!", Toast.LENGTH_SHORT).show();
+                startActivity(AddCategoryActivity.getStartIntent(getContext()));
+                AnimUtil.slideFromRightAnim(getActivity());
             }
         });
     }
