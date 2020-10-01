@@ -1,6 +1,7 @@
 package com.signity.shopkeeperapp.network;
 
 import com.signity.shopkeeperapp.model.Categories.GetCategoryResponse;
+import com.signity.shopkeeperapp.model.CategoryStatus.CategoryStatus;
 import com.signity.shopkeeperapp.model.CustomersModel;
 import com.signity.shopkeeperapp.model.DashBoardModel;
 import com.signity.shopkeeperapp.model.EnquiriesModel;
@@ -18,9 +19,7 @@ import com.signity.shopkeeperapp.model.SetOrdersModel;
 import com.signity.shopkeeperapp.model.StoresModel;
 import com.signity.shopkeeperapp.model.dashboard.StoreDashboardResponse;
 
-import com.signity.shopkeeperapp.model.notification.DataResponse;
 import com.signity.shopkeeperapp.model.notification.NotificationModel;
-import com.signity.shopkeeperapp.model.notification.NotificationResponse;
 import com.signity.shopkeeperapp.model.orders.StoreOrdersReponse;
 import com.signity.shopkeeperapp.model.stores.StoresResponse;
 import com.signity.shopkeeperapp.model.verify.MobileOtpReponse;
@@ -152,4 +151,8 @@ public interface ApiService {
     @FormUrlEncoded
     @POST("/getAllProducts")
     void getAllProducts(@FieldMap Map<String, Object> parameters, Callback<GetProductResponse> response);
+
+    @FormUrlEncoded
+    @POST("/setCategoryStatus")
+    void setCategoryStatus(@FieldMap Map<String, Object> parameters, Callback<CategoryStatus> response);
 }

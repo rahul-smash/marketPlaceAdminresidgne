@@ -7,6 +7,7 @@ import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.CompoundButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.PopupWindow;
@@ -18,14 +19,25 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.signity.shopkeeperapp.R;
+import com.signity.shopkeeperapp.model.Categories.GetCategoryData;
+import com.signity.shopkeeperapp.model.Categories.GetCategoryResponse;
 import com.signity.shopkeeperapp.model.Categories.SubCategory;
+import com.signity.shopkeeperapp.model.CategoryStatus.CategoryStatus;
+import com.signity.shopkeeperapp.network.NetworkAdaper;
+import com.signity.shopkeeperapp.util.ProgressDialogUtil;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+
+import retrofit.Callback;
+import retrofit.RetrofitError;
+import retrofit.client.Response;
 
 public class CategoriesAdapter extends RecyclerView.Adapter<CategoriesAdapter.MyViewHolder> {
-
+    String switcToggle;
     private CategoriesListener listener;
     private Context context;
     private List<SubCategory> categoryDataList = new ArrayList<>();
@@ -84,8 +96,24 @@ public class CategoriesAdapter extends RecyclerView.Adapter<CategoriesAdapter.My
 //                 showOverViewPopMenu(holder);
             }
         });
+         holder.switchCategory.setChecked(
+                (getCategoryData.getStatus().equals("1")));
+        holder.switchCategory.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if(isChecked){
+                    Toast.makeText(context,""+isChecked,Toast.LENGTH_SHORT).show();
+                     switcToggle = "1";
+                    setCategoryStatus(getCategoryData.getId(),String.valueOf(switcToggle));
 
-        holder.switchCategory.setChecked(getCategoryData.getStatus().equals("1"));
+                }else{
+                    Toast.makeText(context,""+isChecked,Toast.LENGTH_SHORT).show();
+
+                    switcToggle = "0";
+                    setCategoryStatus(getCategoryData.getId(),String.valueOf(switcToggle));
+                }
+            }
+        });
+
 
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -157,4 +185,29 @@ public class CategoriesAdapter extends RecyclerView.Adapter<CategoriesAdapter.My
             switchCategory = convertView.findViewById(R.id.switch_catergory);
         }
     }
+    public void setCategoryStatus(String subCategoryId ,String  status) {
+        ProgressDialogUtil.showProgressDialog(context);
+        Map<String, Object> param = new HashMap<>();
+        param.put("cat_id", subCategoryId);
+        param.put("category_status",status );
+
+        NetworkAdaper.getNetworkServices().setCategoryStatus(param, new Callback<CategoryStatus>() {
+            @Override
+            public void success(CategoryStatus categoryStatus, Response response) {
+
+                ProgressDialogUtil.hideProgressDialog();
+
+                if (categoryStatus.getSuccess()) {
+
+                } else {
+                }
+            }
+
+            @Override
+            public void failure(RetrofitError error) {
+                ProgressDialogUtil.hideProgressDialog();
+            }
+        });
+    }
+
 }
