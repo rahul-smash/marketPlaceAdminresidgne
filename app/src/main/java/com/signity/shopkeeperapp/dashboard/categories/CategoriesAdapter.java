@@ -3,6 +3,7 @@ package com.signity.shopkeeperapp.dashboard.categories;
 import android.content.Context;
 import android.graphics.drawable.ColorDrawable;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -23,6 +24,7 @@ import com.signity.shopkeeperapp.model.Categories.GetCategoryData;
 import com.signity.shopkeeperapp.model.Categories.GetCategoryResponse;
 import com.signity.shopkeeperapp.model.Categories.SubCategory;
 import com.signity.shopkeeperapp.model.CategoryStatus.CategoryStatus;
+import com.signity.shopkeeperapp.model.DeleteCategory.DeleteCategories;
 import com.signity.shopkeeperapp.network.NetworkAdaper;
 import com.signity.shopkeeperapp.util.ProgressDialogUtil;
 import com.squareup.picasso.Picasso;
@@ -41,6 +43,7 @@ public class CategoriesAdapter extends RecyclerView.Adapter<CategoriesAdapter.My
     private CategoriesListener listener;
     private Context context;
     private List<SubCategory> categoryDataList = new ArrayList<>();
+    SubCategory getCategoryData;
 
     public CategoriesAdapter(Context context) {
         this.context = context;
@@ -70,7 +73,7 @@ public class CategoriesAdapter extends RecyclerView.Adapter<CategoriesAdapter.My
     @Override
     public void onBindViewHolder(@NonNull final CategoriesAdapter.MyViewHolder holder, final int position) {
 
-        final SubCategory getCategoryData = categoryDataList.get(position);
+        getCategoryData = categoryDataList.get(position);
         String subCategoryImage = getCategoryData.getImage10080();
 
         String txtCategoriesName = getCategoryData.getTitle();
@@ -93,22 +96,24 @@ public class CategoriesAdapter extends RecyclerView.Adapter<CategoriesAdapter.My
         holder.imageViewMore.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-//                 showOverViewPopMenu(holder);
+                showOverViewPopMenu(holder, position);
             }
         });
+        holder.switchCategory.setChecked(
+                (getCategoryData.getStatus().equals("1")));
          holder.switchCategory.setChecked((getCategoryData.getStatus().equals("1")));
         holder.switchCategory.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                if(isChecked){
-                    Toast.makeText(context,""+isChecked,Toast.LENGTH_SHORT).show();
-                     switcToggle = "1";
-                    setCategoryStatus(getCategoryData.getId(),String.valueOf(switcToggle));
+                if (isChecked) {
+                    //     Toast.makeText(context,""+isChecked,Toast.LENGTH_SHORT).show();
+                    switcToggle = "1";
+                    setCategoryStatus(getCategoryData.getId(), String.valueOf(switcToggle));
 
-                }else{
-                    Toast.makeText(context,""+isChecked,Toast.LENGTH_SHORT).show();
+                } else {
+                    //      Toast.makeText(context,""+isChecked,Toast.LENGTH_SHORT).show();
 
                     switcToggle = "0";
-                    setCategoryStatus(getCategoryData.getId(),String.valueOf(switcToggle));
+                    setCategoryStatus(getCategoryData.getId(), String.valueOf(switcToggle));
                 }
             }
         });
@@ -131,8 +136,8 @@ public class CategoriesAdapter extends RecyclerView.Adapter<CategoriesAdapter.My
         });
     }
 
-    private void showOverViewPopMenu(MyViewHolder holder) {
-
+    private void showOverViewPopMenu(MyViewHolder holder, final int pos) {
+        Log.i("@@ViewMore", "--click");
         View layout = LayoutInflater.from(context).inflate(R.layout.popup_delete, null, false);
         final PopupWindow popupWindowOverView = new PopupWindow(layout, LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT, true);
 
@@ -158,8 +163,8 @@ public class CategoriesAdapter extends RecyclerView.Adapter<CategoriesAdapter.My
         popups.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Toast.makeText(context, "Pending work Delete!", Toast.LENGTH_SHORT).show();
-
+                Log.i("@@---CategoryId", "" + getCategoryData.getId());
+                delCategory(getCategoryData.getId(), pos);
             }
         });
     }
@@ -184,11 +189,13 @@ public class CategoriesAdapter extends RecyclerView.Adapter<CategoriesAdapter.My
             switchCategory = convertView.findViewById(R.id.switch_catergory);
         }
     }
-    public void setCategoryStatus(String subCategoryId ,String  status) {
+
+    //SetCategoryStatusAPI
+    public void setCategoryStatus(String subCategoryId, String status) {
         ProgressDialogUtil.showProgressDialog(context);
         Map<String, Object> param = new HashMap<>();
         param.put("cat_id", subCategoryId);
-        param.put("category_status",status );
+        param.put("category_status", status);
 
         NetworkAdaper.getNetworkServices().setCategoryStatus(param, new Callback<CategoryStatus>() {
             @Override
@@ -198,6 +205,32 @@ public class CategoriesAdapter extends RecyclerView.Adapter<CategoriesAdapter.My
 
                 if (categoryStatus.getSuccess()) {
 
+                } else {
+                }
+            }
+
+            @Override
+            public void failure(RetrofitError error) {
+                ProgressDialogUtil.hideProgressDialog();
+            }
+        });
+    }
+
+    //DeletCategoriesAPI
+    public void delCategory(String subCategoryId, final int pos) {
+        ProgressDialogUtil.showProgressDialog(context);
+        Map<String, Object> param = new HashMap<>();
+        param.put("catid", subCategoryId);
+
+        NetworkAdaper.getNetworkServices().delCategory(param, new Callback<DeleteCategories>() {
+            @Override
+            public void success(DeleteCategories deleteCategories, Response response) {
+
+                ProgressDialogUtil.hideProgressDialog();
+
+                if (deleteCategories.getSuccess()) {
+                    Toast.makeText(context, deleteCategories.getMessage(), Toast.LENGTH_SHORT).show();
+                    notifyItemRemoved(pos);
                 } else {
                 }
             }

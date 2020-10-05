@@ -4,6 +4,7 @@ import com.signity.shopkeeperapp.model.Categories.GetCategoryResponse;
 import com.signity.shopkeeperapp.model.CategoryStatus.CategoryStatus;
 import com.signity.shopkeeperapp.model.CustomersModel;
 import com.signity.shopkeeperapp.model.DashBoardModel;
+import com.signity.shopkeeperapp.model.DeleteCategory.DeleteCategories;
 import com.signity.shopkeeperapp.model.EnquiriesModel;
 import com.signity.shopkeeperapp.model.GetCustomerDetailModel;
 import com.signity.shopkeeperapp.model.GetOrdersModel;
@@ -22,6 +23,7 @@ import com.signity.shopkeeperapp.model.dashboard.StoreDashboardResponse;
 import com.signity.shopkeeperapp.model.image.ImageUploadResponse;
 import com.signity.shopkeeperapp.model.notification.NotificationModel;
 import com.signity.shopkeeperapp.model.orders.StoreOrdersReponse;
+import com.signity.shopkeeperapp.model.productStatus.ProductStatus;
 import com.signity.shopkeeperapp.model.stores.StoresResponse;
 import com.signity.shopkeeperapp.model.verify.MobileOtpReponse;
 import com.signity.shopkeeperapp.model.verify.OtpVerifyResponse;
@@ -169,4 +171,14 @@ public interface ApiService {
     @FormUrlEncoded
     @POST("/setCategoryStatus")
     void setCategoryStatus(@FieldMap Map<String, Object> parameters, Callback<CategoryStatus> response);
+
+    @FormUrlEncoded
+    @POST("/delCategory")
+    void delCategory(@FieldMap Map<String, Object> parameters, Callback<DeleteCategories> response);
+
+
+    @FormUrlEncoded
+    @POST("/setProductStatus")
+    void setProductStatus(@FieldMap Map<String, Object> parameters, Callback<ProductStatus> response);
+
 }
