@@ -1,4 +1,4 @@
-package com.signity.shopkeeperapp.notifications;
+package com.signity.shopkeeperapp.products;
 
 import android.app.Dialog;
 import android.graphics.Color;
@@ -10,7 +10,6 @@ import android.view.ViewGroup;
 import android.view.Window;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
-import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -18,29 +17,20 @@ import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.signity.shopkeeperapp.R;
-import com.signity.shopkeeperapp.model.notification.NotificationResponse;
-import com.signity.shopkeeperapp.util.Util;
 
-public class NotificationDialog extends DialogFragment {
+public class CategoryDialog extends DialogFragment {
 
-    public static final String NOTIFICATION_DATA = "NOTIFICATION_DATA";
-    public static final String TAG = "NotificationDialog";
-    private TextView textViewTag, textViewTitle, textViewMessage, textViewDate, textViewTime;
+    public static final String TAG = "CategoryDialog";
     private ImageView imageViewClose;
-    private NotificationResponse notificationResponse;
+    private RecyclerView recycleViewCategory;
 
-    public static NotificationDialog getInstance(Bundle bundle) {
-        NotificationDialog notificationDialog = new NotificationDialog();
-        notificationDialog.setArguments(bundle);
-        return notificationDialog;
-    }
-
-    @Nullable
-    @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.dialog_notification, container, true);
+    public static CategoryDialog getInstance(Bundle bundle) {
+        CategoryDialog categoryDialog = new CategoryDialog();
+        categoryDialog.setArguments(bundle);
+        return categoryDialog;
     }
 
     @NonNull
@@ -66,6 +56,12 @@ public class NotificationDialog extends DialogFragment {
         return dialog;
     }
 
+    @Nullable
+    @Override
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        return inflater.inflate(R.layout.dialog_category, container, true);
+    }
+
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
@@ -82,24 +78,14 @@ public class NotificationDialog extends DialogFragment {
     private void getExtra() {
         Bundle bundle = getArguments();
         if (bundle != null) {
-            notificationResponse = bundle.getParcelable(NOTIFICATION_DATA);
         }
     }
 
     private void setUpData() {
-        textViewTag.setText(notificationResponse.getType());
-        textViewTitle.setText(notificationResponse.getType());
-        textViewMessage.setText(notificationResponse.getMessage());
-        textViewDate.setText(Util.getOrderDate(notificationResponse.getCreated()));
-        textViewTime.setText(Util.getOrderTime(notificationResponse.getCreated()));
     }
 
     private void initView(View view) {
-        textViewTag = view.findViewById(R.id.tv_notification_tag);
-        textViewTitle = view.findViewById(R.id.tv_notification_title);
-        textViewMessage = view.findViewById(R.id.tv_notification_message);
-        textViewDate = view.findViewById(R.id.tv_notification_date);
-        textViewTime = view.findViewById(R.id.tv_notification_time);
+        recycleViewCategory = view.findViewById(R.id.rv_category);
         imageViewClose = view.findViewById(R.id.iv_close);
 
         imageViewClose.setOnClickListener(new View.OnClickListener() {

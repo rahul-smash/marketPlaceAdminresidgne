@@ -148,6 +148,11 @@
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustPan|stateHidden" />
         <activity android:name="com.yalantis.ucrop.UCropActivity" />
+        <activity
+            android:name=".products.VariantActivity"
+            android:launchMode="singleTop"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="adjustPan|stateHidden" />
     </application>
 
 </manifest>

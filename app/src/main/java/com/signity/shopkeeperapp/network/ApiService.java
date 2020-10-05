@@ -17,6 +17,7 @@ import com.signity.shopkeeperapp.model.Product.GetProductResponse;
 import com.signity.shopkeeperapp.model.ResponseForceUpdate;
 import com.signity.shopkeeperapp.model.SetOrdersModel;
 import com.signity.shopkeeperapp.model.StoresModel;
+import com.signity.shopkeeperapp.model.category.AddCategoryResponse;
 import com.signity.shopkeeperapp.model.dashboard.StoreDashboardResponse;
 import com.signity.shopkeeperapp.model.image.ImageUploadResponse;
 import com.signity.shopkeeperapp.model.notification.NotificationModel;
@@ -163,7 +164,7 @@ public interface ApiService {
 
     @FormUrlEncoded
     @POST("/setCategory")
-    void addCategory(@FieldMap Map<String, String> parameters, Callback<String> response);
+    void addCategory(@FieldMap Map<String, String> parameters, Callback<AddCategoryResponse> response);
 
     @FormUrlEncoded
     @POST("/setCategoryStatus")
