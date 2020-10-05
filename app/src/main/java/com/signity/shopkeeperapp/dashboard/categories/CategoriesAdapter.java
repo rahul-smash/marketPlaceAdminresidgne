@@ -24,6 +24,7 @@ import com.signity.shopkeeperapp.model.Categories.GetCategoryData;
 import com.signity.shopkeeperapp.model.Categories.GetCategoryResponse;
 import com.signity.shopkeeperapp.model.Categories.SubCategory;
 import com.signity.shopkeeperapp.model.CategoryStatus.CategoryStatus;
+import com.signity.shopkeeperapp.model.DeleteCategory.DeleteCategories;
 import com.signity.shopkeeperapp.network.NetworkAdaper;
 import com.signity.shopkeeperapp.util.ProgressDialogUtil;
 import com.squareup.picasso.Picasso;
@@ -42,6 +43,7 @@ public class CategoriesAdapter extends RecyclerView.Adapter<CategoriesAdapter.My
     private CategoriesListener listener;
     private Context context;
     private List<SubCategory> categoryDataList = new ArrayList<>();
+    SubCategory getCategoryData;
 
     public CategoriesAdapter(Context context) {
         this.context = context;
@@ -71,7 +73,7 @@ public class CategoriesAdapter extends RecyclerView.Adapter<CategoriesAdapter.My
     @Override
     public void onBindViewHolder(@NonNull final CategoriesAdapter.MyViewHolder holder, final int position) {
 
-        final SubCategory getCategoryData = categoryDataList.get(position);
+        getCategoryData = categoryDataList.get(position);
         String subCategoryImage = getCategoryData.getImage10080();
 
         String txtCategoriesName = getCategoryData.getTitle();
@@ -160,8 +162,8 @@ public class CategoriesAdapter extends RecyclerView.Adapter<CategoriesAdapter.My
         popups.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Toast.makeText(context, "Pending work Delete!", Toast.LENGTH_SHORT).show();
-
+                Log.i("@@---CategoryId",""+getCategoryData.getId());
+                delCategory(getCategoryData.getId());
             }
         });
     }
@@ -187,6 +189,7 @@ public class CategoriesAdapter extends RecyclerView.Adapter<CategoriesAdapter.My
         }
     }
 
+    //SetCategoryStatusAPI
     public void setCategoryStatus(String subCategoryId, String status) {
         ProgressDialogUtil.showProgressDialog(context);
         Map<String, Object> param = new HashMap<>();
@@ -201,6 +204,32 @@ public class CategoriesAdapter extends RecyclerView.Adapter<CategoriesAdapter.My
 
                 if (categoryStatus.getSuccess()) {
 
+                } else {
+                }
+            }
+
+            @Override
+            public void failure(RetrofitError error) {
+                ProgressDialogUtil.hideProgressDialog();
+            }
+        });
+    }
+
+    //DeletCategoriesAPI
+    public void delCategory(String subCategoryId) {
+        ProgressDialogUtil.showProgressDialog(context);
+        Map<String, Object> param = new HashMap<>();
+        param.put("catid", subCategoryId);
+
+        NetworkAdaper.getNetworkServices().delCategory(param, new Callback<DeleteCategories>() {
+            @Override
+            public void success(DeleteCategories deleteCategories, Response response) {
+
+                ProgressDialogUtil.hideProgressDialog();
+
+                if (deleteCategories.getSuccess()) {
+                    Toast.makeText(context, deleteCategories.getMessage(), Toast.LENGTH_SHORT).show();
+                //    notifyDataSetChanged();
                 } else {
                 }
             }
