@@ -16,35 +16,9 @@ public class OrdersListModel implements Serializable {
     @SerializedName("user_lat")
     @Expose
     private String Destinationuser_lat;
-
-    public String getDestinationuser_lat() {
-        return Destinationuser_lat;
-    }
-
-    public void setDestinationuser_lat(String destinationuser_lat) {
-        Destinationuser_lat = destinationuser_lat;
-    }
-
-    public String getDestinationuser_lng() {
-        return Destinationuser_lng;
-    }
-
-    public void setDestinationuser_lng(String destinationuser_lng) {
-        Destinationuser_lng = destinationuser_lng;
-    }
-
     @SerializedName("user_lng")
     @Expose
     private String Destinationuser_lng;
-
-    public String getDisplay_order_id() {
-        return display_order_id;
-    }
-
-    public void setDisplay_order_id(String display_order_id) {
-        this.display_order_id = display_order_id;
-    }
-
     @SerializedName("display_order_id")
     @Expose
     private String display_order_id;
@@ -54,7 +28,6 @@ public class OrdersListModel implements Serializable {
     @SerializedName("user_id")
     @Expose
     private String userId;
-
     @SerializedName("status")
     @Expose
     private String status;
@@ -94,18 +67,61 @@ public class OrdersListModel implements Serializable {
     @SerializedName("address")
     @Expose
     private String address;
-
     @SerializedName("items")
     @Expose
     private List<ItemListModel> items = new ArrayList<ItemListModel>();
-
     @SerializedName("calculated_tax_detail")
     @Expose
     private List<OrderTaxModel> taxes = new ArrayList<OrderTaxModel>();
-
     @SerializedName("store_fixed_tax_detail")
     @Expose
     private List<StoreTaxModel> storeTaxes = new ArrayList<StoreTaxModel>();
+    @SerializedName("payment_method")
+    @Expose
+    private String paymentMethod;
+    @SerializedName("order_facility")
+    @Expose
+    private String orderFacility;
+
+    public String getOrderFacility() {
+        return orderFacility;
+    }
+
+    public void setOrderFacility(String orderFacility) {
+        this.orderFacility = orderFacility;
+    }
+
+    public String getPaymentMethod() {
+        return paymentMethod;
+    }
+
+    public void setPaymentMethod(String paymentMethod) {
+        this.paymentMethod = paymentMethod;
+    }
+
+    public String getDestinationuser_lat() {
+        return Destinationuser_lat;
+    }
+
+    public void setDestinationuser_lat(String destinationuser_lat) {
+        Destinationuser_lat = destinationuser_lat;
+    }
+
+    public String getDestinationuser_lng() {
+        return Destinationuser_lng;
+    }
+
+    public void setDestinationuser_lng(String destinationuser_lng) {
+        Destinationuser_lng = destinationuser_lng;
+    }
+
+    public String getDisplay_order_id() {
+        return display_order_id;
+    }
+
+    public void setDisplay_order_id(String display_order_id) {
+        this.display_order_id = display_order_id;
+    }
 
     /**
      * @return The orderId
