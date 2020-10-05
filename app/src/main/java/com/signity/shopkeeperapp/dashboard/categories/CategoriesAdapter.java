@@ -96,7 +96,7 @@ public class CategoriesAdapter extends RecyclerView.Adapter<CategoriesAdapter.My
         holder.imageViewMore.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                showOverViewPopMenu(holder,position);
+                showOverViewPopMenu(holder, position);
             }
         });
         holder.switchCategory.setChecked(
@@ -162,8 +162,8 @@ public class CategoriesAdapter extends RecyclerView.Adapter<CategoriesAdapter.My
         popups.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Log.i("@@---CategoryId",""+getCategoryData.getId());
-                delCategory(getCategoryData.getId(),pos);
+                Log.i("@@---CategoryId", "" + getCategoryData.getId());
+                delCategory(getCategoryData.getId(), pos);
             }
         });
     }
@@ -229,7 +229,7 @@ public class CategoriesAdapter extends RecyclerView.Adapter<CategoriesAdapter.My
 
                 if (deleteCategories.getSuccess()) {
                     Toast.makeText(context, deleteCategories.getMessage(), Toast.LENGTH_SHORT).show();
-                  notifyItemRemoved(pos);
+                    notifyItemRemoved(pos);
                 } else {
                 }
             }

@@ -8,6 +8,7 @@ import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.CompoundButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.PopupWindow;
@@ -18,18 +19,29 @@ import android.widget.Toast;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.signity.shopkeeperapp.R;
+import com.signity.shopkeeperapp.model.CategoryStatus.CategoryStatus;
 import com.signity.shopkeeperapp.model.Product.GetProductData;
 import com.signity.shopkeeperapp.model.Product.Variant;
+import com.signity.shopkeeperapp.model.productStatus.ProductStatus;
+import com.signity.shopkeeperapp.network.NetworkAdaper;
+import com.signity.shopkeeperapp.util.ProgressDialogUtil;
 import com.signity.shopkeeperapp.util.Util;
 import com.signity.shopkeeperapp.util.prefs.AppPreference;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
+
+import retrofit.Callback;
+import retrofit.RetrofitError;
+import retrofit.client.Response;
 
 public class ProductsAdapter extends RecyclerView.Adapter<ProductsAdapter.MyViewHolder> {
 
+    String switcToggle;
 
     // Define listener member variable
     private ProductsAdapter.OnItemClickListener listener;
@@ -84,6 +96,23 @@ public class ProductsAdapter extends RecyclerView.Adapter<ProductsAdapter.MyView
         Variant variantData = varientDataList.get(0);
 
         holder.switchProduct.setChecked(getProductData.getStatus().equals("1"));
+
+        holder.switchProduct.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if (isChecked) {
+                    //     Toast.makeText(context,""+isChecked,Toast.LENGTH_SHORT).show();
+                    switcToggle = "1";
+                    setProductStatus(mData.get(position).getId(), String.valueOf(switcToggle));
+
+                } else {
+                    //      Toast.makeText(context,""+isChecked,Toast.LENGTH_SHORT).show();
+
+                    switcToggle = "0";
+                    setProductStatus(mData.get(position).getId(), String.valueOf(switcToggle));
+
+                }
+            }
+        });
 
         holder.txtVarient.setText(String.format(Locale.getDefault(), "Variants - %d", varientDataList.size()));
         holder.txtWeight.setText(String.format("Qty - %s%s", variantData.getWeight(), variantData.getUnitType()));
@@ -158,7 +187,31 @@ public class ProductsAdapter extends RecyclerView.Adapter<ProductsAdapter.MyView
         }
 
     }
+    //SetProductStatusAPI
+    public void setProductStatus(String subProductId, String status) {
+        ProgressDialogUtil.showProgressDialog(context);
+        Map<String, Object> param = new HashMap<>();
+        param.put("product_id", subProductId);
+        param.put("product_status", status);
 
+        NetworkAdaper.getNetworkServices().setProductStatus(param, new Callback<ProductStatus>() {
+            @Override
+            public void success(ProductStatus productStatus, Response response) {
+
+                ProgressDialogUtil.hideProgressDialog();
+
+                if (productStatus.getSuccess()) {
+
+                } else {
+                }
+            }
+
+            @Override
+            public void failure(RetrofitError error) {
+                ProgressDialogUtil.hideProgressDialog();
+            }
+        });
+    }
 
 }
 
