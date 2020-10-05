@@ -96,7 +96,7 @@ public class CategoriesAdapter extends RecyclerView.Adapter<CategoriesAdapter.My
         holder.imageViewMore.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                showOverViewPopMenu(holder);
+                showOverViewPopMenu(holder,position);
             }
         });
         holder.switchCategory.setChecked(
@@ -135,7 +135,7 @@ public class CategoriesAdapter extends RecyclerView.Adapter<CategoriesAdapter.My
         });
     }
 
-    private void showOverViewPopMenu(MyViewHolder holder) {
+    private void showOverViewPopMenu(MyViewHolder holder, final int pos) {
         Log.i("@@ViewMore", "--click");
         View layout = LayoutInflater.from(context).inflate(R.layout.popup_delete, null, false);
         final PopupWindow popupWindowOverView = new PopupWindow(layout, LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT, true);
@@ -163,7 +163,7 @@ public class CategoriesAdapter extends RecyclerView.Adapter<CategoriesAdapter.My
             @Override
             public void onClick(View view) {
                 Log.i("@@---CategoryId",""+getCategoryData.getId());
-                delCategory(getCategoryData.getId());
+                delCategory(getCategoryData.getId(),pos);
             }
         });
     }
@@ -216,7 +216,7 @@ public class CategoriesAdapter extends RecyclerView.Adapter<CategoriesAdapter.My
     }
 
     //DeletCategoriesAPI
-    public void delCategory(String subCategoryId) {
+    public void delCategory(String subCategoryId, final int pos) {
         ProgressDialogUtil.showProgressDialog(context);
         Map<String, Object> param = new HashMap<>();
         param.put("catid", subCategoryId);
@@ -229,7 +229,7 @@ public class CategoriesAdapter extends RecyclerView.Adapter<CategoriesAdapter.My
 
                 if (deleteCategories.getSuccess()) {
                     Toast.makeText(context, deleteCategories.getMessage(), Toast.LENGTH_SHORT).show();
-                //    notifyDataSetChanged();
+                  notifyItemRemoved(pos);
                 } else {
                 }
             }
