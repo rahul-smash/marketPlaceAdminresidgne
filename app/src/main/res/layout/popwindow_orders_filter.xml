@@ -81,6 +81,15 @@
                     android:text="Delivered"
                     android:textColor="@color/colorTextDark" />
 
+                <RadioButton
+                    android:id="@+id/radioRejected"
+                    style="@style/Widget.AppCompat.CompoundButton.RadioButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:buttonTint="@color/colorPrimary"
+                    android:text="Rejected"
+                    android:textColor="@color/colorTextDark" />
+
             </RadioGroup>
         </LinearLayout>
     </com.google.android.material.card.MaterialCardView>

@@ -29,7 +29,7 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.reflect.TypeToken;
 import com.signity.shopkeeperapp.R;
-import com.signity.shopkeeperapp.model.Categories.SubCategory;
+import com.signity.shopkeeperapp.model.category.AddCategoryResponse;
 import com.signity.shopkeeperapp.model.category.SubCategoryModel;
 import com.signity.shopkeeperapp.model.image.ImageUploadResponse;
 import com.signity.shopkeeperapp.network.NetworkAdaper;
@@ -131,10 +131,32 @@ public class AddCategoryActivity extends AppCompatActivity implements SubCategor
             return;
         }
 
+        if (TextUtils.isEmpty(categoryImageUrl)) {
+            Toast.makeText(this, "Please add category image", Toast.LENGTH_SHORT).show();
+            return;
+        }
 
+        List<SubCategoryModel> subCategoryModel = subCategoryAdapter.getSubCategoryModels();
+
+        if (subCategoryModel.size() < 1) {
+            Toast.makeText(this, "Please add subcategory", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        for (SubCategoryModel model : subCategoryModel) {
+            if (TextUtils.isEmpty(model.getSubCategoryName())) {
+                Toast.makeText(this, "Please add subcategory", Toast.LENGTH_SHORT).show();
+                return;
+            }
+            if (TextUtils.isEmpty(model.getSubCategoryImage())) {
+                Toast.makeText(this, "Please add subcategory image", Toast.LENGTH_SHORT).show();
+                return;
+            }
+        }
 
         Gson gson = new Gson();
-        JsonElement element = gson.toJsonTree(subCategoryAdapter.getSubCategoryModels(), new TypeToken<List<SubCategoryModel>>() {}.getType());
+        JsonElement element = gson.toJsonTree(subCategoryAdapter.getSubCategoryModels(), new TypeToken<List<SubCategoryModel>>() {
+        }.getType());
         JsonArray jsonArray = element.getAsJsonArray();
 
         Map<String, String> map = new HashMap<>();
@@ -142,15 +164,23 @@ public class AddCategoryActivity extends AppCompatActivity implements SubCategor
         map.put("image", categoryImageUrl);
         map.put("subCate", jsonArray.toString());
 
-        NetworkAdaper.getNetworkServices().addCategory(map, new Callback<String>() {
+        ProgressDialogUtil.showProgressDialog(this);
+        NetworkAdaper.getNetworkServices().addCategory(map, new Callback<AddCategoryResponse>() {
             @Override
-            public void success(String s, Response response) {
+            public void success(AddCategoryResponse addCategoryResponse, Response response) {
+
+                ProgressDialogUtil.hideProgressDialog();
+                if (addCategoryResponse.isSuccess()) {
+                    // TODO - Finish this activity and open add product
+                } else {
+                    Toast.makeText(AddCategoryActivity.this, addCategoryResponse.getMessage(), Toast.LENGTH_SHORT).show();
+                }
 
             }
 
             @Override
             public void failure(RetrofitError error) {
-
+                ProgressDialogUtil.hideProgressDialog();
             }
         });
     }

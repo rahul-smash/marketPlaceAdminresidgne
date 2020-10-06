@@ -101,6 +101,7 @@ public class CategoriesAdapter extends RecyclerView.Adapter<CategoriesAdapter.My
         });
         holder.switchCategory.setChecked(
                 (getCategoryData.getStatus().equals("1")));
+         holder.switchCategory.setChecked((getCategoryData.getStatus().equals("1")));
         holder.switchCategory.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 if (isChecked) {

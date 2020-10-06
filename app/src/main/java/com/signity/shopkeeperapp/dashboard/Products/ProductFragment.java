@@ -23,10 +23,11 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.signity.shopkeeperapp.R;
 import com.signity.shopkeeperapp.adapter.RvGridSpacesItemDecoration;
-import com.signity.shopkeeperapp.dashboard.categories.CategoriesAdapter;
 import com.signity.shopkeeperapp.model.Product.GetProductData;
 import com.signity.shopkeeperapp.model.Product.GetProductResponse;
 import com.signity.shopkeeperapp.network.NetworkAdaper;
+import com.signity.shopkeeperapp.products.AddProductActivity;
+import com.signity.shopkeeperapp.util.AnimUtil;
 import com.signity.shopkeeperapp.util.DialogUtils;
 import com.signity.shopkeeperapp.util.ProgressDialogUtil;
 import com.signity.shopkeeperapp.util.Util;
@@ -42,14 +43,13 @@ import retrofit.client.Response;
 
 public class ProductFragment extends Fragment implements View.OnClickListener, ProductsAdapter.OnItemClickListener {
     public static final String TAG = "ProductFragment";
+    View hiddenView;
     private ProductsAdapter categoriesAdapter;
     private LinearLayout linearLayoutAddProduct;
     private List<GetProductData> categoryData = new ArrayList<>();
     private RecyclerView recyclerViewProduct;
     private LinearLayoutManager layoutManager;
     private int pageSize = 10, currentPageNumber = 1, start, totalOrders;
-    View hiddenView;
-
     private RecyclerView.OnScrollListener recyclerViewOnScrollListener = new RecyclerView.OnScrollListener() {
         @Override
         public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
@@ -204,6 +204,8 @@ public class ProductFragment extends Fragment implements View.OnClickListener, P
     public void onClick(View view) {
         if (view == linearLayoutAddProduct) {
             Toast.makeText(getContext(), "Coming Soon!", Toast.LENGTH_SHORT).show();
+            startActivity(AddProductActivity.getStartIntent(getContext()));
+            AnimUtil.slideFromRightAnim(getActivity());
         }
     }
 

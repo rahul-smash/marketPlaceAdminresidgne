@@ -9,6 +9,10 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.CheckBox;
+import android.widget.LinearLayout;
+import android.widget.RadioGroup;
+import android.widget.Switch;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -16,6 +20,7 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.app.ActivityCompat;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.textfield.TextInputEditText;
 import com.signity.shopkeeperapp.R;
@@ -30,8 +35,26 @@ public class AddProductActivity extends AppCompatActivity implements SubCategory
     private static final String TAG = "AddProductActivity";
     private static final int REQUEST_PERMISSION = 1001;
     private static final int REQUEST_IMAGE_GET = 2002;
+    private static final int REQUEST_VARIANT = 3003;
     private Toolbar toolbar;
     private TextInputEditText editTextCategory;
+    private TextInputEditText editTextSubCategory;
+    private TextInputEditText editTextProductName;
+    private TextInputEditText editTextDescription;
+    private TextInputEditText editTextTag;
+    private TextInputEditText editTextTax;
+    private TextInputEditText editTextWeight;
+    private TextInputEditText editTextUnitType;
+    private TextInputEditText editTextMRP;
+    private TextInputEditText editTextSellingPrice;
+    private TextInputEditText editTextDiscount;
+    private RadioGroup radioGroupVegNonVeg;
+    private CheckBox checkBoxDisplayVegNonVeg;
+    private Switch switchInEx;
+    private LinearLayout linearLayoutImage;
+    private LinearLayout linearLayoutVariant;
+    private RecyclerView recyclerViewVariant;
+    private VariantAdapter variantAdapter;
 
     public static Intent getStartIntent(Context context) {
         return new Intent(context, AddProductActivity.class);
@@ -60,11 +83,46 @@ public class AddProductActivity extends AppCompatActivity implements SubCategory
     private void initView() {
         toolbar = findViewById(R.id.toolbar);
         editTextCategory = findViewById(R.id.edt_category);
+        editTextSubCategory = findViewById(R.id.edt_sub_category);
+        editTextProductName = findViewById(R.id.edt_product_name);
+        editTextDescription = findViewById(R.id.edt_descriptionn);
+        editTextTag = findViewById(R.id.edt_add_tag);
+        editTextTax = findViewById(R.id.edt_tax);
+        editTextWeight = findViewById(R.id.edt_weight);
+        editTextUnitType = findViewById(R.id.edt_unit);
+        editTextMRP = findViewById(R.id.edt_mrp);
+        editTextDiscount = findViewById(R.id.edt_discount);
+        editTextSellingPrice = findViewById(R.id.edt_selling_price);
+        checkBoxDisplayVegNonVeg = findViewById(R.id.cb_display);
+        radioGroupVegNonVeg = findViewById(R.id.rg_veg_nonveg);
+        switchInEx = findViewById(R.id.switch_in_ex);
+        linearLayoutImage = findViewById(R.id.ll_add_products);
+        linearLayoutVariant = findViewById(R.id.ll_add_variant);
+        recyclerViewVariant = findViewById(R.id.rv_variant);
 
         editTextCategory.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Toast.makeText(AddProductActivity.this, "Category", Toast.LENGTH_SHORT).show();
+                CategoryDialog categoryDialog = CategoryDialog.getInstance(null);
+                categoryDialog.show(getSupportFragmentManager(), CategoryDialog.TAG);
+            }
+        });
+
+        editTextSubCategory.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Toast.makeText(AddProductActivity.this, "Sub Category", Toast.LENGTH_SHORT).show();
+                CategoryDialog categoryDialog = CategoryDialog.getInstance(null);
+                categoryDialog.show(getSupportFragmentManager(), CategoryDialog.TAG);
+            }
+        });
+
+        linearLayoutVariant.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivityForResult(VariantActivity.getStartIntent(AddProductActivity.this), REQUEST_VARIANT);
+                AnimUtil.slideFromRightAnim(AddProductActivity.this);
             }
         });
     }

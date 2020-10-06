@@ -76,6 +76,7 @@
         <activity
             android:name=".dashboard.orders.OrderDetailActivity"
             android:label="@string/app_name"
+            android:launchMode="singleTop"
             android:screenOrientation="portrait" />
         <activity
             android:name=".orders.DueOrderActivityWithoutUpdations"
@@ -148,6 +149,11 @@
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustPan|stateHidden" />
         <activity android:name="com.yalantis.ucrop.UCropActivity" />
+        <activity
+            android:name=".products.VariantActivity"
+            android:launchMode="singleTop"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="adjustPan|stateHidden" />
     </application>
 
 </manifest>

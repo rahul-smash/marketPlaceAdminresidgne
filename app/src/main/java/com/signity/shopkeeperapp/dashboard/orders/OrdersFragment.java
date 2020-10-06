@@ -229,6 +229,8 @@ public class OrdersFragment extends Fragment implements HomeOrdersAdapter.Orders
 
         RadioButton radioDelivered = (RadioButton) layout.findViewById(R.id.radioDelivered);
 
+        RadioButton radioRejected = (RadioButton) layout.findViewById(R.id.radioRejected);
+
         switch (checkedId) {
             case R.id.radioPending:
                 radioPending.setChecked(true);
@@ -241,6 +243,9 @@ public class OrdersFragment extends Fragment implements HomeOrdersAdapter.Orders
                 break;
             case R.id.radioDelivered:
                 radioDelivered.setChecked(true);
+                break;
+            case R.id.radioRejected:
+                radioRejected.setChecked(true);
                 break;
             case R.id.radioAllOrders:
             default:
@@ -275,6 +280,9 @@ public class OrdersFragment extends Fragment implements HomeOrdersAdapter.Orders
                         break;
                     case 4:
                         orderTypeFilter = HomeOrdersAdapter.OrderType.DELIVERED;
+                        break;
+                    case 5:
+                        orderTypeFilter = HomeOrdersAdapter.OrderType.REJECTED;
                         break;
                 }
                 getAllOrdersMethod();

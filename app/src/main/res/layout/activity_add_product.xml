@@ -40,6 +40,7 @@
     <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
         android:layout_height="0dp"
+        android:scrollbars="vertical"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
@@ -65,7 +66,7 @@
                 app:layout_constraintTop_toTopOf="parent">
 
                 <LinearLayout
-                    android:id="@+id/ll_add_category_image"
+                    android:id="@+id/ll_add_products"
                     android:layout_width="80dp"
                     android:layout_height="80dp"
                     android:background="@drawable/shape_add_image"
@@ -97,10 +98,10 @@
                     android:scaleType="fitCenter"
                     android:src="@mipmap/ic_launcher"
                     android:visibility="gone"
-                    app:layout_constraintBottom_toBottomOf="@+id/ll_add_category_image"
-                    app:layout_constraintEnd_toEndOf="@+id/ll_add_category_image"
+                    app:layout_constraintBottom_toBottomOf="@+id/ll_add_products"
+                    app:layout_constraintEnd_toEndOf="@+id/ll_add_products"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="@+id/ll_add_category_image" />
+                    app:layout_constraintTop_toTopOf="@+id/ll_add_products" />
 
                 <com.google.android.material.textfield.TextInputLayout
                     android:id="@+id/textInputLayout2"
@@ -110,7 +111,7 @@
                     android:layout_marginTop="16dp"
                     android:hint="Category"
                     app:hintTextColor="@color/colorTextGrey"
-                    app:layout_constraintTop_toBottomOf="@+id/ll_add_category_image">
+                    app:layout_constraintTop_toBottomOf="@+id/ll_add_products">
 
                     <com.google.android.material.textfield.TextInputEditText
                         android:id="@+id/edt_category"
@@ -200,7 +201,7 @@
                         app:layout_constraintTop_toTopOf="parent" />
 
                     <com.google.android.material.textfield.TextInputEditText
-                        android:id="@+id/textInputEditText"
+                        android:id="@+id/edt_descriptionn"
                         style="@style/AppTheme.TextView.Small"
                         android:layout_width="match_parent"
                         android:layout_height="80dp"
@@ -225,13 +226,14 @@
                         android:layout_marginTop="4dp"
                         android:text="Maximum 100 Characters"
                         app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toBottomOf="@+id/textInputEditText" />
+                        app:layout_constraintTop_toBottomOf="@+id/edt_descriptionn" />
 
                 </androidx.constraintlayout.widget.ConstraintLayout>
 
             </androidx.constraintlayout.widget.ConstraintLayout>
 
             <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/const_tag"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
@@ -250,7 +252,7 @@
                     style="@style/Widget.Design.TextInputLayout"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:hint="Product Name"
+                    android:hint="Add Tag"
                     app:hintTextColor="@color/colorTextGrey"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintHorizontal_bias="0.5"
@@ -258,18 +260,19 @@
                     app:layout_constraintTop_toTopOf="parent">
 
                     <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/edt_add_tag"
                         style="@style/AppTheme.TextView.Medium"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:imeOptions="actionNext"
                         android:inputType="textCapWords"
                         android:maxLines="1"
-                        android:text="Butter Cookies" />
+                        android:text="" />
 
                 </com.google.android.material.textfield.TextInputLayout>
 
                 <com.google.android.material.checkbox.MaterialCheckBox
-                    android:id="@+id/materialCheckBox"
+                    android:id="@+id/cb_display"
                     style="@style/Widget.AppCompat.CompoundButton.CheckBox"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -286,7 +289,7 @@
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintHorizontal_bias="0.5"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/materialCheckBox">
+                    app:layout_constraintTop_toBottomOf="@+id/cb_display">
 
                     <com.google.android.material.radiobutton.MaterialRadioButton
                         android:layout_width="wrap_content"
@@ -322,17 +325,17 @@
                         app:hintTextColor="@color/colorTextGrey"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintHorizontal_bias="0.5"
-                        app:layout_constraintStart_toStartOf="parent"
-                        tools:layout_editor_absoluteY="24dp">
+                        app:layout_constraintStart_toStartOf="parent">
 
                         <com.google.android.material.textfield.TextInputEditText
+                            android:id="@+id/edt_tax"
                             style="@style/AppTheme.TextView.Medium"
                             android:layout_width="160dp"
                             android:layout_height="wrap_content"
-                            android:imeOptions="actionNext"
-                            android:inputType="textCapWords"
                             android:drawableEnd="@drawable/percentageicon"
                             android:drawableRight="@drawable/percentageicon"
+                            android:imeOptions="actionNext"
+                            android:inputType="textCapWords"
                             android:maxLines="1"
                             android:text="" />
 
@@ -351,7 +354,8 @@
                             android:layout_height="wrap_content"
                             android:text="Inclusive" />
 
-                        <androidx.appcompat.widget.SwitchCompat
+                        <Switch
+                            android:id="@+id/switch_in_ex"
                             style="@style/Widget.AppCompat.CompoundButton.Switch"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content" />
@@ -365,6 +369,226 @@
                     </LinearLayout>
 
                 </LinearLayout>
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/const_variant"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:background="@color/colorWhite"
+                android:padding="16dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/const_tag">
+
+                <TextView
+                    android:id="@+id/textView2"
+                    style="@style/AppTheme.TextView.Medium"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Variant"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/til_weight"
+                    style="@style/Widget.Design.TextInputLayout"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="16dp"
+                    android:hint="Weight"
+                    app:hintTextColor="@color/colorTextGrey"
+                    app:layout_constraintEnd_toStartOf="@+id/til_unit"
+                    app:layout_constraintHorizontal_bias="0.5"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/textView2">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/edt_weight"
+                        style="@style/AppTheme.TextView.Medium"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:imeOptions="actionNext"
+                        android:inputType="textCapWords"
+                        android:maxLines="1"
+                        android:text="" />
+
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/til_unit"
+                    style="@style/Widget.Design.TextInputLayout"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:hint="Unit Type"
+                    app:hintTextColor="@color/colorTextGrey"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintHorizontal_bias="0.5"
+                    app:layout_constraintStart_toEndOf="@+id/til_weight"
+                    app:layout_constraintTop_toTopOf="@+id/til_weight">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/edt_unit"
+                        style="@style/AppTheme.TextView.Medium"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:drawableEnd="@drawable/dropdownicon"
+                        android:drawableRight="@drawable/dropdownicon"
+                        android:focusable="false"
+                        android:imeOptions="actionNext"
+                        android:inputType="textCapWords"
+                        android:maxLines="1"
+                        android:text="" />
+
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/til_mrp"
+                    style="@style/Widget.Design.TextInputLayout"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="16dp"
+                    android:hint="MRP"
+                    app:hintTextColor="@color/colorTextGrey"
+                    app:layout_constraintEnd_toStartOf="@+id/til_unit"
+                    app:layout_constraintHorizontal_bias="0.5"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/til_weight">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/edt_mrp"
+                        style="@style/AppTheme.TextView.Medium"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:drawableLeft="@drawable/bigrupeesicon"
+                        android:drawablePadding="4dp"
+                        android:drawableTint="@color/colorTextGrey"
+                        android:imeOptions="actionNext"
+                        android:inputType="textCapWords"
+                        android:maxLines="1"
+                        android:text="" />
+
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/til_discount"
+                    style="@style/Widget.Design.TextInputLayout"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:hint="Discount"
+                    app:hintTextColor="@color/colorTextGrey"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintHorizontal_bias="0.0"
+                    app:layout_constraintStart_toEndOf="@+id/til_weight"
+                    app:layout_constraintTop_toTopOf="@+id/til_mrp">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/edt_discount"
+                        style="@style/AppTheme.TextView.Medium"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:drawableRight="@drawable/percentageicon"
+                        android:imeOptions="actionNext"
+                        android:inputType="textCapWords"
+                        android:maxLines="1"
+                        android:text="" />
+
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/til_selling_price"
+                    style="@style/Widget.Design.TextInputLayout"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="16dp"
+                    android:hint="Selling Price"
+                    app:hintTextColor="@color/colorTextGrey"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintHorizontal_bias="0.5"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/til_mrp">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/edt_selling_price"
+                        style="@style/AppTheme.TextView.Medium"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:drawableLeft="@drawable/bigrupeesicon"
+                        android:drawablePadding="4dp"
+                        android:drawableTint="@color/colorTextGrey"
+                        android:imeOptions="actionNext"
+                        android:inputType="textCapWords"
+                        android:maxLines="1"
+                        android:text="" />
+
+                </com.google.android.material.textfield.TextInputLayout>
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingBottom="24dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/const_variant">
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/rv_variant"
+                    android:layout_width="match_parent"
+                    android:layout_height="200dp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    tools:listitem="@layout/itemview_variant" />
+
+                <com.google.android.material.card.MaterialCardView
+                    android:id="@+id/cv_add_variant"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="16dp"
+                    android:stateListAnimator="@null"
+                    app:cardCornerRadius="16dp"
+                    app:cardElevation="4dp"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/rv_variant"
+                    app:rippleColor="@android:color/transparent">
+
+                    <LinearLayout
+                        android:id="@+id/ll_add_variant"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:gravity="center"
+                        android:orientation="horizontal"
+                        android:paddingStart="16dp"
+                        android:paddingTop="8dp"
+                        android:paddingEnd="16dp"
+                        android:paddingBottom="8dp"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent">
+
+                        <ImageView
+                            android:layout_width="16dp"
+                            android:layout_height="16dp"
+                            android:layout_marginEnd="8dp"
+                            android:layout_marginRight="8dp"
+                            android:src="@drawable/addicon" />
+
+                        <TextView
+                            style="@style/AppTheme.TextView.Small"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:gravity="center_horizontal"
+                            android:text="Add Variant"
+                            android:textColor="@color/colorTextDark" />
+
+                    </LinearLayout>
+
+                </com.google.android.material.card.MaterialCardView>
 
             </androidx.constraintlayout.widget.ConstraintLayout>
 

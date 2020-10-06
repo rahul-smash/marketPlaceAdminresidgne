@@ -256,6 +256,9 @@ public class HomeFragment extends Fragment implements HomeContentAdapter.HomeCon
                     case R.id.chip_delivered:
                         orderType = HomeOrdersAdapter.OrderType.DELIVERED;
                         break;
+                    case R.id.chip_rejected:
+                        orderType = HomeOrdersAdapter.OrderType.REJECTED;
+                        break;
                 }
                 getOrders();
             }
