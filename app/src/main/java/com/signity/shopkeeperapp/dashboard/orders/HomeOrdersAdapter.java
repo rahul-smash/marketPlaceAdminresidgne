@@ -151,7 +151,7 @@ public class HomeOrdersAdapter extends RecyclerView.Adapter<HomeOrdersAdapter.Vi
 
     class ViewHolder extends RecyclerView.ViewHolder {
         ImageView imageViewProduct;
-        TextView textViewName, textViewPrice, textViewOrderId, textViewDateTime, textViewItemsCount;
+        TextView textViewName, textViewPrice, textViewOrderId, textViewDateTime, textViewItemsCount, textViewPaymentType;
 
         public ViewHolder(final View convertView) {
             super(convertView);
@@ -161,6 +161,7 @@ public class HomeOrdersAdapter extends RecyclerView.Adapter<HomeOrdersAdapter.Vi
             textViewOrderId = convertView.findViewById(R.id.tv_order_id);
             textViewName = convertView.findViewById(R.id.tv_store_name);
             textViewDateTime = convertView.findViewById(R.id.tv_order_date_time);
+            textViewPaymentType = convertView.findViewById(R.id.tv_order_type);
         }
 
         public void bind(int position) {
@@ -175,6 +176,7 @@ public class HomeOrdersAdapter extends RecyclerView.Adapter<HomeOrdersAdapter.Vi
             textViewItemsCount.setText(String.format("%s %s", ordersModel.getItems().size(), itemText));
             textViewPrice.setText(String.format(Locale.getDefault(), "%s", Util.getPriceWithCurrency(ordersModel.getTotal(), AppPreference.getInstance().getCurrency())));
             textViewDateTime.setText(ordersModel.getTime());
+            textViewPaymentType.setText(ordersModel.getPaymentMethod().toUpperCase());
         }
     }
 

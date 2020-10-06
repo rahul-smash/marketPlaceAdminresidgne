@@ -19,6 +19,7 @@ import com.signity.shopkeeperapp.util.prefs.AppPreference;
 import com.squareup.picasso.Picasso;
 
 import java.util.List;
+import java.util.Locale;
 
 public class OrderDetailsAdpater extends RecyclerView.Adapter<OrderDetailsAdpater.MyViewHolder> {
 
@@ -51,16 +52,16 @@ public class OrderDetailsAdpater extends RecyclerView.Adapter<OrderDetailsAdpate
         holder.textViewItemName.setText(itemListModel.getName());
         holder.textViewWeight.setText(String.format("Weight: %s %s", itemListModel.getWeight(), itemListModel.getUnitType()));
         holder.textViewQuantity.setText(itemListModel.getQuantity());
-        holder.textViewProductPrice.setText(String.format("x %.2f", itemListModel.getPrice()));
+        holder.textViewProductPrice.setText(String.format(Locale.getDefault(), "x %.2f", itemListModel.getPrice()));
         double total = Integer.parseInt(itemListModel.getQuantity()) * itemListModel.getPrice();
         holder.textViewTotal.setText(Util.getPriceWithCurrency(total, AppPreference.getInstance().getCurrency()));
-        holder.textViewStatus.setText(itemListModel.getStatus().equals("1") ? "Accept" : "Reject");
-        holder.switchItem.setChecked(itemListModel.getStatus().equals("1"));
+        holder.textViewStatus.setText(itemListModel.getStatus().equals("2") ? "Reject" : "Accept");
+        holder.switchItem.setChecked(!itemListModel.getStatus().equals("2"));
         holder.switchItem.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (listener != null) {
-                    listener.onChangeStatus(itemListModel.getItemId(), itemListModel.getStatus().equals("1") ? "2" : "1");
+                    listener.onChangeStatus(itemListModel.getItemId(), itemListModel.getStatus().equals("2") ? "1" : "2");
                 }
             }
         });
