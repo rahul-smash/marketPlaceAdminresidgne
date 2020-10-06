@@ -246,6 +246,11 @@ public class DashboardActivity extends AppCompatActivity implements BottomNaviga
     }
 
     @Override
+    public void onClickViewCustomers() {
+
+    }
+
+    @Override
     public void onClickNavigation(NavDrawerAdapter.NavigationItems navigationItems) {
         switch (navigationItems) {
             case DASHBOARD:

@@ -26,6 +26,8 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.widget.ContentLoadingProgressBar;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -34,7 +36,9 @@ import com.google.android.material.chip.Chip;
 import com.google.android.material.chip.ChipGroup;
 import com.signity.shopkeeperapp.R;
 import com.signity.shopkeeperapp.adapter.SpacesItemDecoration;
+import com.signity.shopkeeperapp.customer.CustomerFragment;
 import com.signity.shopkeeperapp.dashboard.DashboardActivity;
+import com.signity.shopkeeperapp.dashboard.account.AccountFragment;
 import com.signity.shopkeeperapp.dashboard.orders.HomeOrdersAdapter;
 import com.signity.shopkeeperapp.dashboard.orders.OrderDetailActivity;
 import com.signity.shopkeeperapp.model.OrdersListModel;
@@ -444,12 +448,24 @@ public class HomeFragment extends Fragment implements HomeContentAdapter.HomeCon
                 }
                 break;
             case ALL_CUSTOMERS:
+            //    Toast.makeText(getActivity(),"-----",Toast.LENGTH_SHORT).show();
+                showFragment(CustomerFragment.getInstance(null), CustomerFragment.TAG);
+
                 break;
             case TOTAL_PRODUCT:
                 if (listener != null) {
                     listener.onClickViewProducts();
                 }
                 break;
+        }
+    }
+    private void showFragment(Fragment fragment, String tag) {
+        FragmentManager manager = getActivity().getSupportFragmentManager();
+        FragmentTransaction fragmentTransaction = manager.beginTransaction();
+        if (manager.findFragmentByTag(tag) == null) {
+            fragmentTransaction.replace(R.id.fl_dashboard, fragment, tag);
+            fragmentTransaction.disallowAddToBackStack();
+            fragmentTransaction.commit();
         }
     }
 
@@ -531,5 +547,6 @@ public class HomeFragment extends Fragment implements HomeContentAdapter.HomeCon
         void onClickViewAllOrders();
 
         void onClickViewProducts();
+        void onClickViewCustomers();
     }
 }

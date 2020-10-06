@@ -24,6 +24,7 @@ import android.widget.TextView;
 
 import com.signity.shopkeeperapp.R;
 import com.signity.shopkeeperapp.app.DbAdapter;
+import com.signity.shopkeeperapp.dashboard.Products.ProductFragment;
 import com.signity.shopkeeperapp.db.AppDatabase;
 import com.signity.shopkeeperapp.model.CustomersModel;
 import com.signity.shopkeeperapp.model.UserModel;
@@ -49,6 +50,7 @@ import retrofit.client.Response;
  * Created by Rajesh on 28/9/15.
  */
 public class CustomerFragment extends Fragment {
+    public static final String TAG = "CustomerFragment";
 
     View rootView;
     ListView listCustomer;
@@ -60,6 +62,11 @@ public class CustomerFragment extends Fragment {
 
     TextView noDataFound, txtAreaa, txtName;
     public boolean filterStatusArea = false, isFilterStatusName = false;
+    public static CustomerFragment getInstance(Bundle bundle) {
+        CustomerFragment fragment = new CustomerFragment();
+        fragment.setArguments(bundle);
+        return fragment;
+    }
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -231,7 +238,7 @@ public class CustomerFragment extends Fragment {
                 @Override
                 public void onClick(View view) {
 
-                    Intent custDetailIntent = new Intent(context, CustomerActivity.class);
+                  /*  Intent custDetailIntent = new Intent(context, CustomerActivity.class);
                     custDetailIntent.putExtra("name", filteredData.get(position).getFullName());
                     custDetailIntent.putExtra("id", filteredData.get(position).getId());
                     custDetailIntent.putExtra("email", filteredData.get(position).getEmail());
@@ -239,7 +246,7 @@ public class CustomerFragment extends Fragment {
                     custDetailIntent.putExtra("phone", filteredData.get(position).getPhone());
 
                     context.startActivity(custDetailIntent);
-                    AnimUtil.slideFromRightAnim((Activity) context);
+                    AnimUtil.slideFromRightAnim((Activity) context);*/
                 }
             });
 
