@@ -183,6 +183,7 @@ public class OrdersFragment extends Fragment implements HomeOrdersAdapter.Orders
                     ordersAdapter.setOrderTypeFilter(orderTypeFilter);
                     ordersAdapter.addOrdersListModels(orderListModel);
                 } else {
+                    Toast.makeText(getContext(), getValues.getMessage(), Toast.LENGTH_SHORT).show();
                 }
             }
 
@@ -311,6 +312,9 @@ public class OrdersFragment extends Fragment implements HomeOrdersAdapter.Orders
                 ProgressDialogUtil.hideProgressDialog();
                 if (getValues.getSuccess()) {
                     ordersAdapter.removeItem(position);
+                    if (start < totalOrders) {
+                        getAllOrdersMethod();
+                    }
                 } else {
                     Toast.makeText(getContext(), getValues.getMessage(), Toast.LENGTH_SHORT).show();
                 }

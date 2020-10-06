@@ -38,7 +38,6 @@ import com.signity.shopkeeperapp.R;
 import com.signity.shopkeeperapp.adapter.SpacesItemDecoration;
 import com.signity.shopkeeperapp.customer.CustomerFragment;
 import com.signity.shopkeeperapp.dashboard.DashboardActivity;
-import com.signity.shopkeeperapp.dashboard.account.AccountFragment;
 import com.signity.shopkeeperapp.dashboard.orders.HomeOrdersAdapter;
 import com.signity.shopkeeperapp.dashboard.orders.OrderDetailActivity;
 import com.signity.shopkeeperapp.model.OrdersListModel;
@@ -164,7 +163,7 @@ public class HomeFragment extends Fragment implements HomeContentAdapter.HomeCon
                     ordersListModels = ordersReponse.getData().getOrders();
                     homeOrdersAdapter.setOrdersListModels(ordersListModels);
                 } else {
-
+                    Toast.makeText(getContext(), ordersReponse.getMessage(), Toast.LENGTH_SHORT).show();
                 }
             }
 
@@ -448,9 +447,7 @@ public class HomeFragment extends Fragment implements HomeContentAdapter.HomeCon
                 }
                 break;
             case ALL_CUSTOMERS:
-            //    Toast.makeText(getActivity(),"-----",Toast.LENGTH_SHORT).show();
                 showFragment(CustomerFragment.getInstance(null), CustomerFragment.TAG);
-
                 break;
             case TOTAL_PRODUCT:
                 if (listener != null) {
@@ -459,6 +456,7 @@ public class HomeFragment extends Fragment implements HomeContentAdapter.HomeCon
                 break;
         }
     }
+
     private void showFragment(Fragment fragment, String tag) {
         FragmentManager manager = getActivity().getSupportFragmentManager();
         FragmentTransaction fragmentTransaction = manager.beginTransaction();
@@ -547,6 +545,7 @@ public class HomeFragment extends Fragment implements HomeContentAdapter.HomeCon
         void onClickViewAllOrders();
 
         void onClickViewProducts();
+
         void onClickViewCustomers();
     }
 }

@@ -7,7 +7,16 @@
     android:paddingTop="16dp"
     android:paddingEnd="16dp"
     android:paddingRight="16dp"
-    android:paddingBottom="8dp">
+    android:paddingBottom="16dp">
+
+    <View
+        android:layout_width="5dp"
+        android:layout_height="0dp"
+        android:background="@drawable/shape_curved"
+        android:backgroundTint="@color/colorAccept"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <ImageView
         android:id="@+id/iv_product"
@@ -89,7 +98,7 @@
 
         <TextView
             android:id="@+id/tv_order_type"
-            style="@style/AppTheme.TextView.Small"
+            style="@style/AppTheme.TextView.Tiny"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="COD" />

@@ -78,6 +78,10 @@ public interface ApiService {
     void setOrderStatus(@FieldMap Map<String, String> parameters, Callback<SetOrdersModel> response);
 
     @FormUrlEncoded
+    @POST("/orderDetail")
+    void getOrderDetail(@FieldMap Map<String, String> parameters, Callback<StoreOrdersReponse> response);
+
+    @FormUrlEncoded
     @POST("/setOrderStatus")
     void rejectOrder(@FieldMap Map<String, String> parameters, Callback<SetOrdersModel> response);
 

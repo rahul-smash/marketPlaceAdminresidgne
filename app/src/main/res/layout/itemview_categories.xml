@@ -13,6 +13,7 @@
         android:layout_height="wrap_content"
         android:padding="8dp"
         android:src="@drawable/moreicon"
+        android:visibility="invisible"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -68,15 +69,16 @@
         android:layout_height="wrap_content"
         android:gravity="center"
         android:orientation="vertical"
+        android:visibility="gone"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/tv_subcategory_name">
 
         <Switch
-            android:textOff="Disable"
-            android:textOn="Enable"
             android:id="@+id/switch_catergory"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:textOff="Disable"
+            android:textOn="Enable"
             android:thumbTint="@color/colorWhite"
             android:track="@drawable/indicator_selected" />
 

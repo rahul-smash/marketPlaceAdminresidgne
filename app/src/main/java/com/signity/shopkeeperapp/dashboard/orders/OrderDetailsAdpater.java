@@ -24,13 +24,15 @@ import java.util.Locale;
 public class OrderDetailsAdpater extends RecyclerView.Adapter<OrderDetailsAdpater.MyViewHolder> {
 
     private static final String TAG = "OrderDetaislAdpater";
+    private final boolean canChange;
     private OrderDetailListener listener;
     private Context context;
     private List<ItemListModel> itemListModels;
 
-    public OrderDetailsAdpater(Context context, List<ItemListModel> listOrder) {
+    public OrderDetailsAdpater(Context context, List<ItemListModel> listOrder, boolean val) {
         this.context = context;
         this.itemListModels = listOrder;
+        this.canChange = val;
     }
 
     public void setItemListModels(List<ItemListModel> itemListModels) {
@@ -65,6 +67,8 @@ public class OrderDetailsAdpater extends RecyclerView.Adapter<OrderDetailsAdpate
                 }
             }
         });
+
+        holder.switchItem.setEnabled(canChange);
 
         if (!TextUtils.isEmpty(itemListModel.getImageSmall())) {
             Picasso.with(context)

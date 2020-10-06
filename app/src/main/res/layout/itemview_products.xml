@@ -13,6 +13,7 @@
         android:layout_height="wrap_content"
         android:padding="8dp"
         android:src="@drawable/moreicon"
+        android:visibility="invisible"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -34,6 +35,7 @@
         android:layout_marginStart="16dp"
         android:layout_marginLeft="16dp"
         android:maxLines="1"
+        android:ellipsize="end"
         android:text="Sapphire Cookie"
         app:layout_constraintEnd_toStartOf="@+id/iv_more"
         app:layout_constraintStart_toEndOf="@+id/iv_product_image"
@@ -108,6 +110,7 @@
         android:layout_height="wrap_content"
         android:gravity="center"
         android:orientation="vertical"
+        android:visibility="invisible"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/iv_product_image">
 

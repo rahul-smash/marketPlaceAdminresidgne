@@ -23,6 +23,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.signity.shopkeeperapp.R;
 import com.signity.shopkeeperapp.model.OrderItemResponseModel;
 import com.signity.shopkeeperapp.model.OrdersListModel;
+import com.signity.shopkeeperapp.model.orders.StoreOrdersReponse;
 import com.signity.shopkeeperapp.network.NetworkAdaper;
 import com.signity.shopkeeperapp.util.AnimUtil;
 import com.signity.shopkeeperapp.util.Constant;
@@ -53,6 +54,7 @@ public class OrderDetailActivity extends AppCompatActivity implements OrderDetai
     private TextView textViewCouponDiscount;
     private TextView textViewMrpDiscount;
     private TextView textViewPaymentMode;
+    private String orderId;
 
     public static Intent getStartIntent(Context context) {
         return new Intent(context, OrderDetailActivity.class);
@@ -73,13 +75,46 @@ public class OrderDetailActivity extends AppCompatActivity implements OrderDetai
         setUpToolbar();
         setOrderDetails();
         setUpAdapter();
+        getOrderDetail();
     }
 
     private void getExtra() {
         Bundle bundle = getIntent().getExtras();
         if (bundle != null) {
             ordersListModel = (OrdersListModel) bundle.getSerializable(ORDER_OBJECT);
+            orderId = ordersListModel.getOrderId();
         }
+    }
+
+    private void getOrderDetail() {
+        ProgressDialogUtil.showProgressDialog(this);
+        Map<String, String> param = new HashMap<String, String>();
+        param.put("order_id", orderId);
+
+        NetworkAdaper.getNetworkServices().getOrderDetail(param, new Callback<StoreOrdersReponse>() {
+            @Override
+            public void success(StoreOrdersReponse getValues, Response response) {
+
+                ProgressDialogUtil.hideProgressDialog();
+                if (getValues.isSuccess()) {
+                    if (getValues.getData() != null && getValues.getData().getOrders() != null) {
+                        if (getValues.getData().getOrders().size() > 0) {
+                            ordersListModel = getValues.getData().getOrders().get(0);
+                            setOrderDetails();
+                            orderDetailsAdpater.setItemListModels(ordersListModel.getItems());
+                        }
+                    }
+                } else {
+                    Toast.makeText(OrderDetailActivity.this, getValues.getMessage(), Toast.LENGTH_SHORT).show();
+                }
+
+            }
+
+            @Override
+            public void failure(RetrofitError error) {
+                ProgressDialogUtil.hideProgressDialog();
+            }
+        });
     }
 
     private void setUpToolbar() {
@@ -98,7 +133,8 @@ public class OrderDetailActivity extends AppCompatActivity implements OrderDetai
     }
 
     private void setUpAdapter() {
-        orderDetailsAdpater = new OrderDetailsAdpater(this, ordersListModel.getItems());
+        boolean val = ordersListModel.getStatus().equals("0");
+        orderDetailsAdpater = new OrderDetailsAdpater(this, ordersListModel.getItems(), val);
         orderDetailsAdpater.setListener(this);
         recyclerView1.setLayoutManager(new LinearLayoutManager(this));
         recyclerView1.setAdapter(orderDetailsAdpater);
