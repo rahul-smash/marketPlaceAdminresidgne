@@ -26,6 +26,8 @@ import com.signity.shopkeeperapp.adapter.RvGridSpacesItemDecoration;
 import com.signity.shopkeeperapp.model.Product.GetProductData;
 import com.signity.shopkeeperapp.model.Product.GetProductResponse;
 import com.signity.shopkeeperapp.network.NetworkAdaper;
+import com.signity.shopkeeperapp.products.AddProductActivity;
+import com.signity.shopkeeperapp.util.AnimUtil;
 import com.signity.shopkeeperapp.util.DialogUtils;
 import com.signity.shopkeeperapp.util.ProgressDialogUtil;
 import com.signity.shopkeeperapp.util.Util;
@@ -202,8 +204,8 @@ public class ProductFragment extends Fragment implements View.OnClickListener, P
     public void onClick(View view) {
         if (view == linearLayoutAddProduct) {
             Toast.makeText(getContext(), "Coming Soon!", Toast.LENGTH_SHORT).show();
-//            startActivity(AddProductActivity.getStartIntent(getContext()));
-//            AnimUtil.slideFromRightAnim(getActivity());
+            startActivity(AddProductActivity.getStartIntent(getContext()));
+            AnimUtil.slideFromRightAnim(getActivity());
         }
     }
 

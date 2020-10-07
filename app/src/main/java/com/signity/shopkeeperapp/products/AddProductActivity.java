@@ -6,10 +6,18 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
+import android.os.Parcelable;
+import android.text.Editable;
+import android.text.TextUtils;
+import android.text.TextWatcher;
 import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.LinearLayout;
 import android.widget.RadioGroup;
 import android.widget.Switch;
@@ -18,19 +26,34 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.AppCompatSpinner;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.app.ActivityCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.textfield.TextInputEditText;
 import com.signity.shopkeeperapp.R;
-import com.signity.shopkeeperapp.categories.SubCategoryAdapter;
+import com.signity.shopkeeperapp.model.Categories.GetCategoryData;
+import com.signity.shopkeeperapp.model.Categories.GetCategoryResponse;
+import com.signity.shopkeeperapp.model.Categories.SubCategory;
+import com.signity.shopkeeperapp.network.NetworkAdaper;
 import com.signity.shopkeeperapp.util.AnimUtil;
+import com.signity.shopkeeperapp.util.ProgressDialogUtil;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import retrofit.Callback;
+import retrofit.RetrofitError;
+import retrofit.client.Response;
 
 /**
  * Created by ketan on 25/09/20.
  */
-public class AddProductActivity extends AppCompatActivity implements SubCategoryAdapter.SubCategoryAdapterListner {
+public class AddProductActivity extends AppCompatActivity implements SubCategoryDialog.SubCategoryListener, CategoryDialog.CategoryListener {
 
     private static final String TAG = "AddProductActivity";
     private static final int REQUEST_PERMISSION = 1001;
@@ -44,7 +67,7 @@ public class AddProductActivity extends AppCompatActivity implements SubCategory
     private TextInputEditText editTextTag;
     private TextInputEditText editTextTax;
     private TextInputEditText editTextWeight;
-    private TextInputEditText editTextUnitType;
+    private AppCompatSpinner appCompatSpinnerUnitType;
     private TextInputEditText editTextMRP;
     private TextInputEditText editTextSellingPrice;
     private TextInputEditText editTextDiscount;
@@ -54,7 +77,12 @@ public class AddProductActivity extends AppCompatActivity implements SubCategory
     private LinearLayout linearLayoutImage;
     private LinearLayout linearLayoutVariant;
     private RecyclerView recyclerViewVariant;
+    private RecyclerView recyclerViewImages;
     private VariantAdapter variantAdapter;
+    private List<GetCategoryData> categoryDataList = new ArrayList<>();
+    private String selectedCategoryId;
+    private String selectedSubCategoryId;
+    private List<String> unitList = new ArrayList<>(Arrays.asList("Kg", "Gram", "Quantity"));
 
     public static Intent getStartIntent(Context context) {
         return new Intent(context, AddProductActivity.class);
@@ -67,6 +95,24 @@ public class AddProductActivity extends AppCompatActivity implements SubCategory
         initView();
         setUpToolbar();
         setUpAdapter();
+        setUpSpinner();
+        getCategoriesApi();
+    }
+
+    private void setUpSpinner() {
+        final ArrayAdapter<String> stringArrayAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_dropdown_item, unitList);
+        appCompatSpinnerUnitType.setAdapter(stringArrayAdapter);
+        appCompatSpinnerUnitType.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                Toast.makeText(AddProductActivity.this, stringArrayAdapter.getItem(position), Toast.LENGTH_SHORT).show();
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
     }
 
     private void setUpToolbar() {
@@ -89,7 +135,7 @@ public class AddProductActivity extends AppCompatActivity implements SubCategory
         editTextTag = findViewById(R.id.edt_add_tag);
         editTextTax = findViewById(R.id.edt_tax);
         editTextWeight = findViewById(R.id.edt_weight);
-        editTextUnitType = findViewById(R.id.edt_unit);
+        appCompatSpinnerUnitType = findViewById(R.id.spinner_unit_type);
         editTextMRP = findViewById(R.id.edt_mrp);
         editTextDiscount = findViewById(R.id.edt_discount);
         editTextSellingPrice = findViewById(R.id.edt_selling_price);
@@ -103,8 +149,9 @@ public class AddProductActivity extends AppCompatActivity implements SubCategory
         editTextCategory.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(AddProductActivity.this, "Category", Toast.LENGTH_SHORT).show();
-                CategoryDialog categoryDialog = CategoryDialog.getInstance(null);
+                Bundle bundle = new Bundle();
+                bundle.putParcelableArrayList(CategoryDialog.CATEGORY_DATA, (ArrayList<? extends Parcelable>) categoryDataList);
+                CategoryDialog categoryDialog = CategoryDialog.getInstance(bundle);
                 categoryDialog.show(getSupportFragmentManager(), CategoryDialog.TAG);
             }
         });
@@ -112,9 +159,22 @@ public class AddProductActivity extends AppCompatActivity implements SubCategory
         editTextSubCategory.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(AddProductActivity.this, "Sub Category", Toast.LENGTH_SHORT).show();
-                CategoryDialog categoryDialog = CategoryDialog.getInstance(null);
-                categoryDialog.show(getSupportFragmentManager(), CategoryDialog.TAG);
+
+                if (TextUtils.isEmpty(selectedCategoryId)) {
+                    return;
+                }
+
+                List<SubCategory> subCategories = new ArrayList<>();
+                for (GetCategoryData categoryData : categoryDataList) {
+                    if (categoryData.getId().equals(selectedCategoryId)) {
+                        subCategories.addAll(categoryData.getSubCategory());
+                    }
+                }
+
+                Bundle bundle = new Bundle();
+                bundle.putParcelableArrayList(SubCategoryDialog.SUBCATEGORY_DATA, (ArrayList<? extends Parcelable>) subCategories);
+                SubCategoryDialog subCategoryDialog = SubCategoryDialog.getInstance(bundle);
+                subCategoryDialog.show(getSupportFragmentManager(), SubCategoryDialog.TAG);
             }
         });
 
@@ -123,6 +183,57 @@ public class AddProductActivity extends AppCompatActivity implements SubCategory
             public void onClick(View v) {
                 startActivityForResult(VariantActivity.getStartIntent(AddProductActivity.this), REQUEST_VARIANT);
                 AnimUtil.slideFromRightAnim(AddProductActivity.this);
+            }
+        });
+
+        checkBoxDisplayVegNonVeg.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                radioGroupVegNonVeg.setVisibility(isChecked ? View.VISIBLE : View.GONE);
+            }
+        });
+
+        radioGroupVegNonVeg.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(RadioGroup group, int checkedId) {
+                // TODO - VEG/Non-VEG RADIO BUTTON
+            }
+        });
+
+        editTextDiscount.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+                if (TextUtils.isEmpty(s.toString())) {
+                    return;
+                }
+
+                String mrp = editTextMRP.getText().toString();
+
+                if (TextUtils.isEmpty(mrp)) {
+                    mrp = "0";
+                }
+
+                double doubleMrp = Double.parseDouble(mrp);
+                double discount = Double.parseDouble(s.toString());
+
+                if (discount < 0 || discount > 100) {
+                    Toast.makeText(AddProductActivity.this, "Invalid discount value", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+
+                final double price = doubleMrp - (doubleMrp * (discount / 100));
+                editTextSellingPrice.setText(String.format("%.2f", price));
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
             }
         });
     }
@@ -166,6 +277,32 @@ public class AddProductActivity extends AppCompatActivity implements SubCategory
         }
     }
 
+    public void getCategoriesApi() {
+        ProgressDialogUtil.showProgressDialog(this);
+        Map<String, Object> param = new HashMap<>();
+        param.put("page", 1);
+        param.put("pagesize", 1000);
+
+        NetworkAdaper.getNetworkServices().getCategories(param, new Callback<GetCategoryResponse>() {
+            @Override
+            public void success(GetCategoryResponse getCategoryResponse, Response response) {
+
+                ProgressDialogUtil.hideProgressDialog();
+
+                if (getCategoryResponse.getSuccess()) {
+                    categoryDataList = getCategoryResponse.getData();
+                } else {
+                    Toast.makeText(AddProductActivity.this, "Data not found!", Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void failure(RetrofitError error) {
+                ProgressDialogUtil.hideProgressDialog();
+            }
+        });
+    }
+
     private void runAnimation() {
         finish();
         AnimUtil.slideFromLeftAnim(this);
@@ -173,6 +310,8 @@ public class AddProductActivity extends AppCompatActivity implements SubCategory
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.menu_add_product, menu);
         return super.onCreateOptionsMenu(menu);
     }
 
@@ -181,11 +320,68 @@ public class AddProductActivity extends AppCompatActivity implements SubCategory
         if (item.getItemId() == android.R.id.home) {
             runAnimation();
         }
+        if (item.getItemId() == R.id.action_save) {
+            saveProduct();
+        }
         return super.onOptionsItemSelected(item);
     }
 
+    private void saveProduct() {
+        String productName = editTextProductName.getText().toString().trim();
+        String productDescription = editTextDescription.getText().toString().trim();
+        String productTag = editTextTag.getText().toString().trim();
+        String productTax = editTextTax.getText().toString().trim();
+        String variantWeight = editTextWeight.getText().toString().trim();
+        String variantMrp = editTextMRP.getText().toString().trim();
+        String variantDiscount = editTextDiscount.getText().toString().trim();
+        String variantSellingPrice = editTextSellingPrice.getText().toString().trim();
+
+        if (TextUtils.isEmpty(selectedCategoryId)) {
+            Toast.makeText(this, "Please choose category", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        if (TextUtils.isEmpty(selectedSubCategoryId)) {
+            Toast.makeText(this, "Please choose subcategory", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        if (TextUtils.isEmpty(productName)) {
+            Toast.makeText(this, "Please enter product name", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        if (TextUtils.isEmpty(productTax)) {
+            Toast.makeText(this, "Please enter product tax", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        if (TextUtils.isEmpty(variantWeight)) {
+            Toast.makeText(this, "Please enter product weight", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        if (TextUtils.isEmpty(variantMrp)) {
+            Toast.makeText(this, "Please enter product MRP", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        if (TextUtils.isEmpty(variantDiscount)) {
+            Toast.makeText(this, "Please enter product discount", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+    }
+
     @Override
-    public void onAddImage(int position) {
-        getGalleryImage();
+    public void onSelectCategory(String categoryId, String categoryName) {
+        selectedCategoryId = categoryId;
+        editTextCategory.setText(categoryName);
+    }
+
+    @Override
+    public void onSelectSubCategory(String subCategoryId, String subCategoryName) {
+        selectedSubCategoryId = subCategoryId;
+        editTextSubCategory.setText(subCategoryName);
     }
 }

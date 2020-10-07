@@ -1,11 +1,25 @@
 package com.signity.shopkeeperapp.model.Categories;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
 import java.util.List;
 
-public class GetCategoryData {
+public class GetCategoryData implements Parcelable {
+    public static final Creator<GetCategoryData> CREATOR = new Creator<GetCategoryData>() {
+        @Override
+        public GetCategoryData createFromParcel(Parcel in) {
+            return new GetCategoryData(in);
+        }
+
+        @Override
+        public GetCategoryData[] newArray(int size) {
+            return new GetCategoryData[size];
+        }
+    };
     @SerializedName("id")
     @Expose
     private String id;
@@ -42,6 +56,25 @@ public class GetCategoryData {
     @SerializedName("sub_category")
     @Expose
     private List<SubCategory> subCategory = null;
+
+    protected GetCategoryData(Parcel in) {
+        id = in.readString();
+        title = in.readString();
+        version = in.readString();
+        status = in.readString();
+        byte tmpDeleted = in.readByte();
+        deleted = tmpDeleted == 0 ? null : tmpDeleted == 1;
+        showProductImage = in.readString();
+        sort = in.readString();
+        image10080 = in.readString();
+        image300200 = in.readString();
+        image = in.readString();
+        if (in.readByte() == 0) {
+            subCategoryTotal = null;
+        } else {
+            subCategoryTotal = in.readInt();
+        }
+    }
 
     public String getId() {
         return id;
@@ -139,4 +172,28 @@ public class GetCategoryData {
         this.subCategory = subCategory;
     }
 
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(id);
+        dest.writeString(title);
+        dest.writeString(version);
+        dest.writeString(status);
+        dest.writeByte((byte) (deleted == null ? 0 : deleted ? 1 : 2));
+        dest.writeString(showProductImage);
+        dest.writeString(sort);
+        dest.writeString(image10080);
+        dest.writeString(image300200);
+        dest.writeString(image);
+        if (subCategoryTotal == null) {
+            dest.writeByte((byte) 0);
+        } else {
+            dest.writeByte((byte) 1);
+            dest.writeInt(subCategoryTotal);
+        }
+    }
 }

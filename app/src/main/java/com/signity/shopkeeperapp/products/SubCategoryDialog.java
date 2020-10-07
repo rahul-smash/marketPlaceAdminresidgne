@@ -24,25 +24,25 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.signity.shopkeeperapp.R;
-import com.signity.shopkeeperapp.model.Categories.GetCategoryData;
+import com.signity.shopkeeperapp.model.Categories.SubCategory;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class CategoryDialog extends DialogFragment implements CategoryDialogAdapter.CategoryDialogListener {
+public class SubCategoryDialog extends DialogFragment implements SubCategoryDialogAdapter.SubCategoryDialogListener {
 
-    public static final String TAG = "CategoryDialog";
-    public static final String CATEGORY_DATA = "CATEGORY_DATA";
+    public static final String TAG = "SubCategoryDialog";
+    public static final String SUBCATEGORY_DATA = "SUBCATEGORY_DATA";
     private ImageView imageViewClose;
     private RecyclerView recycleViewCategory;
-    private List<GetCategoryData> categoryDataList = new ArrayList<>();
-    private CategoryDialogAdapter categoryDialogAdapter;
+    private List<SubCategory> subCategoryList = new ArrayList<>();
+    private SubCategoryDialogAdapter subCategoryDialogAdapter;
     private SearchView searchViewCategory;
     private TextView textViewDialogTitle;
-    private CategoryListener listener;
+    private SubCategoryListener listener;
 
-    public static CategoryDialog getInstance(Bundle bundle) {
-        CategoryDialog categoryDialog = new CategoryDialog();
+    public static SubCategoryDialog getInstance(Bundle bundle) {
+        SubCategoryDialog categoryDialog = new SubCategoryDialog();
         categoryDialog.setArguments(bundle);
         return categoryDialog;
     }
@@ -69,6 +69,14 @@ public class CategoryDialog extends DialogFragment implements CategoryDialogAdap
         return dialog;
     }
 
+    @Override
+    public void onAttach(@NonNull Context context) {
+        super.onAttach(context);
+        if (context instanceof AddProductActivity) {
+            listener = (SubCategoryListener) context;
+        }
+    }
+
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -89,17 +97,9 @@ public class CategoryDialog extends DialogFragment implements CategoryDialogAdap
         setUpSearchView();
     }
 
-    @Override
-    public void onAttach(@NonNull Context context) {
-        super.onAttach(context);
-        if (context instanceof AddProductActivity) {
-            listener = (CategoryListener) context;
-        }
-    }
-
     private void setUpSearchView() {
         searchViewCategory.setIconifiedByDefault(false);
-        searchViewCategory.setQueryHint("Search Category");
+        searchViewCategory.setQueryHint("Search SubCategory");
         searchViewCategory.setFocusable(false);
         searchViewCategory.setIconified(false);
         searchViewCategory.clearFocus();
@@ -117,36 +117,35 @@ public class CategoryDialog extends DialogFragment implements CategoryDialogAdap
             }
         });
 
-        textViewDialogTitle.setText("Choose Category");
+        textViewDialogTitle.setText("Choose SubCategory");
     }
 
     private void filterCategory(String trim) {
-        List<GetCategoryData> categoryDataListNew = new ArrayList<>();
+        List<SubCategory> subCategoriesNew = new ArrayList<>();
 
-        if (categoryDataList.size() == 0) {
+        if (subCategoryList.size() == 0) {
             return;
         }
 
-        for (GetCategoryData categoryData : categoryDataList) {
-            if (categoryData.getTitle().toLowerCase().startsWith(trim.toLowerCase())) {
-                categoryDataListNew.add(categoryData);
+        for (SubCategory subCategory : subCategoryList) {
+            if (subCategory.getTitle().toLowerCase().startsWith(trim.toLowerCase())) {
+                subCategoriesNew.add(subCategory);
             }
         }
-        categoryDialogAdapter.setCategoryDataList(categoryDataListNew);
+        subCategoryDialogAdapter.setSubCategoryList(subCategoriesNew);
     }
 
     private void setUpAdapter() {
-        categoryDialogAdapter = new CategoryDialogAdapter(getContext(), categoryDataList);
-        categoryDialogAdapter.setCategoryDataList(categoryDataList);
-        categoryDialogAdapter.setListener(this);
-        recycleViewCategory.setAdapter(categoryDialogAdapter);
+        subCategoryDialogAdapter = new SubCategoryDialogAdapter(getContext(), subCategoryList);
+        subCategoryDialogAdapter.setListener(this);
+        recycleViewCategory.setAdapter(subCategoryDialogAdapter);
         recycleViewCategory.setLayoutManager(new LinearLayoutManager(getContext()));
     }
 
     private void getExtra() {
         Bundle bundle = getArguments();
         if (bundle != null) {
-            categoryDataList = bundle.getParcelableArrayList(CATEGORY_DATA);
+            subCategoryList = bundle.getParcelableArrayList(SUBCATEGORY_DATA);
         }
     }
 
@@ -174,14 +173,14 @@ public class CategoryDialog extends DialogFragment implements CategoryDialogAdap
     }
 
     @Override
-    public void onSelectCategory(String categoryId, String categoryName) {
+    public void onSelectSubCategory(String subCategoryId, String subCategoryName) {
         if (listener != null) {
-            listener.onSelectCategory(categoryId, categoryName);
+            listener.onSelectSubCategory(subCategoryId, subCategoryName);
         }
         dismiss();
     }
 
-    public interface CategoryListener {
-        void onSelectCategory(String categoryId, String categoryName);
+    public interface SubCategoryListener {
+        void onSelectSubCategory(String subCategoryId, String subCategoryName);
     }
 }

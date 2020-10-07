@@ -90,6 +90,25 @@
 
                 </LinearLayout>
 
+                <TextView
+                    style="@style/AppTheme.TextView.Tiny"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_horizontal"
+                    android:text="Max 6 Photos"
+                    android:textColor="@color/colorPrimary"
+                    app:layout_constraintEnd_toEndOf="@+id/ll_add_products"
+                    app:layout_constraintStart_toStartOf="@+id/ll_add_products"
+                    app:layout_constraintTop_toBottomOf="@+id/ll_add_products" />
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/rv_product_images"
+                    android:layout_width="0dp"
+                    android:layout_height="80dp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toEndOf="@+id/ll_add_products"
+                    app:layout_constraintTop_toTopOf="parent" />
+
                 <ImageView
                     android:id="@+id/iv_category"
                     android:layout_width="80dp"
@@ -108,7 +127,7 @@
                     style="@style/Widget.Design.TextInputLayout"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="16dp"
+                    android:layout_marginTop="24dp"
                     android:hint="Category"
                     app:hintTextColor="@color/colorTextGrey"
                     app:layout_constraintTop_toBottomOf="@+id/ll_add_products">
@@ -125,7 +144,7 @@
                         android:imeOptions="actionDone"
                         android:inputType="textCapWords"
                         android:maxLines="1"
-                        android:text="Cookies" />
+                        android:text="" />
 
                 </com.google.android.material.textfield.TextInputLayout>
 
@@ -152,7 +171,7 @@
                         android:imeOptions="actionDone"
                         android:inputType="textCapWords"
                         android:maxLines="1"
-                        android:text="Butter Cookies" />
+                        android:text="" />
 
                 </com.google.android.material.textfield.TextInputLayout>
 
@@ -175,7 +194,7 @@
                         android:imeOptions="actionNext"
                         android:inputType="textCapWords"
                         android:maxLines="1"
-                        android:text="Butter Cookies" />
+                        android:text="" />
 
                 </com.google.android.material.textfield.TextInputLayout>
 
@@ -209,10 +228,11 @@
                         android:background="@drawable/shape_edittext_background"
                         android:gravity="start"
                         android:inputType="textMultiLine"
+                        android:imeOptions="actionNext"
                         android:maxLength="100"
                         android:maxLines="4"
                         android:padding="12dp"
-                        android:text="Loreum "
+                        android:text=""
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toBottomOf="@+id/textView" />
@@ -286,6 +306,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="horizontal"
+                    android:visibility="gone"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintHorizontal_bias="0.5"
                     app:layout_constraintStart_toStartOf="parent"
@@ -335,7 +356,7 @@
                             android:drawableEnd="@drawable/percentageicon"
                             android:drawableRight="@drawable/percentageicon"
                             android:imeOptions="actionNext"
-                            android:inputType="textCapWords"
+                            android:inputType="numberDecimal"
                             android:maxLines="1"
                             android:text="" />
 
@@ -400,7 +421,7 @@
                     android:layout_marginTop="16dp"
                     android:hint="Weight"
                     app:hintTextColor="@color/colorTextGrey"
-                    app:layout_constraintEnd_toStartOf="@+id/til_unit"
+                    app:layout_constraintEnd_toStartOf="@+id/spinner_unit_type"
                     app:layout_constraintHorizontal_bias="0.5"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/textView2">
@@ -411,38 +432,34 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:imeOptions="actionNext"
-                        android:inputType="textCapWords"
+                        android:inputType="number"
                         android:maxLines="1"
                         android:text="" />
 
                 </com.google.android.material.textfield.TextInputLayout>
 
-                <com.google.android.material.textfield.TextInputLayout
-                    android:id="@+id/til_unit"
-                    style="@style/Widget.Design.TextInputLayout"
-                    android:layout_width="0dp"
+                <TextView
+                    style="@style/AppTheme.TextView.Tiny"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:hint="Unit Type"
-                    app:hintTextColor="@color/colorTextGrey"
+                    android:layout_marginStart="4dp"
+                    android:layout_marginLeft="4dp"
+                    android:text="Unit Type"
+                    android:textSize="12sp"
+                    app:layout_constraintBottom_toTopOf="@+id/spinner_unit_type"
+                    app:layout_constraintStart_toEndOf="@+id/til_weight" />
+
+                <androidx.appcompat.widget.AppCompatSpinner
+                    android:id="@+id/spinner_unit_type"
+                    style="@style/Widget.AppCompat.Spinner.Underlined"
+                    android:layout_width="0dp"
+                    android:layout_height="42dp"
+                    android:dropDownWidth="match_parent"
+                    android:spinnerMode="dropdown"
+                    app:layout_constraintBottom_toBottomOf="@+id/til_weight"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintHorizontal_bias="0.5"
-                    app:layout_constraintStart_toEndOf="@+id/til_weight"
-                    app:layout_constraintTop_toTopOf="@+id/til_weight">
-
-                    <com.google.android.material.textfield.TextInputEditText
-                        android:id="@+id/edt_unit"
-                        style="@style/AppTheme.TextView.Medium"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:drawableEnd="@drawable/dropdownicon"
-                        android:drawableRight="@drawable/dropdownicon"
-                        android:focusable="false"
-                        android:imeOptions="actionNext"
-                        android:inputType="textCapWords"
-                        android:maxLines="1"
-                        android:text="" />
-
-                </com.google.android.material.textfield.TextInputLayout>
+                    app:layout_constraintStart_toEndOf="@+id/til_weight" />
 
                 <com.google.android.material.textfield.TextInputLayout
                     android:id="@+id/til_mrp"
@@ -452,7 +469,7 @@
                     android:layout_marginTop="16dp"
                     android:hint="MRP"
                     app:hintTextColor="@color/colorTextGrey"
-                    app:layout_constraintEnd_toStartOf="@+id/til_unit"
+                    app:layout_constraintEnd_toStartOf="@+id/spinner_unit_type"
                     app:layout_constraintHorizontal_bias="0.5"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/til_weight">
@@ -466,7 +483,7 @@
                         android:drawablePadding="4dp"
                         android:drawableTint="@color/colorTextGrey"
                         android:imeOptions="actionNext"
-                        android:inputType="textCapWords"
+                        android:inputType="numberDecimal"
                         android:maxLines="1"
                         android:text="" />
 
@@ -491,7 +508,7 @@
                         android:layout_height="wrap_content"
                         android:drawableRight="@drawable/percentageicon"
                         android:imeOptions="actionNext"
-                        android:inputType="textCapWords"
+                        android:inputType="numberDecimal"
                         android:maxLines="1"
                         android:text="" />
 
@@ -518,8 +535,8 @@
                         android:drawableLeft="@drawable/bigrupeesicon"
                         android:drawablePadding="4dp"
                         android:drawableTint="@color/colorTextGrey"
-                        android:imeOptions="actionNext"
-                        android:inputType="textCapWords"
+                        android:imeOptions="actionDone"
+                        android:inputType="numberDecimal"
                         android:maxLines="1"
                         android:text="" />
 
@@ -538,7 +555,7 @@
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/rv_variant"
                     android:layout_width="match_parent"
-                    android:layout_height="200dp"
+                    android:layout_height="wrap_content"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
@@ -549,6 +566,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="16dp"
+                    android:layout_marginBottom="24dp"
                     android:stateListAnimator="@null"
                     app:cardCornerRadius="16dp"
                     app:cardElevation="4dp"
