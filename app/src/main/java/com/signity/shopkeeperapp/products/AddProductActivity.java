@@ -5,6 +5,8 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Rect;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Parcelable;
 import android.text.Editable;
@@ -29,17 +31,28 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.AppCompatSpinner;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.app.ActivityCompat;
+import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.textfield.TextInputEditText;
 import com.signity.shopkeeperapp.R;
+import com.signity.shopkeeperapp.adapter.SpacesItemDecoration;
+import com.signity.shopkeeperapp.adapter.SpacesItemImageDecoration;
 import com.signity.shopkeeperapp.model.Categories.GetCategoryData;
 import com.signity.shopkeeperapp.model.Categories.GetCategoryResponse;
 import com.signity.shopkeeperapp.model.Categories.SubCategory;
+import com.signity.shopkeeperapp.model.Product.DynamicField;
+import com.signity.shopkeeperapp.model.Product.StoreAttributes;
+import com.signity.shopkeeperapp.model.Product.Variant;
+import com.signity.shopkeeperapp.model.image.ImageUploadResponse;
 import com.signity.shopkeeperapp.network.NetworkAdaper;
 import com.signity.shopkeeperapp.util.AnimUtil;
 import com.signity.shopkeeperapp.util.ProgressDialogUtil;
+import com.signity.shopkeeperapp.util.Util;
+import com.yalantis.ucrop.UCrop;
+import com.yalantis.ucrop.util.FileUtils;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -49,6 +62,7 @@ import java.util.Map;
 import retrofit.Callback;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
+import retrofit.mime.TypedFile;
 
 /**
  * Created by ketan on 25/09/20.
@@ -78,11 +92,18 @@ public class AddProductActivity extends AppCompatActivity implements SubCategory
     private LinearLayout linearLayoutVariant;
     private RecyclerView recyclerViewVariant;
     private RecyclerView recyclerViewImages;
+    private RecyclerView recyclerViewDynamicField;
     private VariantAdapter variantAdapter;
+    private ImagesAdapter imagesAdapter;
     private List<GetCategoryData> categoryDataList = new ArrayList<>();
     private String selectedCategoryId;
     private String selectedSubCategoryId;
-    private List<String> unitList = new ArrayList<>(Arrays.asList("Kg", "Gram", "Quantity"));
+    private List<String> unitList = new ArrayList<>(Arrays.asList("Kg", "gram", "Ltr", "ml"));
+    private String unitType;
+    private String foodType;
+    private List<Variant> variantList = new ArrayList<>();
+    private List<DynamicField> dynamicFieldList = new ArrayList<>();
+    private DynamicFieldAdapter dynamicFieldAdapter;
 
     public static Intent getStartIntent(Context context) {
         return new Intent(context, AddProductActivity.class);
@@ -99,13 +120,31 @@ public class AddProductActivity extends AppCompatActivity implements SubCategory
         getCategoriesApi();
     }
 
+    private void getStoreAttributes() {
+        NetworkAdaper.getNetworkServices().getStoreAttributes(new Callback<StoreAttributes>() {
+            @Override
+            public void success(StoreAttributes storeAttributes, Response response) {
+
+                ProgressDialogUtil.hideProgressDialog();
+                if (storeAttributes.isSuccess()) {
+                    dynamicFieldAdapter.setDynamicFieldList(storeAttributes.getData());
+                }
+            }
+
+            @Override
+            public void failure(RetrofitError error) {
+                ProgressDialogUtil.hideProgressDialog();
+            }
+        });
+    }
+
     private void setUpSpinner() {
         final ArrayAdapter<String> stringArrayAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_dropdown_item, unitList);
         appCompatSpinnerUnitType.setAdapter(stringArrayAdapter);
         appCompatSpinnerUnitType.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                Toast.makeText(AddProductActivity.this, stringArrayAdapter.getItem(position), Toast.LENGTH_SHORT).show();
+                unitType = stringArrayAdapter.getItem(position);
             }
 
             @Override
@@ -124,6 +163,28 @@ public class AddProductActivity extends AppCompatActivity implements SubCategory
     }
 
     private void setUpAdapter() {
+        variantAdapter = new VariantAdapter(this);
+        recyclerViewVariant.setAdapter(variantAdapter);
+        recyclerViewVariant.setLayoutManager(new LinearLayoutManager(this));
+        recyclerViewVariant.addItemDecoration(new SpacesItemDecoration((int) Util.pxFromDp(this, 16)));
+
+        imagesAdapter = new ImagesAdapter(this);
+        recyclerViewImages.setAdapter(imagesAdapter);
+        recyclerViewImages.setLayoutManager(new LinearLayoutManager(this, RecyclerView.HORIZONTAL, false));
+        recyclerViewImages.addItemDecoration(new SpacesItemImageDecoration((int) Util.pxFromDp(this, 8)));
+
+        dynamicFieldAdapter = new DynamicFieldAdapter(this);
+        recyclerViewDynamicField.setLayoutManager(new LinearLayoutManager(this));
+        recyclerViewDynamicField.setAdapter(dynamicFieldAdapter);
+        recyclerViewDynamicField.addItemDecoration(new RecyclerView.ItemDecoration() {
+            @Override
+            public void getItemOffsets(@NonNull Rect outRect, @NonNull View view, @NonNull RecyclerView parent, @NonNull RecyclerView.State state) {
+                outRect.left = 0;
+                outRect.right = 0;
+                outRect.bottom = (int) Util.pxFromDp(AddProductActivity.this, 8);
+                outRect.top = 0;
+            }
+        });
     }
 
     private void initView() {
@@ -145,10 +206,16 @@ public class AddProductActivity extends AppCompatActivity implements SubCategory
         linearLayoutImage = findViewById(R.id.ll_add_products);
         linearLayoutVariant = findViewById(R.id.ll_add_variant);
         recyclerViewVariant = findViewById(R.id.rv_variant);
+        recyclerViewImages = findViewById(R.id.rv_product_images);
+        recyclerViewDynamicField = findViewById(R.id.rv_dynamic_fields);
 
         editTextCategory.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
+                selectedSubCategoryId = null;
+                editTextSubCategory.setText(null);
+
                 Bundle bundle = new Bundle();
                 bundle.putParcelableArrayList(CategoryDialog.CATEGORY_DATA, (ArrayList<? extends Parcelable>) categoryDataList);
                 CategoryDialog categoryDialog = CategoryDialog.getInstance(bundle);
@@ -196,7 +263,14 @@ public class AddProductActivity extends AppCompatActivity implements SubCategory
         radioGroupVegNonVeg.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(RadioGroup group, int checkedId) {
-                // TODO - VEG/Non-VEG RADIO BUTTON
+                switch (checkedId) {
+                    case R.id.mrb_non_veg:
+                        foodType = "non-veg";
+                        break;
+                    case R.id.mrb_veg:
+                        foodType = "veg";
+                        break;
+                }
             }
         });
 
@@ -236,6 +310,17 @@ public class AddProductActivity extends AppCompatActivity implements SubCategory
 
             }
         });
+
+        linearLayoutImage.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (imagesAdapter.getItemCount() < 6) {
+                    getGalleryImage();
+                } else {
+                    Toast.makeText(AddProductActivity.this, "Max 6 image allowded", Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
     }
 
     private void getGalleryImage() {
@@ -258,11 +343,76 @@ public class AddProductActivity extends AppCompatActivity implements SubCategory
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (resultCode == Activity.RESULT_OK && requestCode == REQUEST_IMAGE_GET) {
-            if (data == null) {
-                return;
+        if (resultCode == Activity.RESULT_OK) {
+            switch (requestCode) {
+                case REQUEST_IMAGE_GET:
+
+                    if (data == null) {
+                        return;
+                    }
+
+                    File fileLogo = new File(getExternalFilesDir("ValueAppz"), "product.png");
+                    Uri output = Uri.fromFile(fileLogo);
+
+                    Uri fullPhotoUri = data.getData();
+
+                    if (fullPhotoUri == null) {
+                        return;
+                    }
+
+                    UCrop.of(fullPhotoUri, output)
+                            .withAspectRatio(1, 1)
+                            .withMaxResultSize(500, 500)
+                            .start(this);
+                    break;
+                case UCrop.REQUEST_CROP:
+
+                    if (data == null) {
+                        return;
+                    }
+
+                    final Uri resultUri = UCrop.getOutput(data);
+                    uploadImage(FileUtils.getPath(this, resultUri));
+                    break;
+                default:
+                    if (data == null || data.getExtras() == null) {
+                        return;
+                    }
+
+                    Variant variant = data.getExtras().getParcelable(VariantActivity.VARIANT_DATA);
+                    variantList.add(variant);
+                    variantAdapter.setVariantList(variantList);
+                    break;
             }
         }
+    }
+
+    private void uploadImage(String path) {
+        File file = new File(path);
+
+        TypedFile typedFile = new TypedFile("multipart/form-data", file);
+
+        ProgressDialogUtil.showProgressDialog(this);
+        NetworkAdaper.getNetworkServices().uploadImage(typedFile, new Callback<ImageUploadResponse>() {
+            @Override
+            public void success(ImageUploadResponse imageUploadResponse, Response response) {
+                ProgressDialogUtil.hideProgressDialog();
+
+                if (imageUploadResponse.isSuccess()) {
+                    String productImage = imageUploadResponse.getMessage().getUrl();
+                    String imageUrl = String.format("https://s3.amazonaws.com/store-asset/%s", productImage);
+                    imagesAdapter.addImage(imageUrl);
+                    if (imagesAdapter.getItemCount() > 0) {
+                        recyclerViewImages.smoothScrollToPosition(imagesAdapter.getItemCount() - 1);
+                    }
+                }
+            }
+
+            @Override
+            public void failure(RetrofitError error) {
+                ProgressDialogUtil.hideProgressDialog();
+            }
+        });
     }
 
     @Override
@@ -281,19 +431,17 @@ public class AddProductActivity extends AppCompatActivity implements SubCategory
         ProgressDialogUtil.showProgressDialog(this);
         Map<String, Object> param = new HashMap<>();
         param.put("page", 1);
-        param.put("pagesize", 1000);
+        param.put("pagelength", 1000);
 
         NetworkAdaper.getNetworkServices().getCategories(param, new Callback<GetCategoryResponse>() {
             @Override
             public void success(GetCategoryResponse getCategoryResponse, Response response) {
-
-                ProgressDialogUtil.hideProgressDialog();
-
                 if (getCategoryResponse.getSuccess()) {
                     categoryDataList = getCategoryResponse.getData();
                 } else {
                     Toast.makeText(AddProductActivity.this, "Data not found!", Toast.LENGTH_SHORT).show();
                 }
+                getStoreAttributes();
             }
 
             @Override
@@ -335,6 +483,8 @@ public class AddProductActivity extends AppCompatActivity implements SubCategory
         String variantMrp = editTextMRP.getText().toString().trim();
         String variantDiscount = editTextDiscount.getText().toString().trim();
         String variantSellingPrice = editTextSellingPrice.getText().toString().trim();
+        String inclusiveExclusive = switchInEx.isChecked() ? "exclusive" : "inclusive";
+        boolean displayVegNonVeg = checkBoxDisplayVegNonVeg.isChecked();
 
         if (TextUtils.isEmpty(selectedCategoryId)) {
             Toast.makeText(this, "Please choose category", Toast.LENGTH_SHORT).show();
@@ -351,6 +501,13 @@ public class AddProductActivity extends AppCompatActivity implements SubCategory
             return;
         }
 
+        if (displayVegNonVeg) {
+            if (TextUtils.isEmpty(foodType)) {
+                Toast.makeText(this, "Please choose veg/non-veg", Toast.LENGTH_SHORT).show();
+                return;
+            }
+        }
+
         if (TextUtils.isEmpty(productTax)) {
             Toast.makeText(this, "Please enter product tax", Toast.LENGTH_SHORT).show();
             return;
@@ -361,13 +518,13 @@ public class AddProductActivity extends AppCompatActivity implements SubCategory
             return;
         }
 
-        if (TextUtils.isEmpty(variantMrp)) {
-            Toast.makeText(this, "Please enter product MRP", Toast.LENGTH_SHORT).show();
+        if (TextUtils.isEmpty(unitType)) {
+            Toast.makeText(this, "Please select unit type", Toast.LENGTH_SHORT).show();
             return;
         }
 
-        if (TextUtils.isEmpty(variantDiscount)) {
-            Toast.makeText(this, "Please enter product discount", Toast.LENGTH_SHORT).show();
+        if (TextUtils.isEmpty(variantMrp)) {
+            Toast.makeText(this, "Please enter product MRP", Toast.LENGTH_SHORT).show();
             return;
         }
 

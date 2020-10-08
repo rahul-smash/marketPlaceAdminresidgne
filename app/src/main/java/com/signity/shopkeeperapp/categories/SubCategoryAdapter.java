@@ -12,6 +12,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.core.content.res.ResourcesCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.card.MaterialCardView;
@@ -106,9 +107,11 @@ public class SubCategoryAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
                 String categoryImageUrl = subCategory.getSubCategoryImage();
                 if (!TextUtils.isEmpty(categoryImageUrl)) {
                     imageViewSubCategoryImage.setVisibility(View.VISIBLE);
+                    linearLayoutAddImage.setVisibility(View.INVISIBLE);
                     String imageUrl = String.format("https://s3.amazonaws.com/store-asset/%s", categoryImageUrl);
                     Picasso.with(context)
                             .load(imageUrl)
+                            .placeholder(ResourcesCompat.getDrawable(context.getResources(), R.drawable.addimageicon, null))
                             .into(imageViewSubCategoryImage);
                 }
             } catch (Exception e) {

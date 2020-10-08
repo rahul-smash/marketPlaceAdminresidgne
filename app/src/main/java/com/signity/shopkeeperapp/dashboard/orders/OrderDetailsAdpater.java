@@ -10,6 +10,7 @@ import android.widget.Switch;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.core.content.res.ResourcesCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.signity.shopkeeperapp.R;
@@ -73,10 +74,11 @@ public class OrderDetailsAdpater extends RecyclerView.Adapter<OrderDetailsAdpate
         if (!TextUtils.isEmpty(itemListModel.getImageSmall())) {
             Picasso.with(context)
                     .load(itemListModel.getImageSmall())
-                    .error(R.mipmap.ic_launcher)
+                    .error(R.drawable.addimageicon)
+                    .placeholder(ResourcesCompat.getDrawable(context.getResources(), R.drawable.addimageicon, null))
                     .into(holder.imageViewItem);
         } else {
-            holder.imageViewItem.setImageResource(R.mipmap.ic_launcher);
+            holder.imageViewItem.setImageResource(R.drawable.addimageicon);
         }
     }
 

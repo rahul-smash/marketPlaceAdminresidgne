@@ -203,7 +203,6 @@ public class ProductFragment extends Fragment implements View.OnClickListener, P
     @Override
     public void onClick(View view) {
         if (view == linearLayoutAddProduct) {
-            Toast.makeText(getContext(), "Coming Soon!", Toast.LENGTH_SHORT).show();
             startActivity(AddProductActivity.getStartIntent(getContext()));
             AnimUtil.slideFromRightAnim(getActivity());
         }

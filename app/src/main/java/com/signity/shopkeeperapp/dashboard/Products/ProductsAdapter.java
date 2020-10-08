@@ -19,7 +19,6 @@ import android.widget.Toast;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.signity.shopkeeperapp.R;
-import com.signity.shopkeeperapp.model.CategoryStatus.CategoryStatus;
 import com.signity.shopkeeperapp.model.Product.GetProductData;
 import com.signity.shopkeeperapp.model.Product.Variant;
 import com.signity.shopkeeperapp.model.productStatus.ProductStatus;
@@ -81,9 +80,9 @@ public class ProductsAdapter extends RecyclerView.Adapter<ProductsAdapter.MyView
             if (subProductImage != null && !subProductImage.isEmpty()) {
 
                 Picasso.with(context).load(subProductImage)
-                        .error(R.mipmap.ic_launcher).placeholder(R.drawable.ic_launcher).into(holder.imageCategory);
+                        .error(R.drawable.addimageicon).placeholder(R.drawable.addimageicon).into(holder.imageCategory);
             } else {
-                holder.imageCategory.setImageResource(R.mipmap.ic_launcher);
+                holder.imageCategory.setImageResource(R.drawable.addimageicon);
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -160,6 +159,31 @@ public class ProductsAdapter extends RecyclerView.Adapter<ProductsAdapter.MyView
         });
     }
 
+    //SetProductStatusAPI
+    public void setProductStatus(String subProductId, String status) {
+        ProgressDialogUtil.showProgressDialog(context);
+        Map<String, Object> param = new HashMap<>();
+        param.put("product_id", subProductId);
+        param.put("product_status", status);
+
+        NetworkAdaper.getNetworkServices().setProductStatus(param, new Callback<ProductStatus>() {
+            @Override
+            public void success(ProductStatus productStatus, Response response) {
+
+                ProgressDialogUtil.hideProgressDialog();
+
+                if (productStatus.getSuccess()) {
+
+                } else {
+                }
+            }
+
+            @Override
+            public void failure(RetrofitError error) {
+                ProgressDialogUtil.hideProgressDialog();
+            }
+        });
+    }
 
     // Define the listener interface
     public interface OnItemClickListener {
@@ -186,31 +210,6 @@ public class ProductsAdapter extends RecyclerView.Adapter<ProductsAdapter.MyView
             switchProduct = convertView.findViewById(R.id.switch_product);
         }
 
-    }
-    //SetProductStatusAPI
-    public void setProductStatus(String subProductId, String status) {
-        ProgressDialogUtil.showProgressDialog(context);
-        Map<String, Object> param = new HashMap<>();
-        param.put("product_id", subProductId);
-        param.put("product_status", status);
-
-        NetworkAdaper.getNetworkServices().setProductStatus(param, new Callback<ProductStatus>() {
-            @Override
-            public void success(ProductStatus productStatus, Response response) {
-
-                ProgressDialogUtil.hideProgressDialog();
-
-                if (productStatus.getSuccess()) {
-
-                } else {
-                }
-            }
-
-            @Override
-            public void failure(RetrofitError error) {
-                ProgressDialogUtil.hideProgressDialog();
-            }
-        });
     }
 
 }

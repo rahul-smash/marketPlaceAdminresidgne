@@ -52,14 +52,14 @@
             android:layout_height="match_parent">
 
             <androidx.constraintlayout.widget.ConstraintLayout
-                android:id="@+id/constraintLayout3"
+                android:id="@+id/const_image"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="@color/colorWhite"
                 android:paddingStart="16dp"
-                android:paddingTop="24dp"
-                android:paddingEnd="16dp"
-                android:paddingBottom="16dp"
+                android:paddingLeft="16dp"
+                android:paddingTop="16dp"
+                android:paddingBottom="8dp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.5"
                 app:layout_constraintStart_toStartOf="parent"
@@ -105,32 +105,41 @@
                     android:id="@+id/rv_product_images"
                     android:layout_width="0dp"
                     android:layout_height="80dp"
+                    android:layout_marginStart="8dp"
+                    android:layout_marginLeft="8dp"
+                    android:scrollbars="horizontal"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toEndOf="@+id/ll_add_products"
-                    app:layout_constraintTop_toTopOf="parent" />
+                    app:layout_constraintTop_toTopOf="parent"
+                    tools:listitem="@layout/itemview_image" />
 
-                <ImageView
-                    android:id="@+id/iv_category"
-                    android:layout_width="80dp"
-                    android:layout_height="80dp"
-                    android:adjustViewBounds="true"
-                    android:scaleType="fitCenter"
-                    android:src="@mipmap/ic_launcher"
-                    android:visibility="gone"
-                    app:layout_constraintBottom_toBottomOf="@+id/ll_add_products"
-                    app:layout_constraintEnd_toEndOf="@+id/ll_add_products"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="@+id/ll_add_products" />
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/constraintLayout3"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/colorWhite"
+                android:paddingStart="16dp"
+                android:paddingTop="24dp"
+                android:paddingEnd="16dp"
+                android:paddingBottom="16dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.5"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/const_image">
 
                 <com.google.android.material.textfield.TextInputLayout
                     android:id="@+id/textInputLayout2"
                     style="@style/Widget.Design.TextInputLayout"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="24dp"
                     android:hint="Category"
                     app:hintTextColor="@color/colorTextGrey"
-                    app:layout_constraintTop_toBottomOf="@+id/ll_add_products">
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintHorizontal_bias="0.5"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent">
 
                     <com.google.android.material.textfield.TextInputEditText
                         android:id="@+id/edt_category"
@@ -156,8 +165,10 @@
                     android:layout_marginTop="16dp"
                     android:hint="SubCategory"
                     app:hintTextColor="@color/colorTextGrey"
-                    app:layout_constraintTop_toBottomOf="@+id/textInputLayout2"
-                    tools:layout_editor_absoluteX="16dp">
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintHorizontal_bias="0.5"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/textInputLayout2">
 
                     <com.google.android.material.textfield.TextInputEditText
                         android:id="@+id/edt_sub_category"
@@ -183,8 +194,10 @@
                     android:layout_marginTop="16dp"
                     android:hint="Product Name"
                     app:hintTextColor="@color/colorTextGrey"
-                    app:layout_constraintTop_toBottomOf="@+id/textInputLayout3"
-                    tools:layout_editor_absoluteX="16dp">
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintHorizontal_bias="0.5"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/textInputLayout3">
 
                     <com.google.android.material.textfield.TextInputEditText
                         android:id="@+id/edt_product_name"
@@ -227,8 +240,8 @@
                         android:layout_marginTop="8dp"
                         android:background="@drawable/shape_edittext_background"
                         android:gravity="start"
-                        android:inputType="textMultiLine"
                         android:imeOptions="actionNext"
+                        android:inputType="textMultiLine"
                         android:maxLength="100"
                         android:maxLines="4"
                         android:padding="12dp"
@@ -313,12 +326,14 @@
                     app:layout_constraintTop_toBottomOf="@+id/cb_display">
 
                     <com.google.android.material.radiobutton.MaterialRadioButton
+                        android:id="@+id/mrb_non_veg"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="Non-Vegetarian"
                         android:textColor="@color/colorTextDark" />
 
                     <com.google.android.material.radiobutton.MaterialRadioButton
+                        android:id="@+id/mrb_veg"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="8dp"
@@ -394,12 +409,13 @@
             </androidx.constraintlayout.widget.ConstraintLayout>
 
             <androidx.constraintlayout.widget.ConstraintLayout
-                android:id="@+id/const_variant"
+                android:id="@+id/const_variant_old"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
                 android:background="@color/colorWhite"
                 android:padding="16dp"
+                android:visibility="gone"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/const_tag">
@@ -541,6 +557,38 @@
                         android:text="" />
 
                 </com.google.android.material.textfield.TextInputLayout>
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/const_variant"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:background="@color/colorWhite"
+                android:padding="16dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/const_tag">
+
+                <TextView
+                    android:id="@+id/textView22"
+                    style="@style/AppTheme.TextView.Medium"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Variant"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/rv_dynamic_fields"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="16dp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintHorizontal_bias="0.5"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/textView22" />
 
             </androidx.constraintlayout.widget.ConstraintLayout>
 

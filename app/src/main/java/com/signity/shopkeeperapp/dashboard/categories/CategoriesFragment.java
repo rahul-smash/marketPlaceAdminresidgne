@@ -18,10 +18,12 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.signity.shopkeeperapp.R;
 import com.signity.shopkeeperapp.adapter.RvGridSpacesItemDecoration;
+import com.signity.shopkeeperapp.categories.AddCategoryActivity;
 import com.signity.shopkeeperapp.model.Categories.GetCategoryData;
 import com.signity.shopkeeperapp.model.Categories.GetCategoryResponse;
 import com.signity.shopkeeperapp.model.Categories.SubCategory;
 import com.signity.shopkeeperapp.network.NetworkAdaper;
+import com.signity.shopkeeperapp.util.AnimUtil;
 import com.signity.shopkeeperapp.util.DialogUtils;
 import com.signity.shopkeeperapp.util.ProgressDialogUtil;
 import com.signity.shopkeeperapp.util.Util;
@@ -119,9 +121,8 @@ public class CategoriesFragment extends Fragment implements CategoriesAdapter.Ca
         linearLayoutAddCategory.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(getContext(), "Coming Soon!", Toast.LENGTH_SHORT).show();
-//                startActivity(AddCategoryActivity.getStartIntent(getContext()));
-//                AnimUtil.slideFromRightAnim(getActivity());
+                startActivity(AddCategoryActivity.getStartIntent(getContext()));
+                AnimUtil.slideFromRightAnim(getActivity());
             }
         });
     }
@@ -157,7 +158,7 @@ public class CategoriesFragment extends Fragment implements CategoriesAdapter.Ca
         ProgressDialogUtil.showProgressDialog(getActivity());
         Map<String, Object> param = new HashMap<>();
         param.put("page", currentPageNumber);
-        param.put("pagesize", pageSize);
+        param.put("pagelength", pageSize);
 
         NetworkAdaper.getNetworkServices().getCategories(param, new Callback<GetCategoryResponse>() {
             @Override

@@ -32,11 +32,11 @@
 
     <ImageView
         android:id="@+id/iv_sub_category"
-        android:layout_width="80dp"
-        android:layout_height="80dp"
+        android:layout_width="60dp"
+        android:layout_height="60dp"
         android:adjustViewBounds="true"
         android:scaleType="fitCenter"
-        android:src="@mipmap/ic_launcher"
+        android:src="@drawable/addimageicon"
         android:visibility="gone"
         app:layout_constraintBottom_toBottomOf="@+id/ll_add_sub_category_image"
         app:layout_constraintEnd_toEndOf="@+id/ll_add_sub_category_image"
@@ -59,10 +59,10 @@
             android:id="@+id/edt_sub_category_name"
             style="@style/AppTheme.TextView.Medium"
             android:layout_width="match_parent"
-            android:maxLines="1"
+            android:layout_height="wrap_content"
             android:imeOptions="actionDone"
             android:inputType="textCapWords"
-            android:layout_height="wrap_content" />
+            android:maxLines="1" />
 
     </com.google.android.material.textfield.TextInputLayout>
 

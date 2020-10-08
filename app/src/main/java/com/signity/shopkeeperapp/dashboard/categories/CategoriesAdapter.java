@@ -83,9 +83,9 @@ public class CategoriesAdapter extends RecyclerView.Adapter<CategoriesAdapter.My
             if (!TextUtils.isEmpty(subCategoryImage)) {
                 Picasso.with(context)
                         .load(subCategoryImage)
-                        .error(R.mipmap.ic_launcher).placeholder(R.drawable.ic_launcher).into(holder.imageViewCategory);
+                        .error(R.drawable.addimageicon).placeholder(R.drawable.addimageicon).into(holder.imageViewCategory);
             } else {
-                holder.imageViewCategory.setImageResource(R.mipmap.ic_launcher);
+                holder.imageViewCategory.setImageResource(R.drawable.addimageicon);
             }
         } catch (Exception e) {
             e.printStackTrace();

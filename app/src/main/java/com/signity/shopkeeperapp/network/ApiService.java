@@ -15,6 +15,7 @@ import com.signity.shopkeeperapp.model.MobResponseLogin;
 import com.signity.shopkeeperapp.model.OrderItemResponseModel;
 import com.signity.shopkeeperapp.model.OtpVerifyModel;
 import com.signity.shopkeeperapp.model.Product.GetProductResponse;
+import com.signity.shopkeeperapp.model.Product.StoreAttributes;
 import com.signity.shopkeeperapp.model.ResponseForceUpdate;
 import com.signity.shopkeeperapp.model.SetOrdersModel;
 import com.signity.shopkeeperapp.model.StoresModel;
@@ -180,9 +181,10 @@ public interface ApiService {
     @POST("/delCategory")
     void delCategory(@FieldMap Map<String, Object> parameters, Callback<DeleteCategories> response);
 
-
     @FormUrlEncoded
     @POST("/setProductStatus")
     void setProductStatus(@FieldMap Map<String, Object> parameters, Callback<ProductStatus> response);
 
+    @POST("/getStoreAttributes")
+    void getStoreAttributes(Callback<StoreAttributes> response);
 }

@@ -20,6 +20,7 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.app.ActivityCompat;
+import androidx.core.content.res.ResourcesCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -259,8 +260,10 @@ public class AddCategoryActivity extends AppCompatActivity implements SubCategor
                         case CATEGORY:
                             if (imageViewCategory != null) {
                                 imageViewCategory.setVisibility(View.VISIBLE);
+                                linearLayoutAddCategoryImage.setVisibility(View.INVISIBLE);
                                 Picasso.with(AddCategoryActivity.this)
                                         .load(imageUrl)
+                                        .placeholder(ResourcesCompat.getDrawable(getResources(), R.drawable.addimageicon, null))
                                         .into(imageViewCategory);
                             }
                             break;

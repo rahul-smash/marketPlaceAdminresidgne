@@ -1,11 +1,24 @@
-
 package com.signity.shopkeeperapp.model.Product;
+
+import android.os.Parcel;
+import android.os.Parcelable;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-public class Variant {
+public class Variant implements Parcelable {
 
+    public static final Creator<Variant> CREATOR = new Creator<Variant>() {
+        @Override
+        public Variant createFromParcel(Parcel in) {
+            return new Variant(in);
+        }
+
+        @Override
+        public Variant[] newArray(int size) {
+            return new Variant[size];
+        }
+    };
     @SerializedName("id")
     @Expose
     private String id;
@@ -36,6 +49,22 @@ public class Variant {
     @SerializedName("order_by")
     @Expose
     private String orderBy;
+
+    public Variant() {
+    }
+
+    protected Variant(Parcel in) {
+        id = in.readString();
+        storeId = in.readString();
+        productId = in.readString();
+        sku = in.readString();
+        unitType = in.readString();
+        weight = in.readString();
+        mrpPrice = in.readString();
+        discount = in.readString();
+        price = in.readString();
+        orderBy = in.readString();
+    }
 
     public String getId() {
         return id;
@@ -117,4 +146,22 @@ public class Variant {
         this.orderBy = orderBy;
     }
 
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(id);
+        dest.writeString(storeId);
+        dest.writeString(productId);
+        dest.writeString(sku);
+        dest.writeString(unitType);
+        dest.writeString(weight);
+        dest.writeString(mrpPrice);
+        dest.writeString(discount);
+        dest.writeString(price);
+        dest.writeString(orderBy);
+    }
 }
