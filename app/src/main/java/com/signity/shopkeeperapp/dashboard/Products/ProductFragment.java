@@ -2,6 +2,9 @@ package com.signity.shopkeeperapp.dashboard.Products;
 
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
+import android.os.Parcelable;
+import android.text.TextUtils;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -10,6 +13,7 @@ import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.PopupWindow;
 import android.widget.TextView;
@@ -21,12 +25,18 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.android.material.textfield.TextInputEditText;
 import com.signity.shopkeeperapp.R;
 import com.signity.shopkeeperapp.adapter.RvGridSpacesItemDecoration;
+import com.signity.shopkeeperapp.model.Categories.GetCategoryData;
+import com.signity.shopkeeperapp.model.Categories.GetCategoryResponse;
+import com.signity.shopkeeperapp.model.Categories.SubCategory;
 import com.signity.shopkeeperapp.model.Product.GetProductData;
 import com.signity.shopkeeperapp.model.Product.GetProductResponse;
 import com.signity.shopkeeperapp.network.NetworkAdaper;
 import com.signity.shopkeeperapp.products.AddProductActivity;
+import com.signity.shopkeeperapp.products.CategoryDialog;
+import com.signity.shopkeeperapp.products.SubCategoryDialog;
 import com.signity.shopkeeperapp.util.AnimUtil;
 import com.signity.shopkeeperapp.util.DialogUtils;
 import com.signity.shopkeeperapp.util.ProgressDialogUtil;
@@ -50,6 +60,10 @@ public class ProductFragment extends Fragment implements View.OnClickListener, P
     private RecyclerView recyclerViewProduct;
     private LinearLayoutManager layoutManager;
     private int pageSize = 10, currentPageNumber = 1, start, totalOrders;
+    private List<GetCategoryData> categoryDataList = new ArrayList<>();
+    private String selectedCategoryId = "0";
+    private String selectedSubCategoryId = "0";
+    private TextInputEditText txtSelectCategory, txtSubCategory;
     private RecyclerView.OnScrollListener recyclerViewOnScrollListener = new RecyclerView.OnScrollListener() {
         @Override
         public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
@@ -104,7 +118,7 @@ public class ProductFragment extends Fragment implements View.OnClickListener, P
         }
         if (item.getItemId() == R.id.action_filter) {
             // TODO - Filter Menu
-//            showOverViewPopMenu();
+            showOverViewPopMenu();
 
 
         }
@@ -115,6 +129,7 @@ public class ProductFragment extends Fragment implements View.OnClickListener, P
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         setUpAdapter();
+        getCategoriesApi();
     }
 
     private void setUpAdapter() {
@@ -167,8 +182,8 @@ public class ProductFragment extends Fragment implements View.OnClickListener, P
         Map<String, Object> param = new HashMap<>();
         param.put("page", currentPageNumber);
         param.put("pagelength", pageSize);
-        param.put("cat_id", "0");
-        param.put("sub_cat_ids", "0");
+        param.put("cat_id", selectedCategoryId);
+        param.put("sub_cat_ids", selectedSubCategoryId);
 
         NetworkAdaper.getNetworkServices().getAllProducts(param, new Callback<GetProductResponse>() {
             @Override
@@ -237,18 +252,100 @@ public class ProductFragment extends Fragment implements View.OnClickListener, P
         float den = getActivity().getResources().getDisplayMetrics().density;
         int offsetY = (int) (den * 2);
         popupWindowOverView.showAtLocation(layout, Gravity.TOP, 0, 0);
-        TextView txtSelectCategory = layout.findViewById(R.id.txtSelectCategory);
-        txtSelectCategory.setOnClickListener(new View.OnClickListener() {
+        txtSelectCategory = layout.findViewById(R.id.edt_category);
+        Button btnApply = layout.findViewById(R.id.btnApply);
+        btnApply.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                currentPageNumber=1;
+                getProductApi();
+                popupWindowOverView.dismiss();
 
             }
         });
-        TextView txtSubCategory = layout.findViewById(R.id.txtSubCategory);
-        txtSubCategory.setOnClickListener(new View.OnClickListener() {
+        Button btnCancel = layout.findViewById(R.id.btnCancel);
+        btnCancel.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
 
+                popupWindowOverView.dismiss();
+
+            }
+        });
+        txtSelectCategory.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Bundle bundle = new Bundle();
+                bundle.putParcelableArrayList(CategoryDialog.CATEGORY_DATA, (ArrayList<? extends Parcelable>) categoryDataList);
+                CategoryDialog categoryDialog = CategoryDialog.getInstance(bundle);
+                categoryDialog.setListenerCategory(new CategoryDialog.CategoryListener() {
+                    @Override
+                    public void onSelectCategory(String categoryId, String categoryName) {
+                        Log.i("---categoryName", "" + categoryName);
+
+                        selectedCategoryId = categoryId;
+                        txtSelectCategory.setText(categoryName);
+                    }
+                });
+                categoryDialog.show(getActivity().getSupportFragmentManager(), CategoryDialog.TAG);
+
+            }
+        });
+        txtSubCategory = layout.findViewById(R.id.edt_sub_category);
+        txtSubCategory.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (TextUtils.isEmpty(selectedCategoryId)) {
+                    return;
+                }
+
+                List<SubCategory> subCategories = new ArrayList<>();
+                for (GetCategoryData categoryData : categoryDataList) {
+                    if (categoryData.getId().equals(selectedCategoryId)) {
+                        subCategories.addAll(categoryData.getSubCategory());
+                    }
+                }
+
+                Bundle bundle = new Bundle();
+                bundle.putParcelableArrayList(SubCategoryDialog.SUBCATEGORY_DATA, (ArrayList<? extends Parcelable>) subCategories);
+                SubCategoryDialog subCategoryDialog = SubCategoryDialog.getInstance(bundle);
+                subCategoryDialog.setListenerCategory(new SubCategoryDialog.SubCategoryListener() {
+                    @Override
+                    public void onSelectSubCategory(String subCategoryId, String subCategoryName) {
+                        Log.i("---subCategoryName", "" + subCategoryName);
+
+                        selectedSubCategoryId = subCategoryId;
+                        txtSubCategory.setText(subCategoryName);
+                    }
+                });
+                subCategoryDialog.show(getActivity().getSupportFragmentManager(), SubCategoryDialog.TAG);
+            }
+        });
+    }
+
+
+    public void getCategoriesApi() {
+        ProgressDialogUtil.showProgressDialog(getActivity());
+        Map<String, Object> param = new HashMap<>();
+        param.put("page", 1);
+        param.put("pagesize", 1000);
+
+        NetworkAdaper.getNetworkServices().getCategories(param, new Callback<GetCategoryResponse>() {
+            @Override
+            public void success(GetCategoryResponse getCategoryResponse, Response response) {
+
+                ProgressDialogUtil.hideProgressDialog();
+
+                if (getCategoryResponse.getSuccess()) {
+                    categoryDataList = getCategoryResponse.getData();
+                } else {
+                    Toast.makeText(getActivity(), "Data not found!", Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void failure(RetrofitError error) {
+                ProgressDialogUtil.hideProgressDialog();
             }
         });
     }

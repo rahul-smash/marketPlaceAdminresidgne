@@ -40,6 +40,9 @@ public class SubCategoryDialog extends DialogFragment implements SubCategoryDial
     private SearchView searchViewCategory;
     private TextView textViewDialogTitle;
     private SubCategoryListener listener;
+    public void setListenerCategory(SubCategoryListener listener) {
+        this.listener = listener;
+    }
 
     public static SubCategoryDialog getInstance(Bundle bundle) {
         SubCategoryDialog categoryDialog = new SubCategoryDialog();
