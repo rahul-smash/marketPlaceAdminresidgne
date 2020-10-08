@@ -41,6 +41,10 @@ public class CategoryDialog extends DialogFragment implements CategoryDialogAdap
     private TextView textViewDialogTitle;
     private CategoryListener listener;
 
+    public void setListenerCategory(CategoryListener listener) {
+        this.listener = listener;
+    }
+
     public static CategoryDialog getInstance(Bundle bundle) {
         CategoryDialog categoryDialog = new CategoryDialog();
         categoryDialog.setArguments(bundle);

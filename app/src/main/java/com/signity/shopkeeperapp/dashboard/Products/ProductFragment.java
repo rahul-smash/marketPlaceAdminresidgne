@@ -50,7 +50,7 @@ import retrofit.Callback;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
 
-public class ProductFragment extends Fragment implements View.OnClickListener, ProductsAdapter.OnItemClickListener, SubCategoryDialog.SubCategoryListener,CategoryDialog.CategoryListener {
+public class ProductFragment extends Fragment implements View.OnClickListener, ProductsAdapter.OnItemClickListener {
     public static final String TAG = "ProductFragment";
     View hiddenView;
     private ProductsAdapter categoriesAdapter;
@@ -259,7 +259,17 @@ public class ProductFragment extends Fragment implements View.OnClickListener, P
                 Bundle bundle = new Bundle();
                 bundle.putParcelableArrayList(CategoryDialog.CATEGORY_DATA, (ArrayList<? extends Parcelable>) categoryDataList);
                 CategoryDialog categoryDialog = CategoryDialog.getInstance(bundle);
+               categoryDialog.setListenerCategory(new CategoryDialog.CategoryListener() {
+                   @Override
+                   public void onSelectCategory(String categoryId, String categoryName) {
+                       Log.i("---categoryName",""+categoryName);
+
+                       selectedCategoryId = categoryId;
+                       txtSelectCategory.setText(categoryName);
+                   }
+               });
                 categoryDialog.show(getActivity().getSupportFragmentManager(), CategoryDialog.TAG);
+
             }
         });
          txtSubCategory = layout.findViewById(R.id.edt_sub_category);
@@ -280,24 +290,21 @@ public class ProductFragment extends Fragment implements View.OnClickListener, P
                 Bundle bundle = new Bundle();
                 bundle.putParcelableArrayList(SubCategoryDialog.SUBCATEGORY_DATA, (ArrayList<? extends Parcelable>) subCategories);
                 SubCategoryDialog subCategoryDialog = SubCategoryDialog.getInstance(bundle);
+               subCategoryDialog.setListenerCategory(new SubCategoryDialog.SubCategoryListener() {
+                   @Override
+                   public void onSelectSubCategory(String subCategoryId, String subCategoryName) {
+                       Log.i("---subCategoryName",""+subCategoryName);
+
+                       selectedSubCategoryId = subCategoryId;
+                       txtSubCategory.setText(subCategoryName);
+                   }
+               });
                 subCategoryDialog.show(getActivity().getSupportFragmentManager(), SubCategoryDialog.TAG);
             }
         });
     }
 
-    @Override
-    public void onSelectCategory(String categoryId, String categoryName) {
-        Log.i("--------",""+categoryName);
 
-        selectedCategoryId = categoryId;
-        txtSelectCategory.setText(categoryName);
-    }
-
-    @Override
-    public void onSelectSubCategory(String subCategoryId, String subCategoryName) {
-        selectedSubCategoryId = subCategoryId;
-        txtSubCategory.setText(subCategoryName);
-    }
 
     public void getCategoriesApi() {
         ProgressDialogUtil.showProgressDialog(getActivity());
