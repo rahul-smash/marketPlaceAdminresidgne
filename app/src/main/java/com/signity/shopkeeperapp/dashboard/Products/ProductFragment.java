@@ -2,6 +2,9 @@ package com.signity.shopkeeperapp.dashboard.Products;
 
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
+import android.os.Parcelable;
+import android.text.TextUtils;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -21,12 +24,18 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.android.material.textfield.TextInputEditText;
 import com.signity.shopkeeperapp.R;
 import com.signity.shopkeeperapp.adapter.RvGridSpacesItemDecoration;
+import com.signity.shopkeeperapp.model.Categories.GetCategoryData;
+import com.signity.shopkeeperapp.model.Categories.GetCategoryResponse;
+import com.signity.shopkeeperapp.model.Categories.SubCategory;
 import com.signity.shopkeeperapp.model.Product.GetProductData;
 import com.signity.shopkeeperapp.model.Product.GetProductResponse;
 import com.signity.shopkeeperapp.network.NetworkAdaper;
 import com.signity.shopkeeperapp.products.AddProductActivity;
+import com.signity.shopkeeperapp.products.CategoryDialog;
+import com.signity.shopkeeperapp.products.SubCategoryDialog;
 import com.signity.shopkeeperapp.util.AnimUtil;
 import com.signity.shopkeeperapp.util.DialogUtils;
 import com.signity.shopkeeperapp.util.ProgressDialogUtil;
@@ -41,7 +50,7 @@ import retrofit.Callback;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
 
-public class ProductFragment extends Fragment implements View.OnClickListener, ProductsAdapter.OnItemClickListener {
+public class ProductFragment extends Fragment implements View.OnClickListener, ProductsAdapter.OnItemClickListener, SubCategoryDialog.SubCategoryListener,CategoryDialog.CategoryListener {
     public static final String TAG = "ProductFragment";
     View hiddenView;
     private ProductsAdapter categoriesAdapter;
@@ -50,6 +59,10 @@ public class ProductFragment extends Fragment implements View.OnClickListener, P
     private RecyclerView recyclerViewProduct;
     private LinearLayoutManager layoutManager;
     private int pageSize = 10, currentPageNumber = 1, start, totalOrders;
+    private List<GetCategoryData> categoryDataList = new ArrayList<>();
+    private String selectedCategoryId;
+    private String selectedSubCategoryId;
+   private TextInputEditText txtSelectCategory,txtSubCategory;
     private RecyclerView.OnScrollListener recyclerViewOnScrollListener = new RecyclerView.OnScrollListener() {
         @Override
         public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
@@ -104,7 +117,7 @@ public class ProductFragment extends Fragment implements View.OnClickListener, P
         }
         if (item.getItemId() == R.id.action_filter) {
             // TODO - Filter Menu
-//            showOverViewPopMenu();
+            showOverViewPopMenu();
 
 
         }
@@ -115,6 +128,7 @@ public class ProductFragment extends Fragment implements View.OnClickListener, P
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         setUpAdapter();
+        getCategoriesApi();
     }
 
     private void setUpAdapter() {
@@ -203,7 +217,7 @@ public class ProductFragment extends Fragment implements View.OnClickListener, P
     @Override
     public void onClick(View view) {
         if (view == linearLayoutAddProduct) {
-            Toast.makeText(getContext(), "Coming Soon!", Toast.LENGTH_SHORT).show();
+          //  Toast.makeText(getContext(), "Coming Soon!", Toast.LENGTH_SHORT).show();
             startActivity(AddProductActivity.getStartIntent(getContext()));
             AnimUtil.slideFromRightAnim(getActivity());
         }
@@ -238,18 +252,75 @@ public class ProductFragment extends Fragment implements View.OnClickListener, P
         float den = getActivity().getResources().getDisplayMetrics().density;
         int offsetY = (int) (den * 2);
         popupWindowOverView.showAtLocation(layout, Gravity.TOP, 0, 0);
-        TextView txtSelectCategory = layout.findViewById(R.id.txtSelectCategory);
+         txtSelectCategory = layout.findViewById(R.id.edt_category);
         txtSelectCategory.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
+                Bundle bundle = new Bundle();
+                bundle.putParcelableArrayList(CategoryDialog.CATEGORY_DATA, (ArrayList<? extends Parcelable>) categoryDataList);
+                CategoryDialog categoryDialog = CategoryDialog.getInstance(bundle);
+                categoryDialog.show(getActivity().getSupportFragmentManager(), CategoryDialog.TAG);
             }
         });
-        TextView txtSubCategory = layout.findViewById(R.id.txtSubCategory);
+         txtSubCategory = layout.findViewById(R.id.edt_sub_category);
         txtSubCategory.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                if (TextUtils.isEmpty(selectedCategoryId)) {
+                    return;
+                }
 
+                List<SubCategory> subCategories = new ArrayList<>();
+                for (GetCategoryData categoryData : categoryDataList) {
+                    if (categoryData.getId().equals(selectedCategoryId)) {
+                        subCategories.addAll(categoryData.getSubCategory());
+                    }
+                }
+
+                Bundle bundle = new Bundle();
+                bundle.putParcelableArrayList(SubCategoryDialog.SUBCATEGORY_DATA, (ArrayList<? extends Parcelable>) subCategories);
+                SubCategoryDialog subCategoryDialog = SubCategoryDialog.getInstance(bundle);
+                subCategoryDialog.show(getActivity().getSupportFragmentManager(), SubCategoryDialog.TAG);
+            }
+        });
+    }
+
+    @Override
+    public void onSelectCategory(String categoryId, String categoryName) {
+        Log.i("--------",""+categoryName);
+
+        selectedCategoryId = categoryId;
+        txtSelectCategory.setText(categoryName);
+    }
+
+    @Override
+    public void onSelectSubCategory(String subCategoryId, String subCategoryName) {
+        selectedSubCategoryId = subCategoryId;
+        txtSubCategory.setText(subCategoryName);
+    }
+
+    public void getCategoriesApi() {
+        ProgressDialogUtil.showProgressDialog(getActivity());
+        Map<String, Object> param = new HashMap<>();
+        param.put("page", 1);
+        param.put("pagesize", 1000);
+
+        NetworkAdaper.getNetworkServices().getCategories(param, new Callback<GetCategoryResponse>() {
+            @Override
+            public void success(GetCategoryResponse getCategoryResponse, Response response) {
+
+                ProgressDialogUtil.hideProgressDialog();
+
+                if (getCategoryResponse.getSuccess()) {
+                    categoryDataList = getCategoryResponse.getData();
+                } else {
+                    Toast.makeText(getActivity(), "Data not found!", Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void failure(RetrofitError error) {
+                ProgressDialogUtil.hideProgressDialog();
             }
         });
     }
