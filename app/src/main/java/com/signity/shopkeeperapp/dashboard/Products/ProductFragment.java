@@ -108,7 +108,7 @@ public class ProductFragment extends Fragment implements View.OnClickListener, P
     @Override
     public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
         super.onCreateOptionsMenu(menu, inflater);
-        inflater.inflate(R.menu.menu_products, menu);
+//        inflater.inflate(R.menu.menu_products, menu);
     }
 
     @Override
