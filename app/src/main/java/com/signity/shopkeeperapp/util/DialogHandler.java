@@ -88,7 +88,13 @@ public class DialogHandler {
         dialog.getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE);
 
     }
+    public void setDialogDummy(String title) {
+        titleTxt.setText(title);
+        dialog.setCanceledOnTouchOutside(false);
+        dialog.show();
+        dialog.getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE);
 
+    }
     public void setCancelable(boolean status) {
         dialog.setCancelable(status);
     }
