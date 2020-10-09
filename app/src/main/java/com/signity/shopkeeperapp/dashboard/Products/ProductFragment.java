@@ -1,5 +1,8 @@
 package com.signity.shopkeeperapp.dashboard.Products;
 
+import android.app.AlertDialog;
+import android.content.Context;
+import android.content.DialogInterface;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.os.Parcelable;
@@ -38,6 +41,7 @@ import com.signity.shopkeeperapp.products.AddProductActivity;
 import com.signity.shopkeeperapp.products.CategoryDialog;
 import com.signity.shopkeeperapp.products.SubCategoryDialog;
 import com.signity.shopkeeperapp.util.AnimUtil;
+import com.signity.shopkeeperapp.util.DialogHandler;
 import com.signity.shopkeeperapp.util.DialogUtils;
 import com.signity.shopkeeperapp.util.ProgressDialogUtil;
 import com.signity.shopkeeperapp.util.Util;
@@ -105,7 +109,7 @@ public class ProductFragment extends Fragment implements View.OnClickListener, P
         return inflater.inflate(R.layout.fragment_product, container, false);
     }
 
-    @Override
+   /* @Override
     public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
         super.onCreateOptionsMenu(menu, inflater);
         inflater.inflate(R.menu.menu_products, menu);
@@ -123,7 +127,7 @@ public class ProductFragment extends Fragment implements View.OnClickListener, P
 
         }
         return super.onOptionsItemSelected(item);
-    }
+    }*/
 
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
@@ -218,8 +222,12 @@ public class ProductFragment extends Fragment implements View.OnClickListener, P
     @Override
     public void onClick(View view) {
         if (view == linearLayoutAddProduct) {
-            startActivity(AddProductActivity.getStartIntent(getContext()));
-            AnimUtil.slideFromRightAnim(getActivity());
+            showAlertDialog(getActivity());
+
+
+         /* //Hide code here
+          startActivity(AddProductActivity.getStartIntent(getContext()));
+            AnimUtil.slideFromRightAnim(getActivity());*/
         }
     }
 
@@ -350,6 +358,24 @@ public class ProductFragment extends Fragment implements View.OnClickListener, P
         });
     }
 
+    public void showAlertDialog(Context context
+                                ) {
+        AlertDialog.Builder builder1 = new AlertDialog.Builder(context);
+        builder1.setMessage("Please visit Admin Portal to add new product/Category.");
+        builder1.setCancelable(true);
 
+        builder1.setPositiveButton(
+                getString(R.string.str_lbl_ok),
+                new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        dialog.cancel();
+                    }
+                });
+
+
+        AlertDialog alert11 = builder1.create();
+        alert11.show();
+
+    }
 }
 
