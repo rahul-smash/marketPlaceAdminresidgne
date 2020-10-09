@@ -16,12 +16,15 @@ import com.signity.shopkeeperapp.R;
 import com.signity.shopkeeperapp.model.Product.DynamicField;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class DynamicFieldAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
     private Context context;
     private List<DynamicField> dynamicFieldList = new ArrayList<>();
+    private Map<String, String> fieldMap = new HashMap<>();
 
     public DynamicFieldAdapter(Context context) {
         this.context = context;
@@ -105,6 +108,14 @@ public class DynamicFieldAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
             textInputLayout.setHint(dynamicField.getLabel());
             textInputLayout.setHintEnabled(true);
             textInputEditText.setTag(dynamicField.getVariantFieldName());
+
+            textInputEditText.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+                @Override
+                public void onFocusChange(View v, boolean hasFocus) {
+                    TextInputEditText textInputEditText = (TextInputEditText) v;
+                    fieldMap.put(textInputEditText.getTag().toString(), textInputEditText.getText().toString());
+                }
+            });
         }
     }
 
@@ -124,7 +135,15 @@ public class DynamicFieldAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
             DynamicField dynamicField = dynamicFieldList.get(positon);
             textInputLayout.setHint(dynamicField.getLabel());
             textInputLayout.setHintEnabled(true);
+            textInputEditText.setTag(dynamicField.getVariantFieldName());
 
+            textInputEditText.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+                @Override
+                public void onFocusChange(View v, boolean hasFocus) {
+                    TextInputEditText textInputEditText = (TextInputEditText) v;
+                    fieldMap.put(textInputEditText.getTag().toString(), textInputEditText.getText().toString());
+                }
+            });
         }
     }
 

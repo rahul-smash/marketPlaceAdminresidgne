@@ -19,7 +19,6 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.PopupWindow;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -41,7 +40,6 @@ import com.signity.shopkeeperapp.products.AddProductActivity;
 import com.signity.shopkeeperapp.products.CategoryDialog;
 import com.signity.shopkeeperapp.products.SubCategoryDialog;
 import com.signity.shopkeeperapp.util.AnimUtil;
-import com.signity.shopkeeperapp.util.DialogHandler;
 import com.signity.shopkeeperapp.util.DialogUtils;
 import com.signity.shopkeeperapp.util.ProgressDialogUtil;
 import com.signity.shopkeeperapp.util.Util;
@@ -109,7 +107,7 @@ public class ProductFragment extends Fragment implements View.OnClickListener, P
         return inflater.inflate(R.layout.fragment_product, container, false);
     }
 
-   /* @Override
+    @Override
     public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
         super.onCreateOptionsMenu(menu, inflater);
 //        inflater.inflate(R.menu.menu_products, menu);
@@ -127,7 +125,7 @@ public class ProductFragment extends Fragment implements View.OnClickListener, P
 
         }
         return super.onOptionsItemSelected(item);
-    }*/
+    }
 
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
@@ -265,7 +263,7 @@ public class ProductFragment extends Fragment implements View.OnClickListener, P
         btnApply.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                currentPageNumber=1;
+                currentPageNumber = 1;
                 getProductApi();
                 popupWindowOverView.dismiss();
 
@@ -358,10 +356,9 @@ public class ProductFragment extends Fragment implements View.OnClickListener, P
         });
     }
 
-    public void showAlertDialog(Context context
-                                ) {
+    public void showAlertDialog(Context context) {
         AlertDialog.Builder builder1 = new AlertDialog.Builder(context);
-        builder1.setMessage("Please visit Admin Portal to add new product/Category.");
+        builder1.setMessage("Please visit Admin Portal to add new product.");
         builder1.setCancelable(true);
 
         builder1.setPositiveButton(
@@ -369,6 +366,8 @@ public class ProductFragment extends Fragment implements View.OnClickListener, P
                 new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
                         dialog.cancel();
+                        startActivity(AddProductActivity.getStartIntent(getContext()));
+                        AnimUtil.slideFromRightAnim(getActivity());
                     }
                 });
 

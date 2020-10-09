@@ -127,7 +127,9 @@ public class AddProductActivity extends AppCompatActivity implements SubCategory
 
                 ProgressDialogUtil.hideProgressDialog();
                 if (storeAttributes.isSuccess()) {
-                    dynamicFieldAdapter.setDynamicFieldList(storeAttributes.getData());
+                    if (storeAttributes.getData() != null) {
+                        dynamicFieldAdapter.setDynamicFieldList(storeAttributes.getData().getDynamicFields());
+                    }
                 }
             }
 
@@ -432,7 +434,6 @@ public class AddProductActivity extends AppCompatActivity implements SubCategory
         Map<String, Object> param = new HashMap<>();
         param.put("page", 1);
         param.put("pagelength", 1000);
-
         NetworkAdaper.getNetworkServices().getCategories(param, new Callback<GetCategoryResponse>() {
             @Override
             public void success(GetCategoryResponse getCategoryResponse, Response response) {

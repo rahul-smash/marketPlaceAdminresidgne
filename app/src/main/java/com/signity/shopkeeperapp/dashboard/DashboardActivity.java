@@ -70,7 +70,6 @@ public class DashboardActivity extends AppCompatActivity implements BottomNaviga
         setContentView(R.layout.activity_dashboard);
         initViews();
         setUpToolbar();
-        setUpStoreData();
         setUpNavigationAdapter();
         setUpDrawerToggle();
         setUpBottomNavigation();
@@ -162,6 +161,7 @@ public class DashboardActivity extends AppCompatActivity implements BottomNaviga
         super.onResume();
         navDrawerAdapter.setSelectedId(navSelectedId);
         checkForceDownload();
+        setUpStoreData();
     }
 
     @Override

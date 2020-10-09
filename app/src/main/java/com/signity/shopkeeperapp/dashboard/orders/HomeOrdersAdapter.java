@@ -170,7 +170,7 @@ public class HomeOrdersAdapter extends RecyclerView.Adapter<HomeOrdersAdapter.Vi
 
             imageViewProduct.setVisibility(showImages ? View.VISIBLE : View.GONE);
             textViewName.setText(ordersModel.getCustomerName());
-            textViewOrderId.setText(String.format("Order- %s", ordersModel.getOrderId()));
+            textViewOrderId.setText(String.format("Order #%s", ordersModel.getOrderId()));
 
             String itemText = ordersModel.getItems().size() > 1 ? "items" : "item";
             textViewItemsCount.setText(String.format("%s %s", ordersModel.getItems().size(), itemText));

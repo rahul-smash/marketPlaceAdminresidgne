@@ -1,5 +1,8 @@
 package com.signity.shopkeeperapp.dashboard.categories;
 
+import android.app.AlertDialog;
+import android.content.Context;
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -121,8 +124,9 @@ public class CategoriesFragment extends Fragment implements CategoriesAdapter.Ca
         linearLayoutAddCategory.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivity(AddCategoryActivity.getStartIntent(getContext()));
-                AnimUtil.slideFromRightAnim(getActivity());
+                showAlertDialog(getContext());
+//                startActivity(AddCategoryActivity.getStartIntent(getContext()));
+//                AnimUtil.slideFromRightAnim(getActivity());
             }
         });
     }
@@ -194,6 +198,27 @@ public class CategoriesFragment extends Fragment implements CategoriesAdapter.Ca
 
     @Override
     public void onClickCategory(int position) {
+
+    }
+
+    public void showAlertDialog(Context context) {
+        AlertDialog.Builder builder1 = new AlertDialog.Builder(context);
+        builder1.setMessage("Please visit Admin Portal to add new category.");
+        builder1.setCancelable(true);
+
+        builder1.setPositiveButton(
+                getString(R.string.str_lbl_ok),
+                new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        dialog.cancel();
+                        startActivity(AddCategoryActivity.getStartIntent(getContext()));
+                        AnimUtil.slideFromRightAnim(getActivity());
+                    }
+                });
+
+
+        AlertDialog alert11 = builder1.create();
+        alert11.show();
 
     }
 }

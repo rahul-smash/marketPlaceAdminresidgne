@@ -47,133 +47,14 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/appBarLayout">
 
-        <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/til_weight"
-            style="@style/Widget.Design.TextInputLayout"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:hint="Weight"
-            app:hintTextColor="@color/colorTextGrey"
-            app:layout_constraintEnd_toStartOf="@+id/spinner_unit_type"
-            app:layout_constraintHorizontal_bias="0.5"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent">
-
-            <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/edt_weight"
-                style="@style/AppTheme.TextView.Medium"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:imeOptions="actionNext"
-                android:inputType="number"
-                android:maxLines="1"
-                android:text="" />
-
-        </com.google.android.material.textfield.TextInputLayout>
-
-        <TextView
-            style="@style/AppTheme.TextView.Tiny"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="4dp"
-            android:layout_marginLeft="4dp"
-            android:text="Unit Type"
-            android:textSize="12sp"
-            app:layout_constraintBottom_toTopOf="@+id/spinner_unit_type"
-            app:layout_constraintStart_toEndOf="@+id/til_weight" />
-
-        <androidx.appcompat.widget.AppCompatSpinner
-            android:id="@+id/spinner_unit_type"
-            style="@style/Widget.AppCompat.Spinner.Underlined"
-            android:layout_width="0dp"
-            android:layout_height="42dp"
-            android:dropDownWidth="match_parent"
-            android:spinnerMode="dropdown"
-            app:layout_constraintBottom_toBottomOf="@+id/til_weight"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.5"
-            app:layout_constraintStart_toEndOf="@+id/til_weight" />
-
-        <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/til_mrp"
-            style="@style/Widget.Design.TextInputLayout"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
-            android:hint="MRP"
-            app:hintTextColor="@color/colorTextGrey"
-            app:layout_constraintEnd_toStartOf="@+id/spinner_unit_type"
-            app:layout_constraintHorizontal_bias="0.5"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/til_weight">
-
-            <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/edt_mrp"
-                style="@style/AppTheme.TextView.Medium"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:drawableLeft="@drawable/bigrupeesicon"
-                android:drawablePadding="4dp"
-                android:drawableTint="@color/colorTextGrey"
-                android:imeOptions="actionNext"
-                android:inputType="numberDecimal"
-                android:maxLines="1"
-                android:text="" />
-
-        </com.google.android.material.textfield.TextInputLayout>
-
-        <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/til_discount"
-            style="@style/Widget.Design.TextInputLayout"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:hint="Discount"
-            app:hintTextColor="@color/colorTextGrey"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.0"
-            app:layout_constraintStart_toEndOf="@+id/til_weight"
-            app:layout_constraintTop_toTopOf="@+id/til_mrp">
-
-            <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/edt_discount"
-                style="@style/AppTheme.TextView.Medium"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:drawableRight="@drawable/percentageicon"
-                android:imeOptions="actionNext"
-                android:inputType="numberDecimal"
-                android:maxLines="1"
-                android:text="" />
-
-        </com.google.android.material.textfield.TextInputLayout>
-
-        <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/til_selling_price"
-            style="@style/Widget.Design.TextInputLayout"
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rv_dynamic_fields"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
-            android:hint="Selling Price"
-            app:hintTextColor="@color/colorTextGrey"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/til_mrp">
-
-            <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/edt_selling_price"
-                style="@style/AppTheme.TextView.Medium"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:drawableLeft="@drawable/bigrupeesicon"
-                android:drawablePadding="4dp"
-                android:drawableTint="@color/colorTextGrey"
-                android:imeOptions="actionDone"
-                android:inputType="numberDecimal"
-                android:maxLines="1"
-                android:text="" />
-
-        </com.google.android.material.textfield.TextInputLayout>
+            app:layout_constraintTop_toTopOf="parent" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

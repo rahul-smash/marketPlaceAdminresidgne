@@ -121,7 +121,6 @@ public class HomeFragment extends Fragment implements HomeContentAdapter.HomeCon
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         setUpAdapter();
-        setUpStoreData();
     }
 
     private void setUpStoreData() {
@@ -139,6 +138,7 @@ public class HomeFragment extends Fragment implements HomeContentAdapter.HomeCon
     @Override
     public void onResume() {
         super.onResume();
+        setUpStoreData();
         storeDashboard();
         getOrders();
     }

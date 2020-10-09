@@ -3,13 +3,10 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@drawable/item_background_rounded"
-    android:paddingTop="16dp"
-    android:paddingEnd="16dp"
-    android:paddingRight="16dp"
-    android:paddingBottom="16dp">
+    android:background="@drawable/item_background_rounded">
 
     <View
+        android:id="@+id/view5"
         android:layout_width="5dp"
         android:layout_height="0dp"
         android:background="@drawable/shape_curved"
@@ -18,172 +15,176 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <ImageView
-        android:id="@+id/iv_product"
-        android:layout_width="64dp"
-        android:layout_height="64dp"
-        android:layout_marginStart="16dp"
-        android:layout_marginLeft="16dp"
-        android:adjustViewBounds="true"
-        android:scaleType="fitCenter"
-        android:src="@drawable/ic_launcher"
-        android:visibility="gone"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <TextView
-        android:id="@+id/tv_store_name"
-        style="@style/AppTheme.TextView.Medium"
-        android:layout_width="0dp"
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:layout_marginLeft="16dp"
-        android:maxLines="1"
-        android:text="Mohit Gupta"
-        app:layout_constraintEnd_toStartOf="@+id/tv_order_date_time"
-        app:layout_constraintStart_toEndOf="@+id/iv_product"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <TextView
-        android:id="@+id/tv_order_price"
-        style="@style/AppTheme.TextView.Medium"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Rs.300"
-        app:layout_constraintBottom_toBottomOf="@+id/tv_order_id"
+        android:padding="16dp"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/tv_order_id" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
 
-    <TextView
-        android:id="@+id/tv_order_id"
-        style="@style/AppTheme.TextView.Medium"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:layout_marginLeft="16dp"
-        android:text="Order- 1112221"
-        android:textColor="@color/colorBlack"
-        app:layout_constraintEnd_toStartOf="@+id/tv_order_price"
-        app:layout_constraintStart_toEndOf="@+id/iv_product"
-        app:layout_constraintTop_toBottomOf="@+id/tv_store_name" />
-
-    <TextView
-        android:id="@+id/tv_items_count"
-        style="@style/AppTheme.TextView.Small"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:layout_marginLeft="16dp"
-        android:layout_marginTop="12dp"
-        android:text="2 items"
-        app:layout_constraintHorizontal_chainStyle="spread_inside"
-        app:layout_constraintStart_toEndOf="@+id/iv_product"
-        app:layout_constraintTop_toBottomOf="@+id/tv_order_id" />
-
-    <LinearLayout
-        android:id="@+id/ll_type"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:layout_marginLeft="8dp"
-        android:background="@drawable/shape_grey_dark_rounded"
-        android:gravity="center"
-        android:paddingStart="12dp"
-        android:paddingTop="4dp"
-        android:paddingEnd="12dp"
-        android:paddingBottom="4dp"
-        app:layout_constraintBottom_toBottomOf="@+id/tv_items_count"
-        app:layout_constraintStart_toEndOf="@+id/tv_items_count"
-        app:layout_constraintTop_toTopOf="@+id/tv_items_count">
+        <ImageView
+            android:id="@+id/iv_product"
+            android:layout_width="64dp"
+            android:layout_height="64dp"
+            android:layout_marginStart="16dp"
+            android:layout_marginLeft="16dp"
+            android:adjustViewBounds="true"
+            android:scaleType="fitCenter"
+            android:src="@drawable/ic_launcher"
+            android:visibility="gone"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
-            android:id="@+id/tv_order_type"
-            style="@style/AppTheme.TextView.Tiny"
-            android:layout_width="wrap_content"
+            android:id="@+id/tv_order_id"
+            style="@style/AppTheme.TextView.Small"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:text="COD" />
-
-    </LinearLayout>
-
-    <TextView
-        android:id="@+id/tv_order_date_time"
-        style="@style/AppTheme.TextView.Small"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="4dp"
-        android:layout_marginRight="4dp"
-        android:gravity="end"
-        android:text="11 Sep 2020, 09:15 PM"
-        app:layout_constraintBottom_toBottomOf="@+id/tv_store_name"
-        app:layout_constraintEnd_toStartOf="@+id/iv_next_arrow"
-        app:layout_constraintTop_toTopOf="@+id/tv_store_name" />
-
-    <ImageView
-        android:id="@+id/iv_next_arrow"
-        android:layout_width="12dp"
-        android:layout_height="12dp"
-        android:src="@drawable/detailnextarrow"
-        app:layout_constraintBottom_toBottomOf="@+id/tv_store_name"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <com.google.android.material.chip.ChipGroup
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tv_order_price">
-
-        <com.google.android.material.chip.Chip
-            android:id="@+id/chip_ship"
-            style="@style/AppTheme.Chip.Small.Ship"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Shipped"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/tv_order_date_time"
-            app:rippleColor="@android:color/transparent" />
-
-        <com.google.android.material.chip.Chip
-            android:id="@+id/chip_reject"
-            style="@style/AppTheme.Chip.Small.Reject"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Reject"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/tv_order_date_time" />
-
-    </com.google.android.material.chip.ChipGroup>
-
-    <LinearLayout
-        android:id="@+id/ll_status"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:layout_marginLeft="16dp"
-        android:layout_marginTop="8dp"
-        android:gravity="center"
-        android:orientation="horizontal"
-        android:visibility="visible"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tv_items_count">
-
-        <View
-            android:layout_width="4dp"
-            android:layout_height="4dp"
-            android:background="@drawable/shape_primary_dark_rounded"
-            android:backgroundTint="@color/colorAccept" />
+            android:maxLines="1"
+            android:text="Order #234"
+            android:textColor="@color/colorTextDark"
+            app:layout_constraintEnd_toStartOf="@+id/tv_order_date_time"
+            app:layout_constraintStart_toEndOf="@+id/iv_product"
+            app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
-            android:id="@+id/tv_order_status"
+            android:id="@+id/tv_order_price"
+            style="@style/AppTheme.TextView.Medium"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Rs.300"
+            app:layout_constraintBottom_toBottomOf="@+id/tv_store_name"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/tv_store_name" />
+
+        <TextView
+            android:id="@+id/tv_store_name"
+            style="@style/AppTheme.TextView.Medium"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="Mohit Sharma"
+            android:textColor="@color/colorBlack"
+            app:layout_constraintEnd_toStartOf="@+id/tv_order_price"
+            app:layout_constraintStart_toEndOf="@+id/iv_product"
+            app:layout_constraintTop_toBottomOf="@+id/tv_order_id" />
+
+        <TextView
+            android:id="@+id/tv_items_count"
             style="@style/AppTheme.TextView.Small"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="4dp"
-            android:layout_marginLeft="4dp"
-            android:text="Accepted"
-            android:textColor="@color/colorAccept" />
+            android:layout_marginTop="8dp"
+            android:text="2 items"
+            app:layout_constraintHorizontal_chainStyle="spread_inside"
+            app:layout_constraintStart_toEndOf="@+id/iv_product"
+            app:layout_constraintTop_toBottomOf="@+id/tv_store_name" />
 
-    </LinearLayout>
+        <LinearLayout
+            android:id="@+id/ll_type"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_marginLeft="8dp"
+            android:background="@drawable/shape_grey_dark_rounded"
+            android:gravity="center"
+            android:paddingStart="12dp"
+            android:paddingTop="4dp"
+            android:paddingEnd="12dp"
+            android:paddingBottom="4dp"
+            app:layout_constraintBottom_toBottomOf="@+id/tv_items_count"
+            app:layout_constraintStart_toEndOf="@+id/tv_items_count"
+            app:layout_constraintTop_toTopOf="@+id/tv_items_count">
+
+            <TextView
+                android:id="@+id/tv_order_type"
+                style="@style/AppTheme.TextView.Tiny"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="COD" />
+
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/tv_order_date_time"
+            style="@style/AppTheme.TextView.Small"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="4dp"
+            android:layout_marginRight="4dp"
+            android:gravity="end"
+            android:text="11 Sep 2020, 09:15 PM"
+            app:layout_constraintBottom_toBottomOf="@+id/tv_order_id"
+            app:layout_constraintEnd_toStartOf="@+id/iv_next_arrow"
+            app:layout_constraintTop_toTopOf="@+id/tv_order_id" />
+
+        <ImageView
+            android:id="@+id/iv_next_arrow"
+            android:layout_width="12dp"
+            android:layout_height="12dp"
+            android:src="@drawable/detailnextarrow"
+            app:layout_constraintBottom_toBottomOf="@+id/tv_order_id"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <com.google.android.material.chip.ChipGroup
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/tv_order_price">
+
+            <com.google.android.material.chip.Chip
+                android:id="@+id/chip_ship"
+                style="@style/AppTheme.Chip.Small.Ship"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Shipped"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/tv_order_date_time"
+                app:rippleColor="@android:color/transparent" />
+
+            <com.google.android.material.chip.Chip
+                android:id="@+id/chip_reject"
+                style="@style/AppTheme.Chip.Small.Reject"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Reject"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/tv_order_date_time" />
+
+        </com.google.android.material.chip.ChipGroup>
+
+        <LinearLayout
+            android:id="@+id/ll_status"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            android:gravity="center"
+            android:orientation="horizontal"
+            android:visibility="visible"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/tv_items_count">
+
+            <View
+                android:layout_width="4dp"
+                android:layout_height="4dp"
+                android:background="@drawable/shape_primary_dark_rounded"
+                android:backgroundTint="@color/colorAccept" />
+
+            <TextView
+                android:id="@+id/tv_order_status"
+                style="@style/AppTheme.TextView.Small"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="4dp"
+                android:layout_marginLeft="4dp"
+                android:text="Accepted"
+                android:textColor="@color/colorAccept" />
+
+        </LinearLayout>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

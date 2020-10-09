@@ -1,47 +1,39 @@
 package com.signity.shopkeeperapp.products;
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Rect;
 import android.os.Bundle;
-import android.text.Editable;
-import android.text.TextUtils;
-import android.text.TextWatcher;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.LinearLayout;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.AppCompatSpinner;
 import androidx.appcompat.widget.Toolbar;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
-import com.google.android.material.textfield.TextInputEditText;
 import com.signity.shopkeeperapp.R;
-import com.signity.shopkeeperapp.model.Product.Variant;
+import com.signity.shopkeeperapp.model.Product.StoreAttributes;
+import com.signity.shopkeeperapp.network.NetworkAdaper;
 import com.signity.shopkeeperapp.util.AnimUtil;
+import com.signity.shopkeeperapp.util.ProgressDialogUtil;
+import com.signity.shopkeeperapp.util.Util;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import retrofit.Callback;
+import retrofit.RetrofitError;
+import retrofit.client.Response;
 
 public class VariantActivity extends AppCompatActivity {
 
     public static final String VARIANT_DATA = "VARIANT_DATA";
     private static final String TAG = "VariantActivity";
     private Toolbar toolbar;
-    private TextInputEditText editTextWeight;
-    private AppCompatSpinner appCompatSpinnerUnitType;
-    private TextInputEditText editTextMRP;
-    private TextInputEditText editTextSellingPrice;
-    private TextInputEditText editTextDiscount;
     private LinearLayout linearLayoutSave;
-    private List<String> unitList = new ArrayList<>(Arrays.asList("Kg", "gram", "Ltr", "ml"));
-    private String unitType;
+    private DynamicFieldAdapter dynamicFieldAdapter;
+    private RecyclerView recyclerViewDynamicField;
 
     public static Intent getStartIntent(Context context) {
         return new Intent(context, VariantActivity.class);
@@ -59,79 +51,39 @@ public class VariantActivity extends AppCompatActivity {
         setContentView(R.layout.activity_variant);
         initViews();
         setUpToolbar();
-        setUpSpinner();
+        setUpAdapter();
+        getStoreAttributes();
+    }
+
+    private void setUpAdapter() {
+        dynamicFieldAdapter = new DynamicFieldAdapter(this);
+        recyclerViewDynamicField.setLayoutManager(new LinearLayoutManager(this));
+        recyclerViewDynamicField.setAdapter(dynamicFieldAdapter);
+        recyclerViewDynamicField.addItemDecoration(new RecyclerView.ItemDecoration() {
+            @Override
+            public void getItemOffsets(@NonNull Rect outRect, @NonNull View view, @NonNull RecyclerView parent, @NonNull RecyclerView.State state) {
+                outRect.left = 0;
+                outRect.right = 0;
+                outRect.bottom = (int) Util.pxFromDp(VariantActivity.this, 8);
+                outRect.top = 0;
+            }
+        });
     }
 
     private void initViews() {
         toolbar = findViewById(R.id.toolbar);
-        editTextWeight = findViewById(R.id.edt_weight);
-        appCompatSpinnerUnitType = findViewById(R.id.spinner_unit_type);
-        editTextMRP = findViewById(R.id.edt_mrp);
-        editTextDiscount = findViewById(R.id.edt_discount);
-        editTextSellingPrice = findViewById(R.id.edt_selling_price);
         linearLayoutSave = findViewById(R.id.ll_save);
-
-        editTextDiscount.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
-            }
-
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-
-                if (TextUtils.isEmpty(s.toString())) {
-                    return;
-                }
-
-                String mrp = editTextMRP.getText().toString();
-
-                if (TextUtils.isEmpty(mrp)) {
-                    mrp = "0";
-                }
-
-                double doubleMrp = Double.parseDouble(mrp);
-                double discount = Double.parseDouble(s.toString());
-
-                if (discount < 0 || discount > 100) {
-                    Toast.makeText(VariantActivity.this, "Invalid discount value", Toast.LENGTH_SHORT).show();
-                    return;
-                }
-
-                final double price = doubleMrp - (doubleMrp * (discount / 100));
-                editTextSellingPrice.setText(String.format("%.2f", price));
-            }
-
-            @Override
-            public void afterTextChanged(Editable s) {
-
-            }
-        });
+        recyclerViewDynamicField = findViewById(R.id.rv_dynamic_fields);
 
         linearLayoutSave.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                saveVariant();
+//                saveVariant();
             }
         });
     }
 
-    private void setUpSpinner() {
-        final ArrayAdapter<String> stringArrayAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_dropdown_item, unitList);
-        appCompatSpinnerUnitType.setAdapter(stringArrayAdapter);
-        appCompatSpinnerUnitType.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                unitType = stringArrayAdapter.getItem(position);
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> parent) {
-
-            }
-        });
-    }
-
+/*
     private void saveVariant() {
         String weight = editTextWeight.getText().toString().trim();
         String mrp = editTextMRP.getText().toString().trim();
@@ -166,6 +118,7 @@ public class VariantActivity extends AppCompatActivity {
         setResult(Activity.RESULT_OK, intent);
         finishAnimate();
     }
+*/
 
     private void setUpToolbar() {
         setSupportActionBar(toolbar);
@@ -191,5 +144,23 @@ public class VariantActivity extends AppCompatActivity {
     private void finishAnimate() {
         finish();
         AnimUtil.slideFromLeftAnim(this);
+    }
+
+    private void getStoreAttributes() {
+        NetworkAdaper.getNetworkServices().getStoreAttributes(new Callback<StoreAttributes>() {
+            @Override
+            public void success(StoreAttributes storeAttributes, Response response) {
+
+                ProgressDialogUtil.hideProgressDialog();
+                if (storeAttributes.isSuccess()) {
+                    dynamicFieldAdapter.setDynamicFieldList(storeAttributes.getData().getDynamicFields());
+                }
+            }
+
+            @Override
+            public void failure(RetrofitError error) {
+                ProgressDialogUtil.hideProgressDialog();
+            }
+        });
     }
 }

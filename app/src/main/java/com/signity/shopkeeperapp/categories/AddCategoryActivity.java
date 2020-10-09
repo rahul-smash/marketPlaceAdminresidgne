@@ -156,8 +156,7 @@ public class AddCategoryActivity extends AppCompatActivity implements SubCategor
         }
 
         Gson gson = new Gson();
-        JsonElement element = gson.toJsonTree(subCategoryAdapter.getSubCategoryModels(), new TypeToken<List<SubCategoryModel>>() {
-        }.getType());
+        JsonElement element = gson.toJsonTree(subCategoryAdapter.getSubCategoryModels(), new TypeToken<List<SubCategoryModel>>() {}.getType());
         JsonArray jsonArray = element.getAsJsonArray();
 
         Map<String, String> map = new HashMap<>();
