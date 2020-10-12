@@ -15,6 +15,7 @@ import android.widget.Switch;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.signity.shopkeeperapp.R;
@@ -106,6 +107,7 @@ public class ProductsAdapter extends RecyclerView.Adapter<ProductsAdapter.MyView
                 if (listener != null) {
                     listener.onClickShareProduct();
                 }
+                popupWindowOverView.dismiss();
             }
         });
 
@@ -116,6 +118,7 @@ public class ProductsAdapter extends RecyclerView.Adapter<ProductsAdapter.MyView
                 if (listener != null) {
                     listener.onClickDeleteProduct(id);
                 }
+                popupWindowOverView.dismiss();
             }
         });
     }
@@ -141,8 +144,9 @@ public class ProductsAdapter extends RecyclerView.Adapter<ProductsAdapter.MyView
     class MyViewHolder extends RecyclerView.ViewHolder {
 
         Switch switchProduct;
+        ConstraintLayout constraintLayoutParent;
         ImageView imageViewProduct, imageSettings;
-        TextView txtProductName, textViewStatus, txtProductType, txtPrice, txtVarient, txtWeight, txtLblQuantity, txtDiscountPrice;
+        TextView txtProductName, textViewStatus, txtSubCategoryName, txtPrice, txtVarient, txtWeight, txtLblQuantity, txtDiscountPrice;
 
         public MyViewHolder(final View convertView) {
             super(convertView);
@@ -150,13 +154,14 @@ public class ProductsAdapter extends RecyclerView.Adapter<ProductsAdapter.MyView
             imageSettings = convertView.findViewById(R.id.iv_more);
             txtProductName = convertView.findViewById(R.id.tv_product_name);
             textViewStatus = convertView.findViewById(R.id.tv_status);
-            txtProductType = convertView.findViewById(R.id.tv_subcategory_name);
+            txtSubCategoryName = convertView.findViewById(R.id.tv_subcategory_name);
             txtVarient = convertView.findViewById(R.id.tv_product_variant);
             txtWeight = convertView.findViewById(R.id.tv_product_quantity);
             txtLblQuantity = convertView.findViewById(R.id.txtLblQuantity);
             txtDiscountPrice = convertView.findViewById(R.id.tv_product_price_final);
             txtPrice = convertView.findViewById(R.id.tv_product_price);
             switchProduct = convertView.findViewById(R.id.switch_product);
+            constraintLayoutParent = convertView.findViewById(R.id.const_parent);
         }
 
         public void bind(int position) {
@@ -172,6 +177,7 @@ public class ProductsAdapter extends RecyclerView.Adapter<ProductsAdapter.MyView
             }
 
             txtProductName.setText(productData.getTitle());
+            txtSubCategoryName.setText("");
 
             List<Variant> varientDataList = productData.getVariants();
             Variant variantData = varientDataList.get(0);
@@ -186,7 +192,7 @@ public class ProductsAdapter extends RecyclerView.Adapter<ProductsAdapter.MyView
                 }
             });
 
-            textViewStatus.setText(productData.getStatus().equals("1") ? "enabled" : "disabled");
+            textViewStatus.setText(productData.getStatus().equals("1") ? "Enabled" : "Disabled");
             txtVarient.setText(String.format(Locale.getDefault(), "Variants - %d", varientDataList.size()));
             txtWeight.setText(String.format("Qty - %s%s", variantData.getWeight(), variantData.getUnitType()));
             txtDiscountPrice.setText(Util.getPriceWithCurrency(Double.parseDouble(variantData.getPrice()), AppPreference.getInstance().getCurrency()));
@@ -198,6 +204,15 @@ public class ProductsAdapter extends RecyclerView.Adapter<ProductsAdapter.MyView
                     popmenu(imageSettings, productData.getId());
                 }
             });
+
+            ConstraintLayout.LayoutParams layoutParams = (ConstraintLayout.LayoutParams) constraintLayoutParent.getLayoutParams();
+            int margin = (int) Util.pxFromDp(context, 16);
+            layoutParams.setMargins(margin, margin, margin, 0);
+
+            if (position == mData.size() - 1) {
+                layoutParams.setMargins(margin, margin, margin, 5 * margin);
+            }
+            constraintLayoutParent.setLayoutParams(layoutParams);
         }
     }
 }

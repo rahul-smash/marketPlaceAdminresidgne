@@ -21,30 +21,29 @@
         app:layout_constraintTop_toTopOf="parent">
 
         <LinearLayout
-            android:padding="15dp"
-            android:id="@+id/popups"
-            android:layout_width="match_parent"
+            android:id="@+id/ll_delete"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_below="@+id/popupsShare"
+            android:gravity="center"
             android:orientation="horizontal"
-        >
+            android:padding="16dp">
 
             <ImageView
-                android:layout_gravity="center"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:scaleType="fitXY"
+                android:layout_width="16dp"
+                android:layout_height="16dp"
                 android:src="@drawable/deleteicon" />
 
             <TextView
+                style="@style/AppTheme.TextView.Small"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:layout_marginLeft="10dp"
+                android:layout_marginStart="8dp"
+                android:layout_marginLeft="8dp"
                 android:gravity="center"
-                android:padding="2dp"
-                android:text="DELETE"
-                android:textColor="@android:color/holo_red_dark"
-                android:textSize="@dimen/text_normal"/>
+                android:text="Delete"
+                android:textColor="@color/colorReject" />
         </LinearLayout>
+
     </com.google.android.material.card.MaterialCardView>
 </androidx.constraintlayout.widget.ConstraintLayout>

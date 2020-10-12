@@ -3,125 +3,136 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/parent"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:background="@drawable/item_background_rounded"
-    android:padding="16dp">
+    android:layout_height="wrap_content">
 
-    <ImageView
-        android:id="@+id/iv_more"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:padding="8dp"
-        android:src="@drawable/moreicon"
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/const_parent"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@drawable/item_background_rounded"
+        android:padding="16dp"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <ImageView
-        android:id="@+id/iv_product_image"
-        android:layout_width="64dp"
-        android:layout_height="64dp"
-        android:adjustViewBounds="true"
-        android:scaleType="fitCenter"
-        android:src="@drawable/ic_launcher"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent">
 
-    <TextView
-        android:id="@+id/tv_product_name"
-        style="@style/AppTheme.TextView.Medium"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:layout_marginLeft="8dp"
-        android:ellipsize="end"
-        android:maxLines="1"
-        android:text="Sapphire Cookie"
-        app:layout_constraintEnd_toStartOf="@+id/iv_more"
-        app:layout_constraintStart_toEndOf="@+id/iv_product_image"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <TextView
-        android:id="@+id/tv_subcategory_name"
-        style="@style/AppTheme.TextView.Small"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:maxLines="1"
-        android:text="Butter Cookies"
-        app:layout_constraintEnd_toStartOf="@+id/linearLayout3"
-        app:layout_constraintStart_toStartOf="@+id/tv_product_name"
-        app:layout_constraintTop_toBottomOf="@+id/tv_product_name" />
-
-    <TextView
-        android:id="@+id/tv_product_variant"
-        style="@style/AppTheme.TextView.Mini"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:maxLines="1"
-        android:text="Variants - 4"
-        app:layout_constraintStart_toStartOf="@+id/tv_subcategory_name"
-        app:layout_constraintTop_toBottomOf="@+id/tv_subcategory_name" />
-
-    <TextView
-        android:id="@+id/tv_product_quantity"
-        style="@style/AppTheme.TextView.Mini"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:layout_marginLeft="16dp"
-        android:maxLines="1"
-        android:text="Qty - 80Kg"
-        app:layout_constraintStart_toEndOf="@+id/tv_product_variant"
-        app:layout_constraintTop_toBottomOf="@+id/tv_subcategory_name" />
-
-    <TextView
-        android:id="@+id/tv_product_price"
-        style="@style/AppTheme.TextView.Small"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
-        android:maxLines="1"
-        android:text="244"
-        app:layout_constraintStart_toStartOf="@+id/iv_product_image"
-        app:layout_constraintTop_toBottomOf="@+id/iv_product_image" />
-
-    <TextView
-        android:id="@+id/tv_product_price_final"
-        style="@style/AppTheme.TextView.Small"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:layout_marginLeft="16dp"
-        android:layout_marginTop="8dp"
-        android:maxLines="1"
-        android:text="244"
-        android:textColor="@color/colorTextDark"
-        app:layout_constraintStart_toEndOf="@+id/tv_product_price"
-        app:layout_constraintTop_toBottomOf="@+id/iv_product_image" />
-
-    <LinearLayout
-        android:id="@+id/linearLayout3"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:gravity="center"
-        android:orientation="vertical"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/iv_product_image">
-
-        <Switch
-            android:id="@+id/switch_product"
+        <ImageView
+            android:id="@+id/iv_more"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:thumbTint="@color/switch_selector"
-            android:trackTint="@color/switch_selector" />
+            android:padding="8dp"
+            android:src="@drawable/moreicon"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <ImageView
+            android:id="@+id/iv_product_image"
+            android:layout_width="64dp"
+            android:layout_height="64dp"
+            android:adjustViewBounds="true"
+            android:scaleType="fitCenter"
+            android:src="@drawable/ic_launcher"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
-            android:id="@+id/tv_status"
-            style="@style/AppTheme.TextView.Tiny"
+            android:id="@+id/tv_product_name"
+            style="@style/AppTheme.TextView.Medium"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_marginLeft="8dp"
+            android:ellipsize="end"
+            android:maxLines="1"
+            android:text="Sapphire Cookie"
+            app:layout_constraintEnd_toStartOf="@+id/iv_more"
+            app:layout_constraintStart_toEndOf="@+id/iv_product_image"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/tv_subcategory_name"
+            style="@style/AppTheme.TextView.Small"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:maxLines="1"
+            android:text="Butter Cookies"
+            app:layout_constraintEnd_toStartOf="@+id/linearLayout3"
+            app:layout_constraintStart_toStartOf="@+id/tv_product_name"
+            app:layout_constraintTop_toBottomOf="@+id/tv_product_name" />
+
+        <TextView
+            android:id="@+id/tv_product_variant"
+            style="@style/AppTheme.TextView.Mini"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:maxLines="1"
-            android:text="Enable" />
+            android:text="Variants - 4"
+            app:layout_constraintStart_toStartOf="@+id/tv_subcategory_name"
+            app:layout_constraintTop_toBottomOf="@+id/tv_subcategory_name" />
 
-    </LinearLayout>
+        <TextView
+            android:id="@+id/tv_product_quantity"
+            style="@style/AppTheme.TextView.Mini"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginLeft="16dp"
+            android:maxLines="1"
+            android:text="Qty - 80Kg"
+            app:layout_constraintStart_toEndOf="@+id/tv_product_variant"
+            app:layout_constraintTop_toBottomOf="@+id/tv_subcategory_name" />
+
+        <TextView
+            android:id="@+id/tv_product_price"
+            style="@style/AppTheme.TextView.Small"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:maxLines="1"
+            android:text="244"
+            app:layout_constraintStart_toStartOf="@+id/iv_product_image"
+            app:layout_constraintTop_toBottomOf="@+id/iv_product_image" />
+
+        <TextView
+            android:id="@+id/tv_product_price_final"
+            style="@style/AppTheme.TextView.Small"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginLeft="16dp"
+            android:layout_marginTop="8dp"
+            android:maxLines="1"
+            android:text="244"
+            android:textColor="@color/colorTextDark"
+            app:layout_constraintStart_toEndOf="@+id/tv_product_price"
+            app:layout_constraintTop_toBottomOf="@+id/iv_product_image" />
+
+        <LinearLayout
+            android:id="@+id/linearLayout3"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:orientation="vertical"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/iv_product_image">
+
+            <Switch
+                android:id="@+id/switch_product"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:thumbTint="@color/switch_selector"
+                android:trackTint="@color/switch_selector" />
+
+            <TextView
+                android:id="@+id/tv_status"
+                style="@style/AppTheme.TextView.Tiny"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:maxLines="1"
+                android:text="Enable" />
+
+        </LinearLayout>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

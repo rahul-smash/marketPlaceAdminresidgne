@@ -29,7 +29,6 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.textfield.TextInputEditText;
 import com.signity.shopkeeperapp.R;
-import com.signity.shopkeeperapp.adapter.RvGridSpacesItemDecoration;
 import com.signity.shopkeeperapp.model.Categories.GetCategoryData;
 import com.signity.shopkeeperapp.model.Categories.GetCategoryResponse;
 import com.signity.shopkeeperapp.model.Categories.SubCategory;
@@ -192,7 +191,6 @@ public class ProductFragment extends Fragment implements View.OnClickListener, P
         productsAdapter.setListener(this);
         recyclerViewProduct.setAdapter(productsAdapter);
         recyclerViewProduct.addOnScrollListener(recyclerViewOnScrollListener);
-        recyclerViewProduct.addItemDecoration(new RvGridSpacesItemDecoration((int) Util.pxFromDp(getContext(), 16)));
     }
 
     private void initView(View rootView) {

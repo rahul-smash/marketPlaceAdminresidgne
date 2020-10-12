@@ -3,47 +3,33 @@ package com.signity.shopkeeperapp.dashboard.categories;
 import android.content.Context;
 import android.graphics.drawable.ColorDrawable;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.CompoundButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.PopupWindow;
 import android.widget.Switch;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.signity.shopkeeperapp.R;
-import com.signity.shopkeeperapp.model.Categories.GetCategoryData;
-import com.signity.shopkeeperapp.model.Categories.GetCategoryResponse;
 import com.signity.shopkeeperapp.model.Categories.SubCategory;
-import com.signity.shopkeeperapp.model.CategoryStatus.CategoryStatus;
-import com.signity.shopkeeperapp.model.DeleteCategory.DeleteCategories;
-import com.signity.shopkeeperapp.network.NetworkAdaper;
-import com.signity.shopkeeperapp.util.ProgressDialogUtil;
+import com.signity.shopkeeperapp.util.Util;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-
-import retrofit.Callback;
-import retrofit.RetrofitError;
-import retrofit.client.Response;
 
 public class CategoriesAdapter extends RecyclerView.Adapter<CategoriesAdapter.MyViewHolder> {
-    String switcToggle;
+
     private CategoriesListener listener;
     private Context context;
     private List<SubCategory> categoryDataList = new ArrayList<>();
-    SubCategory getCategoryData;
 
     public CategoriesAdapter(Context context) {
         this.context = context;
@@ -72,72 +58,10 @@ public class CategoriesAdapter extends RecyclerView.Adapter<CategoriesAdapter.My
 
     @Override
     public void onBindViewHolder(@NonNull final CategoriesAdapter.MyViewHolder holder, final int position) {
-
-        getCategoryData = categoryDataList.get(position);
-        String subCategoryImage = getCategoryData.getImage10080();
-
-        String txtCategoriesName = getCategoryData.getTitle();
-
-        holder.textViewSubCategoryName.setText(txtCategoriesName);
-        try {
-            if (!TextUtils.isEmpty(subCategoryImage)) {
-                Picasso.with(context)
-                        .load(subCategoryImage)
-                        .error(R.drawable.addimageicon).placeholder(R.drawable.addimageicon).into(holder.imageViewCategory);
-            } else {
-                holder.imageViewCategory.setImageResource(R.drawable.addimageicon);
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        holder.textViewCategoryName.setText(getCategoryData.getCategoryName());
-
-        holder.textViewPriority.setText(String.format("Priority :%s", getCategoryData.getVersion()));
-        holder.imageViewMore.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                showOverViewPopMenu(holder, position);
-            }
-        });
-        holder.switchCategory.setChecked(
-                (getCategoryData.getStatus().equals("1")));
-         holder.switchCategory.setChecked((getCategoryData.getStatus().equals("1")));
-        holder.switchCategory.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                if (isChecked) {
-                    //     Toast.makeText(context,""+isChecked,Toast.LENGTH_SHORT).show();
-                    switcToggle = "1";
-                    setCategoryStatus(getCategoryData.getId(), String.valueOf(switcToggle));
-
-                } else {
-                    //      Toast.makeText(context,""+isChecked,Toast.LENGTH_SHORT).show();
-
-                    switcToggle = "0";
-                    setCategoryStatus(getCategoryData.getId(), String.valueOf(switcToggle));
-                }
-            }
-        });
-
-
-        holder.itemView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (listener != null)
-                    listener.onClickCategory(holder.getAdapterPosition());
-            }
-        });
-        holder.imageViewCategory.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                // Triggers click upwards to the adapter on click
-                if (listener != null)
-                    listener.onClickCategory(holder.getAdapterPosition());
-            }
-        });
+        holder.bind(position);
     }
 
-    private void showOverViewPopMenu(MyViewHolder holder, final int pos) {
-        Log.i("@@ViewMore", "--click");
+    private void showOverViewPopMenu(ImageView imageViewMore, final int pos) {
         View layout = LayoutInflater.from(context).inflate(R.layout.popup_delete, null, false);
         final PopupWindow popupWindowOverView = new PopupWindow(layout, LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT, true);
 
@@ -146,8 +70,7 @@ public class CategoriesAdapter extends RecyclerView.Adapter<CategoriesAdapter.My
         popupWindowOverView.setTouchInterceptor(new View.OnTouchListener() { // or whatever you want
             @Override
             public boolean onTouch(View v, MotionEvent event) {
-                if (event.getAction() == MotionEvent.ACTION_OUTSIDE) // here I want to close the pw when clicking outside it but at all this is just an example of how it works and you can implement the onTouch() or the onKey() you want
-                {
+                if (event.getAction() == MotionEvent.ACTION_OUTSIDE) {
                     popupWindowOverView.dismiss();
                     return true;
                 }
@@ -156,28 +79,46 @@ public class CategoriesAdapter extends RecyclerView.Adapter<CategoriesAdapter.My
 
         });
 
-        float den = context.getResources().getDisplayMetrics().density;
-        int offsetY = (int) (den * 2);
-        popupWindowOverView.showAsDropDown(holder.imageViewMore, 0, 0);
-        LinearLayout popups = layout.findViewById(R.id.popups);
-        popups.setOnClickListener(new View.OnClickListener() {
+        popupWindowOverView.showAsDropDown(imageViewMore, 0, 0);
+        LinearLayout delete = layout.findViewById(R.id.ll_delete);
+        delete.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Log.i("@@---CategoryId", "" + getCategoryData.getId());
-                delCategory(getCategoryData.getId(), pos);
+                if (listener != null) {
+                    listener.onClickDeleteCategory(categoryDataList.get(pos).getId(), pos);
+                }
+                popupWindowOverView.dismiss();
             }
         });
     }
 
+    public void removeItem(int position) {
+        categoryDataList.remove(position);
+        notifyItemRemoved(position);
+    }
+
+    public void updateCategoryStatus(String id) {
+        for (SubCategory subCategory : categoryDataList) {
+            if (subCategory.getId().equals(id)) {
+                subCategory.setStatus(subCategory.getStatus().equals("1") ? "0" : "1");
+                break;
+            }
+        }
+        notifyDataSetChanged();
+    }
+
     public interface CategoriesListener {
-        void onClickCategory(int position);
+        void onClickDeleteCategory(String subCategoryId, int position);
+
+        void onClickSwitchProduct(String id, String status);
     }
 
     class MyViewHolder extends RecyclerView.ViewHolder {
 
         ImageView imageViewCategory, imageViewMore;
-        TextView textViewCategoryName, textViewSubCategoryName, textViewPriority;
+        TextView textViewCategoryName, textViewSubCategoryName, textViewPriority, textViewStatus;
         Switch switchCategory;
+        ConstraintLayout constraintLayoutParent;
 
         public MyViewHolder(final View convertView) {
             super(convertView);
@@ -186,60 +127,53 @@ public class CategoriesAdapter extends RecyclerView.Adapter<CategoriesAdapter.My
             imageViewCategory = convertView.findViewById(R.id.iv_category_image);
             textViewCategoryName = convertView.findViewById(R.id.tv_category_name);
             textViewSubCategoryName = convertView.findViewById(R.id.tv_subcategory_name);
+            textViewStatus = convertView.findViewById(R.id.tv_status);
             switchCategory = convertView.findViewById(R.id.switch_catergory);
+            constraintLayoutParent = convertView.findViewById(R.id.const_parent);
+        }
+
+        public void bind(final int position) {
+            final SubCategory subCategory = categoryDataList.get(position);
+            String subCategoryImage = subCategory.getImage10080();
+            if (!TextUtils.isEmpty(subCategoryImage)) {
+                Picasso.with(context)
+                        .load(subCategoryImage)
+                        .error(R.drawable.addimageicon)
+                        .placeholder(R.drawable.addimageicon)
+                        .into(imageViewCategory);
+            }
+
+            textViewCategoryName.setText(subCategory.getCategoryName());
+            textViewSubCategoryName.setText(subCategory.getTitle());
+            textViewStatus.setText(subCategory.getStatus().equals("1") ? "Enabled" : "Disabled");
+            textViewPriority.setText(String.format("Priority :%s", subCategory.getVersion()));
+
+            imageViewMore.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    showOverViewPopMenu(imageViewMore, position);
+                }
+            });
+
+            switchCategory.setChecked(subCategory.getStatus().equals("1"));
+
+            switchCategory.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (listener != null) {
+                        listener.onClickSwitchProduct(subCategory.getId(), (subCategory.getStatus().equals("1") ? "0" : "1"));
+                    }
+                }
+            });
+
+            ConstraintLayout.LayoutParams layoutParams = (ConstraintLayout.LayoutParams) constraintLayoutParent.getLayoutParams();
+            int margin = (int) Util.pxFromDp(context, 16);
+            layoutParams.setMargins(margin, margin, margin, 0);
+
+            if (position == categoryDataList.size() - 1) {
+                layoutParams.setMargins(margin, margin, margin, 5 * margin);
+            }
+            constraintLayoutParent.setLayoutParams(layoutParams);
         }
     }
-
-    //SetCategoryStatusAPI
-    public void setCategoryStatus(String subCategoryId, String status) {
-        ProgressDialogUtil.showProgressDialog(context);
-        Map<String, Object> param = new HashMap<>();
-        param.put("cat_id", subCategoryId);
-        param.put("category_status", status);
-
-        NetworkAdaper.getNetworkServices().setCategoryStatus(param, new Callback<CategoryStatus>() {
-            @Override
-            public void success(CategoryStatus categoryStatus, Response response) {
-
-                ProgressDialogUtil.hideProgressDialog();
-
-                if (categoryStatus.getSuccess()) {
-
-                } else {
-                }
-            }
-
-            @Override
-            public void failure(RetrofitError error) {
-                ProgressDialogUtil.hideProgressDialog();
-            }
-        });
-    }
-
-    //DeletCategoriesAPI
-    public void delCategory(String subCategoryId, final int pos) {
-        ProgressDialogUtil.showProgressDialog(context);
-        Map<String, Object> param = new HashMap<>();
-        param.put("catid", subCategoryId);
-
-        NetworkAdaper.getNetworkServices().delCategory(param, new Callback<DeleteCategories>() {
-            @Override
-            public void success(DeleteCategories deleteCategories, Response response) {
-
-                ProgressDialogUtil.hideProgressDialog();
-
-                if (deleteCategories.getSuccess()) {
-                    Toast.makeText(context, deleteCategories.getMessage(), Toast.LENGTH_SHORT).show();
-                    notifyItemRemoved(pos);
-                } else {
-                }
-            }
-
-            @Override
-            public void failure(RetrofitError error) {
-                ProgressDialogUtil.hideProgressDialog();
-            }
-        });
-    }
-
 }

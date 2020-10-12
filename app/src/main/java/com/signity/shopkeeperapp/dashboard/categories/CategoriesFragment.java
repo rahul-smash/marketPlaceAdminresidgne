@@ -20,11 +20,12 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.signity.shopkeeperapp.R;
-import com.signity.shopkeeperapp.adapter.RvGridSpacesItemDecoration;
 import com.signity.shopkeeperapp.categories.AddCategoryActivity;
 import com.signity.shopkeeperapp.model.Categories.GetCategoryData;
 import com.signity.shopkeeperapp.model.Categories.GetCategoryResponse;
 import com.signity.shopkeeperapp.model.Categories.SubCategory;
+import com.signity.shopkeeperapp.model.CategoryStatus.CategoryStatus;
+import com.signity.shopkeeperapp.model.DeleteCategory.DeleteCategories;
 import com.signity.shopkeeperapp.network.NetworkAdaper;
 import com.signity.shopkeeperapp.util.AnimUtil;
 import com.signity.shopkeeperapp.util.DialogUtils;
@@ -114,7 +115,6 @@ public class CategoriesFragment extends Fragment implements CategoriesAdapter.Ca
         categoriesAdapter.setListener(this);
         recyclerViewCategories.setAdapter(categoriesAdapter);
         recyclerViewCategories.addOnScrollListener(recyclerViewOnScrollListener);
-        recyclerViewCategories.addItemDecoration(new RvGridSpacesItemDecoration((int) Util.pxFromDp(getContext(), 16)));
     }
 
     private void initView(View view) {
@@ -197,8 +197,13 @@ public class CategoriesFragment extends Fragment implements CategoriesAdapter.Ca
     }
 
     @Override
-    public void onClickCategory(int position) {
+    public void onClickDeleteCategory(String subCategoryId, int position) {
+        deleteCategory(subCategoryId, position);
+    }
 
+    @Override
+    public void onClickSwitchProduct(String id, String status) {
+        setCategoryStatus(id, status);
     }
 
     public void showAlertDialog(Context context) {
@@ -220,5 +225,59 @@ public class CategoriesFragment extends Fragment implements CategoriesAdapter.Ca
         AlertDialog alert11 = builder1.create();
         alert11.show();
 
+    }
+
+    public void deleteCategory(String subCategoryId, final int position) {
+        ProgressDialogUtil.showProgressDialog(getContext());
+        Map<String, Object> param = new HashMap<>();
+        param.put("catid", subCategoryId);
+
+        NetworkAdaper.getNetworkServices().delCategory(param, new Callback<DeleteCategories>() {
+            @Override
+            public void success(DeleteCategories deleteCategories, Response response) {
+
+                ProgressDialogUtil.hideProgressDialog();
+
+                if (deleteCategories.getSuccess()) {
+                    categoriesAdapter.removeItem(position);
+                    if (start < totalCategory) {
+                        getAllOrdersMethod();
+                    }
+                } else {
+                    Toast.makeText(getContext(), deleteCategories.getMessage(), Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void failure(RetrofitError error) {
+                ProgressDialogUtil.hideProgressDialog();
+            }
+        });
+    }
+
+    public void setCategoryStatus(final String subCategoryId, String status) {
+        ProgressDialogUtil.showProgressDialog(getContext());
+        Map<String, Object> param = new HashMap<>();
+        param.put("cat_id", subCategoryId);
+        param.put("category_status", status);
+
+        NetworkAdaper.getNetworkServices().setCategoryStatus(param, new Callback<CategoryStatus>() {
+            @Override
+            public void success(CategoryStatus categoryStatus, Response response) {
+
+                ProgressDialogUtil.hideProgressDialog();
+
+                if (categoryStatus.getSuccess()) {
+                    categoriesAdapter.updateCategoryStatus(subCategoryId);
+                } else {
+                    Toast.makeText(getContext(), categoryStatus.getMessage(), Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void failure(RetrofitError error) {
+                ProgressDialogUtil.hideProgressDialog();
+            }
+        });
     }
 }
