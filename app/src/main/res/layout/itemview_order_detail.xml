@@ -26,13 +26,13 @@
             android:id="@+id/tv_product_name"
             style="@style/AppTheme.TextView.Medium"
             android:layout_width="0dp"
-            android:layout_marginEnd="8dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
             android:layout_marginLeft="8dp"
-            android:text="Coconut Cookies"
-            android:maxLines="1"
+            android:layout_marginEnd="8dp"
             android:ellipsize="end"
+            android:maxLines="1"
+            android:text="Coconut Cookies"
             app:layout_constraintEnd_toStartOf="@+id/linearLayout2"
             app:layout_constraintStart_toEndOf="@+id/iv_product_image"
             app:layout_constraintTop_toTopOf="parent" />
@@ -108,8 +108,8 @@
                 android:id="@+id/switch_product"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:thumbTint="@color/colorWhite"
-                android:track="@drawable/indicator_selected" />
+                android:thumbTint="@color/switch_selector"
+                android:trackTint="@color/switch_selector" />
 
             <TextView
                 android:id="@+id/tv_product_status"

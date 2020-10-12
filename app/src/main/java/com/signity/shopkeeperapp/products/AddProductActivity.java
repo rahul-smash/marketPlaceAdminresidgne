@@ -12,6 +12,7 @@ import android.os.Parcelable;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -69,6 +70,7 @@ import retrofit.mime.TypedFile;
  */
 public class AddProductActivity extends AppCompatActivity implements SubCategoryDialog.SubCategoryListener, CategoryDialog.CategoryListener {
 
+    public static final String CATEGORY_ID = "CATEGORY_ID";
     private static final String TAG = "AddProductActivity";
     private static final int REQUEST_PERMISSION = 1001;
     private static final int REQUEST_IMAGE_GET = 2002;
@@ -96,7 +98,7 @@ public class AddProductActivity extends AppCompatActivity implements SubCategory
     private VariantAdapter variantAdapter;
     private ImagesAdapter imagesAdapter;
     private List<GetCategoryData> categoryDataList = new ArrayList<>();
-    private String selectedCategoryId;
+    private String selectedCategoryId = "";
     private String selectedSubCategoryId;
     private List<String> unitList = new ArrayList<>(Arrays.asList("Kg", "gram", "Ltr", "ml"));
     private String unitType;
@@ -109,15 +111,29 @@ public class AddProductActivity extends AppCompatActivity implements SubCategory
         return new Intent(context, AddProductActivity.class);
     }
 
+    public static Intent getStartIntent(Context context, Bundle bundle) {
+        Intent intent = getStartIntent(context);
+        intent.putExtras(bundle);
+        return intent;
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_product);
+        getExtra();
         initView();
         setUpToolbar();
         setUpAdapter();
         setUpSpinner();
         getCategoriesApi();
+    }
+
+    private void getExtra() {
+        Bundle bundle = getIntent().getExtras();
+        if (bundle != null) {
+            selectedCategoryId = bundle.getString(CATEGORY_ID);
+        }
     }
 
     private void getStoreAttributes() {
@@ -439,6 +455,13 @@ public class AddProductActivity extends AppCompatActivity implements SubCategory
             public void success(GetCategoryResponse getCategoryResponse, Response response) {
                 if (getCategoryResponse.getSuccess()) {
                     categoryDataList = getCategoryResponse.getData();
+                    Log.d(TAG, "success: " + selectedCategoryId);
+                    for (GetCategoryData categoryData : categoryDataList) {
+                        if (categoryData.getId().equals(selectedCategoryId)) {
+                            editTextCategory.setText(categoryData.getTitle());
+                            break;
+                        }
+                    }
                 } else {
                     Toast.makeText(AddProductActivity.this, "Data not found!", Toast.LENGTH_SHORT).show();
                 }

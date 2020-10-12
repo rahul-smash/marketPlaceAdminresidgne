@@ -13,7 +13,6 @@
         android:layout_height="wrap_content"
         android:padding="8dp"
         android:src="@drawable/moreicon"
-        android:visibility="invisible"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -32,10 +31,10 @@
         style="@style/AppTheme.TextView.Medium"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:layout_marginLeft="16dp"
-        android:maxLines="1"
+        android:layout_marginStart="8dp"
+        android:layout_marginLeft="8dp"
         android:ellipsize="end"
+        android:maxLines="1"
         android:text="Sapphire Cookie"
         app:layout_constraintEnd_toStartOf="@+id/iv_more"
         app:layout_constraintStart_toEndOf="@+id/iv_product_image"
@@ -46,7 +45,6 @@
         style="@style/AppTheme.TextView.Small"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/tv_category_name"
         android:maxLines="1"
         android:text="Butter Cookies"
         app:layout_constraintEnd_toStartOf="@+id/linearLayout3"
@@ -58,7 +56,6 @@
         style="@style/AppTheme.TextView.Mini"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/tv_subcategory_name"
         android:maxLines="1"
         android:text="Variants - 4"
         app:layout_constraintStart_toStartOf="@+id/tv_subcategory_name"
@@ -69,7 +66,6 @@
         style="@style/AppTheme.TextView.Mini"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/tv_subcategory_name"
         android:layout_marginStart="16dp"
         android:layout_marginLeft="16dp"
         android:maxLines="1"
@@ -82,7 +78,6 @@
         style="@style/AppTheme.TextView.Small"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/tv_category_name"
         android:layout_marginTop="8dp"
         android:maxLines="1"
         android:text="244"
@@ -94,9 +89,8 @@
         style="@style/AppTheme.TextView.Small"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/tv_category_name"
-        android:layout_marginStart="24dp"
-        android:layout_marginLeft="24dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginLeft="16dp"
         android:layout_marginTop="8dp"
         android:maxLines="1"
         android:text="244"
@@ -110,7 +104,6 @@
         android:layout_height="wrap_content"
         android:gravity="center"
         android:orientation="vertical"
-        android:visibility="invisible"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/iv_product_image">
 
@@ -118,8 +111,8 @@
             android:id="@+id/switch_product"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:thumbTint="@color/colorWhite"
-            android:track="@drawable/indicator_selected" />
+            android:thumbTint="@color/switch_selector"
+            android:trackTint="@color/switch_selector" />
 
         <TextView
             android:id="@+id/tv_status"

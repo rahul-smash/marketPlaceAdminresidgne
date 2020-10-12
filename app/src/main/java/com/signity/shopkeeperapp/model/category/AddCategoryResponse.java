@@ -13,13 +13,13 @@ public class AddCategoryResponse implements Serializable {
     private String message;
 
     @SerializedName("data")
-    private String data;
+    private Data data;
 
-    public String getData() {
+    public Data getData() {
         return data;
     }
 
-    public void setData(String data) {
+    public void setData(Data data) {
         this.data = data;
     }
 
@@ -41,14 +41,14 @@ public class AddCategoryResponse implements Serializable {
 
     @Override
     public String toString() {
-        return
-                "AddCategoryResponse{" +
-                        "success = '" + success + '\'' +
-                        ",message = '" + message + '\'' +
-                        "}";
+        return "AddCategoryResponse{" +
+                "success=" + success +
+                ", message='" + message + '\'' +
+                ", data=" + data +
+                '}';
     }
 
-    static class Data {
+    public static class Data {
         @SerializedName("catid")
         private String categoryId;
 

@@ -128,7 +128,8 @@
         <activity
             android:name=".dashboard.DashboardActivity"
             android:launchMode="singleTask"
-            android:screenOrientation="portrait" />
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="adjustPan|stateHidden" />
         <activity
             android:name=".stores.StoresActivity"
             android:launchMode="singleTop"

@@ -79,8 +79,8 @@
             android:layout_height="wrap_content"
             android:textOff="Disable"
             android:textOn="Enable"
-            android:thumbTint="@color/colorWhite"
-            android:track="@drawable/indicator_selected" />
+            android:trackTint="@color/switch_selector"
+            android:thumbTint="@color/switch_selector"/>
 
         <TextView
             android:id="@+id/tv_status"

@@ -34,6 +34,7 @@ import com.signity.shopkeeperapp.model.category.AddCategoryResponse;
 import com.signity.shopkeeperapp.model.category.SubCategoryModel;
 import com.signity.shopkeeperapp.model.image.ImageUploadResponse;
 import com.signity.shopkeeperapp.network.NetworkAdaper;
+import com.signity.shopkeeperapp.products.AddProductActivity;
 import com.signity.shopkeeperapp.util.AnimUtil;
 import com.signity.shopkeeperapp.util.ProgressDialogUtil;
 import com.squareup.picasso.Picasso;
@@ -156,7 +157,8 @@ public class AddCategoryActivity extends AppCompatActivity implements SubCategor
         }
 
         Gson gson = new Gson();
-        JsonElement element = gson.toJsonTree(subCategoryAdapter.getSubCategoryModels(), new TypeToken<List<SubCategoryModel>>() {}.getType());
+        JsonElement element = gson.toJsonTree(subCategoryAdapter.getSubCategoryModels(), new TypeToken<List<SubCategoryModel>>() {
+        }.getType());
         JsonArray jsonArray = element.getAsJsonArray();
 
         Map<String, String> map = new HashMap<>();
@@ -171,7 +173,10 @@ public class AddCategoryActivity extends AppCompatActivity implements SubCategor
 
                 ProgressDialogUtil.hideProgressDialog();
                 if (addCategoryResponse.isSuccess()) {
-                    // TODO - Finish this activity and open add product
+                    Bundle bundle = new Bundle();
+                    bundle.putString(AddProductActivity.CATEGORY_ID,addCategoryResponse.getData().getCategoryId());
+                    startActivity(AddProductActivity.getStartIntent(AddCategoryActivity.this,bundle));
+                    finish();
                 } else {
                     Toast.makeText(AddCategoryActivity.this, addCategoryResponse.getMessage(), Toast.LENGTH_SHORT).show();
                 }

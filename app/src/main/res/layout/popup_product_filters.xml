@@ -1,18 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:layout_margin="20dp">
-
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content">
 
     <com.google.android.material.card.MaterialCardView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="8dp"
-        android:layout_marginEnd="16dp"
-        android:layout_marginBottom="16dp"
+        android:layout_centerInParent="true"
+        android:layout_margin="16dp"
         android:background="@color/colorWhite"
         app:cardCornerRadius="4dp"
         app:cardElevation="6dp"
@@ -23,17 +19,18 @@
         app:layout_constraintTop_toTopOf="parent">
 
         <LinearLayout
-            android:orientation="vertical"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="20dp"
-            android:padding="4dp">
+            android:orientation="vertical"
+            android:paddingLeft="16dp"
+            android:paddingTop="16dp"
+            android:paddingRight="16dp">
+
             <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/textInputLayout2"
                 style="@style/Widget.Design.TextInputLayout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="24dp"
                 android:hint="Category"
                 app:hintTextColor="@color/colorTextGrey"
                 app:layout_constraintTop_toBottomOf="@+id/ll_add_products">
@@ -62,8 +59,7 @@
                 android:layout_marginTop="16dp"
                 android:hint="SubCategory"
                 app:hintTextColor="@color/colorTextGrey"
-                app:layout_constraintTop_toBottomOf="@+id/textInputLayout2"
-               >
+                app:layout_constraintTop_toBottomOf="@+id/textInputLayout2">
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/edt_sub_category"
@@ -82,104 +78,98 @@
             </com.google.android.material.textfield.TextInputLayout>
 
 
-<!--
-            <LinearLayout
-                android:id="@+id/linearCategory"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="10dp"
-                android:layout_marginTop="10dp"
-                android:layout_marginRight="10dp"
-                android:layout_marginBottom="5dp"
-                android:orientation="vertical">
+            <!--
+                        <LinearLayout
+                            android:id="@+id/linearCategory"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="10dp"
+                            android:layout_marginTop="10dp"
+                            android:layout_marginRight="10dp"
+                            android:layout_marginBottom="5dp"
+                            android:orientation="vertical">
 
-                <TextView
-                    style="@style/AppTheme.TextView.Medium"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:gravity="left|center"
-                    android:paddingLeft="5dp"
-                    android:text="Category "
-                    android:textColor="@color/colorTextGrey"
-                    android:textSize="@dimen/text_normal" />
+                            <TextView
+                                style="@style/AppTheme.TextView.Medium"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:gravity="left|center"
+                                android:paddingLeft="5dp"
+                                android:text="Category "
+                                android:textColor="@color/colorTextGrey"
+                                android:textSize="@dimen/text_normal" />
 
-                <TextView
-                    android:id="@+id/txtSelectCategory"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="4dp"
-                    android:layout_marginTop="2dp"
-                    android:layout_marginRight="4dp"
-                    android:background="@drawable/shape_line_botton"
-                    android:drawableRight="@drawable/ic_down"
-                    android:gravity="left|center"
-                    android:hint="Select Category"
-                    android:padding="5dp"
-                    android:paddingLeft="5dp"
-                    android:tag="Selection of Make is required."
-                    android:textSize="@dimen/text_size_normal" />
-
-
-            </LinearLayout>
-
-            <LinearLayout
-                android:id="@+id/linearSubCategory"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/linearCategory"
-                android:layout_marginLeft="10dp"
-                android:layout_marginTop="20dp"
-                android:layout_marginRight="10dp"
-                android:layout_marginBottom="5dp"
-                android:orientation="vertical">
-
-                <TextView
-                    style="@style/AppTheme.TextView.Medium"
-
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:gravity="left|center"
-                    android:paddingLeft="5dp"
-                    android:text="Sub Category "
-                    android:textColor="@color/colorTextGrey"
-                    android:textSize="@dimen/text_normal" />
-
-                <TextView
-                    android:id="@+id/txtSubCategory"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="4dp"
-                    android:layout_marginTop="2dp"
-                    android:layout_marginRight="4dp"
-                    android:background="@drawable/shape_line_botton"
-                    android:drawableRight="@drawable/ic_down"
-                    android:gravity="left|center"
-                    android:hint="Select SubCategory"
-                    android:padding="5dp"
-                    android:paddingLeft="5dp"
-                    android:tag="Selection of Make is required."
-                    android:textSize="@dimen/text_size_normal" />
+                            <TextView
+                                android:id="@+id/txtSelectCategory"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_marginLeft="4dp"
+                                android:layout_marginTop="2dp"
+                                android:layout_marginRight="4dp"
+                                android:background="@drawable/shape_line_botton"
+                                android:drawableRight="@drawable/ic_down"
+                                android:gravity="left|center"
+                                android:hint="Select Category"
+                                android:padding="5dp"
+                                android:paddingLeft="5dp"
+                                android:tag="Selection of Make is required."
+                                android:textSize="@dimen/text_size_normal" />
 
 
-            </LinearLayout>-->
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:id="@+id/linearSubCategory"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_below="@+id/linearCategory"
+                            android:layout_marginLeft="10dp"
+                            android:layout_marginTop="20dp"
+                            android:layout_marginRight="10dp"
+                            android:layout_marginBottom="5dp"
+                            android:orientation="vertical">
+
+                            <TextView
+                                style="@style/AppTheme.TextView.Medium"
+
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:gravity="left|center"
+                                android:paddingLeft="5dp"
+                                android:text="Sub Category "
+                                android:textColor="@color/colorTextGrey"
+                                android:textSize="@dimen/text_normal" />
+
+                            <TextView
+                                android:id="@+id/txtSubCategory"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_marginLeft="4dp"
+                                android:layout_marginTop="2dp"
+                                android:layout_marginRight="4dp"
+                                android:background="@drawable/shape_line_botton"
+                                android:drawableRight="@drawable/ic_down"
+                                android:gravity="left|center"
+                                android:hint="Select SubCategory"
+                                android:padding="5dp"
+                                android:paddingLeft="5dp"
+                                android:tag="Selection of Make is required."
+                                android:textSize="@dimen/text_size_normal" />
+
+
+                        </LinearLayout>-->
 
             <View
                 android:id="@+id/view"
-
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
-                android:layout_below="@+id/linearSubCategory"
-                android:layout_marginTop="30dp"
-                android:background="@color/colorTextGrey" />
+                android:layout_marginTop="24dp"
+                android:background="@color/colorBackgroundGrey" />
 
             <LinearLayout
                 android:id="@+id/linearViews"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_below="@+id/view"
-                android:layout_marginLeft="10dp"
-                android:layout_marginRight="10dp"
-                android:layout_marginBottom="5dp"
                 android:orientation="horizontal"
                 android:weightSum="2">
 
@@ -187,30 +177,27 @@
                     android:id="@+id/btnCancel"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="10dp"
-                    android:layout_marginRight="10dp"
                     android:layout_weight="1"
                     android:background="@android:color/transparent"
-                    android:text="CANCEL"
+                    android:text="Cancel"
+                    android:textAllCaps="true"
                     android:textColor="@color/colorTextGrey" />
 
                 <View
-                    android:layout_marginTop="5dp"
-                    android:layout_marginBottom="5dp"
                     android:layout_width="1dp"
                     android:layout_height="match_parent"
-                    android:background="@color/colorTextGrey" />
+                    android:layout_marginTop="4dp"
+                    android:layout_marginBottom="4dp"
+                    android:background="@color/colorBackgroundGrey" />
 
                 <Button
                     android:id="@+id/btnApply"
-
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="10dp"
-                    android:layout_marginRight="10dp"
                     android:layout_weight="1"
                     android:background="@android:color/transparent"
-                    android:text="APPLY"
+                    android:text="Apply"
+                    android:textAllCaps="true"
                     android:textColor="@color/colorTextGrey" />
             </LinearLayout>
         </LinearLayout>

@@ -6,9 +6,8 @@ import android.content.DialogInterface;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.os.Parcelable;
+import android.text.InputType;
 import android.text.TextUtils;
-import android.util.Log;
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -23,6 +22,7 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.widget.SearchView;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -35,6 +35,7 @@ import com.signity.shopkeeperapp.model.Categories.GetCategoryResponse;
 import com.signity.shopkeeperapp.model.Categories.SubCategory;
 import com.signity.shopkeeperapp.model.Product.GetProductData;
 import com.signity.shopkeeperapp.model.Product.GetProductResponse;
+import com.signity.shopkeeperapp.model.productStatus.ProductStatus;
 import com.signity.shopkeeperapp.network.NetworkAdaper;
 import com.signity.shopkeeperapp.products.AddProductActivity;
 import com.signity.shopkeeperapp.products.CategoryDialog;
@@ -53,12 +54,12 @@ import retrofit.Callback;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
 
-public class ProductFragment extends Fragment implements View.OnClickListener, ProductsAdapter.OnItemClickListener {
+public class ProductFragment extends Fragment implements View.OnClickListener, ProductsAdapter.ProductAdapterListener {
     public static final String TAG = "ProductFragment";
-    View hiddenView;
-    private ProductsAdapter categoriesAdapter;
+    private View hiddenView;
+    private ProductsAdapter productsAdapter;
     private LinearLayout linearLayoutAddProduct;
-    private List<GetProductData> categoryData = new ArrayList<>();
+    private List<GetProductData> productData = new ArrayList<>();
     private RecyclerView recyclerViewProduct;
     private LinearLayoutManager layoutManager;
     private int pageSize = 10, currentPageNumber = 1, start, totalOrders;
@@ -66,6 +67,7 @@ public class ProductFragment extends Fragment implements View.OnClickListener, P
     private String selectedCategoryId = "0";
     private String selectedSubCategoryId = "0";
     private TextInputEditText txtSelectCategory, txtSubCategory;
+    private boolean isFiltering;
     private RecyclerView.OnScrollListener recyclerViewOnScrollListener = new RecyclerView.OnScrollListener() {
         @Override
         public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
@@ -82,7 +84,7 @@ public class ProductFragment extends Fragment implements View.OnClickListener, P
             if (!isLoading()) {
                 if ((visibleItemCount + firstVisibleItemPosition) >= totalItemCount
                         && firstVisibleItemPosition >= 0 && totalItemCount >= pageSize) {
-                    if (start < totalOrders) {
+                    if (start < totalOrders && !isFiltering) {
                         getAllOrdersMethod();
                     }
                 }
@@ -108,21 +110,69 @@ public class ProductFragment extends Fragment implements View.OnClickListener, P
     }
 
     @Override
-    public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
+    public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull final MenuInflater inflater) {
         super.onCreateOptionsMenu(menu, inflater);
-//        inflater.inflate(R.menu.menu_products, menu);
+        inflater.inflate(R.menu.menu_products, menu);
+        SearchView searchView = (SearchView) menu.findItem(R.id.action_search).getActionView();
+        searchView.setInputType(InputType.TYPE_CLASS_TEXT);
+        searchView.setQueryHint("Search Product");
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                filterProducts(newText.trim());
+                return false;
+            }
+        });
+
+        searchView.setOnSearchClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                productData = productsAdapter.getmData();
+            }
+        });
+
+        searchView.setOnQueryTextFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View v, boolean hasFocus) {
+                isFiltering = hasFocus;
+            }
+        });
+
+        searchView.setOnCloseListener(new SearchView.OnCloseListener() {
+            @Override
+            public boolean onClose() {
+                productsAdapter.setmData(productData);
+                return false;
+            }
+        });
+    }
+
+    private void filterProducts(String trim) {
+
+        List<GetProductData> newFilterProducts = new ArrayList<>();
+
+        if (productData.size() == 0) {
+            return;
+        }
+
+        for (GetProductData data : productData) {
+            if (data.getTitle().toLowerCase().startsWith(trim.toLowerCase())) {
+                newFilterProducts.add(data);
+            }
+        }
+
+        productsAdapter.setmData(newFilterProducts);
     }
 
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-        if (item.getItemId() == R.id.action_saerch) {
-
-        }
         if (item.getItemId() == R.id.action_filter) {
-            // TODO - Filter Menu
             showOverViewPopMenu();
-
-
         }
         return super.onOptionsItemSelected(item);
     }
@@ -131,14 +181,16 @@ public class ProductFragment extends Fragment implements View.OnClickListener, P
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         setUpAdapter();
+        getAllOrdersMethod();
         getCategoriesApi();
     }
 
     private void setUpAdapter() {
         layoutManager = new LinearLayoutManager(getActivity());
         recyclerViewProduct.setLayoutManager(layoutManager);
-        categoriesAdapter = new ProductsAdapter(getContext());
-        recyclerViewProduct.setAdapter(categoriesAdapter);
+        productsAdapter = new ProductsAdapter(getContext());
+        productsAdapter.setListener(this);
+        recyclerViewProduct.setAdapter(productsAdapter);
         recyclerViewProduct.addOnScrollListener(recyclerViewOnScrollListener);
         recyclerViewProduct.addItemDecoration(new RvGridSpacesItemDecoration((int) Util.pxFromDp(getContext(), 16)));
     }
@@ -158,11 +210,8 @@ public class ProductFragment extends Fragment implements View.OnClickListener, P
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         setHasOptionsMenu(true);
-
         initView(view);
-        getAllOrdersMethod();
     }
-
 
     public void getAllOrdersMethod() {
 
@@ -197,9 +246,44 @@ public class ProductFragment extends Fragment implements View.OnClickListener, P
                     currentPageNumber++;
                     start += pageSize;
                     totalOrders = getProductResponse.getTotal();
-                    categoryData = getProductResponse.getData();
-                    if (categoryData != null && categoryData.size() != 0) {
-                        categoriesAdapter.setmData(categoryData);
+                    if (getProductResponse.getData() != null) {
+                        productsAdapter.addData(getProductResponse.getData());
+                    } else {
+                        Toast.makeText(getActivity(), "Data not Found!", Toast.LENGTH_SHORT).show();
+                    }
+
+                } else {
+                    Toast.makeText(getActivity(), "Data not Found!", Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void failure(RetrofitError error) {
+                ProgressDialogUtil.hideProgressDialog();
+            }
+        });
+    }
+
+    public void getProductApiUsingFilter() {
+        ProgressDialogUtil.showProgressDialog(getActivity());
+        Map<String, Object> param = new HashMap<>();
+        param.put("page", currentPageNumber);
+        param.put("pagelength", pageSize);
+        param.put("cat_id", selectedCategoryId);
+        param.put("sub_cat_ids", selectedSubCategoryId);
+
+        NetworkAdaper.getNetworkServices().getAllProducts(param, new Callback<GetProductResponse>() {
+            @Override
+            public void success(GetProductResponse getProductResponse, Response response) {
+
+                ProgressDialogUtil.hideProgressDialog();
+
+                if (getProductResponse.getSuccess()) {
+                    currentPageNumber++;
+                    start += pageSize;
+                    totalOrders = getProductResponse.getTotal();
+                    if (getProductResponse.getData() != null) {
+                        productsAdapter.setmData(getProductResponse.getData());
                     } else {
                         Toast.makeText(getActivity(), "Data not Found!", Toast.LENGTH_SHORT).show();
                     }
@@ -221,17 +305,7 @@ public class ProductFragment extends Fragment implements View.OnClickListener, P
     public void onClick(View view) {
         if (view == linearLayoutAddProduct) {
             showAlertDialog(getActivity());
-
-
-         /* //Hide code here
-          startActivity(AddProductActivity.getStartIntent(getContext()));
-            AnimUtil.slideFromRightAnim(getActivity());*/
         }
-    }
-
-    @Override
-    public void onItemClick(View itemView, int position, GetProductData productData) {
-
     }
 
     private void showOverViewPopMenu() {
@@ -240,13 +314,11 @@ public class ProductFragment extends Fragment implements View.OnClickListener, P
         final PopupWindow popupWindowOverView = new PopupWindow(layout, LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT, true);
 
         popupWindowOverView.setOutsideTouchable(true);
-
         popupWindowOverView.setBackgroundDrawable(new ColorDrawable());
         popupWindowOverView.setTouchInterceptor(new View.OnTouchListener() { // or whatever you want
             @Override
             public boolean onTouch(View v, MotionEvent event) {
-                if (event.getAction() == MotionEvent.ACTION_OUTSIDE) // here I want to close the pw when clicking outside it but at all this is just an example of how it works and you can implement the onTouch() or the onKey() you want
-                {
+                if (event.getAction() == MotionEvent.ACTION_OUTSIDE) {
                     popupWindowOverView.dismiss();
                     return true;
                 }
@@ -254,28 +326,29 @@ public class ProductFragment extends Fragment implements View.OnClickListener, P
             }
 
         });
-
-        float den = getActivity().getResources().getDisplayMetrics().density;
-        int offsetY = (int) (den * 2);
-        popupWindowOverView.showAtLocation(layout, Gravity.TOP, 0, 0);
+        popupWindowOverView.showAsDropDown(hiddenView, 0, 0);
         txtSelectCategory = layout.findViewById(R.id.edt_category);
         Button btnApply = layout.findViewById(R.id.btnApply);
         btnApply.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 currentPageNumber = 1;
-                getProductApi();
+                start = 0;
+                getProductApiUsingFilter();
                 popupWindowOverView.dismiss();
-
             }
         });
         Button btnCancel = layout.findViewById(R.id.btnCancel);
         btnCancel.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
+                currentPageNumber = 1;
+                selectedCategoryId = "0";
+                selectedSubCategoryId = "0";
+                start = 0;
+                productsAdapter.clearData();
+                getAllOrdersMethod();
                 popupWindowOverView.dismiss();
-
             }
         });
         txtSelectCategory.setOnClickListener(new View.OnClickListener() {
@@ -287,14 +360,11 @@ public class ProductFragment extends Fragment implements View.OnClickListener, P
                 categoryDialog.setListenerCategory(new CategoryDialog.CategoryListener() {
                     @Override
                     public void onSelectCategory(String categoryId, String categoryName) {
-                        Log.i("---categoryName", "" + categoryName);
-
                         selectedCategoryId = categoryId;
                         txtSelectCategory.setText(categoryName);
                     }
                 });
-                categoryDialog.show(getActivity().getSupportFragmentManager(), CategoryDialog.TAG);
-
+                categoryDialog.show(getChildFragmentManager(), CategoryDialog.TAG);
             }
         });
         txtSubCategory = layout.findViewById(R.id.edt_sub_category);
@@ -318,23 +388,59 @@ public class ProductFragment extends Fragment implements View.OnClickListener, P
                 subCategoryDialog.setListenerCategory(new SubCategoryDialog.SubCategoryListener() {
                     @Override
                     public void onSelectSubCategory(String subCategoryId, String subCategoryName) {
-                        Log.i("---subCategoryName", "" + subCategoryName);
-
                         selectedSubCategoryId = subCategoryId;
                         txtSubCategory.setText(subCategoryName);
                     }
                 });
-                subCategoryDialog.show(getActivity().getSupportFragmentManager(), SubCategoryDialog.TAG);
+                subCategoryDialog.show(getChildFragmentManager(), SubCategoryDialog.TAG);
+            }
+        });
+
+        for (GetCategoryData categoryData : categoryDataList) {
+            if (categoryData.getId().equals(selectedCategoryId)) {
+                txtSelectCategory.setText(categoryData.getTitle());
+                for (SubCategory subCategory : categoryData.getSubCategory()) {
+                    if (subCategory.getId().equals(selectedSubCategoryId)) {
+                        txtSubCategory.setText(subCategory.getTitle());
+                        break;
+                    }
+                }
+                break;
+            }
+        }
+    }
+
+    public void setProductStatus(final String subProductId, String status) {
+        ProgressDialogUtil.showProgressDialog(getContext());
+        Map<String, Object> param = new HashMap<>();
+        param.put("product_id", subProductId);
+        param.put("product_status", status);
+
+        NetworkAdaper.getNetworkServices().setProductStatus(param, new Callback<ProductStatus>() {
+            @Override
+            public void success(ProductStatus productStatus, Response response) {
+
+                ProgressDialogUtil.hideProgressDialog();
+
+                if (productStatus.getSuccess()) {
+                    productsAdapter.updateProductStatus(subProductId);
+                } else {
+                    Toast.makeText(getContext(), productStatus.getMessage(), Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void failure(RetrofitError error) {
+                ProgressDialogUtil.hideProgressDialog();
             }
         });
     }
-
 
     public void getCategoriesApi() {
         ProgressDialogUtil.showProgressDialog(getActivity());
         Map<String, Object> param = new HashMap<>();
         param.put("page", 1);
-        param.put("pagesize", 1000);
+        param.put("pagelength", 1000);
 
         NetworkAdaper.getNetworkServices().getCategories(param, new Callback<GetCategoryResponse>() {
             @Override
@@ -376,5 +482,19 @@ public class ProductFragment extends Fragment implements View.OnClickListener, P
         alert11.show();
 
     }
-}
 
+    @Override
+    public void onClickDeleteProduct(String id) {
+
+    }
+
+    @Override
+    public void onClickShareProduct() {
+
+    }
+
+    @Override
+    public void onClickSwitchProduct(String id, String status) {
+        setProductStatus(id, status);
+    }
+}
