@@ -13,6 +13,17 @@ public class SubCategoryModel {
     @SerializedName("image")
     private String subCategoryImage;
 
+    @Expose(deserialize = false)
+    private String subCategoryImageUrl;
+
+    public String getSubCategoryImageUrl() {
+        return subCategoryImageUrl;
+    }
+
+    public void setSubCategoryImageUrl(String subCategoryImageUrl) {
+        this.subCategoryImageUrl = subCategoryImageUrl;
+    }
+
     public String getSubCategoryName() {
         return subCategoryName;
     }
@@ -27,5 +38,14 @@ public class SubCategoryModel {
 
     public void setSubCategoryImage(String subCategoryImage) {
         this.subCategoryImage = subCategoryImage;
+    }
+
+    @Override
+    public String toString() {
+        return "SubCategoryModel{" +
+                "subCategoryName='" + subCategoryName + '\'' +
+                ", subCategoryImage='" + subCategoryImage + '\'' +
+                ", subCategoryImageUrl='" + subCategoryImageUrl + '\'' +
+                '}';
     }
 }

@@ -2,6 +2,7 @@ package com.signity.shopkeeperapp.products;
 
 import android.content.Context;
 import android.graphics.Paint;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,23 +12,23 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.signity.shopkeeperapp.R;
-import com.signity.shopkeeperapp.model.Product.Variant;
 import com.signity.shopkeeperapp.util.Util;
 import com.signity.shopkeeperapp.util.prefs.AppPreference;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 public class VariantAdapter extends RecyclerView.Adapter<VariantAdapter.ViewHolder> {
 
     private Context context;
-    private List<Variant> variantList = new ArrayList<>();
+    private List<Map<String, String>> variantList = new ArrayList<>();
 
     public VariantAdapter(Context context) {
         this.context = context;
     }
 
-    public void setVariantList(List<Variant> variantList) {
+    public void setVariantList(List<Map<String, String>> variantList) {
         this.variantList = variantList;
         notifyDataSetChanged();
     }
@@ -63,11 +64,12 @@ public class VariantAdapter extends RecyclerView.Adapter<VariantAdapter.ViewHold
         }
 
         public void bind(int positon) {
-            Variant variant = variantList.get(positon);
-            textViewVariantDetail.setText(String.format("Weight - %s %s", variant.getWeight(), variant.getUnitType()));
-            textViewVariantPrice.setText(Util.getPriceWithCurrency(Double.parseDouble(variant.getMrpPrice()), AppPreference.getInstance().getCurrency()));
-            textViewVariantPriceFinal.setText(Util.getPriceWithCurrency(Double.parseDouble(variant.getPrice()), AppPreference.getInstance().getCurrency()));
-            textViewVariantDiscount.setText(String.format("Discount - %s", variant.getDiscount()).concat("%"));
+            Map<String, String> variant = variantList.get(positon);
+
+            textViewVariantDetail.setText(String.format("Weight - %s %s", variant.get("weight"), variant.get("unit_type")));
+            textViewVariantPrice.setText(Util.getPriceWithCurrency(Double.parseDouble(TextUtils.isEmpty(variant.get("mrp_price")) ? "0" : variant.get("mrp_price")), AppPreference.getInstance().getCurrency()));
+            textViewVariantPriceFinal.setText(Util.getPriceWithCurrency(Double.parseDouble(TextUtils.isEmpty(variant.get("price")) ? "0" : variant.get("price")), AppPreference.getInstance().getCurrency()));
+            textViewVariantDiscount.setText(String.format("Discount - %s", TextUtils.isEmpty(variant.get("discount")) ? "0" : variant.get("discount")).concat("%"));
         }
     }
 }

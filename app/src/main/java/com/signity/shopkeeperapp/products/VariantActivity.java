@@ -1,13 +1,15 @@
 package com.signity.shopkeeperapp.products;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Rect;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.LinearLayout;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -16,11 +18,18 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.signity.shopkeeperapp.R;
+import com.signity.shopkeeperapp.adapter.RvGridSpacesItemDecoration;
+import com.signity.shopkeeperapp.model.Product.DynamicField;
 import com.signity.shopkeeperapp.model.Product.StoreAttributes;
 import com.signity.shopkeeperapp.network.NetworkAdaper;
 import com.signity.shopkeeperapp.util.AnimUtil;
 import com.signity.shopkeeperapp.util.ProgressDialogUtil;
 import com.signity.shopkeeperapp.util.Util;
+
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 
 import retrofit.Callback;
 import retrofit.RetrofitError;
@@ -34,6 +43,7 @@ public class VariantActivity extends AppCompatActivity {
     private LinearLayout linearLayoutSave;
     private DynamicFieldAdapter dynamicFieldAdapter;
     private RecyclerView recyclerViewDynamicField;
+    private List<DynamicField> dynamicFieldList = new ArrayList<>();
 
     public static Intent getStartIntent(Context context) {
         return new Intent(context, VariantActivity.class);
@@ -59,15 +69,7 @@ public class VariantActivity extends AppCompatActivity {
         dynamicFieldAdapter = new DynamicFieldAdapter(this);
         recyclerViewDynamicField.setLayoutManager(new LinearLayoutManager(this));
         recyclerViewDynamicField.setAdapter(dynamicFieldAdapter);
-        recyclerViewDynamicField.addItemDecoration(new RecyclerView.ItemDecoration() {
-            @Override
-            public void getItemOffsets(@NonNull Rect outRect, @NonNull View view, @NonNull RecyclerView parent, @NonNull RecyclerView.State state) {
-                outRect.left = 0;
-                outRect.right = 0;
-                outRect.bottom = (int) Util.pxFromDp(VariantActivity.this, 8);
-                outRect.top = 0;
-            }
-        });
+        recyclerViewDynamicField.addItemDecoration(new RvGridSpacesItemDecoration((int) Util.pxFromDp(VariantActivity.this, 16)));
     }
 
     private void initViews() {
@@ -78,47 +80,39 @@ public class VariantActivity extends AppCompatActivity {
         linearLayoutSave.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-//                saveVariant();
+                saveVariant();
             }
         });
     }
 
-/*
     private void saveVariant() {
-        String weight = editTextWeight.getText().toString().trim();
-        String mrp = editTextMRP.getText().toString().trim();
-        String discount = editTextDiscount.getText().toString().trim();
-        String price = editTextSellingPrice.getText().toString().trim();
 
+        Map<String, String> fieldMap = dynamicFieldAdapter.getFieldMap();
 
-        if (TextUtils.isEmpty(weight)) {
-            Toast.makeText(this, "Please enter product weight", Toast.LENGTH_SHORT).show();
+        if (fieldMap.isEmpty()) {
+            Toast.makeText(this, "Please add variant details", Toast.LENGTH_SHORT).show();
             return;
         }
 
-        if (TextUtils.isEmpty(unitType)) {
-            Toast.makeText(this, "Please select unit type", Toast.LENGTH_SHORT).show();
-            return;
+        for (DynamicField dynamicField : dynamicFieldList) {
+            if (dynamicField.getValidation().equalsIgnoreCase("true")) {
+                if (fieldMap.containsKey(dynamicField.getVariantFieldName())) {
+                    if (TextUtils.isEmpty(fieldMap.get(dynamicField.getVariantFieldName()))) {
+                        Toast.makeText(this, String.format("%s is empty", dynamicField.getLabel()), Toast.LENGTH_SHORT).show();
+                        return;
+                    }
+                } else {
+                    Toast.makeText(this, String.format("%s is empty, add key", dynamicField.getLabel()), Toast.LENGTH_SHORT).show();
+                    return;
+                }
+            }
         }
-
-        if (TextUtils.isEmpty(mrp)) {
-            Toast.makeText(this, "Please enter product MRP", Toast.LENGTH_SHORT).show();
-            return;
-        }
-
-        Variant variant = new Variant();
-        variant.setWeight(weight);
-        variant.setUnitType(unitType);
-        variant.setMrpPrice(mrp);
-        variant.setDiscount(TextUtils.isEmpty(discount) ? "0" : discount);
-        variant.setPrice(price);
 
         Intent intent = new Intent();
-        intent.putExtra(VariantActivity.VARIANT_DATA, variant);
+        intent.putExtra(VariantActivity.VARIANT_DATA, (Serializable) fieldMap);
         setResult(Activity.RESULT_OK, intent);
         finishAnimate();
     }
-*/
 
     private void setUpToolbar() {
         setSupportActionBar(toolbar);
@@ -153,7 +147,8 @@ public class VariantActivity extends AppCompatActivity {
 
                 ProgressDialogUtil.hideProgressDialog();
                 if (storeAttributes.isSuccess()) {
-                    dynamicFieldAdapter.setDynamicFieldList(storeAttributes.getData().getDynamicFields());
+                    dynamicFieldList = storeAttributes.getData().getDynamicFields();
+                    dynamicFieldAdapter.setDynamicFieldList(dynamicFieldList);
                 }
             }
 

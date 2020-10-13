@@ -8,6 +8,7 @@ import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -174,8 +175,8 @@ public class AddCategoryActivity extends AppCompatActivity implements SubCategor
                 ProgressDialogUtil.hideProgressDialog();
                 if (addCategoryResponse.isSuccess()) {
                     Bundle bundle = new Bundle();
-                    bundle.putString(AddProductActivity.CATEGORY_ID,addCategoryResponse.getData().getCategoryId());
-                    startActivity(AddProductActivity.getStartIntent(AddCategoryActivity.this,bundle));
+                    bundle.putString(AddProductActivity.CATEGORY_ID, addCategoryResponse.getData().getParentId());
+                    startActivity(AddProductActivity.getStartIntent(AddCategoryActivity.this, bundle));
                     finish();
                 } else {
                     Toast.makeText(AddCategoryActivity.this, addCategoryResponse.getMessage(), Toast.LENGTH_SHORT).show();
@@ -258,7 +259,7 @@ public class AddCategoryActivity extends AppCompatActivity implements SubCategor
 
                 if (imageUploadResponse.isSuccess()) {
                     categoryImageUrl = imageUploadResponse.getMessage().getUrl();
-                    String imageUrl = String.format("https://s3.amazonaws.com/store-asset/%s", categoryImageUrl);
+                    String imageUrl = imageUploadResponse.getMessage().getImageUrl();
 
                     switch (imageUploadType) {
                         case CATEGORY:
@@ -274,7 +275,10 @@ public class AddCategoryActivity extends AppCompatActivity implements SubCategor
                         case SUBCATEGORY:
                             SubCategoryModel subCategoryModel = subCategoryAdapter.getSubCategoryModels().get(position);
                             subCategoryModel.setSubCategoryImage(categoryImageUrl);
-                            subCategoryAdapter.notifyItemChanged(position);
+                            subCategoryModel.setSubCategoryImageUrl(imageUrl);
+                            Log.d(TAG, "success: " + subCategoryModel.toString());
+
+                            subCategoryAdapter.notifyItemChanged(position, subCategoryModel);
                             break;
                     }
                 }

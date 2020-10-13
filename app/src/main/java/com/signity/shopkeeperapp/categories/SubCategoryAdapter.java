@@ -106,13 +106,12 @@ public class SubCategoryAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
             final SubCategoryModel subCategory = subCategoryModels.get(position);
 
             try {
-                String categoryImageUrl = subCategory.getSubCategoryImage();
+                String categoryImageUrl = subCategory.getSubCategoryImageUrl();
                 if (!TextUtils.isEmpty(categoryImageUrl)) {
                     imageViewSubCategoryImage.setVisibility(View.VISIBLE);
                     linearLayoutAddImage.setVisibility(View.INVISIBLE);
-                    String imageUrl = String.format("https://s3.amazonaws.com/store-asset/%s", categoryImageUrl);
                     Picasso.with(context)
-                            .load(imageUrl)
+                            .load(categoryImageUrl)
                             .placeholder(ResourcesCompat.getDrawable(context.getResources(), R.drawable.addimageicon, null))
                             .into(imageViewSubCategoryImage);
                 }

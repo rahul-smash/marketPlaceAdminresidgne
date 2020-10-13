@@ -3,6 +3,7 @@ package com.signity.shopkeeperapp.model.Product;
 import com.google.gson.annotations.SerializedName;
 
 import java.io.Serializable;
+import java.util.Map;
 
 public class DynamicField implements Serializable {
 
@@ -20,6 +21,17 @@ public class DynamicField implements Serializable {
 
     @SerializedName("min")
     private String min;
+
+    @SerializedName("value")
+    private Map<String, String> value;
+
+    public Map<String, String> getValue() {
+        return value;
+    }
+
+    public void setValue(Map<String, String> value) {
+        this.value = value;
+    }
 
     public String getMin() {
         return min;

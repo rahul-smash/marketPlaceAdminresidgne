@@ -1,9 +1,14 @@
 package com.signity.shopkeeperapp.products;
 
 import android.content.Context;
+import android.text.Editable;
+import android.text.TextUtils;
+import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Spinner;
 import android.widget.TextView;
 
@@ -33,6 +38,10 @@ public class DynamicFieldAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
     public void setDynamicFieldList(List<DynamicField> dynamicFieldList) {
         this.dynamicFieldList = dynamicFieldList;
         notifyDataSetChanged();
+    }
+
+    public Map<String, String> getFieldMap() {
+        return fieldMap;
     }
 
     @NonNull
@@ -103,7 +112,7 @@ public class DynamicFieldAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
 
         public void bind(int positon) {
 
-            DynamicField dynamicField = dynamicFieldList.get(positon);
+            final DynamicField dynamicField = dynamicFieldList.get(positon);
 
             textInputLayout.setHint(dynamicField.getLabel());
             textInputLayout.setHintEnabled(true);
@@ -112,8 +121,37 @@ public class DynamicFieldAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
             textInputEditText.setOnFocusChangeListener(new View.OnFocusChangeListener() {
                 @Override
                 public void onFocusChange(View v, boolean hasFocus) {
-                    TextInputEditText textInputEditText = (TextInputEditText) v;
-                    fieldMap.put(textInputEditText.getTag().toString(), textInputEditText.getText().toString());
+
+                    if (!hasFocus) {
+                        if (dynamicField.getValidation().equalsIgnoreCase("true")) {
+                            if (TextUtils.isEmpty(textInputEditText.getText().toString().trim())) {
+                                textInputEditText.setError("Please enter value");
+                                return;
+                            }
+                        }
+                    }
+
+                    fieldMap.put(textInputEditText.getTag().toString(), textInputEditText.getText().toString().trim());
+                }
+            });
+
+            textInputEditText.addTextChangedListener(new TextWatcher() {
+                @Override
+                public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+                }
+
+                @Override
+                public void onTextChanged(CharSequence s, int start, int before, int count) {
+                    if (TextUtils.isEmpty(s)) {
+                        return;
+                    }
+                    fieldMap.put(textInputEditText.getTag().toString(), s.toString());
+                }
+
+                @Override
+                public void afterTextChanged(Editable s) {
+
                 }
             });
         }
@@ -132,7 +170,7 @@ public class DynamicFieldAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
 
         public void bind(int positon) {
 
-            DynamicField dynamicField = dynamicFieldList.get(positon);
+            final DynamicField dynamicField = dynamicFieldList.get(positon);
             textInputLayout.setHint(dynamicField.getLabel());
             textInputLayout.setHintEnabled(true);
             textInputEditText.setTag(dynamicField.getVariantFieldName());
@@ -140,8 +178,36 @@ public class DynamicFieldAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
             textInputEditText.setOnFocusChangeListener(new View.OnFocusChangeListener() {
                 @Override
                 public void onFocusChange(View v, boolean hasFocus) {
-                    TextInputEditText textInputEditText = (TextInputEditText) v;
-                    fieldMap.put(textInputEditText.getTag().toString(), textInputEditText.getText().toString());
+
+                    if (!hasFocus) {
+                        if (dynamicField.getValidation().equalsIgnoreCase("true")) {
+                            if (TextUtils.isEmpty(textInputEditText.getText().toString().trim())) {
+                                textInputEditText.setError("Please enter value");
+                                return;
+                            }
+                        }
+                    }
+                    fieldMap.put(textInputEditText.getTag().toString(), textInputEditText.getText().toString().trim());
+                }
+            });
+
+            textInputEditText.addTextChangedListener(new TextWatcher() {
+                @Override
+                public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+                }
+
+                @Override
+                public void onTextChanged(CharSequence s, int start, int before, int count) {
+                    if (TextUtils.isEmpty(s)) {
+                        return;
+                    }
+                    fieldMap.put(textInputEditText.getTag().toString(), s.toString());
+                }
+
+                @Override
+                public void afterTextChanged(Editable s) {
+
                 }
             });
         }
@@ -159,6 +225,40 @@ public class DynamicFieldAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
         }
 
         public void bind(int positon) {
+
+            final List<String> spinnerKey = new ArrayList<>();
+            final List<String> spinnerValue = new ArrayList<>();
+
+            DynamicField dynamicField = dynamicFieldList.get(positon);
+
+            final Map<String, String> valueMap = dynamicField.getValue();
+
+            if (valueMap == null || valueMap.isEmpty()) {
+                return;
+            }
+
+            spinner.setTag(dynamicField.getVariantFieldName());
+            textViewHeading.setText(dynamicField.getLabel());
+
+            for (Map.Entry<String, String> entry : valueMap.entrySet()) {
+                spinnerKey.add(entry.getKey());
+                spinnerValue.add(entry.getValue());
+            }
+
+            ArrayAdapter<String> arrayAdapter = new ArrayAdapter<>(context, android.R.layout.simple_spinner_dropdown_item, spinnerValue);
+            spinner.setAdapter(arrayAdapter);
+
+            spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+                @Override
+                public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                    fieldMap.put(spinner.getTag().toString(), spinnerKey.get(position));
+                }
+
+                @Override
+                public void onNothingSelected(AdapterView<?> parent) {
+
+                }
+            });
         }
     }
 

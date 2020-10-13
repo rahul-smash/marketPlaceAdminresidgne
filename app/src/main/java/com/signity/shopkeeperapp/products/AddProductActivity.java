@@ -24,6 +24,7 @@ import android.widget.CompoundButton;
 import android.widget.LinearLayout;
 import android.widget.RadioGroup;
 import android.widget.Switch;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -31,27 +32,38 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.AppCompatSpinner;
 import androidx.appcompat.widget.Toolbar;
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.app.ActivityCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.textfield.TextInputEditText;
+import com.google.gson.Gson;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
+import com.google.gson.reflect.TypeToken;
 import com.signity.shopkeeperapp.R;
 import com.signity.shopkeeperapp.adapter.SpacesItemDecoration;
 import com.signity.shopkeeperapp.adapter.SpacesItemImageDecoration;
 import com.signity.shopkeeperapp.model.Categories.GetCategoryData;
 import com.signity.shopkeeperapp.model.Categories.GetCategoryResponse;
 import com.signity.shopkeeperapp.model.Categories.SubCategory;
+import com.signity.shopkeeperapp.model.CategoryStatus.CategoryStatus;
 import com.signity.shopkeeperapp.model.Product.DynamicField;
+import com.signity.shopkeeperapp.model.Product.ProductImage;
 import com.signity.shopkeeperapp.model.Product.StoreAttributes;
-import com.signity.shopkeeperapp.model.Product.Variant;
 import com.signity.shopkeeperapp.model.image.ImageUploadResponse;
+import com.signity.shopkeeperapp.model.image.MessageResponse;
 import com.signity.shopkeeperapp.network.NetworkAdaper;
 import com.signity.shopkeeperapp.util.AnimUtil;
 import com.signity.shopkeeperapp.util.ProgressDialogUtil;
 import com.signity.shopkeeperapp.util.Util;
 import com.yalantis.ucrop.UCrop;
 import com.yalantis.ucrop.util.FileUtils;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -95,6 +107,8 @@ public class AddProductActivity extends AppCompatActivity implements SubCategory
     private RecyclerView recyclerViewVariant;
     private RecyclerView recyclerViewImages;
     private RecyclerView recyclerViewDynamicField;
+    private ConstraintLayout constraintLayoutTags;
+    private TextView textViewShowMoreLess;
     private VariantAdapter variantAdapter;
     private ImagesAdapter imagesAdapter;
     private List<GetCategoryData> categoryDataList = new ArrayList<>();
@@ -103,9 +117,10 @@ public class AddProductActivity extends AppCompatActivity implements SubCategory
     private List<String> unitList = new ArrayList<>(Arrays.asList("Kg", "gram", "Ltr", "ml"));
     private String unitType;
     private String foodType;
-    private List<Variant> variantList = new ArrayList<>();
+    private List<Map<String, String>> variantList = new ArrayList<>();
     private List<DynamicField> dynamicFieldList = new ArrayList<>();
     private DynamicFieldAdapter dynamicFieldAdapter;
+    private JSONArray jsonArrayVariant = new JSONArray();
 
     public static Intent getStartIntent(Context context) {
         return new Intent(context, AddProductActivity.class);
@@ -144,6 +159,7 @@ public class AddProductActivity extends AppCompatActivity implements SubCategory
                 ProgressDialogUtil.hideProgressDialog();
                 if (storeAttributes.isSuccess()) {
                     if (storeAttributes.getData() != null) {
+                        dynamicFieldList = storeAttributes.getData().getDynamicFields();
                         dynamicFieldAdapter.setDynamicFieldList(storeAttributes.getData().getDynamicFields());
                     }
                 }
@@ -226,6 +242,20 @@ public class AddProductActivity extends AppCompatActivity implements SubCategory
         recyclerViewVariant = findViewById(R.id.rv_variant);
         recyclerViewImages = findViewById(R.id.rv_product_images);
         recyclerViewDynamicField = findViewById(R.id.rv_dynamic_fields);
+        textViewShowMoreLess = findViewById(R.id.tv_show_less_more);
+        constraintLayoutTags = findViewById(R.id.const_tags);
+
+        textViewShowMoreLess.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                constraintLayoutTags.setVisibility(
+                        constraintLayoutTags.getVisibility() == View.VISIBLE ?
+                                View.GONE :
+                                View.VISIBLE
+                );
+                textViewShowMoreLess.setText(constraintLayoutTags.getVisibility() == View.VISIBLE ? "Show Less" : "Show More");
+            }
+        });
 
         editTextCategory.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -397,7 +427,7 @@ public class AddProductActivity extends AppCompatActivity implements SubCategory
                         return;
                     }
 
-                    Variant variant = data.getExtras().getParcelable(VariantActivity.VARIANT_DATA);
+                    Map<String, String> variant = (HashMap<String, String>) data.getExtras().getSerializable(VariantActivity.VARIANT_DATA);
                     variantList.add(variant);
                     variantAdapter.setVariantList(variantList);
                     break;
@@ -417,9 +447,7 @@ public class AddProductActivity extends AppCompatActivity implements SubCategory
                 ProgressDialogUtil.hideProgressDialog();
 
                 if (imageUploadResponse.isSuccess()) {
-                    String productImage = imageUploadResponse.getMessage().getUrl();
-                    String imageUrl = String.format("https://s3.amazonaws.com/store-asset/%s", productImage);
-                    imagesAdapter.addImage(imageUrl);
+                    imagesAdapter.addImage(imageUploadResponse.getMessage());
                     if (imagesAdapter.getItemCount() > 0) {
                         recyclerViewImages.smoothScrollToPosition(imagesAdapter.getItemCount() - 1);
                     }
@@ -503,28 +531,36 @@ public class AddProductActivity extends AppCompatActivity implements SubCategory
         String productDescription = editTextDescription.getText().toString().trim();
         String productTag = editTextTag.getText().toString().trim();
         String productTax = editTextTax.getText().toString().trim();
-        String variantWeight = editTextWeight.getText().toString().trim();
-        String variantMrp = editTextMRP.getText().toString().trim();
-        String variantDiscount = editTextDiscount.getText().toString().trim();
-        String variantSellingPrice = editTextSellingPrice.getText().toString().trim();
         String inclusiveExclusive = switchInEx.isChecked() ? "exclusive" : "inclusive";
         boolean displayVegNonVeg = checkBoxDisplayVegNonVeg.isChecked();
+        List<MessageResponse> productImages = imagesAdapter.getImageList();
+        Map<String, String> variantfieldMap = dynamicFieldAdapter.getFieldMap();
 
+        // get images and check validation
+        if (productImages.isEmpty()) {
+            Toast.makeText(this, "Please add atleast one product image", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        // Validate category
         if (TextUtils.isEmpty(selectedCategoryId)) {
             Toast.makeText(this, "Please choose category", Toast.LENGTH_SHORT).show();
             return;
         }
 
+        // Validate subcategory
         if (TextUtils.isEmpty(selectedSubCategoryId)) {
             Toast.makeText(this, "Please choose subcategory", Toast.LENGTH_SHORT).show();
             return;
         }
 
+        // Validate product name
         if (TextUtils.isEmpty(productName)) {
             Toast.makeText(this, "Please enter product name", Toast.LENGTH_SHORT).show();
             return;
         }
 
+        // if display on get food type
         if (displayVegNonVeg) {
             if (TextUtils.isEmpty(foodType)) {
                 Toast.makeText(this, "Please choose veg/non-veg", Toast.LENGTH_SHORT).show();
@@ -532,26 +568,77 @@ public class AddProductActivity extends AppCompatActivity implements SubCategory
             }
         }
 
-        if (TextUtils.isEmpty(productTax)) {
-            Toast.makeText(this, "Please enter product tax", Toast.LENGTH_SHORT).show();
+        // Variant data
+        if (variantfieldMap.isEmpty()) {
+            Toast.makeText(this, "Please add variant details", Toast.LENGTH_SHORT).show();
             return;
         }
 
-        if (TextUtils.isEmpty(variantWeight)) {
-            Toast.makeText(this, "Please enter product weight", Toast.LENGTH_SHORT).show();
-            return;
+        for (DynamicField dynamicField : dynamicFieldList) {
+            if (dynamicField.getValidation().equalsIgnoreCase("true")) {
+                if (variantfieldMap.containsKey(dynamicField.getVariantFieldName())) {
+                    if (TextUtils.isEmpty(variantfieldMap.get(dynamicField.getVariantFieldName()))) {
+                        Toast.makeText(this, String.format("%s is empty", dynamicField.getLabel()), Toast.LENGTH_SHORT).show();
+                        return;
+                    }
+                } else {
+                    Toast.makeText(this, String.format("%s is empty, add key", dynamicField.getLabel()), Toast.LENGTH_SHORT).show();
+                    return;
+                }
+            }
         }
 
-        if (TextUtils.isEmpty(unitType)) {
-            Toast.makeText(this, "Please select unit type", Toast.LENGTH_SHORT).show();
-            return;
+        JSONArray jsonArray = new JSONArray();
+        try {
+            JSONObject jsonObject = new JSONObject(variantfieldMap.toString());
+            jsonArray.put(jsonObject);
+
+            for (Map<String, String> map : variantList) {
+                jsonArray.put(new JSONObject(map.toString()));
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
         }
 
-        if (TextUtils.isEmpty(variantMrp)) {
-            Toast.makeText(this, "Please enter product MRP", Toast.LENGTH_SHORT).show();
-            return;
+        List<ProductImage> productImages1 = new ArrayList<>();
+        for (MessageResponse messageResponse : productImages) {
+            productImages1.add(new ProductImage(messageResponse.getUrl()));
         }
 
+        Gson gson = new Gson();
+        JsonElement element = gson.toJsonTree(productImages1, new TypeToken<List<ProductImage>>() {
+        }.getType());
+        JsonArray jsonArrayImage = element.getAsJsonArray();
+
+        final Map<String, String> productData = new HashMap<>();
+        productData.put("title", productName);
+        productData.put("brand", productName);
+        productData.put("category_id", selectedSubCategoryId);
+        productData.put("description", productDescription);
+        productData.put("nutrient", foodType);
+        productData.put("tags", productTag);
+        productData.put("image", productImages1.get(0).getImage());
+        productData.put("Variants", jsonArray.toString());
+        productData.put("images", jsonArrayImage.toString());
+
+        ProgressDialogUtil.showProgressDialog(this);
+        NetworkAdaper.getNetworkServices().addProduct(productData, new Callback<CategoryStatus>() {
+            @Override
+            public void success(CategoryStatus res, Response response) {
+
+                ProgressDialogUtil.hideProgressDialog();
+                if (res.getSuccess()) {
+                    finish();
+                } else {
+                    Toast.makeText(AddProductActivity.this, res.getMessage(), Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void failure(RetrofitError error) {
+                ProgressDialogUtil.hideProgressDialog();
+            }
+        });
     }
 
     @Override

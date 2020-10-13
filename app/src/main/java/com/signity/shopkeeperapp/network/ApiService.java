@@ -185,6 +185,10 @@ public interface ApiService {
     @POST("/setProductStatus")
     void setProductStatus(@FieldMap Map<String, Object> parameters, Callback<ProductStatus> response);
 
-    @POST("/getStoreAttributes")
+    @GET("/getStoreAttributes")
     void getStoreAttributes(Callback<StoreAttributes> response);
+
+    @FormUrlEncoded
+    @POST("/addProduct")
+    void addProduct(@FieldMap Map<String, String> parameters, Callback<CategoryStatus> response);
 }

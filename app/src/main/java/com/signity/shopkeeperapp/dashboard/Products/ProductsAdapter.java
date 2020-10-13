@@ -195,8 +195,8 @@ public class ProductsAdapter extends RecyclerView.Adapter<ProductsAdapter.MyView
             textViewStatus.setText(productData.getStatus().equals("1") ? "Enabled" : "Disabled");
             txtVarient.setText(String.format(Locale.getDefault(), "Variants - %d", varientDataList.size()));
             txtWeight.setText(String.format("Qty - %s%s", variantData.getWeight(), variantData.getUnitType()));
-            txtDiscountPrice.setText(Util.getPriceWithCurrency(Double.parseDouble(variantData.getPrice()), AppPreference.getInstance().getCurrency()));
-            txtPrice.setText(Util.getPriceWithCurrency(Double.parseDouble(variantData.getMrpPrice()), AppPreference.getInstance().getCurrency()));
+            txtDiscountPrice.setText(Util.getPriceWithCurrency(Double.parseDouble(TextUtils.isEmpty(variantData.getPrice()) ? "0" : variantData.getPrice()), AppPreference.getInstance().getCurrency()));
+            txtPrice.setText(Util.getPriceWithCurrency(Double.parseDouble(TextUtils.isEmpty(variantData.getMrpPrice()) ? "0" : variantData.getMrpPrice()), AppPreference.getInstance().getCurrency()));
             txtPrice.setPaintFlags(txtPrice.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
             imageSettings.setOnClickListener(new View.OnClickListener() {
                 @Override

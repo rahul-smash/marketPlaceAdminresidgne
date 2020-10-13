@@ -121,7 +121,7 @@
                 android:layout_height="wrap_content"
                 android:background="@color/colorWhite"
                 android:paddingStart="16dp"
-                android:paddingTop="24dp"
+                android:paddingTop="16dp"
                 android:paddingEnd="16dp"
                 android:paddingBottom="16dp"
                 app:layout_constraintEnd_toEndOf="parent"
@@ -271,140 +271,193 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
                 android:background="@color/colorWhite"
-                android:paddingStart="16dp"
-                android:paddingTop="24dp"
-                android:paddingEnd="16dp"
-                android:paddingBottom="16dp"
+                android:padding="16dp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.5"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/constraintLayout3">
 
-                <com.google.android.material.textfield.TextInputLayout
-                    android:id="@+id/textInputLayout5"
-                    style="@style/Widget.Design.TextInputLayout"
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:id="@+id/constraintLayout5"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:hint="Add Tag"
-                    app:hintTextColor="@color/colorTextGrey"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintHorizontal_bias="0.5"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent">
 
-                    <com.google.android.material.textfield.TextInputEditText
-                        android:id="@+id/edt_add_tag"
+                    <TextView
                         style="@style/AppTheme.TextView.Medium"
-                        android:layout_width="match_parent"
+                        android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:imeOptions="actionNext"
-                        android:inputType="textCapWords"
-                        android:maxLines="1"
-                        android:text="" />
+                        android:text="Tags"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
 
-                </com.google.android.material.textfield.TextInputLayout>
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintTop_toTopOf="parent">
 
-                <com.google.android.material.checkbox.MaterialCheckBox
-                    android:id="@+id/cb_display"
-                    style="@style/Widget.AppCompat.CompoundButton.CheckBox"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Display Veg/Non-veg"
-                    android:textColor="@color/colorTextDark"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/textInputLayout5" />
+                        <TextView
+                            android:id="@+id/tv_show_less_more"
+                            style="@style/AppTheme.TextView.Mini"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Show More"
+                            android:textColor="@color/colorPrimary" />
 
-                <RadioGroup
-                    android:id="@+id/rg_veg_nonveg"
+                        <View
+                            android:layout_width="match_parent"
+                            android:layout_height="1dp"
+                            android:background="@color/colorPrimary" />
+
+                    </LinearLayout>
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:id="@+id/const_tags"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="horizontal"
+                    android:layout_marginTop="16dp"
                     android:visibility="gone"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintHorizontal_bias="0.5"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/cb_display">
-
-                    <com.google.android.material.radiobutton.MaterialRadioButton
-                        android:id="@+id/mrb_non_veg"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Non-Vegetarian"
-                        android:textColor="@color/colorTextDark" />
-
-                    <com.google.android.material.radiobutton.MaterialRadioButton
-                        android:id="@+id/mrb_veg"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginStart="8dp"
-                        android:layout_marginLeft="8dp"
-                        android:text="Vegetarian"
-                        android:textColor="@color/colorTextDark" />
-                </RadioGroup>
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="8dp"
-                    android:orientation="horizontal"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintHorizontal_bias="0.5"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/rg_veg_nonveg">
+                    app:layout_constraintTop_toBottomOf="@+id/constraintLayout5">
 
                     <com.google.android.material.textfield.TextInputLayout
-                        android:id="@+id/textInputLayout15"
+                        android:id="@+id/textInputLayout5"
                         style="@style/Widget.Design.TextInputLayout"
-                        android:layout_width="wrap_content"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:hint="Tax"
+                        android:hint="Add Tag"
                         app:hintTextColor="@color/colorTextGrey"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintHorizontal_bias="0.5"
-                        app:layout_constraintStart_toStartOf="parent">
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent">
 
                         <com.google.android.material.textfield.TextInputEditText
-                            android:id="@+id/edt_tax"
+                            android:id="@+id/edt_add_tag"
                             style="@style/AppTheme.TextView.Medium"
-                            android:layout_width="160dp"
+                            android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:drawableEnd="@drawable/percentageicon"
-                            android:drawableRight="@drawable/percentageicon"
                             android:imeOptions="actionNext"
-                            android:inputType="numberDecimal"
+                            android:inputType="textCapWords"
                             android:maxLines="1"
                             android:text="" />
 
                     </com.google.android.material.textfield.TextInputLayout>
 
+                    <com.google.android.material.checkbox.MaterialCheckBox
+                        android:id="@+id/cb_display"
+                        style="@style/Widget.AppCompat.CompoundButton.CheckBox"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Display Veg/Non-veg"
+                        android:textColor="@color/colorTextDark"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/textInputLayout5" />
+
+                    <RadioGroup
+                        android:id="@+id/rg_veg_nonveg"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:visibility="gone"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintHorizontal_bias="0.5"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/cb_display">
+
+                        <com.google.android.material.radiobutton.MaterialRadioButton
+                            android:id="@+id/mrb_non_veg"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Non-Vegetarian"
+                            android:textColor="@color/colorTextDark" />
+
+                        <com.google.android.material.radiobutton.MaterialRadioButton
+                            android:id="@+id/mrb_veg"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="8dp"
+                            android:layout_marginLeft="8dp"
+                            android:text="Vegetarian"
+                            android:textColor="@color/colorTextDark" />
+                    </RadioGroup>
+
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_gravity="bottom"
-                        android:gravity="center"
-                        android:orientation="horizontal">
+                        android:layout_marginTop="8dp"
+                        android:orientation="horizontal"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintHorizontal_bias="0.5"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/rg_veg_nonveg">
 
-                        <TextView
-                            style="@style/AppTheme.TextView.Tiny"
+                        <com.google.android.material.textfield.TextInputLayout
+                            android:id="@+id/textInputLayout15"
+                            style="@style/Widget.Design.TextInputLayout"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="Inclusive" />
+                            android:hint="Tax"
+                            app:hintTextColor="@color/colorTextGrey"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintHorizontal_bias="0.5"
+                            app:layout_constraintStart_toStartOf="parent">
 
-                        <Switch
-                            android:id="@+id/switch_in_ex"
-                            style="@style/Widget.AppCompat.CompoundButton.Switch"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content" />
+                            <com.google.android.material.textfield.TextInputEditText
+                                android:id="@+id/edt_tax"
+                                style="@style/AppTheme.TextView.Medium"
+                                android:layout_width="160dp"
+                                android:layout_height="wrap_content"
+                                android:drawableEnd="@drawable/percentageicon"
+                                android:drawableRight="@drawable/percentageicon"
+                                android:imeOptions="actionNext"
+                                android:inputType="numberDecimal"
+                                android:maxLines="1"
+                                android:text="" />
 
-                        <TextView
-                            style="@style/AppTheme.TextView.Tiny"
-                            android:layout_width="wrap_content"
+                        </com.google.android.material.textfield.TextInputLayout>
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:text="Exclusive" />
+                            android:layout_gravity="bottom"
+                            android:gravity="center"
+                            android:orientation="horizontal">
+
+                            <TextView
+                                style="@style/AppTheme.TextView.Tiny"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="Inclusive" />
+
+                            <Switch
+                                android:id="@+id/switch_in_ex"
+                                style="@style/Widget.AppCompat.CompoundButton.Switch"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content" />
+
+                            <TextView
+                                style="@style/AppTheme.TextView.Tiny"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="Exclusive" />
+
+                        </LinearLayout>
 
                     </LinearLayout>
 
-                </LinearLayout>
+                </androidx.constraintlayout.widget.ConstraintLayout>
 
             </androidx.constraintlayout.widget.ConstraintLayout>
 

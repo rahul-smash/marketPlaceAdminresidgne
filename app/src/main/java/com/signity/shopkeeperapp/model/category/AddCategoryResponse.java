@@ -52,12 +52,31 @@ public class AddCategoryResponse implements Serializable {
         @SerializedName("catid")
         private String categoryId;
 
+        @SerializedName("parent_id")
+        private String parentId;
+
+        public String getParentId() {
+            return parentId;
+        }
+
+        public void setParentId(String parentId) {
+            this.parentId = parentId;
+        }
+
         public String getCategoryId() {
             return categoryId;
         }
 
         public void setCategoryId(String categoryId) {
             this.categoryId = categoryId;
+        }
+
+        @Override
+        public String toString() {
+            return "Data{" +
+                    "categoryId='" + categoryId + '\'' +
+                    ", parentId='" + parentId + '\'' +
+                    '}';
         }
     }
 }
