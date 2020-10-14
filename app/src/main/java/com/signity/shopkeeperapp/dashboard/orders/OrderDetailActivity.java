@@ -23,6 +23,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.signity.shopkeeperapp.R;
 import com.signity.shopkeeperapp.model.OrderItemResponseModel;
 import com.signity.shopkeeperapp.model.OrdersListModel;
+import com.signity.shopkeeperapp.model.SetOrdersModel;
 import com.signity.shopkeeperapp.model.orders.StoreOrdersReponse;
 import com.signity.shopkeeperapp.network.NetworkAdaper;
 import com.signity.shopkeeperapp.util.AnimUtil;
@@ -32,7 +33,9 @@ import com.signity.shopkeeperapp.util.ProgressDialogUtil;
 import com.signity.shopkeeperapp.util.Util;
 import com.signity.shopkeeperapp.util.prefs.AppPreference;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
@@ -42,7 +45,7 @@ import retrofit.client.Response;
 
 import static android.content.Intent.ACTION_DIAL;
 
-public class OrderDetailActivity extends AppCompatActivity implements OrderDetailsAdpater.OrderDetailListener {
+public class OrderDetailActivity extends AppCompatActivity implements OrderDetailsAdpater.OrderDetailListener, HomeOrdersAdapter.OrdersListener {
 
     public static final String ORDER_OBJECT = "OrderObject";
     private TextView textViewTotalPrice, textViewPayableAmount, textViewCartSavings, textViewOrderedBy, textViewDateTime, textViewDeliveryType, textViewNote, textViewItemsCount;
@@ -55,6 +58,8 @@ public class OrderDetailActivity extends AppCompatActivity implements OrderDetai
     private TextView textViewMrpDiscount;
     private TextView textViewPaymentMode;
     private String orderId;
+    private RecyclerView recyclerViewOrders;
+    private HomeOrdersAdapter ordersAdapter;
 
     public static Intent getStartIntent(Context context) {
         return new Intent(context, OrderDetailActivity.class);
@@ -69,7 +74,7 @@ public class OrderDetailActivity extends AppCompatActivity implements OrderDetai
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.order_detail_activity);
+        setContentView(R.layout.order_detail_activity_new);
         getExtra();
         initView();
         setUpToolbar();
@@ -102,6 +107,10 @@ public class OrderDetailActivity extends AppCompatActivity implements OrderDetai
                             ordersListModel = getValues.getData().getOrders().get(0);
                             setOrderDetails();
                             orderDetailsAdpater.setItemListModels(ordersListModel.getItems());
+
+                            List<OrdersListModel> ordersListModels = new ArrayList<>();
+                            ordersListModels.add(ordersListModel);
+                            ordersAdapter.setOrdersListModels(ordersListModels);
                         }
                     }
                 } else {
@@ -113,6 +122,7 @@ public class OrderDetailActivity extends AppCompatActivity implements OrderDetai
             @Override
             public void failure(RetrofitError error) {
                 ProgressDialogUtil.hideProgressDialog();
+                Toast.makeText(OrderDetailActivity.this, "Network is unreachable", Toast.LENGTH_SHORT).show();
             }
         });
     }
@@ -138,6 +148,11 @@ public class OrderDetailActivity extends AppCompatActivity implements OrderDetai
         orderDetailsAdpater.setListener(this);
         recyclerView1.setLayoutManager(new LinearLayoutManager(this));
         recyclerView1.setAdapter(orderDetailsAdpater);
+
+        ordersAdapter = new HomeOrdersAdapter(this);
+        ordersAdapter.setListener(this);
+        recyclerViewOrders.setAdapter(ordersAdapter);
+        recyclerViewOrders.setLayoutManager(new LinearLayoutManager(this));
     }
 
     public void setOrderDetails() {
@@ -174,6 +189,7 @@ public class OrderDetailActivity extends AppCompatActivity implements OrderDetai
         textViewCouponDiscount = (TextView) findViewById(R.id.tv_coupon_discount);
         textViewMrpDiscount = (TextView) findViewById(R.id.tv_mpr_discount);
         textViewPaymentMode = (TextView) findViewById(R.id.tv_payment_mode);
+        recyclerViewOrders = findViewById(R.id.rv_orders);
     }
 
     private void openMap() {
@@ -297,5 +313,62 @@ public class OrderDetailActivity extends AppCompatActivity implements OrderDetai
     @Override
     public void onChangeStatus(String itemId, String status) {
         callOrderItemStatus(itemId, status);
+    }
+
+    @Override
+    public void onClickOrder(int position) {
+
+    }
+
+    @Override
+    public void onRejectOrder(int position) {
+        OrdersListModel order = ordersAdapter.getOrdersListModels().get(position);
+        updateOrderStatus(HomeOrdersAdapter.OrderType.REJECTED, order.getOrderId(), position);
+    }
+
+    @Override
+    public void onAcceptOrder(int position) {
+        OrdersListModel order = ordersAdapter.getOrdersListModels().get(position);
+        updateOrderStatus(HomeOrdersAdapter.OrderType.ACCEPTED, order.getOrderId(), position);
+    }
+
+    @Override
+    public void onShipOrder(int position) {
+        OrdersListModel order = ordersAdapter.getOrdersListModels().get(position);
+        updateOrderStatus(HomeOrdersAdapter.OrderType.SHIPPED, order.getOrderId(), position);
+    }
+
+    @Override
+    public void onDeliverOrder(int position) {
+        OrdersListModel order = ordersAdapter.getOrdersListModels().get(position);
+        updateOrderStatus(HomeOrdersAdapter.OrderType.DELIVERED, order.getOrderId(), position);
+    }
+
+    private void updateOrderStatus(HomeOrdersAdapter.OrderType orderStatus, String orderId, final int position) {
+        ProgressDialogUtil.showProgressDialog(this);
+        Map<String, String> param = new HashMap<String, String>();
+        param.put("user_id", AppPreference.getInstance().getUserId());
+        param.put("order_status", String.valueOf(orderStatus.getStatusId()));
+        param.put("order_ids", orderId);
+
+        NetworkAdaper.getNetworkServices().setOrderStatus(param, new Callback<SetOrdersModel>() {
+            @Override
+            public void success(SetOrdersModel getValues, Response response) {
+
+                ProgressDialogUtil.hideProgressDialog();
+                if (getValues.getSuccess()) {
+                    getOrderDetail();
+                } else {
+                    Toast.makeText(OrderDetailActivity.this, getValues.getMessage(), Toast.LENGTH_SHORT).show();
+                }
+
+            }
+
+            @Override
+            public void failure(RetrofitError error) {
+                ProgressDialogUtil.hideProgressDialog();
+                Toast.makeText(OrderDetailActivity.this, "Network is unreachable", Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 }

@@ -124,7 +124,7 @@ public class StoresActivity extends AppCompatActivity implements StoresAdapter.S
             @Override
             public void failure(RetrofitError error) {
                 ProgressDialogUtil.hideProgressDialog();
-                Toast.makeText(StoresActivity.this, "Error!", Toast.LENGTH_SHORT).show();
+                Toast.makeText(StoresActivity.this, "Network is unreachable", Toast.LENGTH_SHORT).show();
             }
         });
 

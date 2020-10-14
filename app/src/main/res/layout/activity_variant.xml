@@ -49,6 +49,7 @@
             android:id="@+id/const_variant"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:padding="16dp"
             android:background="@color/colorWhite">
 
             <androidx.recyclerview.widget.RecyclerView

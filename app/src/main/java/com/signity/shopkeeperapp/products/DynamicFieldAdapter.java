@@ -179,6 +179,23 @@ public class DynamicFieldAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
                 @Override
                 public void onFocusChange(View v, boolean hasFocus) {
 
+                    if (textInputEditText.getTag().toString().equalsIgnoreCase("price")) {
+                        if (hasFocus) {
+                            String mrp = fieldMap.get("mrp_price");
+                            String discount = fieldMap.get("discount");
+
+                            if (TextUtils.isEmpty(mrp) || TextUtils.isEmpty(discount)) {
+                                return;
+                            }
+
+                            double doubleMrp = Double.parseDouble(mrp);
+                            double doubleDiscount = Double.parseDouble(discount);
+
+                            double price = doubleMrp - (doubleMrp * doubleDiscount / 100);
+                            textInputEditText.setText(String.valueOf(price));
+                        }
+                    }
+
                     if (!hasFocus) {
                         if (dynamicField.getValidation().equalsIgnoreCase("true")) {
                             if (TextUtils.isEmpty(textInputEditText.getText().toString().trim())) {

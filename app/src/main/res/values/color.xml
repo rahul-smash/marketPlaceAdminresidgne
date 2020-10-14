@@ -17,6 +17,7 @@
     <color name="colorWhite">#ffffff</color>
     <color name="colorAccept">#64b117</color>
     <color name="colorReject">#b41617</color>
+    <color name="colorRejectNew">#df4c4c</color>
     <color name="colorBadge">#fee240</color>
     <color name="colorYellow">#d2c231</color>
 

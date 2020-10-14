@@ -52,6 +52,7 @@ public class SplashActivity extends AppCompatActivity {
 
         if (!Util.checkIntenetConnection(this)) {
             internetDialog();
+            return;
         }
 
         if (AppPreference.getInstance().isLoggedIn() == Constant.Mode.LOGGED_IN) {

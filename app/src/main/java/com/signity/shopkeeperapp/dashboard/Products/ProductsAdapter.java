@@ -29,11 +29,13 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
-public class ProductsAdapter extends RecyclerView.Adapter<ProductsAdapter.MyViewHolder> {
+public class ProductsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
     private Context context;
     private List<GetProductData> mData = new ArrayList<>();
     private ProductAdapterListener listener;
+    private int totalOrders;
+    private boolean showLoading = true;
 
     public ProductsAdapter(Context context) {
         this.context = context;
@@ -47,38 +49,73 @@ public class ProductsAdapter extends RecyclerView.Adapter<ProductsAdapter.MyView
         return mData;
     }
 
-    public void setmData(List<GetProductData> mData) {
+    public void setmData(List<GetProductData> mData, int totalOrders) {
+        this.showLoading = true;
+        this.totalOrders = totalOrders;
         this.mData = mData;
+        notifyDataSetChanged();
+    }
+
+    public void setShowLoading(boolean showLoading) {
+        this.showLoading = showLoading;
         notifyDataSetChanged();
     }
 
     public void clearData() {
         this.mData.clear();
+        notifyDataSetChanged();
     }
 
-    public void addData(List<GetProductData> mData) {
+    public void addData(List<GetProductData> mData, int totalOrders) {
+        this.showLoading = true;
+        this.totalOrders = totalOrders;
         this.mData.addAll(mData);
         notifyDataSetChanged();
     }
 
     @NonNull
     @Override
-    public ProductsAdapter.MyViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(context).inflate(R.layout.itemview_products, parent, false);
-        return new ProductsAdapter.MyViewHolder(view);
+    public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+        if (viewType == 1) {
+            View view = LayoutInflater.from(context).inflate(R.layout.itemview_products, parent, false);
+            return new MyViewHolder(view);
+        }
+        View view = LayoutInflater.from(context).inflate(R.layout.itemview_loading, parent, false);
+        return new ViewHolderLoading(view);
     }
 
     @Override
     public int getItemCount() {
+
+        if (showLoading) {
+            if (mData.isEmpty()) {
+                return 1;
+            }
+
+            if (mData.size() < totalOrders) {
+                return mData.size() + 1;
+            }
+        }
+
         return mData.size();
     }
 
     @Override
-    public void onBindViewHolder(final ProductsAdapter.MyViewHolder holder, final int position) {
-        holder.bind(position);
+    public int getItemViewType(int position) {
+        if (position < mData.size()) {
+            return 1;
+        }
+        return super.getItemViewType(position);
     }
 
-    private void popmenu(ImageView view, final String id) {
+    @Override
+    public void onBindViewHolder(final RecyclerView.ViewHolder holder, final int position) {
+        if (holder instanceof MyViewHolder) {
+            ((MyViewHolder) holder).bind(position);
+        }
+    }
+
+    private void popmenu(ImageView view, final String id, final int position) {
         View layout = LayoutInflater.from(context).inflate(R.layout.popup_product_items, null, false);
         final PopupWindow popupWindowOverView = new PopupWindow(layout, LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT, true);
 
@@ -105,7 +142,7 @@ public class ProductsAdapter extends RecyclerView.Adapter<ProductsAdapter.MyView
             @Override
             public void onClick(View v) {
                 if (listener != null) {
-                    listener.onClickShareProduct();
+                    listener.onClickShareProduct(id);
                 }
                 popupWindowOverView.dismiss();
             }
@@ -116,7 +153,7 @@ public class ProductsAdapter extends RecyclerView.Adapter<ProductsAdapter.MyView
             @Override
             public void onClick(View view) {
                 if (listener != null) {
-                    listener.onClickDeleteProduct(id);
+                    listener.onClickDeleteProduct(id, position);
                 }
                 popupWindowOverView.dismiss();
             }
@@ -133,10 +170,16 @@ public class ProductsAdapter extends RecyclerView.Adapter<ProductsAdapter.MyView
         notifyDataSetChanged();
     }
 
-    public interface ProductAdapterListener {
-        void onClickDeleteProduct(String id);
+    public void removeItem(int position) {
+        mData.remove(position);
+        totalOrders--;
+        notifyItemRemoved(position);
+    }
 
-        void onClickShareProduct();
+    public interface ProductAdapterListener {
+        void onClickDeleteProduct(String id, int position);
+
+        void onClickShareProduct(String id);
 
         void onClickSwitchProduct(String id, String status);
     }
@@ -201,7 +244,7 @@ public class ProductsAdapter extends RecyclerView.Adapter<ProductsAdapter.MyView
             imageSettings.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    popmenu(imageSettings, productData.getId());
+                    popmenu(imageSettings, productData.getId(), getAdapterPosition());
                 }
             });
 
@@ -209,9 +252,24 @@ public class ProductsAdapter extends RecyclerView.Adapter<ProductsAdapter.MyView
             int margin = (int) Util.pxFromDp(context, 16);
             layoutParams.setMargins(margin, margin, margin, 0);
 
-            if (position == mData.size() - 1) {
+            if (position == getItemCount() - 1) {
                 layoutParams.setMargins(margin, margin, margin, 5 * margin);
             }
+            constraintLayoutParent.setLayoutParams(layoutParams);
+        }
+    }
+
+    class ViewHolderLoading extends RecyclerView.ViewHolder {
+        ConstraintLayout constraintLayoutParent;
+
+        public ViewHolderLoading(final View convertView) {
+            super(convertView);
+
+            constraintLayoutParent = convertView.findViewById(R.id.const_parent);
+
+            ConstraintLayout.LayoutParams layoutParams = (ConstraintLayout.LayoutParams) constraintLayoutParent.getLayoutParams();
+            int margin = (int) Util.pxFromDp(context, 16);
+            layoutParams.setMargins(margin, margin, margin, 5 * margin);
             constraintLayoutParent.setLayoutParams(layoutParams);
         }
     }

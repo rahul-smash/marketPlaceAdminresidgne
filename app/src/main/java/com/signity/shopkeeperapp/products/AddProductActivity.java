@@ -34,6 +34,7 @@ import androidx.appcompat.widget.AppCompatSpinner;
 import androidx.appcompat.widget.Toolbar;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.app.ActivityCompat;
+import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -168,6 +169,7 @@ public class AddProductActivity extends AppCompatActivity implements SubCategory
             @Override
             public void failure(RetrofitError error) {
                 ProgressDialogUtil.hideProgressDialog();
+                Toast.makeText(AddProductActivity.this, "Network is unreachable", Toast.LENGTH_SHORT).show();
             }
         });
     }
@@ -208,7 +210,7 @@ public class AddProductActivity extends AppCompatActivity implements SubCategory
         recyclerViewImages.addItemDecoration(new SpacesItemImageDecoration((int) Util.pxFromDp(this, 8)));
 
         dynamicFieldAdapter = new DynamicFieldAdapter(this);
-        recyclerViewDynamicField.setLayoutManager(new LinearLayoutManager(this));
+        recyclerViewDynamicField.setLayoutManager(new GridLayoutManager(this, 2));
         recyclerViewDynamicField.setAdapter(dynamicFieldAdapter);
         recyclerViewDynamicField.addItemDecoration(new RecyclerView.ItemDecoration() {
             @Override
@@ -457,6 +459,7 @@ public class AddProductActivity extends AppCompatActivity implements SubCategory
             @Override
             public void failure(RetrofitError error) {
                 ProgressDialogUtil.hideProgressDialog();
+                Toast.makeText(AddProductActivity.this, "Network is unreachable", Toast.LENGTH_SHORT).show();
             }
         });
     }
@@ -499,6 +502,7 @@ public class AddProductActivity extends AppCompatActivity implements SubCategory
             @Override
             public void failure(RetrofitError error) {
                 ProgressDialogUtil.hideProgressDialog();
+                Toast.makeText(AddProductActivity.this, "Network is unreachable", Toast.LENGTH_SHORT).show();
             }
         });
     }
@@ -620,6 +624,11 @@ public class AddProductActivity extends AppCompatActivity implements SubCategory
         productData.put("image", productImages1.get(0).getImage());
         productData.put("Variants", jsonArray.toString());
         productData.put("images", jsonArrayImage.toString());
+        if (!TextUtils.isEmpty(productTax)) {
+            productData.put("gst_tax_type", inclusiveExclusive);
+            productData.put("gst_tax_rate", productTax);
+            productData.put("isTaxEnable", "1");
+        }
 
         ProgressDialogUtil.showProgressDialog(this);
         NetworkAdaper.getNetworkServices().addProduct(productData, new Callback<CategoryStatus>() {
@@ -637,6 +646,7 @@ public class AddProductActivity extends AppCompatActivity implements SubCategory
             @Override
             public void failure(RetrofitError error) {
                 ProgressDialogUtil.hideProgressDialog();
+                Toast.makeText(AddProductActivity.this, "Network is unreachable", Toast.LENGTH_SHORT).show();
             }
         });
     }

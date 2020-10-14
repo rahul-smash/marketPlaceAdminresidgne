@@ -445,7 +445,9 @@
                                 android:id="@+id/switch_in_ex"
                                 style="@style/Widget.AppCompat.CompoundButton.Switch"
                                 android:layout_width="wrap_content"
-                                android:layout_height="wrap_content" />
+                                android:layout_height="wrap_content"
+                                android:thumbTint="@color/switch_selector_product"
+                                android:trackTint="@color/switch_selector_product" />
 
                             <TextView
                                 style="@style/AppTheme.TextView.Tiny"

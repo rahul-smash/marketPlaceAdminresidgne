@@ -198,7 +198,8 @@ public class LoginMobileFragment extends Fragment {
             @Override
             public void failure(RetrofitError error) {
                 ProgressDialogUtil.hideProgressDialog();
-                Toast.makeText(getActivity(), "Error!", Toast.LENGTH_SHORT).show();
+                if (getContext() != null)
+                    Toast.makeText(getContext(), "Network is unreachable", Toast.LENGTH_SHORT).show();
             }
         });
     }

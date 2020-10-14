@@ -182,6 +182,10 @@ public interface ApiService {
     void delCategory(@FieldMap Map<String, Object> parameters, Callback<DeleteCategories> response);
 
     @FormUrlEncoded
+    @POST("/delproduct")
+    void delProduct(@FieldMap Map<String, Object> parameters, Callback<DeleteCategories> response);
+
+    @FormUrlEncoded
     @POST("/setProductStatus")
     void setProductStatus(@FieldMap Map<String, Object> parameters, Callback<ProductStatus> response);
 

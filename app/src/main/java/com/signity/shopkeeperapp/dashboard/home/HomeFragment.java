@@ -24,7 +24,6 @@ import android.widget.Toast;
 import androidx.annotation.IdRes;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.core.widget.ContentLoadingProgressBar;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
@@ -48,6 +47,7 @@ import com.signity.shopkeeperapp.network.NetworkAdaper;
 import com.signity.shopkeeperapp.notifications.NotificationActivity;
 import com.signity.shopkeeperapp.util.AnimUtil;
 import com.signity.shopkeeperapp.util.Constant;
+import com.signity.shopkeeperapp.util.DialogUtils;
 import com.signity.shopkeeperapp.util.ProgressDialogUtil;
 import com.signity.shopkeeperapp.util.Util;
 import com.signity.shopkeeperapp.util.prefs.AppPreference;
@@ -73,7 +73,6 @@ public class HomeFragment extends Fragment implements HomeContentAdapter.HomeCon
     private HomeContentAdapter homeContentAdapter;
     private HomeOrdersAdapter homeOrdersAdapter;
     private LinearLayout linearLayoutViewAllOrders;
-    private ContentLoadingProgressBar progressBar;
     private ChipGroup chipGroup;
     private LinearLayout linearLayoutOverview, linearLayoutShare;
 
@@ -144,12 +143,18 @@ public class HomeFragment extends Fragment implements HomeContentAdapter.HomeCon
     }
 
     public void getOrders() {
+
+        if (!Util.checkIntenetConnection(getContext())) {
+            homeOrdersAdapter.setShowLoading(false);
+            DialogUtils.showAlertDialog(getActivity(), "Internet", "Please check your Internet Connection.");
+            return;
+        }
+
         Map<String, Object> param = new HashMap<>();
         param.put("order_type", orderType.getSlug());
         param.put("page", 1);
         param.put("pagelength", 10);
 
-        progressBar.show();
         NetworkAdaper.getNetworkServices().getDashbaordStoreOrders(param, new Callback<StoreOrdersReponse>() {
             @Override
             public void success(StoreOrdersReponse ordersReponse, Response response) {
@@ -158,7 +163,6 @@ public class HomeFragment extends Fragment implements HomeContentAdapter.HomeCon
                     return;
                 }
 
-                progressBar.hide();
                 if (ordersReponse.isSuccess()) {
                     ordersListModels = ordersReponse.getData().getOrders();
                     homeOrdersAdapter.setOrdersListModels(ordersListModels);
@@ -169,7 +173,10 @@ public class HomeFragment extends Fragment implements HomeContentAdapter.HomeCon
 
             @Override
             public void failure(RetrofitError error) {
-                progressBar.hide();
+                if (getContext() != null) {
+                    Toast.makeText(getContext(), "Network is unreachable", Toast.LENGTH_SHORT).show();
+                }
+                homeOrdersAdapter.setShowLoading(false);
             }
         });
     }
@@ -208,7 +215,7 @@ public class HomeFragment extends Fragment implements HomeContentAdapter.HomeCon
         recyclerViewContent.setLayoutManager(new GridLayoutManager(getContext(), 2));
         recyclerViewContent.setAdapter(homeContentAdapter);
 
-        homeOrdersAdapter = new HomeOrdersAdapter(getContext(), false);
+        homeOrdersAdapter = new HomeOrdersAdapter(getContext());
         homeOrdersAdapter.setListener(this);
         recyclerViewOrders.setAdapter(homeOrdersAdapter);
         recyclerViewOrders.setLayoutManager(new LinearLayoutManager(getContext()));
@@ -224,7 +231,6 @@ public class HomeFragment extends Fragment implements HomeContentAdapter.HomeCon
         textViewStoreName = view.findViewById(R.id.tv_store_name);
         linearLayoutViewAllOrders = view.findViewById(R.id.ll_view_all_orders);
         chipGroup = view.findViewById(R.id.chip_group);
-        progressBar = view.findViewById(R.id.content_progress);
         textViewOverView = view.findViewById(R.id.tv_overview);
         Chip allChip = view.findViewById(R.id.chip_all);
         allChip.setChecked(true);
@@ -259,6 +265,7 @@ public class HomeFragment extends Fragment implements HomeContentAdapter.HomeCon
                         orderType = HomeOrdersAdapter.OrderType.REJECTED;
                         break;
                 }
+                homeOrdersAdapter.clearOrdersList();
                 getOrders();
             }
         });
@@ -494,6 +501,9 @@ public class HomeFragment extends Fragment implements HomeContentAdapter.HomeCon
             @Override
             public void failure(RetrofitError error) {
                 ProgressDialogUtil.hideProgressDialog();
+                if (getContext() != null) {
+                    Toast.makeText(getContext(), "Network is unreachable", Toast.LENGTH_SHORT).show();
+                }
             }
         });
     }

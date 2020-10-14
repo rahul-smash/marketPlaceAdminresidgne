@@ -187,6 +187,7 @@ public class AddCategoryActivity extends AppCompatActivity implements SubCategor
             @Override
             public void failure(RetrofitError error) {
                 ProgressDialogUtil.hideProgressDialog();
+                Toast.makeText(AddCategoryActivity.this, "Network is unreachable", Toast.LENGTH_SHORT).show();
             }
         });
     }
@@ -287,6 +288,7 @@ public class AddCategoryActivity extends AppCompatActivity implements SubCategor
             @Override
             public void failure(RetrofitError error) {
                 ProgressDialogUtil.hideProgressDialog();
+                Toast.makeText(AddCategoryActivity.this, "Network is unreachable", Toast.LENGTH_SHORT).show();
             }
         });
     }

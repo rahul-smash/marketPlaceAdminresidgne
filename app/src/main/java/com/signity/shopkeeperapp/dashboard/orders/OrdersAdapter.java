@@ -123,7 +123,7 @@ public class OrdersAdapter extends RecyclerView.Adapter<OrdersAdapter.MyViewHold
             txt_items = (TextView) convertView.findViewById(R.id.tv_items_count);
             txt_Price = (TextView) convertView.findViewById(R.id.tv_order_price);
             imgProduct = (ImageView) convertView.findViewById(R.id.iv_product);
-            txtorderId = (TextView) convertView.findViewById(R.id.tv_order_id);
+            txtorderId = (TextView) convertView.findViewById(R.id.tv_order_id_items_time);
             txt_Name = (TextView) convertView.findViewById(R.id.tv_store_name);
             txtDate = (TextView) convertView.findViewById(R.id.tv_order_date_time);
             txtStatus = (TextView) convertView.findViewById(R.id.tv_order_status);

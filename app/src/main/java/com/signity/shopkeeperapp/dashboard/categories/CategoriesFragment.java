@@ -92,7 +92,7 @@ public class CategoriesFragment extends Fragment implements CategoriesAdapter.Ca
     @Override
     public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
         super.onCreateOptionsMenu(menu, inflater);
-//        inflater.inflate(R.menu.menu_category, menu);
+        inflater.inflate(R.menu.menu_category, menu);
     }
 
     @Override
@@ -124,9 +124,8 @@ public class CategoriesFragment extends Fragment implements CategoriesAdapter.Ca
         linearLayoutAddCategory.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                showAlertDialog(getContext());
-//                startActivity(AddCategoryActivity.getStartIntent(getContext()));
-//                AnimUtil.slideFromRightAnim(getActivity());
+                startActivity(AddCategoryActivity.getStartIntent(getContext()));
+                AnimUtil.slideFromRightAnim(getActivity());
             }
         });
     }
@@ -192,6 +191,8 @@ public class CategoriesFragment extends Fragment implements CategoriesAdapter.Ca
             @Override
             public void failure(RetrofitError error) {
                 ProgressDialogUtil.hideProgressDialog();
+                if (getContext() != null)
+                    Toast.makeText(getContext(), "Network is unreachable", Toast.LENGTH_SHORT).show();
             }
         });
     }
@@ -251,6 +252,8 @@ public class CategoriesFragment extends Fragment implements CategoriesAdapter.Ca
             @Override
             public void failure(RetrofitError error) {
                 ProgressDialogUtil.hideProgressDialog();
+                if (getContext() != null)
+                    Toast.makeText(getContext(), "Network is unreachable", Toast.LENGTH_SHORT).show();
             }
         });
     }
@@ -277,6 +280,8 @@ public class CategoriesFragment extends Fragment implements CategoriesAdapter.Ca
             @Override
             public void failure(RetrofitError error) {
                 ProgressDialogUtil.hideProgressDialog();
+                if (getContext() != null)
+                    Toast.makeText(getContext(), "Network is unreachable", Toast.LENGTH_SHORT).show();
             }
         });
     }

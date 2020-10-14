@@ -36,7 +36,6 @@ import com.signity.shopkeeperapp.util.ProgressDialogUtil;
 import com.signity.shopkeeperapp.util.Util;
 import com.signity.shopkeeperapp.util.prefs.AppPreference;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -48,7 +47,6 @@ import retrofit.client.Response;
 public class OrdersFragment extends Fragment implements HomeOrdersAdapter.OrdersListener {
     public static final String TAG = "OrdersFragment";
 
-    private List<OrdersListModel> orderListModel = new ArrayList<>();
     private PopupWindow rightMenuPopUpWindow;
     private View hiddenView;
     private RecyclerView recyclerViewOrders;
@@ -58,6 +56,7 @@ public class OrdersFragment extends Fragment implements HomeOrdersAdapter.Orders
     @IdRes
     private int checkedId;
     private int pageSize = 10, currentPageNumber = 1, start, totalOrders;
+    private boolean isLoading;
     private RecyclerView.OnScrollListener recyclerViewOnScrollListener = new RecyclerView.OnScrollListener() {
         @Override
         public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
@@ -71,7 +70,7 @@ public class OrdersFragment extends Fragment implements HomeOrdersAdapter.Orders
             int totalItemCount = layoutManager.getItemCount();
             int firstVisibleItemPosition = layoutManager.findFirstVisibleItemPosition();
 
-            if (!isLoading()) {
+            if (!isLoading) {
                 if ((visibleItemCount + firstVisibleItemPosition) >= totalItemCount
                         && firstVisibleItemPosition >= 0 && totalItemCount >= pageSize) {
                     if (start < totalOrders) {
@@ -102,13 +101,12 @@ public class OrdersFragment extends Fragment implements HomeOrdersAdapter.Orders
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        setUpAdapter();
     }
 
     private void setUpAdapter() {
         layoutManager = new LinearLayoutManager(getActivity());
         recyclerViewOrders.setLayoutManager(layoutManager);
-        ordersAdapter = new HomeOrdersAdapter(getContext(), false);
+        ordersAdapter = new HomeOrdersAdapter(getContext());
         ordersAdapter.setListener(this);
         recyclerViewOrders.setAdapter(ordersAdapter);
         recyclerViewOrders.addOnScrollListener(recyclerViewOnScrollListener);
@@ -129,6 +127,7 @@ public class OrdersFragment extends Fragment implements HomeOrdersAdapter.Orders
         super.onViewCreated(view, savedInstanceState);
         initView(view);
         setHasOptionsMenu(true);
+        setUpAdapter();
         getAllOrdersMethod();
     }
 
@@ -149,6 +148,7 @@ public class OrdersFragment extends Fragment implements HomeOrdersAdapter.Orders
     public void getAllOrdersMethod() {
 
         if (!Util.checkIntenetConnection(getContext())) {
+            ordersAdapter.setShowLoading(false);
             DialogUtils.showAlertDialog(getActivity(), "Internet", "Please check your Internet Connection.");
             return;
         }
@@ -162,26 +162,23 @@ public class OrdersFragment extends Fragment implements HomeOrdersAdapter.Orders
     }
 
     public void getALLOrders() {
-        ProgressDialogUtil.showProgressDialog(getActivity());
         Map<String, Object> param = new HashMap<>();
         param.put("order_type", orderTypeFilter.getSlug());
         param.put("page", currentPageNumber);
         param.put("pagelength", pageSize);
 
+        isLoading = true;
         NetworkAdaper.getNetworkServices().getStoreOrdersNew(param, new Callback<StoreOrdersReponse>() {
             @Override
             public void success(StoreOrdersReponse getValues, Response response) {
-
-                ProgressDialogUtil.hideProgressDialog();
-
+                isLoading = false;
                 if (getValues.isSuccess()) {
                     currentPageNumber++;
                     start += pageSize;
-                    orderListModel = getValues.getData().getOrders();
+                    List<OrdersListModel> orderListModel = getValues.getData().getOrders();
                     totalOrders = getValues.getData().getOrdersTotal();
 
-                    ordersAdapter.setOrderTypeFilter(orderTypeFilter);
-                    ordersAdapter.addOrdersListModels(orderListModel);
+                    ordersAdapter.addOrdersListModels(orderListModel, totalOrders);
                 } else {
                     Toast.makeText(getContext(), getValues.getMessage(), Toast.LENGTH_SHORT).show();
                 }
@@ -189,7 +186,11 @@ public class OrdersFragment extends Fragment implements HomeOrdersAdapter.Orders
 
             @Override
             public void failure(RetrofitError error) {
-                ProgressDialogUtil.hideProgressDialog();
+                isLoading = false;
+                if (getContext() != null) {
+                    Toast.makeText(getContext(), "Network is unreachable", Toast.LENGTH_SHORT).show();
+                }
+                ordersAdapter.setShowLoading(false);
             }
         });
     }
@@ -286,6 +287,7 @@ public class OrdersFragment extends Fragment implements HomeOrdersAdapter.Orders
                         orderTypeFilter = HomeOrdersAdapter.OrderType.REJECTED;
                         break;
                 }
+                ordersAdapter.setOrderTypeFilter(orderTypeFilter);
                 getAllOrdersMethod();
 
                 new Handler().postDelayed(new Runnable() {
@@ -324,6 +326,9 @@ public class OrdersFragment extends Fragment implements HomeOrdersAdapter.Orders
             @Override
             public void failure(RetrofitError error) {
                 ProgressDialogUtil.hideProgressDialog();
+                if (getContext() != null) {
+                    Toast.makeText(getContext(), "Network is unreachable", Toast.LENGTH_SHORT).show();
+                }
             }
         });
     }

@@ -27,11 +27,11 @@ public class HomeOrdersAdapter extends RecyclerView.Adapter<HomeOrdersAdapter.Vi
     private List<OrdersListModel> ordersListModels = new ArrayList<>();
     private HomeOrdersAdapter.OrderType orderTypeFilter = HomeOrdersAdapter.OrderType.ALL;
     private OrdersListener listener;
-    private boolean showImages;
+    private int totalOrders;
+    private boolean showLoading = true;
 
-    public HomeOrdersAdapter(Context context, boolean showImages) {
+    public HomeOrdersAdapter(Context context) {
         this.context = context;
-        this.showImages = showImages;
     }
 
     public void setListener(OrdersListener listener) {
@@ -55,6 +55,9 @@ public class HomeOrdersAdapter extends RecyclerView.Adapter<HomeOrdersAdapter.Vi
             case 2:
                 viewHolder = new ViewHolderRejected(LayoutInflater.from(context).inflate(R.layout.itemview_orders_rejected, parent, false));
                 break;
+            case 101:
+                viewHolder = new ViewHolderLoading(LayoutInflater.from(context).inflate(R.layout.itemview_loading, parent, false));
+                break;
             case 0:
             default:
                 viewHolder = new ViewHolderPending(LayoutInflater.from(context).inflate(R.layout.itemview_orders_pending, parent, false));
@@ -76,13 +79,15 @@ public class HomeOrdersAdapter extends RecyclerView.Adapter<HomeOrdersAdapter.Vi
     }
 
     public void setOrderTypeFilter(OrderType orderTypeFilter) {
-        if (this.orderTypeFilter != orderTypeFilter) {
-            ordersListModels.clear();
+        if (this.orderTypeFilter.statusId != orderTypeFilter.statusId) {
+            clearOrdersList();
         }
         this.orderTypeFilter = orderTypeFilter;
     }
 
-    public void addOrdersListModels(List<OrdersListModel> ordersListModels) {
+    public void addOrdersListModels(List<OrdersListModel> ordersListModels, int totalOrders) {
+        this.showLoading = true;
+        this.totalOrders = totalOrders;
         this.ordersListModels.addAll(ordersListModels);
         notifyDataSetChanged();
     }
@@ -92,6 +97,7 @@ public class HomeOrdersAdapter extends RecyclerView.Adapter<HomeOrdersAdapter.Vi
     }
 
     public void setOrdersListModels(List<OrdersListModel> ordersListModels) {
+        this.showLoading = true;
         this.ordersListModels = ordersListModels;
         notifyDataSetChanged();
     }
@@ -103,12 +109,31 @@ public class HomeOrdersAdapter extends RecyclerView.Adapter<HomeOrdersAdapter.Vi
 
     @Override
     public int getItemViewType(int position) {
-        OrdersListModel model = ordersListModels.get(position);
-        return Integer.parseInt(model.getStatus());
+        if (position < ordersListModels.size()) {
+            OrdersListModel model = ordersListModels.get(position);
+            return Integer.parseInt(model.getStatus());
+        }
+        return 101;
+    }
+
+    public void setShowLoading(boolean showLoading) {
+        this.showLoading = showLoading;
+        notifyDataSetChanged();
     }
 
     @Override
     public int getItemCount() {
+
+        if (showLoading) {
+            if (ordersListModels.isEmpty()) {
+                return 1;
+            }
+
+            if (ordersListModels.size() < totalOrders) {
+                return ordersListModels.size() + 1;
+            }
+        }
+
         return ordersListModels.size();
     }
 
@@ -150,33 +175,33 @@ public class HomeOrdersAdapter extends RecyclerView.Adapter<HomeOrdersAdapter.Vi
     }
 
     class ViewHolder extends RecyclerView.ViewHolder {
-        ImageView imageViewProduct;
-        TextView textViewName, textViewPrice, textViewOrderId, textViewDateTime, textViewItemsCount, textViewPaymentType;
+        ImageView imageViewWhatsapp, imageViewPhoneCall;
+        TextView textViewName, textViewPrice, textViewOrderIdItemsTime, textViewDateTime, textViewDeliveryType, textViewPaymentType;
 
         public ViewHolder(final View convertView) {
             super(convertView);
-            textViewItemsCount = convertView.findViewById(R.id.tv_items_count);
             textViewPrice = convertView.findViewById(R.id.tv_order_price);
-            imageViewProduct = convertView.findViewById(R.id.iv_product);
-            textViewOrderId = convertView.findViewById(R.id.tv_order_id);
+            textViewOrderIdItemsTime = convertView.findViewById(R.id.tv_order_id_items_time);
             textViewName = convertView.findViewById(R.id.tv_store_name);
-            textViewDateTime = convertView.findViewById(R.id.tv_order_date_time);
             textViewPaymentType = convertView.findViewById(R.id.tv_order_type);
+            textViewDeliveryType = convertView.findViewById(R.id.tv_delivery_type);
+            imageViewWhatsapp = convertView.findViewById(R.id.iv_whatsapp);
+            imageViewPhoneCall = convertView.findViewById(R.id.iv_phone_call);
         }
 
         public void bind(int position) {
 
             OrdersListModel ordersModel = ordersListModels.get(position);
 
-            imageViewProduct.setVisibility(showImages ? View.VISIBLE : View.GONE);
-            textViewName.setText(ordersModel.getCustomerName());
-            textViewOrderId.setText(String.format("Order #%s", ordersModel.getOrderId()));
-
+            String orderId = String.format("#%s", ordersModel.getDisplay_order_id());
             String itemText = ordersModel.getItems().size() > 1 ? "items" : "item";
-            textViewItemsCount.setText(String.format("%s %s", ordersModel.getItems().size(), itemText));
+            String item = String.format("(%s %s)", ordersModel.getItems().size(), itemText);
+
+            textViewOrderIdItemsTime.setText(String.format("%s %s | %s", orderId, item, ordersModel.getTime()));
+            textViewName.setText(ordersModel.getCustomerName());
             textViewPrice.setText(String.format(Locale.getDefault(), "%s", Util.getPriceWithCurrency(ordersModel.getTotal(), AppPreference.getInstance().getCurrency())));
-            textViewDateTime.setText(ordersModel.getTime());
             textViewPaymentType.setText(ordersModel.getPaymentMethod().toUpperCase());
+            textViewDeliveryType.setText(ordersModel.getOrderFacility());
         }
     }
 
@@ -297,6 +322,17 @@ public class HomeOrdersAdapter extends RecyclerView.Adapter<HomeOrdersAdapter.Vi
         @Override
         public void bind(int position) {
             super.bind(position);
+        }
+    }
+
+    class ViewHolderLoading extends ViewHolder {
+
+        public ViewHolderLoading(final View convertView) {
+            super(convertView);
+        }
+
+        @Override
+        public void bind(int position) {
         }
     }
 }

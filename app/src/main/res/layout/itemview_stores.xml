@@ -31,7 +31,7 @@
             app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
-            android:id="@+id/tv_order_id"
+            android:id="@+id/tv_order_id_items_time"
             style="@style/AppTheme.TextView.Small"
             android:layout_width="0dp"
             android:layout_height="wrap_content"

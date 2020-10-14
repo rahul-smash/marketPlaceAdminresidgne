@@ -3,6 +3,7 @@ package com.signity.shopkeeperapp.dashboard.Products;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.os.Parcelable;
@@ -32,6 +33,7 @@ import com.signity.shopkeeperapp.R;
 import com.signity.shopkeeperapp.model.Categories.GetCategoryData;
 import com.signity.shopkeeperapp.model.Categories.GetCategoryResponse;
 import com.signity.shopkeeperapp.model.Categories.SubCategory;
+import com.signity.shopkeeperapp.model.DeleteCategory.DeleteCategories;
 import com.signity.shopkeeperapp.model.Product.GetProductData;
 import com.signity.shopkeeperapp.model.Product.GetProductResponse;
 import com.signity.shopkeeperapp.model.productStatus.ProductStatus;
@@ -43,6 +45,7 @@ import com.signity.shopkeeperapp.util.AnimUtil;
 import com.signity.shopkeeperapp.util.DialogUtils;
 import com.signity.shopkeeperapp.util.ProgressDialogUtil;
 import com.signity.shopkeeperapp.util.Util;
+import com.signity.shopkeeperapp.util.prefs.AppPreference;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -67,6 +70,7 @@ public class ProductFragment extends Fragment implements View.OnClickListener, P
     private String selectedSubCategoryId = "0";
     private TextInputEditText txtSelectCategory, txtSubCategory;
     private boolean isFiltering;
+    private boolean isLoading;
     private RecyclerView.OnScrollListener recyclerViewOnScrollListener = new RecyclerView.OnScrollListener() {
         @Override
         public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
@@ -80,7 +84,7 @@ public class ProductFragment extends Fragment implements View.OnClickListener, P
             int totalItemCount = layoutManager.getItemCount();
             int firstVisibleItemPosition = layoutManager.findFirstVisibleItemPosition();
 
-            if (!isLoading()) {
+            if (!isLoading) {
                 if ((visibleItemCount + firstVisibleItemPosition) >= totalItemCount
                         && firstVisibleItemPosition >= 0 && totalItemCount >= pageSize) {
                     if (start < totalOrders && !isFiltering) {
@@ -145,7 +149,7 @@ public class ProductFragment extends Fragment implements View.OnClickListener, P
         searchView.setOnCloseListener(new SearchView.OnCloseListener() {
             @Override
             public boolean onClose() {
-                productsAdapter.setmData(productData);
+                productsAdapter.setmData(productData, totalOrders);
                 return false;
             }
         });
@@ -165,7 +169,7 @@ public class ProductFragment extends Fragment implements View.OnClickListener, P
             }
         }
 
-        productsAdapter.setmData(newFilterProducts);
+        productsAdapter.setmData(newFilterProducts, newFilterProducts.size());
     }
 
     @Override
@@ -214,6 +218,7 @@ public class ProductFragment extends Fragment implements View.OnClickListener, P
     public void getAllOrdersMethod() {
 
         if (!Util.checkIntenetConnection(getContext())) {
+            productsAdapter.setShowLoading(false);
             DialogUtils.showAlertDialog(getActivity(), "Internet", "Please check your Internet Connection.");
             return;
         }
@@ -227,25 +232,23 @@ public class ProductFragment extends Fragment implements View.OnClickListener, P
     }
 
     public void getProductApi() {
-        ProgressDialogUtil.showProgressDialog(getActivity());
         Map<String, Object> param = new HashMap<>();
         param.put("page", currentPageNumber);
         param.put("pagelength", pageSize);
         param.put("cat_id", selectedCategoryId);
         param.put("sub_cat_ids", selectedSubCategoryId);
 
+        isLoading = true;
         NetworkAdaper.getNetworkServices().getAllProducts(param, new Callback<GetProductResponse>() {
             @Override
             public void success(GetProductResponse getProductResponse, Response response) {
-
-                ProgressDialogUtil.hideProgressDialog();
-
+                isLoading = false;
                 if (getProductResponse.getSuccess()) {
                     currentPageNumber++;
                     start += pageSize;
                     totalOrders = getProductResponse.getTotal();
                     if (getProductResponse.getData() != null) {
-                        productsAdapter.addData(getProductResponse.getData());
+                        productsAdapter.addData(getProductResponse.getData(), totalOrders);
                     } else {
                         Toast.makeText(getActivity(), "Data not Found!", Toast.LENGTH_SHORT).show();
                     }
@@ -257,31 +260,33 @@ public class ProductFragment extends Fragment implements View.OnClickListener, P
 
             @Override
             public void failure(RetrofitError error) {
-                ProgressDialogUtil.hideProgressDialog();
+                isLoading = false;
+                if (getContext() != null) {
+                    Toast.makeText(getContext(), "Network is unreachable", Toast.LENGTH_SHORT).show();
+                    productsAdapter.setShowLoading(false);
+                }
             }
         });
     }
 
     public void getProductApiUsingFilter() {
-        ProgressDialogUtil.showProgressDialog(getActivity());
         Map<String, Object> param = new HashMap<>();
         param.put("page", currentPageNumber);
         param.put("pagelength", pageSize);
         param.put("cat_id", selectedCategoryId);
         param.put("sub_cat_ids", selectedSubCategoryId);
 
+        isLoading = true;
         NetworkAdaper.getNetworkServices().getAllProducts(param, new Callback<GetProductResponse>() {
             @Override
             public void success(GetProductResponse getProductResponse, Response response) {
-
-                ProgressDialogUtil.hideProgressDialog();
-
+                isLoading = false;
                 if (getProductResponse.getSuccess()) {
                     currentPageNumber++;
                     start += pageSize;
                     totalOrders = getProductResponse.getTotal();
                     if (getProductResponse.getData() != null) {
-                        productsAdapter.setmData(getProductResponse.getData());
+                        productsAdapter.setmData(getProductResponse.getData(), totalOrders);
                     } else {
                         Toast.makeText(getActivity(), "Data not Found!", Toast.LENGTH_SHORT).show();
                     }
@@ -293,7 +298,9 @@ public class ProductFragment extends Fragment implements View.OnClickListener, P
 
             @Override
             public void failure(RetrofitError error) {
-                ProgressDialogUtil.hideProgressDialog();
+                isLoading = false;
+                if (getContext() != null)
+                    Toast.makeText(getContext(), "Network is unreachable", Toast.LENGTH_SHORT).show();
             }
         });
     }
@@ -302,7 +309,8 @@ public class ProductFragment extends Fragment implements View.OnClickListener, P
     @Override
     public void onClick(View view) {
         if (view == linearLayoutAddProduct) {
-            showAlertDialog(getActivity());
+            startActivity(AddProductActivity.getStartIntent(getContext()));
+            AnimUtil.slideFromRightAnim(getActivity());
         }
     }
 
@@ -332,6 +340,7 @@ public class ProductFragment extends Fragment implements View.OnClickListener, P
             public void onClick(View view) {
                 currentPageNumber = 1;
                 start = 0;
+                productsAdapter.clearData();
                 getProductApiUsingFilter();
                 popupWindowOverView.dismiss();
             }
@@ -408,6 +417,36 @@ public class ProductFragment extends Fragment implements View.OnClickListener, P
         }
     }
 
+    public void deleteCategory(String productId, final int position) {
+        ProgressDialogUtil.showProgressDialog(getContext());
+        Map<String, Object> param = new HashMap<>();
+        param.put("product_id", productId);
+
+        NetworkAdaper.getNetworkServices().delProduct(param, new Callback<DeleteCategories>() {
+            @Override
+            public void success(DeleteCategories deleteCategories, Response response) {
+
+                ProgressDialogUtil.hideProgressDialog();
+
+                if (deleteCategories.getSuccess()) {
+                    productsAdapter.removeItem(position);
+                    if (start < totalOrders) {
+                        getAllOrdersMethod();
+                    }
+                } else {
+                    Toast.makeText(getContext(), deleteCategories.getMessage(), Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void failure(RetrofitError error) {
+                ProgressDialogUtil.hideProgressDialog();
+                if (getContext() != null)
+                    Toast.makeText(getContext(), "Network is unreachable", Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
     public void setProductStatus(final String subProductId, String status) {
         ProgressDialogUtil.showProgressDialog(getContext());
         Map<String, Object> param = new HashMap<>();
@@ -430,12 +469,13 @@ public class ProductFragment extends Fragment implements View.OnClickListener, P
             @Override
             public void failure(RetrofitError error) {
                 ProgressDialogUtil.hideProgressDialog();
+                if (getContext() != null)
+                    Toast.makeText(getContext(), "Network is unreachable", Toast.LENGTH_SHORT).show();
             }
         });
     }
 
     public void getCategoriesApi() {
-        ProgressDialogUtil.showProgressDialog(getActivity());
         Map<String, Object> param = new HashMap<>();
         param.put("page", 1);
         param.put("pagelength", 1000);
@@ -443,8 +483,6 @@ public class ProductFragment extends Fragment implements View.OnClickListener, P
         NetworkAdaper.getNetworkServices().getCategories(param, new Callback<GetCategoryResponse>() {
             @Override
             public void success(GetCategoryResponse getCategoryResponse, Response response) {
-
-                ProgressDialogUtil.hideProgressDialog();
 
                 if (getCategoryResponse.getSuccess()) {
                     categoryDataList = getCategoryResponse.getData();
@@ -455,7 +493,8 @@ public class ProductFragment extends Fragment implements View.OnClickListener, P
 
             @Override
             public void failure(RetrofitError error) {
-                ProgressDialogUtil.hideProgressDialog();
+                if (getContext() != null)
+                    Toast.makeText(getContext(), "Network is unreachable", Toast.LENGTH_SHORT).show();
             }
         });
     }
@@ -481,14 +520,32 @@ public class ProductFragment extends Fragment implements View.OnClickListener, P
 
     }
 
-    @Override
-    public void onClickDeleteProduct(String id) {
+    private void shareIntent(String extra, String shareTitle) {
+        Intent sendIntent = new Intent();
+        sendIntent.setAction(Intent.ACTION_SEND);
+        sendIntent.putExtra(Intent.EXTRA_TEXT, extra);
+        sendIntent.setType("text/plain");
 
+        Intent shareIntent = Intent.createChooser(sendIntent, shareTitle);
+        startActivity(shareIntent);
     }
 
     @Override
-    public void onClickShareProduct() {
+    public void onClickDeleteProduct(String id, int position) {
+        deleteCategory(id, position);
+    }
 
+    @Override
+    public void onClickShareProduct(String id) {
+        String storeUrl = AppPreference.getInstance().getStoreUrl();
+
+        if (TextUtils.isEmpty(storeUrl)) {
+            Toast.makeText(getContext(), "Store url missing", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        String shareUrl = String.format("%s/product/%s", storeUrl, id);
+        shareIntent(shareUrl, "Share Product");
     }
 
     @Override

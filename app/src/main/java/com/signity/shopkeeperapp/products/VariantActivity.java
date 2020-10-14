@@ -3,6 +3,7 @@ package com.signity.shopkeeperapp.products;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Rect;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.Menu;
@@ -14,11 +15,10 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
-import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.signity.shopkeeperapp.R;
-import com.signity.shopkeeperapp.adapter.RvGridSpacesItemDecoration;
 import com.signity.shopkeeperapp.model.Product.DynamicField;
 import com.signity.shopkeeperapp.model.Product.StoreAttributes;
 import com.signity.shopkeeperapp.network.NetworkAdaper;
@@ -67,9 +67,17 @@ public class VariantActivity extends AppCompatActivity {
 
     private void setUpAdapter() {
         dynamicFieldAdapter = new DynamicFieldAdapter(this);
-        recyclerViewDynamicField.setLayoutManager(new LinearLayoutManager(this));
+        recyclerViewDynamicField.setLayoutManager(new GridLayoutManager(this, 2));
         recyclerViewDynamicField.setAdapter(dynamicFieldAdapter);
-        recyclerViewDynamicField.addItemDecoration(new RvGridSpacesItemDecoration((int) Util.pxFromDp(VariantActivity.this, 16)));
+        recyclerViewDynamicField.addItemDecoration(new RecyclerView.ItemDecoration() {
+            @Override
+            public void getItemOffsets(@NonNull Rect outRect, @NonNull View view, @NonNull RecyclerView parent, @NonNull RecyclerView.State state) {
+                outRect.left = 0;
+                outRect.right = 0;
+                outRect.bottom = (int) Util.pxFromDp(VariantActivity.this, 8);
+                outRect.top = 0;
+            }
+        });
     }
 
     private void initViews() {
@@ -155,6 +163,7 @@ public class VariantActivity extends AppCompatActivity {
             @Override
             public void failure(RetrofitError error) {
                 ProgressDialogUtil.hideProgressDialog();
+                Toast.makeText(VariantActivity.this, "Network is unreachable", Toast.LENGTH_SHORT).show();
             }
         });
     }
