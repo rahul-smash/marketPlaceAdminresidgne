@@ -29,7 +29,6 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.AppCompatSpinner;
 import androidx.appcompat.widget.Toolbar;
 import androidx.constraintlayout.widget.ConstraintLayout;
@@ -46,6 +45,7 @@ import com.google.gson.reflect.TypeToken;
 import com.signity.shopkeeperapp.R;
 import com.signity.shopkeeperapp.adapter.SpacesItemDecoration;
 import com.signity.shopkeeperapp.adapter.SpacesItemImageDecoration;
+import com.signity.shopkeeperapp.base.BaseActivity;
 import com.signity.shopkeeperapp.model.Categories.GetCategoryData;
 import com.signity.shopkeeperapp.model.Categories.GetCategoryResponse;
 import com.signity.shopkeeperapp.model.Categories.SubCategory;
@@ -81,7 +81,7 @@ import retrofit.mime.TypedFile;
 /**
  * Created by ketan on 25/09/20.
  */
-public class AddProductActivity extends AppCompatActivity implements SubCategoryDialog.SubCategoryListener, CategoryDialog.CategoryListener {
+public class AddProductActivity extends BaseActivity implements SubCategoryDialog.SubCategoryListener, CategoryDialog.CategoryListener {
 
     public static final String CATEGORY_ID = "CATEGORY_ID";
     private static final String TAG = "AddProductActivity";
@@ -157,6 +157,10 @@ public class AddProductActivity extends AppCompatActivity implements SubCategory
             @Override
             public void success(StoreAttributes storeAttributes, Response response) {
 
+                if (isDestroyed()) {
+                    return;
+                }
+
                 ProgressDialogUtil.hideProgressDialog();
                 if (storeAttributes.isSuccess()) {
                     if (storeAttributes.getData() != null) {
@@ -168,6 +172,9 @@ public class AddProductActivity extends AppCompatActivity implements SubCategory
 
             @Override
             public void failure(RetrofitError error) {
+                if (isDestroyed()) {
+                    return;
+                }
                 ProgressDialogUtil.hideProgressDialog();
                 Toast.makeText(AddProductActivity.this, "Network is unreachable", Toast.LENGTH_SHORT).show();
             }
@@ -446,6 +453,11 @@ public class AddProductActivity extends AppCompatActivity implements SubCategory
         NetworkAdaper.getNetworkServices().uploadImage(typedFile, new Callback<ImageUploadResponse>() {
             @Override
             public void success(ImageUploadResponse imageUploadResponse, Response response) {
+
+                if (isDestroyed()) {
+                    return;
+                }
+
                 ProgressDialogUtil.hideProgressDialog();
 
                 if (imageUploadResponse.isSuccess()) {
@@ -458,6 +470,9 @@ public class AddProductActivity extends AppCompatActivity implements SubCategory
 
             @Override
             public void failure(RetrofitError error) {
+                if (isDestroyed()) {
+                    return;
+                }
                 ProgressDialogUtil.hideProgressDialog();
                 Toast.makeText(AddProductActivity.this, "Network is unreachable", Toast.LENGTH_SHORT).show();
             }
@@ -484,6 +499,11 @@ public class AddProductActivity extends AppCompatActivity implements SubCategory
         NetworkAdaper.getNetworkServices().getCategories(param, new Callback<GetCategoryResponse>() {
             @Override
             public void success(GetCategoryResponse getCategoryResponse, Response response) {
+
+                if (isDestroyed()) {
+                    return;
+                }
+
                 if (getCategoryResponse.getSuccess()) {
                     categoryDataList = getCategoryResponse.getData();
                     Log.d(TAG, "success: " + selectedCategoryId);
@@ -501,6 +521,9 @@ public class AddProductActivity extends AppCompatActivity implements SubCategory
 
             @Override
             public void failure(RetrofitError error) {
+                if (isDestroyed()) {
+                    return;
+                }
                 ProgressDialogUtil.hideProgressDialog();
                 Toast.makeText(AddProductActivity.this, "Network is unreachable", Toast.LENGTH_SHORT).show();
             }
@@ -586,7 +609,7 @@ public class AddProductActivity extends AppCompatActivity implements SubCategory
                         return;
                     }
                 } else {
-                    Toast.makeText(this, String.format("%s is empty, add key", dynamicField.getLabel()), Toast.LENGTH_SHORT).show();
+                    Toast.makeText(this, String.format("%s is empty", dynamicField.getLabel()), Toast.LENGTH_SHORT).show();
                     return;
                 }
             }
@@ -635,6 +658,10 @@ public class AddProductActivity extends AppCompatActivity implements SubCategory
             @Override
             public void success(CategoryStatus res, Response response) {
 
+                if (isDestroyed()) {
+                    return;
+                }
+
                 ProgressDialogUtil.hideProgressDialog();
                 if (res.getSuccess()) {
                     finish();
@@ -645,6 +672,11 @@ public class AddProductActivity extends AppCompatActivity implements SubCategory
 
             @Override
             public void failure(RetrofitError error) {
+
+                if (isDestroyed()) {
+                    return;
+                }
+
                 ProgressDialogUtil.hideProgressDialog();
                 Toast.makeText(AddProductActivity.this, "Network is unreachable", Toast.LENGTH_SHORT).show();
             }

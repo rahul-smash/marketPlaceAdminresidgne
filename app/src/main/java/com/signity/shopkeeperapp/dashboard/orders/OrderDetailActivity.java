@@ -1,5 +1,6 @@
 package com.signity.shopkeeperapp.dashboard.orders;
 
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -8,7 +9,6 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.LinearLayout;
@@ -16,13 +16,13 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.signity.shopkeeperapp.R;
+import com.signity.shopkeeperapp.base.BaseActivity;
 import com.signity.shopkeeperapp.model.OrderItemResponseModel;
 import com.signity.shopkeeperapp.model.OrdersListModel;
 import com.signity.shopkeeperapp.model.SetOrdersModel;
@@ -46,7 +46,7 @@ import retrofit.client.Response;
 
 import static android.content.Intent.ACTION_DIAL;
 
-public class OrderDetailActivity extends AppCompatActivity implements OrderDetailsAdpater.OrderDetailListener, HomeOrdersAdapter.OrdersListener {
+public class OrderDetailActivity extends BaseActivity implements OrderDetailsAdpater.OrderDetailListener, HomeOrdersAdapter.OrdersListener {
 
     public static final String ORDER_OBJECT = "OrderObject";
     private TextView textViewTotalPrice, textViewPayableAmount, textViewCartSavings, textViewAddress, textViewDateTime, textViewDeliveryTimeSlot, textViewNote;
@@ -106,6 +106,10 @@ public class OrderDetailActivity extends AppCompatActivity implements OrderDetai
             @Override
             public void success(StoreOrdersReponse getValues, Response response) {
 
+                if (isDestroyed()) {
+                    return;
+                }
+
                 ProgressDialogUtil.hideProgressDialog();
                 if (getValues.isSuccess()) {
                     if (getValues.getData() != null && getValues.getData().getOrders() != null) {
@@ -117,9 +121,15 @@ public class OrderDetailActivity extends AppCompatActivity implements OrderDetai
                             boolean val = ordersListModel.getStatus().equals("0");
                             orderDetailsAdpater.setItemListModels(ordersListModel.getItems(), val);
 
+                            ordersListModel.setPageNumber(1);
+
                             List<OrdersListModel> ordersListModels = new ArrayList<>();
                             ordersListModels.add(ordersListModel);
-                            ordersAdapter.setOrdersListModels(ordersListModels);
+
+                            Map<Integer, List<OrdersListModel>> newMapData = new HashMap<>();
+                            newMapData.put(1, ordersListModels);
+
+                            ordersAdapter.setPageOrdersMap(newMapData);
                         }
                     }
                 } else {
@@ -130,6 +140,9 @@ public class OrderDetailActivity extends AppCompatActivity implements OrderDetai
 
             @Override
             public void failure(RetrofitError error) {
+                if (isDestroyed()) {
+                    return;
+                }
                 ProgressDialogUtil.hideProgressDialog();
                 Toast.makeText(OrderDetailActivity.this, "Network is unreachable", Toast.LENGTH_SHORT).show();
             }
@@ -296,6 +309,9 @@ public class OrderDetailActivity extends AppCompatActivity implements OrderDetai
         NetworkAdaper.getNetworkServices().setOrderItemStatus(param, new Callback<OrderItemResponseModel>() {
             @Override
             public void success(OrderItemResponseModel orderItemResponseModel, Response response) {
+                if (isDestroyed()) {
+                    return;
+                }
                 ProgressDialogUtil.hideProgressDialog();
                 if (orderItemResponseModel.getSuccess()) {
                     OrdersListModel ordersListModelTemp = orderItemResponseModel.getOrdersListModel();
@@ -304,12 +320,25 @@ public class OrderDetailActivity extends AppCompatActivity implements OrderDetai
                         setOrderDetails();
                         boolean val = ordersListModel.getStatus().equals("0");
                         orderDetailsAdpater.setItemListModels(ordersListModel.getItems(), val);
+
+                        ordersListModel.setPageNumber(1);
+
+                        List<OrdersListModel> ordersListModels = new ArrayList<>();
+                        ordersListModels.add(ordersListModel);
+
+                        Map<Integer, List<OrdersListModel>> newMapData = new HashMap<>();
+                        newMapData.put(1, ordersListModels);
+
+                        ordersAdapter.setPageOrdersMap(newMapData);
                     }
                 }
             }
 
             @Override
             public void failure(RetrofitError error) {
+                if (isDestroyed()) {
+                    return;
+                }
                 ProgressDialogUtil.hideProgressDialog();
             }
         });
@@ -318,21 +347,13 @@ public class OrderDetailActivity extends AppCompatActivity implements OrderDetai
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        MenuInflater inflater = getMenuInflater();
-        inflater.inflate(R.menu.menu_orders_detail, menu);
+//        MenuInflater inflater = getMenuInflater();
+//        inflater.inflate(R.menu.menu_orders_detail, menu);
         return true;
     }
 
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-
-        if (item.getItemId() == R.id.action_call) {
-            if (TextUtils.isEmpty(ordersListModel.getPhone())) {
-                DialogUtils.showAlertDialog(getApplicationContext(), Constant.APP_TITLE, "Sorry! phone number is not available.");
-            } else {
-                callAlert();
-            }
-        }
 
         if (item.getItemId() == android.R.id.home) {
             finish();
@@ -347,32 +368,87 @@ public class OrderDetailActivity extends AppCompatActivity implements OrderDetai
     }
 
     @Override
-    public void onClickOrder(int position) {
+    public void onClickOrder(int position, int pageNumber) {
 
     }
 
     @Override
-    public void onRejectOrder(int position) {
+    public void onRejectOrder(int position, int pageNumber) {
         OrdersListModel order = ordersAdapter.getOrdersListModels().get(position);
         updateOrderStatus(HomeOrdersAdapter.OrderType.REJECTED, order.getOrderId(), position);
     }
 
     @Override
-    public void onAcceptOrder(int position) {
+    public void onAcceptOrder(int position, int pageNumber) {
         OrdersListModel order = ordersAdapter.getOrdersListModels().get(position);
         updateOrderStatus(HomeOrdersAdapter.OrderType.ACCEPTED, order.getOrderId(), position);
     }
 
     @Override
-    public void onShipOrder(int position) {
+    public void onShipOrder(int position, int pageNumber) {
         OrdersListModel order = ordersAdapter.getOrdersListModels().get(position);
         updateOrderStatus(HomeOrdersAdapter.OrderType.SHIPPED, order.getOrderId(), position);
     }
 
     @Override
-    public void onDeliverOrder(int position) {
+    public void onDeliverOrder(int position, int pageNumber) {
         OrdersListModel order = ordersAdapter.getOrdersListModels().get(position);
         updateOrderStatus(HomeOrdersAdapter.OrderType.DELIVERED, order.getOrderId(), position);
+    }
+
+    @Override
+    public void onWhatsappMessage(int position) {
+        OrdersListModel order = ordersAdapter.getOrdersListModels().get(position);
+        String phone = order.getPhone();
+
+        if (TextUtils.isEmpty(phone)) {
+            Toast.makeText(this, "Sorry! phone number is not available.", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        openWhatsapp(phone);
+    }
+
+    private void openWhatsapp(String phone) {
+        try {
+            boolean isWhatsappInstalled = whatsappInstalledOrNot("com.whatsapp");
+            if (isWhatsappInstalled) {
+
+                Intent sendIntent = new Intent("android.intent.action.MAIN");
+                sendIntent.setComponent(new ComponentName("com.whatsapp", "com.whatsapp.Conversation"));
+                String data = String.format("%s%s@s.whatsapp.net", "91", phone);
+                sendIntent.putExtra("jid", data);//phone number without "+" prefix
+                startActivity(sendIntent);
+            } else {
+                Uri uri = Uri.parse("market://details?id=com.whatsapp");
+                Intent goToMarket = new Intent(Intent.ACTION_VIEW, uri);
+                Toast.makeText(this, "WhatsApp not Installed", Toast.LENGTH_SHORT).show();
+                startActivity(goToMarket);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    private boolean whatsappInstalledOrNot(String uri) {
+        PackageManager pm = getPackageManager();
+        boolean appInstalled = false;
+        try {
+            pm.getPackageInfo(uri, PackageManager.GET_ACTIVITIES);
+            appInstalled = true;
+        } catch (PackageManager.NameNotFoundException e) {
+            appInstalled = false;
+        }
+        return appInstalled;
+    }
+
+    @Override
+    public void onCallCustomer(int position) {
+        if (TextUtils.isEmpty(ordersListModel.getPhone())) {
+            DialogUtils.showAlertDialog(getApplicationContext(), Constant.APP_TITLE, "Sorry! phone number is not available.");
+        } else {
+            callAlert();
+        }
     }
 
     private void updateOrderStatus(HomeOrdersAdapter.OrderType orderStatus, String orderId, final int position) {
@@ -386,6 +462,10 @@ public class OrderDetailActivity extends AppCompatActivity implements OrderDetai
             @Override
             public void success(SetOrdersModel getValues, Response response) {
 
+                if (isDestroyed()) {
+                    return;
+                }
+
                 ProgressDialogUtil.hideProgressDialog();
                 if (getValues.getSuccess()) {
                     getOrderDetail();
@@ -397,6 +477,9 @@ public class OrderDetailActivity extends AppCompatActivity implements OrderDetai
 
             @Override
             public void failure(RetrofitError error) {
+                if (isDestroyed()) {
+                    return;
+                }
                 ProgressDialogUtil.hideProgressDialog();
                 Toast.makeText(OrderDetailActivity.this, "Network is unreachable", Toast.LENGTH_SHORT).show();
             }

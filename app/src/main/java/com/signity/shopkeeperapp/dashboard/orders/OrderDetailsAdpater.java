@@ -71,7 +71,7 @@ public class OrderDetailsAdpater extends RecyclerView.Adapter<OrderDetailsAdpate
         });
         if (!TextUtils.isEmpty(itemListModel.getComment())) {
             holder.linearLayoutItemComment.setVisibility(View.VISIBLE);
-            holder.textViewItemComment.setText(itemListModel.getComment());
+            holder.textViewItemComment.setText(String.format("Comment: %s", itemListModel.getComment()));
         }
 
         holder.switchItem.setEnabled(canChange);

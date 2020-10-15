@@ -7,12 +7,12 @@ import android.view.Menu;
 import android.view.MenuItem;
 
 import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.signity.shopkeeperapp.R;
+import com.signity.shopkeeperapp.base.BaseActivity;
 import com.signity.shopkeeperapp.model.notification.NotificationModel;
 import com.signity.shopkeeperapp.model.notification.NotificationResponse;
 import com.signity.shopkeeperapp.network.NetworkAdaper;
@@ -28,7 +28,7 @@ import retrofit.Callback;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
 
-public class NotificationActivity extends AppCompatActivity implements NotificationAdapter.NotificationAdapterListener {
+public class NotificationActivity extends BaseActivity implements NotificationAdapter.NotificationAdapterListener {
 
     private static final String TAG = "NotificationActivity";
     private Toolbar toolbar;
@@ -139,7 +139,9 @@ public class NotificationActivity extends AppCompatActivity implements Notificat
         NetworkAdaper.getNetworkServices().getStoreNotification(param, new Callback<NotificationModel>() {
             @Override
             public void success(NotificationModel notificationModel, Response response) {
-
+                if (isDestroyed()) {
+                    return;
+                }
                 ProgressDialogUtil.hideProgressDialog();
 
                 if (notificationModel.isSuccess()) {
@@ -153,6 +155,9 @@ public class NotificationActivity extends AppCompatActivity implements Notificat
 
             @Override
             public void failure(RetrofitError error) {
+                if (isDestroyed()) {
+                    return;
+                }
                 ProgressDialogUtil.hideProgressDialog();
             }
         });

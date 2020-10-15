@@ -18,7 +18,6 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.res.ResourcesCompat;
@@ -31,6 +30,7 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.reflect.TypeToken;
 import com.signity.shopkeeperapp.R;
+import com.signity.shopkeeperapp.base.BaseActivity;
 import com.signity.shopkeeperapp.model.category.AddCategoryResponse;
 import com.signity.shopkeeperapp.model.category.SubCategoryModel;
 import com.signity.shopkeeperapp.model.image.ImageUploadResponse;
@@ -56,7 +56,7 @@ import retrofit.mime.TypedFile;
 /**
  * Created by ketan on 25/09/20.
  */
-public class AddCategoryActivity extends AppCompatActivity implements SubCategoryAdapter.SubCategoryAdapterListner {
+public class AddCategoryActivity extends BaseActivity implements SubCategoryAdapter.SubCategoryAdapterListner {
 
     private static final String TAG = "AddCategoryActivity";
     private static final int REQUEST_PERMISSION = 1001;
@@ -171,7 +171,9 @@ public class AddCategoryActivity extends AppCompatActivity implements SubCategor
         NetworkAdaper.getNetworkServices().addCategory(map, new Callback<AddCategoryResponse>() {
             @Override
             public void success(AddCategoryResponse addCategoryResponse, Response response) {
-
+                if (isDestroyed()) {
+                    return;
+                }
                 ProgressDialogUtil.hideProgressDialog();
                 if (addCategoryResponse.isSuccess()) {
                     Bundle bundle = new Bundle();
@@ -186,6 +188,9 @@ public class AddCategoryActivity extends AppCompatActivity implements SubCategor
 
             @Override
             public void failure(RetrofitError error) {
+                if (isDestroyed()) {
+                    return;
+                }
                 ProgressDialogUtil.hideProgressDialog();
                 Toast.makeText(AddCategoryActivity.this, "Network is unreachable", Toast.LENGTH_SHORT).show();
             }
@@ -256,6 +261,9 @@ public class AddCategoryActivity extends AppCompatActivity implements SubCategor
         NetworkAdaper.getNetworkServices().uploadImage(typedFile, new Callback<ImageUploadResponse>() {
             @Override
             public void success(ImageUploadResponse imageUploadResponse, Response response) {
+                if (isDestroyed()) {
+                    return;
+                }
                 ProgressDialogUtil.hideProgressDialog();
 
                 if (imageUploadResponse.isSuccess()) {
@@ -287,6 +295,9 @@ public class AddCategoryActivity extends AppCompatActivity implements SubCategor
 
             @Override
             public void failure(RetrofitError error) {
+                if (isDestroyed()) {
+                    return;
+                }
                 ProgressDialogUtil.hideProgressDialog();
                 Toast.makeText(AddCategoryActivity.this, "Network is unreachable", Toast.LENGTH_SHORT).show();
             }

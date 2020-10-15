@@ -195,4 +195,7 @@ public interface ApiService {
     @FormUrlEncoded
     @POST("/addProduct")
     void addProduct(@FieldMap Map<String, String> parameters, Callback<CategoryStatus> response);
+
+    @POST("/publish_store")
+    void publish(Callback<CategoryStatus> response);
 }

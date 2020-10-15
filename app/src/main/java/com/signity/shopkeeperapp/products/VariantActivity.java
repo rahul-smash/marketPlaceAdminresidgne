@@ -13,12 +13,12 @@ import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.signity.shopkeeperapp.R;
+import com.signity.shopkeeperapp.base.BaseActivity;
 import com.signity.shopkeeperapp.model.Product.DynamicField;
 import com.signity.shopkeeperapp.model.Product.StoreAttributes;
 import com.signity.shopkeeperapp.network.NetworkAdaper;
@@ -35,7 +35,7 @@ import retrofit.Callback;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
 
-public class VariantActivity extends AppCompatActivity {
+public class VariantActivity extends BaseActivity {
 
     public static final String VARIANT_DATA = "VARIANT_DATA";
     private static final String TAG = "VariantActivity";
@@ -110,7 +110,7 @@ public class VariantActivity extends AppCompatActivity {
                         return;
                     }
                 } else {
-                    Toast.makeText(this, String.format("%s is empty, add key", dynamicField.getLabel()), Toast.LENGTH_SHORT).show();
+                    Toast.makeText(this, String.format("%s is empty", dynamicField.getLabel()), Toast.LENGTH_SHORT).show();
                     return;
                 }
             }
@@ -152,7 +152,9 @@ public class VariantActivity extends AppCompatActivity {
         NetworkAdaper.getNetworkServices().getStoreAttributes(new Callback<StoreAttributes>() {
             @Override
             public void success(StoreAttributes storeAttributes, Response response) {
-
+                if (isDestroyed()) {
+                    return;
+                }
                 ProgressDialogUtil.hideProgressDialog();
                 if (storeAttributes.isSuccess()) {
                     dynamicFieldList = storeAttributes.getData().getDynamicFields();
@@ -162,6 +164,9 @@ public class VariantActivity extends AppCompatActivity {
 
             @Override
             public void failure(RetrofitError error) {
+                if (isDestroyed()) {
+                    return;
+                }
                 ProgressDialogUtil.hideProgressDialog();
                 Toast.makeText(VariantActivity.this, "Network is unreachable", Toast.LENGTH_SHORT).show();
             }

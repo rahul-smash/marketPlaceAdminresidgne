@@ -98,8 +98,31 @@ public class CategoriesFragment extends Fragment implements CategoriesAdapter.Ca
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         if (item.getItemId() == R.id.action_publish) {
+            publishOnline();
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    private void publishOnline() {
+
+        ProgressDialogUtil.showProgressDialog(getContext());
+        NetworkAdaper.getNetworkServices().publish(new Callback<CategoryStatus>() {
+            @Override
+            public void success(CategoryStatus categoryStatus, Response response) {
+                if (!isAdded()) {
+                    return;
+                }
+                ProgressDialogUtil.hideProgressDialog();
+
+                Toast.makeText(getContext(), categoryStatus.getMessage(), Toast.LENGTH_SHORT).show();
+            }
+
+            @Override
+            public void failure(RetrofitError error) {
+                ProgressDialogUtil.hideProgressDialog();
+            }
+        });
+
     }
 
     @Override
@@ -166,7 +189,9 @@ public class CategoriesFragment extends Fragment implements CategoriesAdapter.Ca
         NetworkAdaper.getNetworkServices().getCategories(param, new Callback<GetCategoryResponse>() {
             @Override
             public void success(GetCategoryResponse getCategoryResponse, Response response) {
-
+                if (!isAdded()) {
+                    return;
+                }
                 ProgressDialogUtil.hideProgressDialog();
 
                 if (getCategoryResponse.getSuccess()) {
@@ -190,6 +215,9 @@ public class CategoriesFragment extends Fragment implements CategoriesAdapter.Ca
 
             @Override
             public void failure(RetrofitError error) {
+                if (!isAdded()) {
+                    return;
+                }
                 ProgressDialogUtil.hideProgressDialog();
                 if (getContext() != null)
                     Toast.makeText(getContext(), "Network is unreachable", Toast.LENGTH_SHORT).show();
@@ -236,7 +264,9 @@ public class CategoriesFragment extends Fragment implements CategoriesAdapter.Ca
         NetworkAdaper.getNetworkServices().delCategory(param, new Callback<DeleteCategories>() {
             @Override
             public void success(DeleteCategories deleteCategories, Response response) {
-
+                if (!isAdded()) {
+                    return;
+                }
                 ProgressDialogUtil.hideProgressDialog();
 
                 if (deleteCategories.getSuccess()) {
@@ -251,6 +281,9 @@ public class CategoriesFragment extends Fragment implements CategoriesAdapter.Ca
 
             @Override
             public void failure(RetrofitError error) {
+                if (!isAdded()) {
+                    return;
+                }
                 ProgressDialogUtil.hideProgressDialog();
                 if (getContext() != null)
                     Toast.makeText(getContext(), "Network is unreachable", Toast.LENGTH_SHORT).show();
@@ -267,7 +300,9 @@ public class CategoriesFragment extends Fragment implements CategoriesAdapter.Ca
         NetworkAdaper.getNetworkServices().setCategoryStatus(param, new Callback<CategoryStatus>() {
             @Override
             public void success(CategoryStatus categoryStatus, Response response) {
-
+                if (!isAdded()) {
+                    return;
+                }
                 ProgressDialogUtil.hideProgressDialog();
 
                 if (categoryStatus.getSuccess()) {
@@ -279,6 +314,9 @@ public class CategoriesFragment extends Fragment implements CategoriesAdapter.Ca
 
             @Override
             public void failure(RetrofitError error) {
+                if (!isAdded()) {
+                    return;
+                }
                 ProgressDialogUtil.hideProgressDialog();
                 if (getContext() != null)
                     Toast.makeText(getContext(), "Network is unreachable", Toast.LENGTH_SHORT).show();

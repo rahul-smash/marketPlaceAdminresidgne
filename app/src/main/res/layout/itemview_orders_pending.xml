@@ -87,17 +87,17 @@
 
             <ImageView
                 android:id="@+id/iv_whatsapp"
-                android:layout_width="32dp"
-                android:layout_height="32dp"
+                android:layout_width="26dp"
+                android:layout_height="26dp"
                 android:layout_marginEnd="8dp"
                 android:layout_marginRight="8dp"
-                android:src="@drawable/emptycategorycentericon" />
+                android:src="@drawable/whatsappicon" />
 
             <ImageView
                 android:id="@+id/iv_phone_call"
-                android:layout_width="32dp"
-                android:layout_height="32dp"
-                android:src="@drawable/emptycategorycentericon" />
+                android:layout_width="26dp"
+                android:layout_height="26dp"
+                android:src="@drawable/callicon_phone" />
 
         </LinearLayout>
 
@@ -145,7 +145,7 @@
             <ImageView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:src="@drawable/accepticon"
+                android:src="@drawable/pendingicon"
                 app:tint="@color/colorYellow" />
 
             <TextView

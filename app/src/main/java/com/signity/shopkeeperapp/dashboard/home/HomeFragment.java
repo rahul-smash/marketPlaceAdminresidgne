@@ -1,7 +1,10 @@
 package com.signity.shopkeeperapp.dashboard.home;
 
+import android.content.ComponentName;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
 import android.os.Bundle;
@@ -60,6 +63,8 @@ import java.util.Map;
 import retrofit.Callback;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
+
+import static android.content.Intent.ACTION_DIAL;
 
 public class HomeFragment extends Fragment implements HomeContentAdapter.HomeContentAdapterListener, HomeOrdersAdapter.OrdersListener {
 
@@ -165,7 +170,16 @@ public class HomeFragment extends Fragment implements HomeContentAdapter.HomeCon
 
                 if (ordersReponse.isSuccess()) {
                     ordersListModels = ordersReponse.getData().getOrders();
-                    homeOrdersAdapter.setOrdersListModels(ordersListModels);
+
+                    for (OrdersListModel model : ordersListModels) {
+                        model.setPageNumber(1);
+                    }
+
+                    Map<Integer, List<OrdersListModel>> newMapData = new HashMap<>();
+                    newMapData.put(1, ordersListModels);
+
+                    homeOrdersAdapter.setPageOrdersMap(newMapData);
+
                 } else {
                     Toast.makeText(getContext(), ordersReponse.getMessage(), Toast.LENGTH_SHORT).show();
                 }
@@ -173,6 +187,9 @@ public class HomeFragment extends Fragment implements HomeContentAdapter.HomeCon
 
             @Override
             public void failure(RetrofitError error) {
+                if (!isAdded()) {
+                    return;
+                }
                 if (getContext() != null) {
                     Toast.makeText(getContext(), "Network is unreachable", Toast.LENGTH_SHORT).show();
                 }
@@ -194,9 +211,18 @@ public class HomeFragment extends Fragment implements HomeContentAdapter.HomeCon
                 }
 
                 if (storeDashboardResponse.isSuccess()) {
-                    homeContentAdapter.setUpData(storeDashboardResponse.getData());
+
                     if (textViewOverView != null) {
                         textViewOverView.setText(typeofDay.getTitle());
+                    }
+
+                    if (storeDashboardResponse.getData() == null) {
+                        return;
+                    }
+
+                    homeContentAdapter.setUpData(storeDashboardResponse.getData());
+                    if (listener != null) {
+                        listener.onUpdateOrdersCount(storeDashboardResponse.getData().getTotalOrders());
                     }
                 } else {
                     Toast.makeText(getContext(), storeDashboardResponse.getMessage(), Toast.LENGTH_SHORT).show();
@@ -265,7 +291,7 @@ public class HomeFragment extends Fragment implements HomeContentAdapter.HomeCon
                         orderType = HomeOrdersAdapter.OrderType.REJECTED;
                         break;
                 }
-                homeOrdersAdapter.clearOrdersList();
+                homeOrdersAdapter.clearPageMap();
                 getOrders();
             }
         });
@@ -386,7 +412,7 @@ public class HomeFragment extends Fragment implements HomeContentAdapter.HomeCon
                     public void run() {
                         popupWindowOverView.dismiss();
                     }
-                }, 700);
+                }, 500);
             }
         });
     }
@@ -491,7 +517,7 @@ public class HomeFragment extends Fragment implements HomeContentAdapter.HomeCon
 
                 ProgressDialogUtil.hideProgressDialog();
                 if (getValues.getSuccess()) {
-                    homeOrdersAdapter.removeItem(position);
+                    getOrders();
                 } else {
                     Toast.makeText(getContext(), getValues.getMessage(), Toast.LENGTH_SHORT).show();
                 }
@@ -509,7 +535,7 @@ public class HomeFragment extends Fragment implements HomeContentAdapter.HomeCon
     }
 
     @Override
-    public void onClickOrder(int position) {
+    public void onClickOrder(int position, int pageNumber) {
         OrdersListModel ordersListModel = ordersListModels.get(position);
         Bundle bundle = new Bundle();
         bundle.putSerializable(OrderDetailActivity.ORDER_OBJECT, ordersListModel);
@@ -518,27 +544,118 @@ public class HomeFragment extends Fragment implements HomeContentAdapter.HomeCon
     }
 
     @Override
-    public void onRejectOrder(int position) {
+    public void onRejectOrder(int position, int pageNumber) {
         OrdersListModel order = ordersListModels.get(position);
         updateOrderStatus(HomeOrdersAdapter.OrderType.REJECTED, order.getOrderId(), position);
     }
 
     @Override
-    public void onAcceptOrder(int position) {
+    public void onAcceptOrder(int position, int pageNumber) {
         OrdersListModel order = ordersListModels.get(position);
         updateOrderStatus(HomeOrdersAdapter.OrderType.ACCEPTED, order.getOrderId(), position);
     }
 
     @Override
-    public void onShipOrder(int position) {
+    public void onShipOrder(int position, int pageNumber) {
         OrdersListModel order = ordersListModels.get(position);
         updateOrderStatus(HomeOrdersAdapter.OrderType.SHIPPED, order.getOrderId(), position);
     }
 
     @Override
-    public void onDeliverOrder(int position) {
+    public void onDeliverOrder(int position, int pageNumber) {
         OrdersListModel order = ordersListModels.get(position);
         updateOrderStatus(HomeOrdersAdapter.OrderType.DELIVERED, order.getOrderId(), position);
+    }
+
+    @Override
+    public void onWhatsappMessage(int position) {
+        OrdersListModel order = ordersListModels.get(position);
+        String phone = order.getPhone();
+
+        if (TextUtils.isEmpty(phone)) {
+            Toast.makeText(getContext(), "Sorry! phone number is not available.", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        openWhatsapp(phone);
+    }
+
+    private void openWhatsapp(String phone) {
+        try {
+            boolean isWhatsappInstalled = whatsappInstalledOrNot("com.whatsapp");
+            if (isWhatsappInstalled) {
+
+                Intent sendIntent = new Intent("android.intent.action.MAIN");
+                sendIntent.setComponent(new ComponentName("com.whatsapp", "com.whatsapp.Conversation"));
+                String data = String.format("%s%s@s.whatsapp.net", "91", phone);
+                sendIntent.putExtra("jid", data);//phone number without "+" prefix
+                startActivity(sendIntent);
+            } else {
+                Uri uri = Uri.parse("market://details?id=com.whatsapp");
+                Intent goToMarket = new Intent(Intent.ACTION_VIEW, uri);
+                Toast.makeText(getContext(), "WhatsApp not Installed", Toast.LENGTH_SHORT).show();
+                startActivity(goToMarket);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    private boolean whatsappInstalledOrNot(String uri) {
+        PackageManager pm = getContext().getPackageManager();
+        boolean appInstalled = false;
+        try {
+            pm.getPackageInfo(uri, PackageManager.GET_ACTIVITIES);
+            appInstalled = true;
+        } catch (PackageManager.NameNotFoundException e) {
+            appInstalled = false;
+        }
+        return appInstalled;
+    }
+
+    @Override
+    public void onCallCustomer(int position) {
+        OrdersListModel order = ordersListModels.get(position);
+        String phone = order.getPhone();
+
+        if (TextUtils.isEmpty(phone)) {
+            DialogUtils.showAlertDialog(getContext(), Constant.APP_TITLE, "Sorry! phone number is not available.");
+        } else {
+            callAlert(phone);
+        }
+    }
+
+    private void callAlert(final String phone) {
+        androidx.appcompat.app.AlertDialog.Builder adb = new androidx.appcompat.app.AlertDialog.Builder(getContext());
+        adb.setTitle("Call " + phone + " ?");
+        adb.setIcon(R.drawable.ic_launcher);
+        adb.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int which) {
+                actionCall(phone);
+            }
+        });
+        adb.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.dismiss();
+            }
+        });
+        adb.show();
+    }
+
+    private void actionCall(String phone) {
+        try {
+            PackageManager pm = getContext().getPackageManager();
+            if (pm.hasSystemFeature(PackageManager.FEATURE_TELEPHONY)) {
+                Intent intent = new Intent(ACTION_DIAL);
+                intent.setData(Uri.parse("tel:" + phone));
+                startActivity(intent);
+                AnimUtil.slideFromRightAnim(getActivity());
+            } else {
+                Toast.makeText(getContext(), "Your device is not supporting any calling feature", Toast.LENGTH_SHORT).show();
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     private void shareIntent(String extra, String shareTitle) {
@@ -557,5 +674,7 @@ public class HomeFragment extends Fragment implements HomeContentAdapter.HomeCon
         void onClickViewProducts();
 
         void onClickViewCustomers();
+
+        void onUpdateOrdersCount(int count);
     }
 }

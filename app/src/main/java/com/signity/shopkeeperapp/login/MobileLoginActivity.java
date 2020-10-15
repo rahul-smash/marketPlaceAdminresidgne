@@ -10,6 +10,7 @@ import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
 import com.signity.shopkeeperapp.R;
+import com.signity.shopkeeperapp.base.BaseActivity;
 import com.signity.shopkeeperapp.dashboard.DashboardActivity;
 import com.signity.shopkeeperapp.stores.StoresActivity;
 import com.signity.shopkeeperapp.util.AnimUtil;
@@ -18,7 +19,7 @@ import com.signity.shopkeeperapp.util.AnimUtil;
  * Created by rajesh on 2/11/15.
  * Updated by ketan on 16/09/20.
  */
-public class MobileLoginActivity extends AppCompatActivity implements LoginMobileFragment.LoginMobileListener, VerifyOtpFragment.VerifyOtpListener {
+public class MobileLoginActivity extends BaseActivity implements LoginMobileFragment.LoginMobileListener, VerifyOtpFragment.VerifyOtpListener {
 
     private static final String TAG = "MobileLoginActivity";
 

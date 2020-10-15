@@ -17,7 +17,6 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBarDrawerToggle;
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
@@ -29,6 +28,7 @@ import com.google.android.material.badge.BadgeDrawable;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.signity.shopkeeperapp.BuildConfig;
 import com.signity.shopkeeperapp.R;
+import com.signity.shopkeeperapp.base.BaseActivity;
 import com.signity.shopkeeperapp.dashboard.Products.ProductFragment;
 import com.signity.shopkeeperapp.dashboard.account.AccountFragment;
 import com.signity.shopkeeperapp.dashboard.categories.CategoriesFragment;
@@ -45,7 +45,7 @@ import retrofit.Callback;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
 
-public class DashboardActivity extends AppCompatActivity implements BottomNavigationView.OnNavigationItemSelectedListener, HomeFragment.HomeFragmentListener, NavDrawerAdapter.NavigationListener {
+public class DashboardActivity extends BaseActivity implements BottomNavigationView.OnNavigationItemSelectedListener, HomeFragment.HomeFragmentListener, NavDrawerAdapter.NavigationListener {
 
     private static final String TAG = "DashboardActivity";
     public BottomNavigationView bottomNavigationView;
@@ -97,12 +97,12 @@ public class DashboardActivity extends AppCompatActivity implements BottomNaviga
         textViewAppVersion = findViewById(R.id.tv_app_version);
     }
 
-    private void createOrdersBadge() {
+    private void createOrdersBadge(int count) {
         BadgeDrawable badgeDrawable = bottomNavigationView.getOrCreateBadge(R.id.action_bottom_orders);
         badgeDrawable.setBackgroundColor(getResources().getColor(R.color.colorBadge));
         badgeDrawable.setBadgeTextColor(getResources().getColor(R.color.colorTextDark));
-        badgeDrawable.setNumber(0);
-        badgeDrawable.setVisible(true);
+        badgeDrawable.setNumber(count);
+        badgeDrawable.setVisible(count > 0);
     }
 
     private void setUpDrawerToggle() {
@@ -251,6 +251,11 @@ public class DashboardActivity extends AppCompatActivity implements BottomNaviga
     }
 
     @Override
+    public void onUpdateOrdersCount(int count) {
+        createOrdersBadge(count);
+    }
+
+    @Override
     public void onClickNavigation(NavDrawerAdapter.NavigationItems navigationItems) {
         switch (navigationItems) {
             case DASHBOARD:
@@ -273,6 +278,11 @@ public class DashboardActivity extends AppCompatActivity implements BottomNaviga
         NetworkAdaper.getNetworkServices().forceDownload(new Callback<ResponseForceUpdate>() {
             @Override
             public void success(ResponseForceUpdate responseForceUpdate, Response response) {
+
+                if (isDestroyed()) {
+                    return;
+                }
+
                 if (responseForceUpdate != null && responseForceUpdate.getSuccess()) {
                     try {
                         ModelForceUpdate forceUpdate = responseForceUpdate.getData().get(0);

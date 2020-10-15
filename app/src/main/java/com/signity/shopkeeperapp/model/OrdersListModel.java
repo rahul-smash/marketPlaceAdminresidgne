@@ -85,6 +85,16 @@ public class OrdersListModel implements Serializable {
     @SerializedName("delivery_time_slot")
     @Expose
     private String deliveryTimeSlot;
+    @Expose(serialize = false)
+    private int pageNumber;
+
+    public int getPageNumber() {
+        return pageNumber;
+    }
+
+    public void setPageNumber(int pageNumber) {
+        this.pageNumber = pageNumber;
+    }
 
     public String getDeliveryTimeSlot() {
         return deliveryTimeSlot;

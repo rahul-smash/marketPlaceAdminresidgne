@@ -242,6 +242,9 @@ public class ProductFragment extends Fragment implements View.OnClickListener, P
         NetworkAdaper.getNetworkServices().getAllProducts(param, new Callback<GetProductResponse>() {
             @Override
             public void success(GetProductResponse getProductResponse, Response response) {
+                if (!isAdded()) {
+                    return;
+                }
                 isLoading = false;
                 if (getProductResponse.getSuccess()) {
                     currentPageNumber++;
@@ -260,6 +263,9 @@ public class ProductFragment extends Fragment implements View.OnClickListener, P
 
             @Override
             public void failure(RetrofitError error) {
+                if (!isAdded()) {
+                    return;
+                }
                 isLoading = false;
                 if (getContext() != null) {
                     Toast.makeText(getContext(), "Network is unreachable", Toast.LENGTH_SHORT).show();
@@ -280,6 +286,9 @@ public class ProductFragment extends Fragment implements View.OnClickListener, P
         NetworkAdaper.getNetworkServices().getAllProducts(param, new Callback<GetProductResponse>() {
             @Override
             public void success(GetProductResponse getProductResponse, Response response) {
+                if (!isAdded()) {
+                    return;
+                }
                 isLoading = false;
                 if (getProductResponse.getSuccess()) {
                     currentPageNumber++;
@@ -298,6 +307,9 @@ public class ProductFragment extends Fragment implements View.OnClickListener, P
 
             @Override
             public void failure(RetrofitError error) {
+                if (!isAdded()) {
+                    return;
+                }
                 isLoading = false;
                 if (getContext() != null)
                     Toast.makeText(getContext(), "Network is unreachable", Toast.LENGTH_SHORT).show();
@@ -338,23 +350,36 @@ public class ProductFragment extends Fragment implements View.OnClickListener, P
         btnApply.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                currentPageNumber = 1;
-                start = 0;
-                productsAdapter.clearData();
-                getProductApiUsingFilter();
-                popupWindowOverView.dismiss();
+                boolean shouldApply = true;
+                if (selectedCategoryId.equals("0") || selectedSubCategoryId.equals("0")) {
+                    shouldApply = false;
+                }
+                if (shouldApply) {
+                    currentPageNumber = 1;
+                    start = 0;
+                    productsAdapter.clearData();
+                    getProductApiUsingFilter();
+                    popupWindowOverView.dismiss();
+                }
             }
         });
         Button btnCancel = layout.findViewById(R.id.btnCancel);
         btnCancel.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                currentPageNumber = 1;
-                selectedCategoryId = "0";
-                selectedSubCategoryId = "0";
-                start = 0;
-                productsAdapter.clearData();
-                getAllOrdersMethod();
+                boolean shouldReload = true;
+                if (selectedCategoryId.equals("0") || selectedSubCategoryId.equals("0")) {
+                    shouldReload = false;
+                }
+
+                if (shouldReload) {
+                    currentPageNumber = 1;
+                    selectedCategoryId = "0";
+                    selectedSubCategoryId = "0";
+                    start = 0;
+                    productsAdapter.clearData();
+                    getAllOrdersMethod();
+                }
                 popupWindowOverView.dismiss();
             }
         });
@@ -425,7 +450,9 @@ public class ProductFragment extends Fragment implements View.OnClickListener, P
         NetworkAdaper.getNetworkServices().delProduct(param, new Callback<DeleteCategories>() {
             @Override
             public void success(DeleteCategories deleteCategories, Response response) {
-
+                if (!isAdded()) {
+                    return;
+                }
                 ProgressDialogUtil.hideProgressDialog();
 
                 if (deleteCategories.getSuccess()) {
@@ -440,6 +467,9 @@ public class ProductFragment extends Fragment implements View.OnClickListener, P
 
             @Override
             public void failure(RetrofitError error) {
+                if (!isAdded()) {
+                    return;
+                }
                 ProgressDialogUtil.hideProgressDialog();
                 if (getContext() != null)
                     Toast.makeText(getContext(), "Network is unreachable", Toast.LENGTH_SHORT).show();
@@ -456,7 +486,9 @@ public class ProductFragment extends Fragment implements View.OnClickListener, P
         NetworkAdaper.getNetworkServices().setProductStatus(param, new Callback<ProductStatus>() {
             @Override
             public void success(ProductStatus productStatus, Response response) {
-
+                if (!isAdded()) {
+                    return;
+                }
                 ProgressDialogUtil.hideProgressDialog();
 
                 if (productStatus.getSuccess()) {
@@ -468,6 +500,9 @@ public class ProductFragment extends Fragment implements View.OnClickListener, P
 
             @Override
             public void failure(RetrofitError error) {
+                if (!isAdded()) {
+                    return;
+                }
                 ProgressDialogUtil.hideProgressDialog();
                 if (getContext() != null)
                     Toast.makeText(getContext(), "Network is unreachable", Toast.LENGTH_SHORT).show();
@@ -483,7 +518,9 @@ public class ProductFragment extends Fragment implements View.OnClickListener, P
         NetworkAdaper.getNetworkServices().getCategories(param, new Callback<GetCategoryResponse>() {
             @Override
             public void success(GetCategoryResponse getCategoryResponse, Response response) {
-
+                if (!isAdded()) {
+                    return;
+                }
                 if (getCategoryResponse.getSuccess()) {
                     categoryDataList = getCategoryResponse.getData();
                 } else {
@@ -493,6 +530,9 @@ public class ProductFragment extends Fragment implements View.OnClickListener, P
 
             @Override
             public void failure(RetrofitError error) {
+                if (!isAdded()) {
+                    return;
+                }
                 if (getContext() != null)
                     Toast.makeText(getContext(), "Network is unreachable", Toast.LENGTH_SHORT).show();
             }

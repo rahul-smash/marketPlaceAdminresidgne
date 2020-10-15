@@ -1,9 +1,15 @@
 package com.signity.shopkeeperapp.dashboard.orders;
 
+import android.content.ComponentName;
 import android.content.Context;
+import android.content.DialogInterface;
+import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.drawable.ColorDrawable;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -31,6 +37,7 @@ import com.signity.shopkeeperapp.model.SetOrdersModel;
 import com.signity.shopkeeperapp.model.orders.StoreOrdersReponse;
 import com.signity.shopkeeperapp.network.NetworkAdaper;
 import com.signity.shopkeeperapp.util.AnimUtil;
+import com.signity.shopkeeperapp.util.Constant;
 import com.signity.shopkeeperapp.util.DialogUtils;
 import com.signity.shopkeeperapp.util.ProgressDialogUtil;
 import com.signity.shopkeeperapp.util.Util;
@@ -44,9 +51,11 @@ import retrofit.Callback;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
 
+import static android.content.Intent.ACTION_DIAL;
+
 public class OrdersFragment extends Fragment implements HomeOrdersAdapter.OrdersListener {
     public static final String TAG = "OrdersFragment";
-
+    private boolean needRefesh;
     private PopupWindow rightMenuPopUpWindow;
     private View hiddenView;
     private RecyclerView recyclerViewOrders;
@@ -80,6 +89,7 @@ public class OrdersFragment extends Fragment implements HomeOrdersAdapter.Orders
             }
         }
     };
+    private int pageNumberToRefresh;
 
     public static OrdersFragment getInstance(Bundle bundle) {
         OrdersFragment fragment = new OrdersFragment();
@@ -159,6 +169,10 @@ public class OrdersFragment extends Fragment implements HomeOrdersAdapter.Orders
     @Override
     public void onResume() {
         super.onResume();
+        if (needRefesh) {
+            getALLOrdersWithPage(pageNumberToRefresh);
+            needRefesh = false;
+        }
     }
 
     public void getALLOrders() {
@@ -171,14 +185,22 @@ public class OrdersFragment extends Fragment implements HomeOrdersAdapter.Orders
         NetworkAdaper.getNetworkServices().getStoreOrdersNew(param, new Callback<StoreOrdersReponse>() {
             @Override
             public void success(StoreOrdersReponse getValues, Response response) {
+                if (!isAdded()) {
+                    return;
+                }
                 isLoading = false;
                 if (getValues.isSuccess()) {
-                    currentPageNumber++;
-                    start += pageSize;
                     List<OrdersListModel> orderListModel = getValues.getData().getOrders();
                     totalOrders = getValues.getData().getOrdersTotal();
 
-                    ordersAdapter.addOrdersListModels(orderListModel, totalOrders);
+//                    ordersAdapter.addOrdersListModels(orderListModel, totalOrders);
+                    for (OrdersListModel model : orderListModel) {
+                        model.setPageNumber(currentPageNumber);
+                    }
+
+                    ordersAdapter.addUpdatePageWithOrders(currentPageNumber, orderListModel, totalOrders);
+                    currentPageNumber++;
+                    start += pageSize;
                 } else {
                     Toast.makeText(getContext(), getValues.getMessage(), Toast.LENGTH_SHORT).show();
                 }
@@ -186,6 +208,52 @@ public class OrdersFragment extends Fragment implements HomeOrdersAdapter.Orders
 
             @Override
             public void failure(RetrofitError error) {
+                if (!isAdded()) {
+                    return;
+                }
+                isLoading = false;
+                if (getContext() != null) {
+                    Toast.makeText(getContext(), "Network is unreachable", Toast.LENGTH_SHORT).show();
+                }
+                ordersAdapter.setShowLoading(false);
+            }
+        });
+    }
+
+    public void getALLOrdersWithPage(final int pageNumber) {
+        Map<String, Object> param = new HashMap<>();
+        param.put("order_type", orderTypeFilter.getSlug());
+        param.put("page", pageNumber);
+        param.put("pagelength", pageSize);
+
+        isLoading = true;
+        NetworkAdaper.getNetworkServices().getStoreOrdersNew(param, new Callback<StoreOrdersReponse>() {
+            @Override
+            public void success(StoreOrdersReponse getValues, Response response) {
+                if (!isAdded()) {
+                    return;
+                }
+                isLoading = false;
+                if (getValues.isSuccess()) {
+                    List<OrdersListModel> orderListModel = getValues.getData().getOrders();
+                    totalOrders = getValues.getData().getOrdersTotal();
+
+//                    ordersAdapter.addOrdersListModels(orderListModel, totalOrders);
+                    for (OrdersListModel model : orderListModel) {
+                        model.setPageNumber(pageNumber);
+                    }
+
+                    ordersAdapter.addUpdatePageWithOrders(pageNumber, orderListModel, totalOrders);
+                } else {
+                    Toast.makeText(getContext(), getValues.getMessage(), Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void failure(RetrofitError error) {
+                if (!isAdded()) {
+                    return;
+                }
                 isLoading = false;
                 if (getContext() != null) {
                     Toast.makeText(getContext(), "Network is unreachable", Toast.LENGTH_SHORT).show();
@@ -287,7 +355,7 @@ public class OrdersFragment extends Fragment implements HomeOrdersAdapter.Orders
                         orderTypeFilter = HomeOrdersAdapter.OrderType.REJECTED;
                         break;
                 }
-                ordersAdapter.setOrderTypeFilter(orderTypeFilter);
+                ordersAdapter.clearPageMap();
                 getAllOrdersMethod();
 
                 new Handler().postDelayed(new Runnable() {
@@ -295,12 +363,12 @@ public class OrdersFragment extends Fragment implements HomeOrdersAdapter.Orders
                     public void run() {
                         rightMenuPopUpWindow.dismiss();
                     }
-                }, 700);
+                }, 500);
             }
         });
     }
 
-    private void updateOrderStatus(HomeOrdersAdapter.OrderType orderStatus, String orderId, final int position) {
+    private void updateOrderStatus(HomeOrdersAdapter.OrderType orderStatus, String orderId, final int pageNumber) {
         ProgressDialogUtil.showProgressDialog(getActivity());
         Map<String, String> param = new HashMap<String, String>();
         param.put("user_id", AppPreference.getInstance().getUserId());
@@ -310,13 +378,12 @@ public class OrdersFragment extends Fragment implements HomeOrdersAdapter.Orders
         NetworkAdaper.getNetworkServices().setOrderStatus(param, new Callback<SetOrdersModel>() {
             @Override
             public void success(SetOrdersModel getValues, Response response) {
-
+                if (!isAdded()) {
+                    return;
+                }
                 ProgressDialogUtil.hideProgressDialog();
                 if (getValues.getSuccess()) {
-                    ordersAdapter.removeItem(position);
-                    if (start < totalOrders) {
-                        getAllOrdersMethod();
-                    }
+                    getALLOrdersWithPage(pageNumber);
                 } else {
                     Toast.makeText(getContext(), getValues.getMessage(), Toast.LENGTH_SHORT).show();
                 }
@@ -325,6 +392,9 @@ public class OrdersFragment extends Fragment implements HomeOrdersAdapter.Orders
 
             @Override
             public void failure(RetrofitError error) {
+                if (!isAdded()) {
+                    return;
+                }
                 ProgressDialogUtil.hideProgressDialog();
                 if (getContext() != null) {
                     Toast.makeText(getContext(), "Network is unreachable", Toast.LENGTH_SHORT).show();
@@ -334,7 +404,9 @@ public class OrdersFragment extends Fragment implements HomeOrdersAdapter.Orders
     }
 
     @Override
-    public void onClickOrder(int position) {
+    public void onClickOrder(int position, int pageNumber) {
+        needRefesh = true;
+        pageNumberToRefresh = pageNumber;
         OrdersListModel order = ordersAdapter.getOrdersListModels().get(position);
         Bundle bundle = new Bundle();
         bundle.putSerializable(OrderDetailActivity.ORDER_OBJECT, order);
@@ -343,26 +415,117 @@ public class OrdersFragment extends Fragment implements HomeOrdersAdapter.Orders
     }
 
     @Override
-    public void onRejectOrder(int position) {
+    public void onRejectOrder(int position, int pageNumber) {
         OrdersListModel order = ordersAdapter.getOrdersListModels().get(position);
-        updateOrderStatus(HomeOrdersAdapter.OrderType.REJECTED, order.getOrderId(), position);
+        updateOrderStatus(HomeOrdersAdapter.OrderType.REJECTED, order.getOrderId(), pageNumber);
     }
 
     @Override
-    public void onAcceptOrder(int position) {
+    public void onAcceptOrder(int position, int pageNumber) {
         OrdersListModel order = ordersAdapter.getOrdersListModels().get(position);
-        updateOrderStatus(HomeOrdersAdapter.OrderType.ACCEPTED, order.getOrderId(), position);
+        updateOrderStatus(HomeOrdersAdapter.OrderType.ACCEPTED, order.getOrderId(), pageNumber);
     }
 
     @Override
-    public void onShipOrder(int position) {
+    public void onShipOrder(int position, int pageNumber) {
         OrdersListModel order = ordersAdapter.getOrdersListModels().get(position);
-        updateOrderStatus(HomeOrdersAdapter.OrderType.SHIPPED, order.getOrderId(), position);
+        updateOrderStatus(HomeOrdersAdapter.OrderType.SHIPPED, order.getOrderId(), pageNumber);
     }
 
     @Override
-    public void onDeliverOrder(int position) {
+    public void onDeliverOrder(int position, int pageNumber) {
         OrdersListModel order = ordersAdapter.getOrdersListModels().get(position);
-        updateOrderStatus(HomeOrdersAdapter.OrderType.DELIVERED, order.getOrderId(), position);
+        updateOrderStatus(HomeOrdersAdapter.OrderType.DELIVERED, order.getOrderId(), pageNumber);
+    }
+
+    @Override
+    public void onWhatsappMessage(int position) {
+        OrdersListModel order = ordersAdapter.getOrdersListModels().get(position);
+        String phone = order.getPhone();
+
+        if (TextUtils.isEmpty(phone)) {
+            Toast.makeText(getContext(), "Sorry! phone number is not available.", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        openWhatsapp(phone);
+    }
+
+    private void openWhatsapp(String phone) {
+        try {
+            boolean isWhatsappInstalled = whatsappInstalledOrNot("com.whatsapp");
+            if (isWhatsappInstalled) {
+
+                Intent sendIntent = new Intent("android.intent.action.MAIN");
+                sendIntent.setComponent(new ComponentName("com.whatsapp", "com.whatsapp.Conversation"));
+                String data = String.format("%s%s@s.whatsapp.net", "91", phone);
+                sendIntent.putExtra("jid", data);//phone number without "+" prefix
+                startActivity(sendIntent);
+            } else {
+                Uri uri = Uri.parse("market://details?id=com.whatsapp");
+                Intent goToMarket = new Intent(Intent.ACTION_VIEW, uri);
+                Toast.makeText(getContext(), "WhatsApp not Installed", Toast.LENGTH_SHORT).show();
+                startActivity(goToMarket);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    private boolean whatsappInstalledOrNot(String uri) {
+        PackageManager pm = getContext().getPackageManager();
+        boolean appInstalled = false;
+        try {
+            pm.getPackageInfo(uri, PackageManager.GET_ACTIVITIES);
+            appInstalled = true;
+        } catch (PackageManager.NameNotFoundException e) {
+            appInstalled = false;
+        }
+        return appInstalled;
+    }
+
+    @Override
+    public void onCallCustomer(int position) {
+        OrdersListModel order = ordersAdapter.getOrdersListModels().get(position);
+        String phone = order.getPhone();
+
+        if (TextUtils.isEmpty(phone)) {
+            DialogUtils.showAlertDialog(getContext(), Constant.APP_TITLE, "Sorry! phone number is not available.");
+        } else {
+            callAlert(phone);
+        }
+    }
+
+    private void callAlert(final String phone) {
+        androidx.appcompat.app.AlertDialog.Builder adb = new androidx.appcompat.app.AlertDialog.Builder(getContext());
+        adb.setTitle("Call " + phone + " ?");
+        adb.setIcon(R.drawable.ic_launcher);
+        adb.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int which) {
+                actionCall(phone);
+            }
+        });
+        adb.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.dismiss();
+            }
+        });
+        adb.show();
+    }
+
+    private void actionCall(String phone) {
+        try {
+            PackageManager pm = getContext().getPackageManager();
+            if (pm.hasSystemFeature(PackageManager.FEATURE_TELEPHONY)) {
+                Intent intent = new Intent(ACTION_DIAL);
+                intent.setData(Uri.parse("tel:" + phone));
+                startActivity(intent);
+                AnimUtil.slideFromRightAnim(getActivity());
+            } else {
+                Toast.makeText(getContext(), "Your device is not supporting any calling feature", Toast.LENGTH_SHORT).show();
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 }

@@ -9,12 +9,12 @@ import android.view.MenuItem;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.signity.shopkeeperapp.R;
+import com.signity.shopkeeperapp.base.BaseActivity;
 import com.signity.shopkeeperapp.dashboard.DashboardActivity;
 import com.signity.shopkeeperapp.model.stores.StoresResponse;
 import com.signity.shopkeeperapp.model.verify.StoreResponse;
@@ -33,7 +33,7 @@ import retrofit.Callback;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
 
-public class StoresActivity extends AppCompatActivity implements StoresAdapter.StoresAdapterListener {
+public class StoresActivity extends BaseActivity implements StoresAdapter.StoresAdapterListener {
 
     public static final String STORES_LIST = "STORES_LIST";
     private static final String TAG = "StoresActivity";
@@ -109,6 +109,10 @@ public class StoresActivity extends AppCompatActivity implements StoresAdapter.S
             @Override
             public void success(StoresResponse mobResponse, Response response) {
 
+                if (isDestroyed()) {
+                    return;
+                }
+
                 ProgressDialogUtil.hideProgressDialog();
 
                 if (mobResponse.getSuccess()) {
@@ -123,6 +127,9 @@ public class StoresActivity extends AppCompatActivity implements StoresAdapter.S
 
             @Override
             public void failure(RetrofitError error) {
+                if (isDestroyed()) {
+                    return;
+                }
                 ProgressDialogUtil.hideProgressDialog();
                 Toast.makeText(StoresActivity.this, "Network is unreachable", Toast.LENGTH_SHORT).show();
             }

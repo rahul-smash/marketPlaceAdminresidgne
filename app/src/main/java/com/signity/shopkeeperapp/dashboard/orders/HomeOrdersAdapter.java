@@ -17,18 +17,20 @@ import com.signity.shopkeeperapp.util.Util;
 import com.signity.shopkeeperapp.util.prefs.AppPreference;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 
 public class HomeOrdersAdapter extends RecyclerView.Adapter<HomeOrdersAdapter.ViewHolder> {
 
     private static final String TAG = "HomeOrdersAdapter";
     private Context context;
-    private List<OrdersListModel> ordersListModels = new ArrayList<>();
-    private HomeOrdersAdapter.OrderType orderTypeFilter = HomeOrdersAdapter.OrderType.ALL;
     private OrdersListener listener;
     private int totalOrders;
     private boolean showLoading = true;
+    private Map<Integer, List<OrdersListModel>> pageOrdersMap = new HashMap<>();
+    private List<OrdersListModel> ordersListModels = new ArrayList<>();
 
     public HomeOrdersAdapter(Context context) {
         this.context = context;
@@ -66,29 +68,37 @@ public class HomeOrdersAdapter extends RecyclerView.Adapter<HomeOrdersAdapter.Vi
     }
 
     @Override
-    public void onBindViewHolder(@NonNull final ViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull final ViewHolder holder, final int position) {
         holder.bind(position);
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (listener != null) {
-                    listener.onClickOrder(holder.getAdapterPosition());
+                    listener.onClickOrder(holder.getAdapterPosition(), ordersListModels.get(position).getPageNumber());
                 }
             }
         });
     }
 
-    public void setOrderTypeFilter(OrderType orderTypeFilter) {
-        if (this.orderTypeFilter.statusId != orderTypeFilter.statusId) {
-            clearOrdersList();
-        }
-        this.orderTypeFilter = orderTypeFilter;
-    }
-
-    public void addOrdersListModels(List<OrdersListModel> ordersListModels, int totalOrders) {
+    public void addUpdatePageWithOrders(int pageNumber, List<OrdersListModel> ordersListModels, int totalOrders) {
         this.showLoading = true;
         this.totalOrders = totalOrders;
-        this.ordersListModels.addAll(ordersListModels);
+        pageOrdersMap.put(pageNumber, ordersListModels);
+        updateOrdersData();
+        notifyDataSetChanged();
+    }
+
+    private void updateOrdersData() {
+        this.ordersListModels = new ArrayList<>();
+        for (List<OrdersListModel> ordersListModelsList : pageOrdersMap.values()) {
+            this.ordersListModels.addAll(ordersListModelsList);
+        }
+    }
+
+    public void setPageOrdersMap(Map<Integer, List<OrdersListModel>> pageOrdersMap) {
+        this.showLoading = true;
+        this.pageOrdersMap = pageOrdersMap;
+        updateOrdersData();
         notifyDataSetChanged();
     }
 
@@ -96,13 +106,8 @@ public class HomeOrdersAdapter extends RecyclerView.Adapter<HomeOrdersAdapter.Vi
         return ordersListModels;
     }
 
-    public void setOrdersListModels(List<OrdersListModel> ordersListModels) {
-        this.showLoading = true;
-        this.ordersListModels = ordersListModels;
-        notifyDataSetChanged();
-    }
-
-    public void clearOrdersList() {
+    public void clearPageMap() {
+        this.pageOrdersMap.clear();
         this.ordersListModels.clear();
         notifyDataSetChanged();
     }
@@ -123,9 +128,9 @@ public class HomeOrdersAdapter extends RecyclerView.Adapter<HomeOrdersAdapter.Vi
 
     @Override
     public int getItemCount() {
-
         if (showLoading) {
-            if (ordersListModels.isEmpty()) {
+
+            if (pageOrdersMap.isEmpty()) {
                 return 1;
             }
 
@@ -135,11 +140,6 @@ public class HomeOrdersAdapter extends RecyclerView.Adapter<HomeOrdersAdapter.Vi
         }
 
         return ordersListModels.size();
-    }
-
-    public void removeItem(int position) {
-        ordersListModels.remove(position);
-        notifyItemRemoved(position);
     }
 
     public enum OrderType {
@@ -163,15 +163,19 @@ public class HomeOrdersAdapter extends RecyclerView.Adapter<HomeOrdersAdapter.Vi
     }
 
     public interface OrdersListener {
-        void onClickOrder(int position);
+        void onClickOrder(int position, int pageNumber);
 
-        void onRejectOrder(int position);
+        void onRejectOrder(int position, int pageNumber);
 
-        void onAcceptOrder(int position);
+        void onAcceptOrder(int position, int pageNumber);
 
-        void onShipOrder(int position);
+        void onShipOrder(int position, int pageNumber);
 
-        void onDeliverOrder(int position);
+        void onDeliverOrder(int position, int pageNumber);
+
+        void onWhatsappMessage(int position);
+
+        void onCallCustomer(int position);
     }
 
     class ViewHolder extends RecyclerView.ViewHolder {
@@ -202,6 +206,24 @@ public class HomeOrdersAdapter extends RecyclerView.Adapter<HomeOrdersAdapter.Vi
             textViewPrice.setText(String.format(Locale.getDefault(), "%s", Util.getPriceWithCurrency(ordersModel.getTotal(), AppPreference.getInstance().getCurrency())));
             textViewPaymentType.setText(ordersModel.getPaymentMethod().toUpperCase());
             textViewDeliveryType.setText(ordersModel.getOrderFacility());
+
+            imageViewPhoneCall.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (listener != null) {
+                        listener.onCallCustomer(getAdapterPosition());
+                    }
+                }
+            });
+
+            imageViewWhatsapp.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (listener != null) {
+                        listener.onWhatsappMessage(getAdapterPosition());
+                    }
+                }
+            });
         }
     }
 
@@ -216,13 +238,13 @@ public class HomeOrdersAdapter extends RecyclerView.Adapter<HomeOrdersAdapter.Vi
         }
 
         @Override
-        public void bind(int position) {
+        public void bind(final int position) {
             super.bind(position);
             chipAccept.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     if (listener != null) {
-                        listener.onAcceptOrder(getAdapterPosition());
+                        listener.onAcceptOrder(getAdapterPosition(), ordersListModels.get(position).getPageNumber());
                     }
                 }
             });
@@ -230,7 +252,7 @@ public class HomeOrdersAdapter extends RecyclerView.Adapter<HomeOrdersAdapter.Vi
                 @Override
                 public void onClick(View v) {
                     if (listener != null) {
-                        listener.onRejectOrder(getAdapterPosition());
+                        listener.onRejectOrder(getAdapterPosition(), ordersListModels.get(position).getPageNumber());
                     }
                 }
             });
@@ -248,13 +270,13 @@ public class HomeOrdersAdapter extends RecyclerView.Adapter<HomeOrdersAdapter.Vi
         }
 
         @Override
-        public void bind(int position) {
+        public void bind(final int position) {
             super.bind(position);
             chipShip.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     if (listener != null) {
-                        listener.onShipOrder(getAdapterPosition());
+                        listener.onShipOrder(getAdapterPosition(), ordersListModels.get(position).getPageNumber());
                     }
                 }
             });
@@ -262,7 +284,7 @@ public class HomeOrdersAdapter extends RecyclerView.Adapter<HomeOrdersAdapter.Vi
                 @Override
                 public void onClick(View v) {
                     if (listener != null) {
-                        listener.onRejectOrder(getAdapterPosition());
+                        listener.onRejectOrder(getAdapterPosition(), ordersListModels.get(position).getPageNumber());
                     }
                 }
             });
@@ -280,13 +302,13 @@ public class HomeOrdersAdapter extends RecyclerView.Adapter<HomeOrdersAdapter.Vi
         }
 
         @Override
-        public void bind(int position) {
+        public void bind(final int position) {
             super.bind(position);
             chipDeliver.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     if (listener != null) {
-                        listener.onDeliverOrder(getAdapterPosition());
+                        listener.onDeliverOrder(getAdapterPosition(), ordersListModels.get(position).getPageNumber());
                     }
                 }
             });
@@ -294,7 +316,7 @@ public class HomeOrdersAdapter extends RecyclerView.Adapter<HomeOrdersAdapter.Vi
                 @Override
                 public void onClick(View v) {
                     if (listener != null) {
-                        listener.onRejectOrder(getAdapterPosition());
+                        listener.onRejectOrder(getAdapterPosition(), ordersListModels.get(position).getPageNumber());
                     }
                 }
             });

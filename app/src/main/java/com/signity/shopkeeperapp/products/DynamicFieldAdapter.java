@@ -125,7 +125,7 @@ public class DynamicFieldAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
                     if (!hasFocus) {
                         if (dynamicField.getValidation().equalsIgnoreCase("true")) {
                             if (TextUtils.isEmpty(textInputEditText.getText().toString().trim())) {
-                                textInputEditText.setError("Please enter value");
+                                textInputEditText.setError("Empty");
                                 return;
                             }
                         }
@@ -199,7 +199,7 @@ public class DynamicFieldAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
                     if (!hasFocus) {
                         if (dynamicField.getValidation().equalsIgnoreCase("true")) {
                             if (TextUtils.isEmpty(textInputEditText.getText().toString().trim())) {
-                                textInputEditText.setError("Please enter value");
+                                textInputEditText.setError("Empty");
                                 return;
                             }
                         }
