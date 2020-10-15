@@ -184,7 +184,7 @@ public class HomeOrdersAdapter extends RecyclerView.Adapter<HomeOrdersAdapter.Vi
             textViewOrderIdItemsTime = convertView.findViewById(R.id.tv_order_id_items_time);
             textViewName = convertView.findViewById(R.id.tv_store_name);
             textViewPaymentType = convertView.findViewById(R.id.tv_order_type);
-            textViewDeliveryType = convertView.findViewById(R.id.tv_delivery_type);
+            textViewDeliveryType = convertView.findViewById(R.id.tv_delivery_time_slot);
             imageViewWhatsapp = convertView.findViewById(R.id.iv_whatsapp);
             imageViewPhoneCall = convertView.findViewById(R.id.iv_phone_call);
         }

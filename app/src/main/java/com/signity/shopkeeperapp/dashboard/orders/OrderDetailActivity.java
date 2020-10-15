@@ -11,12 +11,14 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -36,7 +38,6 @@ import com.signity.shopkeeperapp.util.prefs.AppPreference;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Locale;
 import java.util.Map;
 
 import retrofit.Callback;
@@ -48,7 +49,7 @@ import static android.content.Intent.ACTION_DIAL;
 public class OrderDetailActivity extends AppCompatActivity implements OrderDetailsAdpater.OrderDetailListener, HomeOrdersAdapter.OrdersListener {
 
     public static final String ORDER_OBJECT = "OrderObject";
-    private TextView textViewTotalPrice, textViewPayableAmount, textViewCartSavings, textViewOrderedBy, textViewDateTime, textViewDeliveryType, textViewNote, textViewItemsCount;
+    private TextView textViewTotalPrice, textViewPayableAmount, textViewCartSavings, textViewAddress, textViewDateTime, textViewDeliveryTimeSlot, textViewNote;
     private RecyclerView recyclerView1;
     private OrderDetailsAdpater orderDetailsAdpater;
     private OrdersListModel ordersListModel;
@@ -56,10 +57,16 @@ public class OrderDetailActivity extends AppCompatActivity implements OrderDetai
     private TextView textViewDeliveryCharges;
     private TextView textViewCouponDiscount;
     private TextView textViewMrpDiscount;
-    private TextView textViewPaymentMode;
     private String orderId;
     private RecyclerView recyclerViewOrders;
     private HomeOrdersAdapter ordersAdapter;
+    private TextView textViewCustomerName;
+    private TextView textViewCustomerNumber;
+    private LinearLayout linearLayoutDeliveryDetail;
+    private ConstraintLayout constraintLayoutPaymentDetail;
+    private TextView textViewCouponCode;
+    private LinearLayout linearLayoutDiscountCoupon;
+    private LinearLayout linearLayoutNote;
 
     public static Intent getStartIntent(Context context) {
         return new Intent(context, OrderDetailActivity.class);
@@ -78,7 +85,6 @@ public class OrderDetailActivity extends AppCompatActivity implements OrderDetai
         getExtra();
         initView();
         setUpToolbar();
-        setOrderDetails();
         setUpAdapter();
         getOrderDetail();
     }
@@ -106,7 +112,10 @@ public class OrderDetailActivity extends AppCompatActivity implements OrderDetai
                         if (getValues.getData().getOrders().size() > 0) {
                             ordersListModel = getValues.getData().getOrders().get(0);
                             setOrderDetails();
-                            orderDetailsAdpater.setItemListModels(ordersListModel.getItems());
+                            linearLayoutDeliveryDetail.setVisibility(View.VISIBLE);
+                            constraintLayoutPaymentDetail.setVisibility(View.VISIBLE);
+                            boolean val = ordersListModel.getStatus().equals("0");
+                            orderDetailsAdpater.setItemListModels(ordersListModel.getItems(), val);
 
                             List<OrdersListModel> ordersListModels = new ArrayList<>();
                             ordersListModels.add(ordersListModel);
@@ -143,8 +152,7 @@ public class OrderDetailActivity extends AppCompatActivity implements OrderDetai
     }
 
     private void setUpAdapter() {
-        boolean val = ordersListModel.getStatus().equals("0");
-        orderDetailsAdpater = new OrderDetailsAdpater(this, ordersListModel.getItems(), val);
+        orderDetailsAdpater = new OrderDetailsAdpater(this);
         orderDetailsAdpater.setListener(this);
         recyclerView1.setLayoutManager(new LinearLayoutManager(this));
         recyclerView1.setAdapter(orderDetailsAdpater);
@@ -156,19 +164,33 @@ public class OrderDetailActivity extends AppCompatActivity implements OrderDetai
     }
 
     public void setOrderDetails() {
-        if (ordersListModel.getItems() != null) {
-            textViewItemsCount.setText(String.format(Locale.getDefault(), "%d %s", ordersListModel.getItems().size(), ordersListModel.getItems().size() > 1 ? "items" : "item"));
+
+        textViewCustomerName.setText(ordersListModel.getCustomerName());
+        textViewAddress.setText(ordersListModel.getAddress());
+        textViewCustomerNumber.setText(ordersListModel.getPhone());
+        textViewDateTime.setText(ordersListModel.getTime());
+
+        if (!TextUtils.isEmpty(ordersListModel.getNote())) {
+            linearLayoutNote.setVisibility(View.VISIBLE);
+            textViewNote.setText(ordersListModel.getNote());
         }
 
-        textViewPaymentMode.setText(ordersListModel.getPaymentMethod().toUpperCase());
-        textViewDateTime.setText(ordersListModel.getTime());
-        textViewOrderedBy.setText(String.format("%s, %s", ordersListModel.getCustomerName(), ordersListModel.getAddress()));
-        textViewNote.setText(ordersListModel.getNote());
-        textViewDeliveryType.setText(ordersListModel.getOrderFacility());
+        if (!TextUtils.isEmpty(ordersListModel.getDeliveryTimeSlot())) {
+            try {
+                String[] timeSlot = ordersListModel.getDeliveryTimeSlot().split(" ", 2);
+                textViewDeliveryTimeSlot.setText(timeSlot[1]);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
 
-        textViewTotalPrice.setText(Util.getPriceWithCurrency(ordersListModel.getTotal(), AppPreference.getInstance().getCurrency()));
-        textViewMrpDiscount.setText(Util.getPriceWithCurrency(ordersListModel.getDiscount(), AppPreference.getInstance().getCurrency()));
-        textViewCouponDiscount.setText(Util.getPriceWithCurrency(0, AppPreference.getInstance().getCurrency()));
+        if (ordersListModel.getDiscount() != 0) {
+            linearLayoutDiscountCoupon.setVisibility(View.VISIBLE);
+            textViewCouponCode.setText(String.format("Coupon Applied(%s)", ordersListModel.getCouponCode().toUpperCase()));
+        }
+        textViewTotalPrice.setText(Util.getPriceWithCurrency(ordersListModel.getCheckout(), AppPreference.getInstance().getCurrency()));
+        textViewMrpDiscount.setText(Util.getPriceWithCurrency(0, AppPreference.getInstance().getCurrency()));
+        textViewCouponDiscount.setText(Util.getPriceWithCurrency(ordersListModel.getDiscount(), AppPreference.getInstance().getCurrency()));
         textViewDeliveryCharges.setText(Util.getPriceWithCurrency(ordersListModel.getShippingCharges(), AppPreference.getInstance().getCurrency()));
         textViewPayableAmount.setText(Util.getPriceWithCurrency(ordersListModel.getTotal(), AppPreference.getInstance().getCurrency()));
         textViewCartSavings.setText(String.format("Cart Savings: %s", Util.getPriceWithCurrency(ordersListModel.getDiscount(), AppPreference.getInstance().getCurrency())));
@@ -180,16 +202,28 @@ public class OrderDetailActivity extends AppCompatActivity implements OrderDetai
         textViewTotalPrice = (TextView) findViewById(R.id.tv_total_price);
         textViewPayableAmount = (TextView) findViewById(R.id.tv_payable_amount);
         textViewCartSavings = (TextView) findViewById(R.id.tv_cart_saving);
-        textViewOrderedBy = (TextView) findViewById(R.id.tv_ordered_by);
+        textViewAddress = (TextView) findViewById(R.id.tv_address);
+        textViewCustomerName = (TextView) findViewById(R.id.tv_customer_name);
+        textViewCustomerNumber = (TextView) findViewById(R.id.tv_customer_number);
         textViewDateTime = (TextView) findViewById(R.id.tv_order_date_time);
-        textViewDeliveryType = (TextView) findViewById(R.id.tv_delivery_type);
+        textViewDeliveryTimeSlot = (TextView) findViewById(R.id.tv_delivery_time_slot);
         textViewNote = (TextView) findViewById(R.id.tv_note);
-        textViewItemsCount = (TextView) findViewById(R.id.tv_items_count);
+        linearLayoutNote = findViewById(R.id.ll_note);
         textViewDeliveryCharges = (TextView) findViewById(R.id.tv_delivery_amount);
         textViewCouponDiscount = (TextView) findViewById(R.id.tv_coupon_discount);
         textViewMrpDiscount = (TextView) findViewById(R.id.tv_mpr_discount);
-        textViewPaymentMode = (TextView) findViewById(R.id.tv_payment_mode);
         recyclerViewOrders = findViewById(R.id.rv_orders);
+        linearLayoutDeliveryDetail = findViewById(R.id.ll_delivery_detail);
+        constraintLayoutPaymentDetail = findViewById(R.id.const_payment_details);
+        textViewCouponCode = findViewById(R.id.tv_coupon_code);
+        linearLayoutDiscountCoupon = findViewById(R.id.ll_discount_coupon);
+
+        findViewById(R.id.ll_guide_me).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                openMap();
+            }
+        });
     }
 
     private void openMap() {
@@ -268,7 +302,8 @@ public class OrderDetailActivity extends AppCompatActivity implements OrderDetai
                     if (ordersListModelTemp != null) {
                         ordersListModel = ordersListModelTemp;
                         setOrderDetails();
-                        orderDetailsAdpater.setItemListModels(ordersListModel.getItems());
+                        boolean val = ordersListModel.getStatus().equals("0");
+                        orderDetailsAdpater.setItemListModels(ordersListModel.getItems(), val);
                     }
                 }
             }
@@ -301,10 +336,6 @@ public class OrderDetailActivity extends AppCompatActivity implements OrderDetai
 
         if (item.getItemId() == android.R.id.home) {
             finish();
-        }
-
-        if (item.getItemId() == R.id.action_guide) {
-            openMap();
         }
 
         return super.onOptionsItemSelected(item);

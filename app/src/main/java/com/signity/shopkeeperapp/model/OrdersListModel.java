@@ -82,6 +82,17 @@ public class OrdersListModel implements Serializable {
     @SerializedName("order_facility")
     @Expose
     private String orderFacility;
+    @SerializedName("delivery_time_slot")
+    @Expose
+    private String deliveryTimeSlot;
+
+    public String getDeliveryTimeSlot() {
+        return deliveryTimeSlot;
+    }
+
+    public void setDeliveryTimeSlot(String deliveryTimeSlot) {
+        this.deliveryTimeSlot = deliveryTimeSlot;
+    }
 
     public String getOrderFacility() {
         return orderFacility;

@@ -10,6 +10,7 @@ import java.io.Serializable;
  */
 public class ItemListModel implements Serializable {
 
+    public boolean isChecked = true;
     @SerializedName("cart_id")
     @Expose
     private String itemId;
@@ -34,7 +35,6 @@ public class ItemListModel implements Serializable {
     @SerializedName("status")
     @Expose
     private String status;
-
     @SerializedName("image")
     @Expose
     private String image;
@@ -50,10 +50,19 @@ public class ItemListModel implements Serializable {
     @SerializedName("price")
     @Expose
     private Double price;
+    @SerializedName("comment")
+    @Expose
+    private String comment;
 
-
+    public String getComment() {
+        return comment;
+    }
 
     /*Getter setter start here*/
+
+    public void setComment(String comment) {
+        this.comment = comment;
+    }
 
     public String getItemId() {
         return itemId;
@@ -62,9 +71,6 @@ public class ItemListModel implements Serializable {
     public void setItemId(String itemId) {
         this.itemId = itemId;
     }
-
-    public boolean isChecked = true;
-
 
     public String getImage() {
         return image;

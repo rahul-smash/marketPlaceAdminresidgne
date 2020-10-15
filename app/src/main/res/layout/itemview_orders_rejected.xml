@@ -142,7 +142,7 @@
         app:layout_constraintStart_toStartOf="parent">
 
         <TextView
-            android:id="@+id/tv_delivery_type"
+            android:id="@+id/tv_delivery_time_slot"
             style="@style/AppTheme.TextView.Tiny"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

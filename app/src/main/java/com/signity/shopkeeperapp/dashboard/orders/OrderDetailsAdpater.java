@@ -6,6 +6,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.Switch;
 import android.widget.TextView;
 
@@ -19,24 +20,24 @@ import com.signity.shopkeeperapp.util.Util;
 import com.signity.shopkeeperapp.util.prefs.AppPreference;
 import com.squareup.picasso.Picasso;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
 public class OrderDetailsAdpater extends RecyclerView.Adapter<OrderDetailsAdpater.MyViewHolder> {
 
     private static final String TAG = "OrderDetaislAdpater";
-    private final boolean canChange;
+    private boolean canChange;
     private OrderDetailListener listener;
     private Context context;
-    private List<ItemListModel> itemListModels;
+    private List<ItemListModel> itemListModels = new ArrayList<>();
 
-    public OrderDetailsAdpater(Context context, List<ItemListModel> listOrder, boolean val) {
+    public OrderDetailsAdpater(Context context) {
         this.context = context;
-        this.itemListModels = listOrder;
-        this.canChange = val;
     }
 
-    public void setItemListModels(List<ItemListModel> itemListModels) {
+    public void setItemListModels(List<ItemListModel> itemListModels, boolean canChange) {
+        this.canChange = canChange;
         this.itemListModels = itemListModels;
         notifyDataSetChanged();
     }
@@ -68,6 +69,10 @@ public class OrderDetailsAdpater extends RecyclerView.Adapter<OrderDetailsAdpate
                 }
             }
         });
+        if (!TextUtils.isEmpty(itemListModel.getComment())) {
+            holder.linearLayoutItemComment.setVisibility(View.VISIBLE);
+            holder.textViewItemComment.setText(itemListModel.getComment());
+        }
 
         holder.switchItem.setEnabled(canChange);
 
@@ -97,6 +102,8 @@ public class OrderDetailsAdpater extends RecyclerView.Adapter<OrderDetailsAdpate
 
     static class MyViewHolder extends RecyclerView.ViewHolder {
 
+        LinearLayout linearLayoutItemComment;
+        TextView textViewItemComment;
         TextView textViewItemName, textViewQuantity, textViewWeight, textViewTotal, textViewStatus, textViewProductPrice;
         ImageView imageViewItem;
         Switch switchItem;
@@ -105,6 +112,8 @@ public class OrderDetailsAdpater extends RecyclerView.Adapter<OrderDetailsAdpate
             super(convertView);
             imageViewItem = convertView.findViewById(R.id.iv_product_image);
             textViewItemName = convertView.findViewById(R.id.tv_product_name);
+            textViewItemComment = convertView.findViewById(R.id.tv_item_comment);
+            linearLayoutItemComment = convertView.findViewById(R.id.ll_item_comment);
             textViewQuantity = convertView.findViewById(R.id.tv_product_quantity);
             textViewWeight = convertView.findViewById(R.id.tv_product_weight);
             textViewTotal = convertView.findViewById(R.id.tv_product_total);
