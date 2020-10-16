@@ -44,6 +44,11 @@ public class CategoriesAdapter extends RecyclerView.Adapter<CategoriesAdapter.My
         notifyDataSetChanged();
     }
 
+    public void clearData() {
+        this.categoryDataList.clear();
+        notifyDataSetChanged();
+    }
+
     @NonNull
     @Override
     public MyViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {

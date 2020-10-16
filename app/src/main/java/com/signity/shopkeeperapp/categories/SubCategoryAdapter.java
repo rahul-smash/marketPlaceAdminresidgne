@@ -93,27 +93,34 @@ public class SubCategoryAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
         TextInputEditText textInputEditTextSubCategoryName;
         LinearLayout linearLayoutAddImage;
         ImageView imageViewSubCategoryImage;
+        ImageView imageViewDeleteImage;
 
         public SubCategoryViewHolder(final View view) {
             super(view);
             linearLayoutAddImage = view.findViewById(R.id.ll_add_sub_category_image);
             imageViewSubCategoryImage = view.findViewById(R.id.iv_sub_category);
             textInputEditTextSubCategoryName = view.findViewById(R.id.edt_sub_category_name);
+            imageViewDeleteImage = view.findViewById(R.id.iv_cancel);
         }
 
-        public void bind(int position) {
+        public void bind(final int position) {
 
             final SubCategoryModel subCategory = subCategoryModels.get(position);
 
             try {
                 String categoryImageUrl = subCategory.getSubCategoryImageUrl();
                 if (!TextUtils.isEmpty(categoryImageUrl)) {
+                    imageViewDeleteImage.setVisibility(View.VISIBLE);
                     imageViewSubCategoryImage.setVisibility(View.VISIBLE);
                     linearLayoutAddImage.setVisibility(View.INVISIBLE);
                     Picasso.with(context)
                             .load(categoryImageUrl)
                             .placeholder(ResourcesCompat.getDrawable(context.getResources(), R.drawable.addimageicon, null))
                             .into(imageViewSubCategoryImage);
+                } else {
+                    imageViewDeleteImage.setVisibility(View.GONE);
+                    imageViewSubCategoryImage.setVisibility(View.GONE);
+                    linearLayoutAddImage.setVisibility(View.VISIBLE);
                 }
             } catch (Exception e) {
                 e.printStackTrace();
@@ -156,6 +163,15 @@ public class SubCategoryAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
                         subCategory.setSubCategoryName(subCatName);
                     }
                     return false;
+                }
+            });
+
+            imageViewDeleteImage.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    subCategory.setSubCategoryImageUrl(null);
+                    subCategory.setSubCategoryImage(null);
+                    notifyItemChanged(getAdapterPosition(), subCategory);
                 }
             });
 

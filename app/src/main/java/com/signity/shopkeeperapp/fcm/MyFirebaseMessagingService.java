@@ -84,6 +84,8 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
         }
 
         try {
+            int notificationCount = AppPreference.getInstance().getNotificationCount() + 1;
+            AppPreference.getInstance().setNotificationCount(notificationCount);
             sendNotification(title, message);
         } catch (Exception e) {
             e.printStackTrace();

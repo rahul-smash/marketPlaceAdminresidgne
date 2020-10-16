@@ -241,10 +241,6 @@ public class OrderDetailActivity extends BaseActivity implements OrderDetailsAdp
 
     private void openMap() {
 
-        if (!ordersListModel.getOrderFacility().equalsIgnoreCase("Delivery")) {
-            return;
-        }
-
         String lat = ordersListModel.getDestinationuser_lat();
         String lon = ordersListModel.getDestinationuser_lng();
 

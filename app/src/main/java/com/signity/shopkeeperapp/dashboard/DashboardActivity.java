@@ -28,18 +28,25 @@ import com.google.android.material.badge.BadgeDrawable;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.signity.shopkeeperapp.BuildConfig;
 import com.signity.shopkeeperapp.R;
+import com.signity.shopkeeperapp.SplashActivity;
 import com.signity.shopkeeperapp.base.BaseActivity;
 import com.signity.shopkeeperapp.dashboard.Products.ProductFragment;
 import com.signity.shopkeeperapp.dashboard.account.AccountFragment;
 import com.signity.shopkeeperapp.dashboard.categories.CategoriesFragment;
 import com.signity.shopkeeperapp.dashboard.home.HomeFragment;
 import com.signity.shopkeeperapp.dashboard.orders.OrdersFragment;
+import com.signity.shopkeeperapp.model.LoginModel;
 import com.signity.shopkeeperapp.model.ModelForceUpdate;
 import com.signity.shopkeeperapp.model.ResponseForceUpdate;
 import com.signity.shopkeeperapp.network.NetworkAdaper;
 import com.signity.shopkeeperapp.stores.StoresActivity;
+import com.signity.shopkeeperapp.util.AnimUtil;
 import com.signity.shopkeeperapp.util.DialogHandler;
+import com.signity.shopkeeperapp.util.ProgressDialogUtil;
 import com.signity.shopkeeperapp.util.prefs.AppPreference;
+
+import java.util.HashMap;
+import java.util.Map;
 
 import retrofit.Callback;
 import retrofit.RetrofitError;
@@ -59,6 +66,7 @@ public class DashboardActivity extends BaseActivity implements BottomNavigationV
     private NavDrawerAdapter navDrawerAdapter;
     private ListView listViewNavigation;
     private int navSelectedId;
+    private TextView textViewLogout;
 
     public static Intent getStartIntent(Context context) {
         return new Intent(context, DashboardActivity.class);
@@ -95,6 +103,14 @@ public class DashboardActivity extends BaseActivity implements BottomNavigationV
         listViewNavigation = findViewById(R.id.lv_navigation);
         textViewNavigationTitle = findViewById(R.id.tv_store_name_nav);
         textViewAppVersion = findViewById(R.id.tv_app_version);
+        textViewLogout = findViewById(R.id.tv_logout_title);
+
+        textViewLogout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                callLogOutApi();
+            }
+        });
     }
 
     private void createOrdersBadge(int count) {
@@ -120,7 +136,6 @@ public class DashboardActivity extends BaseActivity implements BottomNavigationV
     }
 
     private void setUpBottomNavigation() {
-//        createOrdersBadge();
         bottomNavigationView.setItemIconTintList(null);
         bottomNavigationView.setItemHorizontalTranslationEnabled(false);
         bottomNavigationView.setOnNavigationItemSelectedListener(this);
@@ -367,5 +382,34 @@ public class DashboardActivity extends BaseActivity implements BottomNavigationV
         } catch (android.content.ActivityNotFoundException anfe) {
             startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("http://play.google.com/store/apps/details?id=" + appPackageName)));
         }
+    }
+
+    private void callLogOutApi() {
+        ProgressDialogUtil.showProgressDialog(this);
+
+        Map<String, String> param = new HashMap<String, String>();
+        param.put("login_id", AppPreference.getInstance().getUserMobile());
+        param.put("type", "phone");
+
+        NetworkAdaper.getNetworkServices().logout(param, new Callback<LoginModel>() {
+            @Override
+            public void success(LoginModel loginModel, Response response) {
+
+                if (isDestroyed()) {
+                    return;
+                }
+
+                ProgressDialogUtil.hideProgressDialog();
+                AppPreference.getInstance().clearAll();
+                startActivity(SplashActivity.getIntent(DashboardActivity.this));
+                AnimUtil.slideFromLeftAnim(DashboardActivity.this);
+                finish();
+            }
+
+            @Override
+            public void failure(RetrofitError error) {
+                ProgressDialogUtil.hideProgressDialog();
+            }
+        });
     }
 }

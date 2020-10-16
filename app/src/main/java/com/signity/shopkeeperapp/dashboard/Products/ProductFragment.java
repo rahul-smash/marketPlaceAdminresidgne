@@ -149,7 +149,7 @@ public class ProductFragment extends Fragment implements View.OnClickListener, P
         searchView.setOnCloseListener(new SearchView.OnCloseListener() {
             @Override
             public boolean onClose() {
-                productsAdapter.setmData(productData, totalOrders);
+                productsAdapter.setmData(productData, totalOrders, true);
                 return false;
             }
         });
@@ -169,7 +169,7 @@ public class ProductFragment extends Fragment implements View.OnClickListener, P
             }
         }
 
-        productsAdapter.setmData(newFilterProducts, newFilterProducts.size());
+        productsAdapter.setmData(newFilterProducts, newFilterProducts.size(), false);
     }
 
     @Override
@@ -295,7 +295,7 @@ public class ProductFragment extends Fragment implements View.OnClickListener, P
                     start += pageSize;
                     totalOrders = getProductResponse.getTotal();
                     if (getProductResponse.getData() != null) {
-                        productsAdapter.setmData(getProductResponse.getData(), totalOrders);
+                        productsAdapter.setmData(getProductResponse.getData(), totalOrders, true);
                     } else {
                         Toast.makeText(getActivity(), "Data not Found!", Toast.LENGTH_SHORT).show();
                     }

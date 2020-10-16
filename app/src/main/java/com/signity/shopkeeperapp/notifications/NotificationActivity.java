@@ -20,6 +20,7 @@ import com.signity.shopkeeperapp.util.AnimUtil;
 import com.signity.shopkeeperapp.util.DialogUtils;
 import com.signity.shopkeeperapp.util.ProgressDialogUtil;
 import com.signity.shopkeeperapp.util.Util;
+import com.signity.shopkeeperapp.util.prefs.AppPreference;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -72,6 +73,7 @@ public class NotificationActivity extends BaseActivity implements NotificationAd
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_notification);
+        AppPreference.getInstance().setNotificationCount(0);
         initViews();
         setUpToolbar();
         setUpAdapter();

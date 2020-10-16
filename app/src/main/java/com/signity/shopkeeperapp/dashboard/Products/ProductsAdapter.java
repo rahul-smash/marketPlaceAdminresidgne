@@ -49,8 +49,8 @@ public class ProductsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
         return mData;
     }
 
-    public void setmData(List<GetProductData> mData, int totalOrders) {
-        this.showLoading = true;
+    public void setmData(List<GetProductData> mData, int totalOrders,boolean showLoading) {
+        this.showLoading = showLoading;
         this.totalOrders = totalOrders;
         this.mData = mData;
         notifyDataSetChanged();

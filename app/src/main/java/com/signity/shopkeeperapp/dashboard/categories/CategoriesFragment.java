@@ -162,7 +162,6 @@ public class CategoriesFragment extends Fragment implements CategoriesAdapter.Ca
         super.onViewCreated(view, savedInstanceState);
         setHasOptionsMenu(true);
         initView(view);
-        getAllOrdersMethod();
     }
 
     public void getAllOrdersMethod() {
@@ -178,6 +177,10 @@ public class CategoriesFragment extends Fragment implements CategoriesAdapter.Ca
     @Override
     public void onResume() {
         super.onResume();
+        currentPageNumber = 1;
+        start = 0;
+        categoriesAdapter.clearData();
+        getAllOrdersMethod();
     }
 
     public void getCategoriesApi() {

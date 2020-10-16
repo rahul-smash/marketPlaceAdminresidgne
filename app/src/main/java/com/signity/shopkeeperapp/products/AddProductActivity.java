@@ -371,7 +371,7 @@ public class AddProductActivity extends BaseActivity implements SubCategoryDialo
         linearLayoutImage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (imagesAdapter.getItemCount() < 6) {
+                if (imagesAdapter.getItemCount() < 4) {
                     getGalleryImage();
                 } else {
                     Toast.makeText(AddProductActivity.this, "Max 6 image allowded", Toast.LENGTH_SHORT).show();

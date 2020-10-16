@@ -61,10 +61,12 @@ public class ImagesAdapter extends RecyclerView.Adapter<ImagesAdapter.ViewHolder
     public class ViewHolder extends RecyclerView.ViewHolder {
 
         ImageView imageView;
+        ImageView imageViewDeleteImage;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
             imageView = itemView.findViewById(R.id.iv_product_image);
+            imageViewDeleteImage = itemView.findViewById(R.id.iv_cancel);
         }
 
         public void bind(int positon) {
@@ -77,6 +79,14 @@ public class ImagesAdapter extends RecyclerView.Adapter<ImagesAdapter.ViewHolder
                         .placeholder(ResourcesCompat.getDrawable(context.getResources(), R.drawable.addimageicon, null))
                         .into(imageView);
             }
+
+            imageViewDeleteImage.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    imageList.remove(getAdapterPosition());
+                    notifyItemRemoved(getAdapterPosition());
+                }
+            });
         }
     }
 }

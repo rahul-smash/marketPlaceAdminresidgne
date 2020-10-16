@@ -1,5 +1,7 @@
 package com.signity.shopkeeperapp;
 
+import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 
@@ -30,6 +32,10 @@ public class SplashActivity extends AppCompatActivity {
 
     private static final String TAG = "SplashActivity";
     private static final int SPLASH_TIME_OUT = 1000;
+
+    public static Intent getIntent(Context context) {
+        return new Intent(context, SplashActivity.class);
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

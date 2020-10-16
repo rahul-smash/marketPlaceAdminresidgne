@@ -79,12 +79,25 @@
             android:layout_height="80dp"
             android:adjustViewBounds="true"
             android:scaleType="fitCenter"
-            android:src="@mipmap/ic_launcher"
+            android:src="@drawable/addimageicon"
             android:visibility="gone"
             app:layout_constraintBottom_toBottomOf="@+id/ll_add_category_image"
             app:layout_constraintEnd_toEndOf="@+id/ll_add_category_image"
-            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintStart_toStartOf="@+id/ll_add_category_image"
             app:layout_constraintTop_toTopOf="@+id/ll_add_category_image" />
+
+        <ImageView
+            android:id="@+id/iv_cancel"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:background="@drawable/shape_grey_dark_rounded_alpha"
+            android:src="@drawable/rejecticon"
+            android:visibility="gone"
+            app:layout_constraintBottom_toBottomOf="@+id/ll_add_category_image"
+            app:layout_constraintEnd_toEndOf="@+id/ll_add_category_image"
+            app:layout_constraintStart_toStartOf="@+id/ll_add_category_image"
+            app:layout_constraintTop_toTopOf="@+id/ll_add_category_image"
+            app:tint="@color/colorTextDark" />
 
         <com.google.android.material.textfield.TextInputLayout
             style="@style/Widget.Design.TextInputLayout"

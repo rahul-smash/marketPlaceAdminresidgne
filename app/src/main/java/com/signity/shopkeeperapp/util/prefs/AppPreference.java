@@ -185,4 +185,12 @@ public class AppPreference {
     public void clearAll() {
         mPrefs.edit().clear().apply();
     }
+
+    public int getNotificationCount() {
+        return mPrefs.getInt(PrefConstants.PREF_KEY_NOTIFICATION_COUNT, 0);
+    }
+
+    public void setNotificationCount(int count) {
+        mPrefs.edit().putInt(PrefConstants.PREF_KEY_NOTIFICATION_COUNT, count).apply();
+    }
 }

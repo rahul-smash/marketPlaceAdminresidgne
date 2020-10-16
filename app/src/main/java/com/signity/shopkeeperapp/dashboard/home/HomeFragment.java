@@ -145,6 +145,8 @@ public class HomeFragment extends Fragment implements HomeContentAdapter.HomeCon
         setUpStoreData();
         storeDashboard();
         getOrders();
+        notificationCount = AppPreference.getInstance().getNotificationCount();
+        setUpBadge();
     }
 
     public void getOrders() {

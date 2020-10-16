@@ -72,6 +72,7 @@ public class AddCategoryActivity extends BaseActivity implements SubCategoryAdap
     private ImageUploadType imageUploadType = ImageUploadType.CATEGORY;
     private int position;
     private LinearLayout linearLayoutNext;
+    private ImageView imageViewDeleteImage;
 
     public static Intent getStartIntent(Context context) {
         return new Intent(context, AddCategoryActivity.class);
@@ -105,6 +106,7 @@ public class AddCategoryActivity extends BaseActivity implements SubCategoryAdap
         recyclerViewSubCategory = findViewById(R.id.rv_add_sub_category);
         textInputEditTextCategoryName = findViewById(R.id.edt_category_name);
         imageViewCategory = findViewById(R.id.iv_category);
+        imageViewDeleteImage = findViewById(R.id.iv_cancel);
         linearLayoutAddCategoryImage = findViewById(R.id.ll_add_category_image);
         toolbar = findViewById(R.id.toolbar);
         linearLayoutNext = findViewById(R.id.ll_next);
@@ -121,6 +123,17 @@ public class AddCategoryActivity extends BaseActivity implements SubCategoryAdap
             @Override
             public void onClick(View v) {
                 saveCategory();
+            }
+        });
+
+        imageViewDeleteImage.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                categoryImageUrl = null;
+                imageViewCategory.setVisibility(View.GONE);
+                imageViewDeleteImage.setVisibility(View.GONE);
+                imageViewCategory.setImageDrawable(ResourcesCompat.getDrawable(getResources(), R.drawable.addimageicon, null));
+                linearLayoutAddCategoryImage.setVisibility(View.VISIBLE);
             }
         });
     }
@@ -273,6 +286,7 @@ public class AddCategoryActivity extends BaseActivity implements SubCategoryAdap
                     switch (imageUploadType) {
                         case CATEGORY:
                             if (imageViewCategory != null) {
+                                imageViewDeleteImage.setVisibility(View.VISIBLE);
                                 imageViewCategory.setVisibility(View.VISIBLE);
                                 linearLayoutAddCategoryImage.setVisibility(View.INVISIBLE);
                                 Picasso.with(AddCategoryActivity.this)

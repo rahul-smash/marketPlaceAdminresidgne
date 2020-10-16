@@ -111,7 +111,7 @@
 
             <com.google.android.material.chip.Chip
                 android:id="@+id/chip_deliver"
-                style="@style/AppTheme.Chip.Small.Accept"
+                style="@style/AppTheme.Chip.Small.Deliver"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Delivered"

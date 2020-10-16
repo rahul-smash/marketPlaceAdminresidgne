@@ -11,6 +11,7 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
@@ -179,8 +180,9 @@ public class DynamicFieldAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
                 @Override
                 public void onFocusChange(View v, boolean hasFocus) {
 
-                    if (textInputEditText.getTag().toString().equalsIgnoreCase("price")) {
-                        if (hasFocus) {
+                    if (hasFocus) {
+                        if (textInputEditText.getTag().toString().equalsIgnoreCase("price")) {
+
                             String mrp = fieldMap.get("mrp_price");
                             String discount = fieldMap.get("discount");
 
@@ -219,6 +221,27 @@ public class DynamicFieldAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
                     if (TextUtils.isEmpty(s)) {
                         return;
                     }
+
+                    // TODO - Stock issue to be fixed
+                    if (textInputEditText.getTag().toString().equalsIgnoreCase("custom_field2")) {
+
+                        String stockValue = fieldMap.get("custom_field1");
+
+                        if (TextUtils.isEmpty(stockValue)) {
+                            Toast.makeText(context, "Please add Stock", Toast.LENGTH_SHORT).show();
+                            return;
+                        }
+
+                        int stock = Integer.parseInt(stockValue);
+                        int minStock = Integer.parseInt(s.toString());
+
+                        if (minStock >= stock) {
+                            Toast.makeText(context, "Min stock value required", Toast.LENGTH_SHORT).show();
+                            return;
+                        }
+
+                    }
+
                     fieldMap.put(textInputEditText.getTag().toString(), s.toString());
                 }
 
