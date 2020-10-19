@@ -224,7 +224,7 @@ public class HomeFragment extends Fragment implements HomeContentAdapter.HomeCon
 
                     homeContentAdapter.setUpData(storeDashboardResponse.getData());
                     if (listener != null) {
-                        listener.onUpdateOrdersCount(storeDashboardResponse.getData().getTotalOrders());
+                        listener.onUpdateOrdersCount(storeDashboardResponse.getData().getActiveOrders());
                     }
                 } else {
                     Toast.makeText(getContext(), storeDashboardResponse.getMessage(), Toast.LENGTH_SHORT).show();

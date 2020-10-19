@@ -4,7 +4,10 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.graphics.drawable.ColorDrawable;
+import android.graphics.drawable.Drawable;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Parcelable;
 import android.text.InputType;
@@ -24,6 +27,7 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.widget.SearchView;
+import androidx.core.content.FileProvider;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -46,7 +50,12 @@ import com.signity.shopkeeperapp.util.DialogUtils;
 import com.signity.shopkeeperapp.util.ProgressDialogUtil;
 import com.signity.shopkeeperapp.util.Util;
 import com.signity.shopkeeperapp.util.prefs.AppPreference;
+import com.squareup.picasso.Picasso;
+import com.squareup.picasso.Target;
 
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -560,11 +569,13 @@ public class ProductFragment extends Fragment implements View.OnClickListener, P
 
     }
 
-    private void shareIntent(String extra, String shareTitle) {
+    private void shareIntent(String extra, String shareTitle, Uri uri) {
         Intent sendIntent = new Intent();
         sendIntent.setAction(Intent.ACTION_SEND);
         sendIntent.putExtra(Intent.EXTRA_TEXT, extra);
-        sendIntent.setType("text/plain");
+        sendIntent.putExtra(Intent.EXTRA_STREAM, uri);
+        sendIntent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+        sendIntent.setType("*/*");
 
         Intent shareIntent = Intent.createChooser(sendIntent, shareTitle);
         startActivity(shareIntent);
@@ -576,16 +587,65 @@ public class ProductFragment extends Fragment implements View.OnClickListener, P
     }
 
     @Override
-    public void onClickShareProduct(String id) {
-        String storeUrl = AppPreference.getInstance().getStoreUrl();
+    public void onClickShareProduct(int position) {
 
-        if (TextUtils.isEmpty(storeUrl)) {
-            Toast.makeText(getContext(), "Store url missing", Toast.LENGTH_SHORT).show();
-            return;
-        }
+        final GetProductData productData = productsAdapter.getmData().get(position);
 
-        String shareUrl = String.format("%s/product/%s", storeUrl, id);
-        shareIntent(shareUrl, "Share Product");
+        final String storeUrl = AppPreference.getInstance().getStoreUrl();
+        final String mobile = AppPreference.getInstance().getUserMobile();
+
+        Picasso.with(getContext())
+                .load(productData.getImage300200())
+                .into(new Target() {
+                    @Override
+                    public void onBitmapLoaded(final Bitmap bitmap, Picasso.LoadedFrom from) {
+                        new Thread(new Runnable() {
+
+                            @Override
+                            public void run() {
+
+                                File fileProduct = new File(getContext().getExternalFilesDir("ValueAppz"), "product_share.png");
+                                try {
+                                    fileProduct.createNewFile();
+                                    FileOutputStream ostream = new FileOutputStream(fileProduct);
+                                    bitmap.compress(Bitmap.CompressFormat.PNG, 80, ostream);
+                                    ostream.flush();
+                                    ostream.close();
+                                } catch (IOException e) {
+                                    e.printStackTrace();
+                                }
+
+                                Uri uri = FileProvider.getUriForFile(getContext(), getContext().getPackageName() + ".provider", fileProduct);
+                                String price = "";
+                                if (productData.getVariants() != null && productData.getVariants().size() > 0) {
+                                    price = productData.getVariants().get(0).getPrice();
+                                }
+                                String message = String.format("Item Name: %s\nPrice:%s\n", productData.getTitle(), price);
+                                String message1 = String.format("Place your order here %s/product/%s. ", storeUrl, productData.getId());
+                                String message2 = String.format("Feel free to call us on %s if you need any help with ordering online. Thank you.", mobile);
+
+                                StringBuilder builder = new StringBuilder();
+                                builder.append(message);
+                                builder.append(message1);
+                                builder.append(message2);
+
+                                shareIntent(builder.toString(), "Share Product", uri);
+
+                            }
+                        }).start();
+
+                    }
+
+                    @Override
+                    public void onBitmapFailed(Drawable errorDrawable) {
+
+                    }
+
+                    @Override
+                    public void onPrepareLoad(Drawable placeHolderDrawable) {
+
+                    }
+                });
     }
 
     @Override

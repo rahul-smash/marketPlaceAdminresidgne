@@ -67,6 +67,7 @@ public class OrderDetailActivity extends BaseActivity implements OrderDetailsAdp
     private TextView textViewCouponCode;
     private LinearLayout linearLayoutDiscountCoupon;
     private LinearLayout linearLayoutNote;
+    private TextView textViewDeliveryDateSlot;
 
     public static Intent getStartIntent(Context context) {
         return new Intent(context, OrderDetailActivity.class);
@@ -116,7 +117,7 @@ public class OrderDetailActivity extends BaseActivity implements OrderDetailsAdp
                         if (getValues.getData().getOrders().size() > 0) {
                             ordersListModel = getValues.getData().getOrders().get(0);
                             setOrderDetails();
-                            linearLayoutDeliveryDetail.setVisibility(View.VISIBLE);
+                            linearLayoutDeliveryDetail.setVisibility(ordersListModel.getOrderFacility().equalsIgnoreCase("pickup") ? View.GONE : View.VISIBLE);
                             constraintLayoutPaymentDetail.setVisibility(View.VISIBLE);
                             boolean val = ordersListModel.getStatus().equals("0");
                             orderDetailsAdpater.setItemListModels(ordersListModel.getItems(), val);
@@ -191,6 +192,7 @@ public class OrderDetailActivity extends BaseActivity implements OrderDetailsAdp
         if (!TextUtils.isEmpty(ordersListModel.getDeliveryTimeSlot())) {
             try {
                 String[] timeSlot = ordersListModel.getDeliveryTimeSlot().split(" ", 2);
+                textViewDeliveryDateSlot.setText(Util.getDeliverySlotDate(timeSlot[0]));
                 textViewDeliveryTimeSlot.setText(timeSlot[1]);
             } catch (Exception e) {
                 e.printStackTrace();
@@ -220,6 +222,7 @@ public class OrderDetailActivity extends BaseActivity implements OrderDetailsAdp
         textViewCustomerNumber = (TextView) findViewById(R.id.tv_customer_number);
         textViewDateTime = (TextView) findViewById(R.id.tv_order_date_time);
         textViewDeliveryTimeSlot = (TextView) findViewById(R.id.tv_delivery_time_slot);
+        textViewDeliveryDateSlot = (TextView) findViewById(R.id.tv_delivery_date_slot);
         textViewNote = (TextView) findViewById(R.id.tv_note);
         linearLayoutNote = findViewById(R.id.ll_note);
         textViewDeliveryCharges = (TextView) findViewById(R.id.tv_delivery_amount);

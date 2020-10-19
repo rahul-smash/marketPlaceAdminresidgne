@@ -142,7 +142,7 @@ public class ProductsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
             @Override
             public void onClick(View v) {
                 if (listener != null) {
-                    listener.onClickShareProduct(id);
+                    listener.onClickShareProduct(position);
                 }
                 popupWindowOverView.dismiss();
             }
@@ -179,7 +179,7 @@ public class ProductsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
     public interface ProductAdapterListener {
         void onClickDeleteProduct(String id, int position);
 
-        void onClickShareProduct(String id);
+        void onClickShareProduct(int position);
 
         void onClickSwitchProduct(String id, String status);
     }

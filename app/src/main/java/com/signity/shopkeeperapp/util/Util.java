@@ -297,4 +297,22 @@ public class Util {
 
         return output;
     }
+
+
+    public static String getDeliverySlotDate(String format) {
+        String output = "";
+
+        SimpleDateFormat inputFormat = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
+        SimpleDateFormat outputFormat = new SimpleDateFormat("dd MMM, yyyy", Locale.getDefault());
+        try {
+            Date date = inputFormat.parse(format);
+            if (date != null) {
+                output = outputFormat.format(date);
+            }
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+
+        return output;
+    }
 }

@@ -222,7 +222,6 @@ public class DynamicFieldAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
                         return;
                     }
 
-                    // TODO - Stock issue to be fixed
                     if (textInputEditText.getTag().toString().equalsIgnoreCase("custom_field2")) {
 
                         String stockValue = fieldMap.get("custom_field1");
