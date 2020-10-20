@@ -630,7 +630,7 @@ public class HomeFragment extends Fragment implements HomeContentAdapter.HomeCon
     private void callAlert(final String phone) {
         androidx.appcompat.app.AlertDialog.Builder adb = new androidx.appcompat.app.AlertDialog.Builder(getContext());
         adb.setTitle("Call " + phone + " ?");
-        adb.setIcon(R.drawable.ic_launcher);
+        adb.setIcon(R.mipmap.ic_launcher);
         adb.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int which) {
                 actionCall(phone);

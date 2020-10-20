@@ -233,7 +233,7 @@ public class CustomerDetailFragment extends Fragment {
         adb.setTitle("Call " + phoneNumber + " ?");
 
 
-        adb.setIcon(R.drawable.ic_launcher);
+        adb.setIcon(R.mipmap.ic_launcher);
 
 
         adb.setPositiveButton("Yes", new DialogInterface.OnClickListener() {

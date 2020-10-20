@@ -178,9 +178,8 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
         builder = new NotificationCompat.Builder(this, DEFAULCHANNEL);
         builder.setContentTitle(title)  // required
                 .setContentText(message)  // required
-                .setSmallIcon(R.drawable.ic_launcher) // required
-                .setLargeIcon(BitmapFactory.decodeResource(this.getResources(),
-                        R.drawable.ic_launcher))
+                .setSmallIcon(R.drawable.ic_notification) // required
+                .setLargeIcon(BitmapFactory.decodeResource(this.getResources(), R.drawable.ic_notification))
                 .setAutoCancel(true)
                 .setSound(defaultSoundUri)
                 .setStyle(new NotificationCompat.BigTextStyle().bigText(message))

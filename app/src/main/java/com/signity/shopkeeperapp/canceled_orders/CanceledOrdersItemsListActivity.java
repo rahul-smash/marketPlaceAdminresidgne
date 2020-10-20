@@ -53,8 +53,8 @@ public class CanceledOrdersItemsListActivity extends Activity implements View.On
     CanceledOrderItemsAdapter adapter;
     String userId = "";
     String orderId = "";
-    private OrdersListModel ordersListModel;
     Button btnGuidMe;
+    private OrdersListModel ordersListModel;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -164,7 +164,7 @@ public class CanceledOrdersItemsListActivity extends Activity implements View.On
         adb.setTitle("Call " + phoneNumber + " ?");
 
 
-        adb.setIcon(R.drawable.ic_launcher);
+        adb.setIcon(R.mipmap.ic_launcher);
 
 
         adb.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
@@ -213,6 +213,11 @@ public class CanceledOrdersItemsListActivity extends Activity implements View.On
         AnimUtil.slideFromLeftAnim(getActivity());*/
     }
 
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        AnimUtil.slideFromLeftAnim(CanceledOrdersItemsListActivity.this);
+    }
 
     class CanceledOrderItemsAdapter extends BaseAdapter {
 
@@ -299,11 +304,5 @@ public class CanceledOrdersItemsListActivity extends Activity implements View.On
         }
 
 
-    }
-
-    @Override
-    public void onBackPressed() {
-        super.onBackPressed();
-        AnimUtil.slideFromLeftAnim(CanceledOrdersItemsListActivity.this);
     }
 }

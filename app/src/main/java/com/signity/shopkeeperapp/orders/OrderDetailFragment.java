@@ -302,7 +302,7 @@ public class OrderDetailFragment extends Fragment implements View.OnClickListene
     private void callAlert() {
         androidx.appcompat.app.AlertDialog.Builder adb = new androidx.appcompat.app.AlertDialog.Builder(getActivity());
         adb.setTitle("Call " + phoneNumber + " ?");
-        adb.setIcon(R.drawable.ic_launcher);
+        adb.setIcon(R.mipmap.ic_launcher);
         adb.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int which) {
                 actionCall();
