@@ -26,6 +26,7 @@ import com.signity.shopkeeperapp.model.notification.NotificationModel;
 import com.signity.shopkeeperapp.model.orders.StoreOrdersReponse;
 import com.signity.shopkeeperapp.model.productStatus.ProductStatus;
 import com.signity.shopkeeperapp.model.stores.StoresResponse;
+import com.signity.shopkeeperapp.model.verify.EmailVerifyResponse;
 import com.signity.shopkeeperapp.model.verify.MobileOtpReponse;
 import com.signity.shopkeeperapp.model.verify.OtpVerifyResponse;
 
@@ -137,6 +138,10 @@ public interface ApiService {
     @FormUrlEncoded
     @POST("/userLogin")
     void loginVerification(@FieldMap Map<String, String> parameters, Callback<LoginModel> response);
+
+    @FormUrlEncoded
+    @POST("/userLogin")
+    void loginVerificationNew(@FieldMap Map<String, String> parameters, Callback<EmailVerifyResponse> response);
 
     @FormUrlEncoded
     @POST("/logout")

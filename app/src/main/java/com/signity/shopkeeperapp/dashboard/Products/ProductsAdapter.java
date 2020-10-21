@@ -49,7 +49,7 @@ public class ProductsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
         return mData;
     }
 
-    public void setmData(List<GetProductData> mData, int totalOrders,boolean showLoading) {
+    public void setmData(List<GetProductData> mData, int totalOrders, boolean showLoading) {
         this.showLoading = showLoading;
         this.totalOrders = totalOrders;
         this.mData = mData;
@@ -235,11 +235,14 @@ public class ProductsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
                 }
             });
 
+            double discountPrice = Double.parseDouble(TextUtils.isEmpty(variantData.getPrice()) ? "0" : variantData.getPrice());
+            double mrpPrice = Double.parseDouble(TextUtils.isEmpty(variantData.getMrpPrice()) ? "0" : variantData.getMrpPrice());
+
             textViewStatus.setText(productData.getStatus().equals("1") ? "Enabled" : "Disabled");
             txtVarient.setText(String.format(Locale.getDefault(), "Variants - %d", varientDataList.size()));
             txtWeight.setText(String.format("Qty - %s%s", variantData.getWeight(), variantData.getUnitType()));
-            txtDiscountPrice.setText(Util.getPriceWithCurrency(Double.parseDouble(TextUtils.isEmpty(variantData.getPrice()) ? "0" : variantData.getPrice()), AppPreference.getInstance().getCurrency()));
-            txtPrice.setText(Util.getPriceWithCurrency(Double.parseDouble(TextUtils.isEmpty(variantData.getMrpPrice()) ? "0" : variantData.getMrpPrice()), AppPreference.getInstance().getCurrency()));
+            txtDiscountPrice.setText(Util.getPriceWithCurrency(discountPrice, AppPreference.getInstance().getCurrency()));
+            txtPrice.setText(Util.getPriceWithCurrency(mrpPrice, AppPreference.getInstance().getCurrency()));
             txtPrice.setPaintFlags(txtPrice.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
             imageSettings.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -247,6 +250,8 @@ public class ProductsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
                     popmenu(imageSettings, productData.getId(), getAdapterPosition());
                 }
             });
+
+            txtPrice.setVisibility(discountPrice == mrpPrice ? View.GONE : View.VISIBLE);
 
             ConstraintLayout.LayoutParams layoutParams = (ConstraintLayout.LayoutParams) constraintLayoutParent.getLayoutParams();
             int margin = (int) Util.pxFromDp(context, 16);

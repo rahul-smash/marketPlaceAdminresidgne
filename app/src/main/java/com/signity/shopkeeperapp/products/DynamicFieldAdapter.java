@@ -24,6 +24,7 @@ import com.signity.shopkeeperapp.model.Product.DynamicField;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 
 public class DynamicFieldAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
@@ -115,7 +116,8 @@ public class DynamicFieldAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
 
             final DynamicField dynamicField = dynamicFieldList.get(positon);
 
-            textInputLayout.setHint(dynamicField.getLabel());
+            String astr = dynamicField.getValidation().equalsIgnoreCase("true") ? "*" : "";
+            textInputLayout.setHint(dynamicField.getLabel().concat(astr));
             textInputLayout.setHintEnabled(true);
             textInputEditText.setTag(dynamicField.getVariantFieldName());
 
@@ -126,7 +128,7 @@ public class DynamicFieldAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
                     if (!hasFocus) {
                         if (dynamicField.getValidation().equalsIgnoreCase("true")) {
                             if (TextUtils.isEmpty(textInputEditText.getText().toString().trim())) {
-                                textInputEditText.setError("Empty");
+//                                textInputEditText.setError("Empty");
                                 return;
                             }
                         }
@@ -172,9 +174,15 @@ public class DynamicFieldAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
         public void bind(int positon) {
 
             final DynamicField dynamicField = dynamicFieldList.get(positon);
-            textInputLayout.setHint(dynamicField.getLabel());
+
+            String astr = dynamicField.getValidation().equalsIgnoreCase("true") ? "*" : "";
+            textInputLayout.setHint(dynamicField.getLabel().concat(astr));
             textInputLayout.setHintEnabled(true);
             textInputEditText.setTag(dynamicField.getVariantFieldName());
+
+            if (dynamicField.getVariantFieldName().equalsIgnoreCase("discount")) {
+                textInputEditText.setText("0");
+            }
 
             textInputEditText.setOnFocusChangeListener(new View.OnFocusChangeListener() {
                 @Override
@@ -194,16 +202,20 @@ public class DynamicFieldAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
                             double doubleDiscount = Double.parseDouble(discount);
 
                             double price = doubleMrp - (doubleMrp * doubleDiscount / 100);
-                            textInputEditText.setText(String.valueOf(price));
+                            textInputEditText.setText(String.format(Locale.getDefault(), "%.2f", price));
                         }
                     }
 
                     if (!hasFocus) {
-                        if (dynamicField.getValidation().equalsIgnoreCase("true")) {
-                            if (TextUtils.isEmpty(textInputEditText.getText().toString().trim())) {
-                                textInputEditText.setError("Empty");
-                                return;
-                            }
+                        String value = textInputEditText.getText().toString().trim();
+                        if (TextUtils.isEmpty(value)) {
+                            return;
+                        }
+
+                        double dValue = Double.parseDouble(value);
+                        if (dValue < 0) {
+                            Toast.makeText(context, "Invalid " + dynamicField.getLabel(), Toast.LENGTH_SHORT).show();
+                            return;
                         }
                     }
                     fieldMap.put(textInputEditText.getTag().toString(), textInputEditText.getText().toString().trim());
@@ -277,7 +289,8 @@ public class DynamicFieldAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
             }
 
             spinner.setTag(dynamicField.getVariantFieldName());
-            textViewHeading.setText(dynamicField.getLabel());
+            String astr = dynamicField.getValidation().equalsIgnoreCase("true") ? "*" : "";
+            textViewHeading.setText(dynamicField.getLabel().concat(astr));
 
             for (Map.Entry<String, String> entry : valueMap.entrySet()) {
                 spinnerKey.add(entry.getKey());

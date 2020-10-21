@@ -29,4 +29,5 @@ public final class PrefConstants {
     public static final String PREF_KEY_STORE_URL = "PREF_KEY_STORE_URL";
 
     public static final String PREF_KEY_NOTIFICATION_COUNT = "PREF_KEY_NOTIFICATION_COUNT";
+    public static final String PREF_KEY_STORE_PHONE_CODE = "PREF_KEY_STORE_PHONE_CODE";
 }

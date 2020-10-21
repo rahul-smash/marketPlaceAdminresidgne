@@ -2,70 +2,54 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_margin="20dp"
-    android:background="@drawable/custom_dialog_shape"
-    android:padding="10dp">
-
+    android:background="@drawable/item_background_rounded"
+    android:padding="16dp">
 
     <TextView
         android:id="@+id/label"
+        style="@style/AppTheme.TextView.Medium"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
-        android:text="Forgot your password?"
-        android:textColor="@android:color/black"
-        android:textSize="@dimen/text_normal" />
-
+        android:text="Forgot your password?" />
 
     <EditText
         android:id="@+id/getEmail"
-        android:layout_width="fill_parent"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@+id/label"
-        android:layout_margin="20dp"
-        android:background="@drawable/edittext_round_corners"
-        android:hint="Enter your email."
+        android:layout_marginTop="16dp"
+        android:hint="Email"
         android:imeOptions="actionDone"
-        android:padding="5dp"
         android:singleLine="true" />
 
-
-    <View
-        android:id="@+id/line"
-        android:layout_width="fill_parent"
-        android:layout_height="1dp"
-        android:layout_below="@+id/getEmail"
-        android:background="@color/colorPrimary" />
-
     <LinearLayout
-        android:layout_width="fill_parent"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/line"
+        android:layout_below="@+id/getEmail"
+        android:layout_marginTop="16dp"
+        android:gravity="center"
         android:orientation="horizontal"
         android:weightSum="2">
-
 
         <Button
             android:id="@+id/cancelBtn"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:background="@android:color/transparent"
             android:gravity="center"
             android:text="Cancel" />
 
         <View
-            android:layout_width="1dp"
-            android:layout_height="fill_parent"
-            android:background="@color/colorPrimary" />
+            android:layout_width="16dp"
+            android:layout_height="16dp" />
 
         <Button
             android:id="@+id/okBtn"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:background="@android:color/transparent"
             android:gravity="center"
             android:text="Ok" />
 

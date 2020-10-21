@@ -338,9 +338,10 @@ public class HomeFragment extends Fragment implements HomeContentAdapter.HomeCon
             Toast.makeText(getContext(), "Url not available", Toast.LENGTH_SHORT).show();
             return;
         }
-        String text = String.format("Enjoy your favorite food in the comfort of your home by ordering from %s, online. Click %s. Order now!",
+        String text = String.format("Hello! You can enjoy your favorite food from %s using %s. Contact us on %s if you need help with your online order. Order now!",
                 AppPreference.getInstance().getStoreName(),
-                website);
+                website,
+                AppPreference.getInstance().getUserMobile());
         shareIntent(text, "Share website");
     }
 
@@ -589,7 +590,7 @@ public class HomeFragment extends Fragment implements HomeContentAdapter.HomeCon
 
                 Intent sendIntent = new Intent("android.intent.action.MAIN");
                 sendIntent.setComponent(new ComponentName("com.whatsapp", "com.whatsapp.Conversation"));
-                String data = String.format("%s%s@s.whatsapp.net", "91", phone);
+                String data = String.format("%s%s@s.whatsapp.net", AppPreference.getInstance().getPhoneCode(), phone);
                 sendIntent.putExtra("jid", data);//phone number without "+" prefix
                 startActivity(sendIntent);
             } else {

@@ -7,6 +7,7 @@ import android.content.SharedPreferences;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Build;
+import android.text.TextUtils;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.Display;
@@ -23,6 +24,8 @@ import java.text.SimpleDateFormat;
 import java.util.Currency;
 import java.util.Date;
 import java.util.Locale;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * Created by Rajinder on 30/9/15.
@@ -314,5 +317,19 @@ public class Util {
         }
 
         return output;
+    }
+
+    public static boolean checkValidEmail(String email) {
+        if (TextUtils.isEmpty(email)) {
+            return false;
+        }
+        boolean isValid = false;
+        final String EMAIL_PATTERN =
+                "^[_A-Za-z0-9-+]+(\\.[_A-Za-z0-9-]+)*@"
+                        + "[A-Za-z0-9-]+(\\.[A-Za-z0-9]+)*(\\.[A-Za-z]{2,})$";
+        Pattern pattern = Pattern.compile(EMAIL_PATTERN);
+        Matcher matcher = pattern.matcher(email);
+        isValid = matcher.matches();
+        return isValid;
     }
 }

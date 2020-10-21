@@ -22,6 +22,7 @@ public class LogInOptionsFragment extends Fragment implements View.OnClickListen
 
     Button numberBtn, emailBtn;
     PrefManager prefManager;
+    public static final String TAG = "LogInOptionsFragment";
 
     public static Fragment newInstance(Context context) {
         return Fragment.instantiate(context,

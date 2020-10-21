@@ -415,7 +415,7 @@ public class OrderDetailActivity extends BaseActivity implements OrderDetailsAdp
 
                 Intent sendIntent = new Intent("android.intent.action.MAIN");
                 sendIntent.setComponent(new ComponentName("com.whatsapp", "com.whatsapp.Conversation"));
-                String data = String.format("%s%s@s.whatsapp.net", "91", phone);
+                String data = String.format("%s%s@s.whatsapp.net", AppPreference.getInstance().getPhoneCode(), phone);
                 sendIntent.putExtra("jid", data);//phone number without "+" prefix
                 startActivity(sendIntent);
             } else {

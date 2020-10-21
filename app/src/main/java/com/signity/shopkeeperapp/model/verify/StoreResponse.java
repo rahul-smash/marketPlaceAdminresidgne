@@ -62,6 +62,8 @@ public class StoreResponse implements Parcelable {
     private String currency;
     @SerializedName("show_currency")
     private String showCurrency;
+    @SerializedName("currency_abbr")
+    private String currencyCode;
     @SerializedName("app_share_link")
     private String appShareLink;
     @SerializedName("android_share_link")
@@ -104,6 +106,8 @@ public class StoreResponse implements Parcelable {
     private String modified;
     @SerializedName("store_url")
     private String storeUrl;
+    @SerializedName("phonecode")
+    private String phoneCode;
 
     public StoreResponse() {
     }
@@ -131,6 +135,7 @@ public class StoreResponse implements Parcelable {
         this.version = in.readString();
         this.currency = in.readString();
         this.showCurrency = in.readString();
+        this.currencyCode = in.readString();
         this.appShareLink = in.readString();
         this.androidShareLink = in.readString();
         this.iphoneShareLink = in.readString();
@@ -152,6 +157,23 @@ public class StoreResponse implements Parcelable {
         this.created = in.readString();
         this.modified = in.readString();
         this.storeUrl = in.readString();
+        this.phoneCode = in.readString();
+    }
+
+    public String getPhoneCode() {
+        return phoneCode;
+    }
+
+    public void setPhoneCode(String phoneCode) {
+        this.phoneCode = phoneCode;
+    }
+
+    public String getCurrencyCode() {
+        return currencyCode;
+    }
+
+    public void setCurrencyCode(String currencyCode) {
+        this.currencyCode = currencyCode;
     }
 
     public String getStoreUrl() {
@@ -576,6 +598,7 @@ public class StoreResponse implements Parcelable {
         dest.writeString(this.version);
         dest.writeString(this.currency);
         dest.writeString(this.showCurrency);
+        dest.writeString(this.currencyCode);
         dest.writeString(this.appShareLink);
         dest.writeString(this.androidShareLink);
         dest.writeString(this.iphoneShareLink);
@@ -597,5 +620,6 @@ public class StoreResponse implements Parcelable {
         dest.writeString(this.created);
         dest.writeString(this.modified);
         dest.writeString(this.storeUrl);
+        dest.writeString(this.phoneCode);
     }
 }

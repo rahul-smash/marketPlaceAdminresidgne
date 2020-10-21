@@ -617,7 +617,7 @@ public class AddProductActivity extends BaseActivity implements SubCategoryDialo
 
         JSONArray jsonArray = new JSONArray();
         try {
-            JSONObject jsonObject = new JSONObject(variantfieldMap.toString());
+            JSONObject jsonObject = new JSONObject(variantfieldMap);
             jsonArray.put(jsonObject);
 
             for (Map<String, String> map : variantList) {

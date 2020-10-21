@@ -42,6 +42,11 @@ public class AppPreference {
     }
 
     public void saveUser(UserResponse userResponse) {
+
+        if (userResponse == null) {
+            return;
+        }
+
         setUserId(userResponse.getId());
         setUserName(userResponse.getFullName());
         setOnDuty(userResponse.getOnDuty());
@@ -99,15 +104,23 @@ public class AppPreference {
         setCurrency(storeResponse.getCurrency());
         setStoreType(storeResponse.getType());
         setStoreUrl(storeResponse.getStoreUrl());
+        setPhoneCode(storeResponse.getPhoneCode());
     }
 
-    // TODO - Default Currency is INR
     public String getCurrency() {
         return mPrefs.getString(PrefConstants.PREF_KEY_STORE_CURRENCY, "INR");
     }
 
     public void setCurrency(String currency) {
         mPrefs.edit().putString(PrefConstants.PREF_KEY_STORE_CURRENCY, currency).apply();
+    }
+
+    public String getPhoneCode() {
+        return mPrefs.getString(PrefConstants.PREF_KEY_STORE_PHONE_CODE, "91");
+    }
+
+    public void setPhoneCode(String phoneCode) {
+        mPrefs.edit().putString(PrefConstants.PREF_KEY_STORE_PHONE_CODE, phoneCode).apply();
     }
 
     public String getLongitude() {
