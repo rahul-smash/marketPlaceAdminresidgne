@@ -206,4 +206,12 @@ public class AppPreference {
     public void setNotificationCount(int count) {
         mPrefs.edit().putInt(PrefConstants.PREF_KEY_NOTIFICATION_COUNT, count).apply();
     }
+
+    public String getLoginType() {
+        return mPrefs.getString(PrefConstants.PREF_KEY_LOGIN_TYPE, "mobile");
+    }
+
+    public void setLoginType(String type) {
+        mPrefs.edit().putString(PrefConstants.PREF_KEY_LOGIN_TYPE, type).apply();
+    }
 }

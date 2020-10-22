@@ -97,13 +97,19 @@ public class StoresActivity extends BaseActivity implements StoresAdapter.Stores
         String deviceId = Settings.Secure.getString(getApplicationContext().getContentResolver(), Settings.Secure.ANDROID_ID);
 
         String deviceToken = AppPreference.getInstance().getDeviceToken();
-        String mobileNumber = AppPreference.getInstance().getUserMobile();
+        String mobileNumber = "";
+        if (AppPreference.getInstance().getLoginType().equalsIgnoreCase("mobile")) {
+            mobileNumber = AppPreference.getInstance().getUserMobile();
+        } else {
+            mobileNumber = AppPreference.getInstance().getUserEmail();
+        }
 
         Map<String, String> param = new HashMap<>();
         param.put("mobile", mobileNumber);
         param.put("device_id", deviceId);
         param.put("device_token", deviceToken);
         param.put("platform", Constant.PLATFORM);
+        param.put("type", AppPreference.getInstance().getLoginType());
 
         NetworkAdaper.getNetworkServices().getAdminStoresNew(param, new Callback<StoresResponse>() {
             @Override

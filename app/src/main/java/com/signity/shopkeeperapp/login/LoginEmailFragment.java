@@ -23,7 +23,6 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.signity.shopkeeperapp.R;
 import com.signity.shopkeeperapp.model.LoginModel;
 import com.signity.shopkeeperapp.model.verify.EmailVerifyResponse;
-import com.signity.shopkeeperapp.model.verify.OtpVerifyResponse;
 import com.signity.shopkeeperapp.network.NetworkAdaper;
 import com.signity.shopkeeperapp.util.Constant;
 import com.signity.shopkeeperapp.util.DialogHandler;
@@ -169,6 +168,7 @@ public class LoginEmailFragment extends Fragment {
                 ProgressDialogUtil.hideProgressDialog();
 
                 if (otpVerifyResponse.isSuccess()) {
+                    AppPreference.getInstance().setLoginType("email");
                     if (otpVerifyResponse.getStore().size() > 1) {
                         listener.onEmailVerified(true);
                     } else {

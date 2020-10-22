@@ -468,6 +468,7 @@ public class VerifyOtpFragment extends Fragment {
                     }
 
                     if (listener != null) {
+                        AppPreference.getInstance().setLoginType("mobile");
                         if (otpVerifyResponse.getStore().size() > 1) {
                             listener.onOtpVerified(true);
                         } else {
