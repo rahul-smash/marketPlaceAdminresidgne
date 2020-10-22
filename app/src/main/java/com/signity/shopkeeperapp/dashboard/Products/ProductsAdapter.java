@@ -182,6 +182,8 @@ public class ProductsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
         void onClickShareProduct(int position);
 
         void onClickSwitchProduct(String id, String status);
+
+        void onClickProduct(String productId);
     }
 
     class MyViewHolder extends RecyclerView.ViewHolder {
@@ -252,6 +254,15 @@ public class ProductsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
             });
 
             txtPrice.setVisibility(discountPrice == mrpPrice ? View.GONE : View.VISIBLE);
+
+            itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (listener != null) {
+                        listener.onClickProduct(productData.getId());
+                    }
+                }
+            });
 
             ConstraintLayout.LayoutParams layoutParams = (ConstraintLayout.LayoutParams) constraintLayoutParent.getLayoutParams();
             int margin = (int) Util.pxFromDp(context, 16);

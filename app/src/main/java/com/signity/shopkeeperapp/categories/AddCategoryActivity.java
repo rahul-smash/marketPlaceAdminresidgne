@@ -58,6 +58,7 @@ import retrofit.mime.TypedFile;
  */
 public class AddCategoryActivity extends BaseActivity implements SubCategoryAdapter.SubCategoryAdapterListner {
 
+    public static final String CATEGORY_ID = "CATEGORY_ID";
     private static final String TAG = "AddCategoryActivity";
     private static final int REQUEST_PERMISSION = 1001;
     private static final int REQUEST_IMAGE_GET = 2002;
@@ -73,18 +74,54 @@ public class AddCategoryActivity extends BaseActivity implements SubCategoryAdap
     private int position;
     private LinearLayout linearLayoutNext;
     private ImageView imageViewDeleteImage;
+    private String categoryId;
 
     public static Intent getStartIntent(Context context) {
         return new Intent(context, AddCategoryActivity.class);
+    }
+
+    public static Intent getStartIntent(Context context, Bundle bundle) {
+        Intent intent = getStartIntent(context);
+        intent.putExtras(bundle);
+        return intent;
     }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_category);
+        getExtra();
         initView();
         setUpToolbar();
         setUpAdapter();
+        getCategoryById();
+    }
+
+    private void getCategoryById() {
+
+        Map<String, String> map = new HashMap<>();
+        map.put("category_id", categoryId);
+
+        NetworkAdaper.getNetworkServices().getCategoryById(map, new Callback<String>() {
+            @Override
+            public void success(String s, Response response) {
+
+            }
+
+            @Override
+            public void failure(RetrofitError error) {
+
+            }
+        });
+
+    }
+
+    private void getExtra() {
+
+        Bundle bundle = getIntent().getExtras();
+        if (bundle != null) {
+            categoryId = bundle.getString(CATEGORY_ID);
+        }
     }
 
     private void setUpToolbar() {

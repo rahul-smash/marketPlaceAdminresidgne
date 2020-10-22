@@ -116,6 +116,8 @@ public class CategoriesAdapter extends RecyclerView.Adapter<CategoriesAdapter.My
         void onClickDeleteCategory(String subCategoryId, int position);
 
         void onClickSwitchProduct(String id, String status);
+
+        void onClickCategory(String id);
     }
 
     class MyViewHolder extends RecyclerView.ViewHolder {
@@ -167,6 +169,15 @@ public class CategoriesAdapter extends RecyclerView.Adapter<CategoriesAdapter.My
                 public void onClick(View v) {
                     if (listener != null) {
                         listener.onClickSwitchProduct(subCategory.getId(), (subCategory.getStatus().equals("1") ? "0" : "1"));
+                    }
+                }
+            });
+
+            itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (listener != null) {
+                        listener.onClickCategory(subCategory.getCategoryId());
                     }
                 }
             });

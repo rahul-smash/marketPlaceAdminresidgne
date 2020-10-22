@@ -206,6 +206,7 @@ public class CategoriesFragment extends Fragment implements CategoriesAdapter.Ca
                     for (GetCategoryData categoryResponse : getCategoryResponse.getData()) {
                         for (SubCategory category : categoryResponse.getSubCategory()) {
                             category.setCategoryName(categoryResponse.getTitle());
+                            category.setCategoryId(categoryResponse.getId());
                             categoryList.add(category);
                         }
                     }
@@ -236,6 +237,13 @@ public class CategoriesFragment extends Fragment implements CategoriesAdapter.Ca
     @Override
     public void onClickSwitchProduct(String id, String status) {
         setCategoryStatus(id, status);
+    }
+
+    @Override
+    public void onClickCategory(String id) {
+        Bundle bundle = new Bundle();
+        bundle.putString(AddCategoryActivity.CATEGORY_ID, id);
+        startActivity(AddCategoryActivity.getStartIntent(getContext(), bundle));
     }
 
     public void showAlertDialog(Context context) {

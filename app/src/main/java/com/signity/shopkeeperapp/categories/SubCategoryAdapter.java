@@ -94,6 +94,7 @@ public class SubCategoryAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
         LinearLayout linearLayoutAddImage;
         ImageView imageViewSubCategoryImage;
         ImageView imageViewDeleteImage;
+        ImageView imageViewDeleteSubCategory;
 
         public SubCategoryViewHolder(final View view) {
             super(view);
@@ -101,6 +102,7 @@ public class SubCategoryAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
             imageViewSubCategoryImage = view.findViewById(R.id.iv_sub_category);
             textInputEditTextSubCategoryName = view.findViewById(R.id.edt_sub_category_name);
             imageViewDeleteImage = view.findViewById(R.id.iv_cancel);
+            imageViewDeleteSubCategory = view.findViewById(R.id.iv_delete);
         }
 
         public void bind(final int position) {
@@ -172,6 +174,14 @@ public class SubCategoryAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
                     subCategory.setSubCategoryImageUrl(null);
                     subCategory.setSubCategoryImage(null);
                     notifyItemChanged(getAdapterPosition(), subCategory);
+                }
+            });
+
+            imageViewDeleteSubCategory.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    subCategoryModels.remove(getAdapterPosition());
+                    notifyItemRemoved(getAdapterPosition());
                 }
             });
 
