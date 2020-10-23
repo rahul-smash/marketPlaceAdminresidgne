@@ -9,17 +9,6 @@ import com.google.gson.annotations.SerializedName;
 import java.util.List;
 
 public class GetCategoryData implements Parcelable {
-    public static final Creator<GetCategoryData> CREATOR = new Creator<GetCategoryData>() {
-        @Override
-        public GetCategoryData createFromParcel(Parcel in) {
-            return new GetCategoryData(in);
-        }
-
-        @Override
-        public GetCategoryData[] newArray(int size) {
-            return new GetCategoryData[size];
-        }
-    };
     @SerializedName("id")
     @Expose
     private String id;

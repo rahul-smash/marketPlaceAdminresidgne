@@ -31,7 +31,9 @@ import com.google.gson.JsonElement;
 import com.google.gson.reflect.TypeToken;
 import com.signity.shopkeeperapp.R;
 import com.signity.shopkeeperapp.base.BaseActivity;
+import com.signity.shopkeeperapp.model.Categories.SubCategory;
 import com.signity.shopkeeperapp.model.category.AddCategoryResponse;
+import com.signity.shopkeeperapp.model.category.CategoryDetailResponse;
 import com.signity.shopkeeperapp.model.category.SubCategoryModel;
 import com.signity.shopkeeperapp.model.image.ImageUploadResponse;
 import com.signity.shopkeeperapp.network.NetworkAdaper;
@@ -58,6 +60,8 @@ import retrofit.mime.TypedFile;
  */
 public class AddCategoryActivity extends BaseActivity implements SubCategoryAdapter.SubCategoryAdapterListner {
 
+    public static final String CATEGORY_ID = "CATEGORY_ID";
+    public static final String ACTIVITY_TYPE = "ACTIVITY_TYPE";
     private static final String TAG = "AddCategoryActivity";
     private static final int REQUEST_PERMISSION = 1001;
     private static final int REQUEST_IMAGE_GET = 2002;
@@ -73,18 +77,87 @@ public class AddCategoryActivity extends BaseActivity implements SubCategoryAdap
     private int position;
     private LinearLayout linearLayoutNext;
     private ImageView imageViewDeleteImage;
+    private String categoryId;
+    private ActivityType activityType = ActivityType.ADD;
 
     public static Intent getStartIntent(Context context) {
         return new Intent(context, AddCategoryActivity.class);
+    }
+
+    public static Intent getStartIntent(Context context, Bundle bundle) {
+        Intent intent = getStartIntent(context);
+        intent.putExtras(bundle);
+        return intent;
     }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_category);
+        getExtra();
         initView();
         setUpToolbar();
         setUpAdapter();
+        getCategoryById();
+    }
+
+    private void getCategoryById() {
+
+        ProgressDialogUtil.showProgressDialog(this);
+        Map<String, String> map = new HashMap<>();
+        map.put("category_id", categoryId);
+
+        NetworkAdaper.getNetworkServices().getCategoryById(map, new Callback<CategoryDetailResponse>() {
+            @Override
+            public void success(CategoryDetailResponse s, Response response) {
+
+                ProgressDialogUtil.hideProgressDialog();
+
+                textInputEditTextCategoryName.setText(s.getData().getTitle());
+                int indexC = s.getData().getImage10080().lastIndexOf("/");
+                String nameC = s.getData().getImage10080().substring(indexC+1);
+                categoryImageUrl = nameC;
+
+                imageViewDeleteImage.setVisibility(View.VISIBLE);
+                imageViewCategory.setVisibility(View.VISIBLE);
+                linearLayoutAddCategoryImage.setVisibility(View.INVISIBLE);
+
+                Picasso.with(AddCategoryActivity.this)
+                        .load(s.getData().getImage10080())
+                        .placeholder(ResourcesCompat.getDrawable(getResources(), R.drawable.addimageicon, null))
+                        .into(imageViewCategory);
+
+                List<SubCategoryModel> models = new ArrayList<>();
+                for (SubCategory subCategory : s.getData().getSubCategory()) {
+                    SubCategoryModel model = new SubCategoryModel();
+                    model.setId(subCategory.getId());
+                    model.setSubCategoryName(subCategory.getTitle());
+                    model.setSubCategoryImageUrl(subCategory.getImage10080());
+                    int index = subCategory.getImage10080().lastIndexOf("/");
+                    String name = subCategory.getImage10080().substring(indexC+1);
+                    model.setSubCategoryImage(name);
+                    models.add(model);
+                }
+
+                subCategoryAdapter.setSubCategoryModels(models);
+            }
+
+            @Override
+            public void failure(RetrofitError error) {
+                error.printStackTrace();
+                ProgressDialogUtil.hideProgressDialog();
+            }
+        });
+
+    }
+
+    private void getExtra() {
+
+        Bundle bundle = getIntent().getExtras();
+        if (bundle != null) {
+            categoryId = bundle.getString(CATEGORY_ID);
+            activityType = (ActivityType) bundle.getSerializable(ACTIVITY_TYPE);
+        }
     }
 
     private void setUpToolbar() {
@@ -179,6 +252,35 @@ public class AddCategoryActivity extends BaseActivity implements SubCategoryAdap
         map.put("title", categoryName);
         map.put("image", categoryImageUrl);
         map.put("subCate", jsonArray.toString());
+        if (activityType == ActivityType.EDIT) {
+            map.put("category_id", categoryId);
+            ProgressDialogUtil.showProgressDialog(this);
+            NetworkAdaper.getNetworkServices().editCategory(map, new Callback<AddCategoryResponse>() {
+                @Override
+                public void success(AddCategoryResponse addCategoryResponse, Response response) {
+                    if (isDestroyed()) {
+                        return;
+                    }
+                    ProgressDialogUtil.hideProgressDialog();
+                    if (addCategoryResponse.isSuccess()) {
+                        finish();
+                    } else {
+                        Toast.makeText(AddCategoryActivity.this, addCategoryResponse.getMessage(), Toast.LENGTH_SHORT).show();
+                    }
+
+                }
+
+                @Override
+                public void failure(RetrofitError error) {
+                    if (isDestroyed()) {
+                        return;
+                    }
+                    ProgressDialogUtil.hideProgressDialog();
+                    Toast.makeText(AddCategoryActivity.this, "Network is unreachable", Toast.LENGTH_SHORT).show();
+                }
+            });
+            return;
+        }
 
         ProgressDialogUtil.showProgressDialog(this);
         NetworkAdaper.getNetworkServices().addCategory(map, new Callback<AddCategoryResponse>() {
@@ -357,6 +459,10 @@ public class AddCategoryActivity extends BaseActivity implements SubCategoryAdap
 
     private enum ImageUploadType {
         CATEGORY, SUBCATEGORY
+    }
+
+    public enum ActivityType {
+        EDIT, ADD;
     }
 
 }

@@ -51,6 +51,9 @@ import com.signity.shopkeeperapp.model.Categories.GetCategoryResponse;
 import com.signity.shopkeeperapp.model.Categories.SubCategory;
 import com.signity.shopkeeperapp.model.CategoryStatus.CategoryStatus;
 import com.signity.shopkeeperapp.model.Product.DynamicField;
+import com.signity.shopkeeperapp.model.Product.ImageObject;
+import com.signity.shopkeeperapp.model.Product.ProductDetail;
+import com.signity.shopkeeperapp.model.Product.ProductDetailResponse;
 import com.signity.shopkeeperapp.model.Product.ProductImage;
 import com.signity.shopkeeperapp.model.Product.StoreAttributes;
 import com.signity.shopkeeperapp.model.image.ImageUploadResponse;
@@ -84,6 +87,7 @@ import retrofit.mime.TypedFile;
 public class AddProductActivity extends BaseActivity implements SubCategoryDialog.SubCategoryListener, CategoryDialog.CategoryListener {
 
     public static final String CATEGORY_ID = "CATEGORY_ID";
+    public static final String PRODUCT_ID = "PRODUCT_ID";
     private static final String TAG = "AddProductActivity";
     private static final int REQUEST_PERMISSION = 1001;
     private static final int REQUEST_IMAGE_GET = 2002;
@@ -122,6 +126,12 @@ public class AddProductActivity extends BaseActivity implements SubCategoryDialo
     private List<DynamicField> dynamicFieldList = new ArrayList<>();
     private DynamicFieldAdapter dynamicFieldAdapter;
     private JSONArray jsonArrayVariant = new JSONArray();
+    private ProductDetail productData;
+    private String productId;
+
+    // TODO - Get Product Details from API and fill the data
+    // TODO - update the product
+    // TODO - Refresh the page as in Orders Listing
 
     public static Intent getStartIntent(Context context) {
         return new Intent(context, AddProductActivity.class);
@@ -145,10 +155,90 @@ public class AddProductActivity extends BaseActivity implements SubCategoryDialo
         getCategoriesApi();
     }
 
+    private void getProductById() {
+
+        if (TextUtils.isEmpty(productId)) {
+            return;
+        }
+
+        Map<String, String> map = new HashMap<>();
+        map.put("product_id", productId);
+
+        NetworkAdaper.getNetworkServices().getProductById(map, new Callback<ProductDetailResponse>() {
+            @Override
+            public void success(ProductDetailResponse productDetailResponse, Response response) {
+
+                if (productDetailResponse.isSuccess()) {
+                    productData = productDetailResponse.getProductData();
+                    populateProductData();
+                }
+
+            }
+
+            @Override
+            public void failure(RetrofitError error) {
+
+            }
+        });
+
+    }
+
+    private void populateProductData() {
+        if (productData == null) {
+            return;
+        }
+
+        setImagesData();
+        setCategorySubCategory();
+        setProductDetails();
+    }
+
+    private void setProductDetails() {
+        editTextProductName.setText(productData.getTitle());
+        editTextDescription.setText(productData.getDescription());
+        editTextTag.setText(productData.getTags());
+        editTextTax.setText(productData.getGstTaxRate());
+        switchInEx.setChecked(!productData.getGstTaxType().equalsIgnoreCase("inclusive"));
+    }
+
+    private void setCategorySubCategory() {
+        selectedCategoryId = productData.getCategoryParentId();
+        selectedSubCategoryId = productData.getCategoryIds();
+
+        for (GetCategoryData categoryData : categoryDataList) {
+            if (categoryData.getId().equals(selectedCategoryId)) {
+                editTextCategory.setText(categoryData.getTitle());
+                for (SubCategory category : categoryData.getSubCategory()) {
+                    if (category.getId().equals(selectedSubCategoryId)) {
+                        editTextSubCategory.setText(category.getTitle());
+                    }
+                }
+            }
+        }
+    }
+
+    private void setImagesData() {
+        List<MessageResponse> messageResponses = new ArrayList<>();
+        for (ImageObject imageObject : productData.getImageList()) {
+
+            int index = imageObject.getImage().lastIndexOf("/");
+            String imageName = imageObject.getImage().substring(index + 1);
+
+            MessageResponse messageResponse = new MessageResponse();
+            messageResponse.setImageUrl(imageObject.getImage10080());
+            messageResponse.setUrl(imageName);
+
+            messageResponses.add(messageResponse);
+        }
+
+        imagesAdapter.setImageList(messageResponses);
+    }
+
     private void getExtra() {
         Bundle bundle = getIntent().getExtras();
         if (bundle != null) {
             selectedCategoryId = bundle.getString(CATEGORY_ID);
+            productId = bundle.getString(PRODUCT_ID);
         }
     }
 
@@ -517,6 +607,7 @@ public class AddProductActivity extends BaseActivity implements SubCategoryDialo
                     Toast.makeText(AddProductActivity.this, "Data not found!", Toast.LENGTH_SHORT).show();
                 }
                 getStoreAttributes();
+                getProductById();
             }
 
             @Override

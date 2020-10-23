@@ -33,6 +33,11 @@ public class SubCategoryAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
     private List<SubCategoryModel> subCategoryModels = new ArrayList<>();
     private SubCategoryAdapterListner listener;
 
+    public void setSubCategoryModels(List<SubCategoryModel> subCategoryModels) {
+        this.subCategoryModels = subCategoryModels;
+        notifyDataSetChanged();
+    }
+
     public SubCategoryAdapter(Context context) {
         this.context = context;
     }
@@ -94,6 +99,7 @@ public class SubCategoryAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
         LinearLayout linearLayoutAddImage;
         ImageView imageViewSubCategoryImage;
         ImageView imageViewDeleteImage;
+        ImageView imageViewDeleteSubCategory;
 
         public SubCategoryViewHolder(final View view) {
             super(view);
@@ -101,6 +107,7 @@ public class SubCategoryAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
             imageViewSubCategoryImage = view.findViewById(R.id.iv_sub_category);
             textInputEditTextSubCategoryName = view.findViewById(R.id.edt_sub_category_name);
             imageViewDeleteImage = view.findViewById(R.id.iv_cancel);
+            imageViewDeleteSubCategory = view.findViewById(R.id.iv_delete);
         }
 
         public void bind(final int position) {
@@ -125,6 +132,8 @@ public class SubCategoryAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
             } catch (Exception e) {
                 e.printStackTrace();
             }
+
+            textInputEditTextSubCategoryName.setText(subCategory.getSubCategoryName());
 
             textInputEditTextSubCategoryName.setOnFocusChangeListener(new View.OnFocusChangeListener() {
                 @Override
@@ -172,6 +181,14 @@ public class SubCategoryAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
                     subCategory.setSubCategoryImageUrl(null);
                     subCategory.setSubCategoryImage(null);
                     notifyItemChanged(getAdapterPosition(), subCategory);
+                }
+            });
+
+            imageViewDeleteSubCategory.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    subCategoryModels.remove(getAdapterPosition());
+                    notifyItemRemoved(getAdapterPosition());
                 }
             });
 

@@ -57,15 +57,16 @@
         app:tint="@color/colorTextDark" />
 
     <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/textInputLayout8"
         style="@style/Widget.Design.TextInputLayout"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:layout_marginLeft="16dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginEnd="8dp"
         android:hint="Sub Category Name"
         app:hintTextColor="@color/colorTextGrey"
         app:layout_constraintBottom_toBottomOf="@+id/ll_add_sub_category_image"
-        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/iv_delete"
         app:layout_constraintStart_toEndOf="@+id/ll_add_sub_category_image">
 
         <com.google.android.material.textfield.TextInputEditText
@@ -78,5 +79,15 @@
             android:maxLines="1" />
 
     </com.google.android.material.textfield.TextInputLayout>
+
+    <ImageView
+        android:id="@+id/iv_delete"
+        android:layout_width="24dp"
+        android:layout_height="24dp"
+        android:src="@drawable/rejecticon"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:tint="@color/colorTextDark" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

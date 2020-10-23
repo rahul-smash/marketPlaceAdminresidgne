@@ -9,8 +9,8 @@ import com.google.gson.annotations.SerializedName;
 public class SubCategory implements Parcelable {
     public static final Creator<SubCategory> CREATOR = new Creator<SubCategory>() {
         @Override
-        public SubCategory createFromParcel(Parcel in) {
-            return new SubCategory(in);
+        public SubCategory createFromParcel(Parcel source) {
+            return new SubCategory(source);
         }
 
         @Override
@@ -47,19 +47,32 @@ public class SubCategory implements Parcelable {
     private String image300200;
     @Expose(serialize = false, deserialize = false)
     private String categoryName;
+    @Expose(serialize = false, deserialize = false)
+    private String categoryId;
+
+    public SubCategory() {
+    }
 
     protected SubCategory(Parcel in) {
-        id = in.readString();
-        title = in.readString();
-        version = in.readString();
-        status = in.readString();
-        byte tmpDeleted = in.readByte();
-        deleted = tmpDeleted == 0 ? null : tmpDeleted == 1;
-        sort = in.readString();
-        image = in.readString();
-        image10080 = in.readString();
-        image300200 = in.readString();
-        categoryName = in.readString();
+        this.id = in.readString();
+        this.title = in.readString();
+        this.version = in.readString();
+        this.status = in.readString();
+        this.deleted = (Boolean) in.readValue(Boolean.class.getClassLoader());
+        this.sort = in.readString();
+        this.image = in.readString();
+        this.image10080 = in.readString();
+        this.image300200 = in.readString();
+        this.categoryName = in.readString();
+        this.categoryId = in.readString();
+    }
+
+    public String getCategoryId() {
+        return categoryId;
+    }
+
+    public void setCategoryId(String categoryId) {
+        this.categoryId = categoryId;
     }
 
     public String getCategoryName() {
@@ -149,15 +162,16 @@ public class SubCategory implements Parcelable {
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
-        dest.writeString(id);
-        dest.writeString(title);
-        dest.writeString(version);
-        dest.writeString(status);
-        dest.writeByte((byte) (deleted == null ? 0 : deleted ? 1 : 2));
-        dest.writeString(sort);
-        dest.writeString(image);
-        dest.writeString(image10080);
-        dest.writeString(image300200);
-        dest.writeString(categoryName);
+        dest.writeString(this.id);
+        dest.writeString(this.title);
+        dest.writeString(this.version);
+        dest.writeString(this.status);
+        dest.writeValue(this.deleted);
+        dest.writeString(this.sort);
+        dest.writeString(this.image);
+        dest.writeString(this.image10080);
+        dest.writeString(this.image300200);
+        dest.writeString(this.categoryName);
+        dest.writeString(this.categoryId);
     }
 }

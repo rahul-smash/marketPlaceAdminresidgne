@@ -652,4 +652,11 @@ public class ProductFragment extends Fragment implements View.OnClickListener, P
     public void onClickSwitchProduct(String id, String status) {
         setProductStatus(id, status);
     }
+
+    @Override
+    public void onClickProduct(String productId) {
+        Bundle bundle = new Bundle();
+        bundle.putString(AddProductActivity.PRODUCT_ID, productId);
+        startActivity(AddProductActivity.getStartIntent(getContext(), bundle));
+    }
 }
