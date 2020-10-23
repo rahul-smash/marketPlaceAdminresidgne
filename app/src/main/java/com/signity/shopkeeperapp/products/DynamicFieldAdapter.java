@@ -32,7 +32,6 @@ public class DynamicFieldAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
     private Context context;
     private List<DynamicField> dynamicFieldList = new ArrayList<>();
     private Map<String, String> fieldMap = new HashMap<>();
-    private boolean isfocus;
 
     public DynamicFieldAdapter(Context context) {
         this.context = context;
@@ -45,6 +44,11 @@ public class DynamicFieldAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
 
     public Map<String, String> getFieldMap() {
         return fieldMap;
+    }
+
+    public void setFieldMap(Map<String, String> fieldMap) {
+        this.fieldMap = fieldMap;
+        notifyDataSetChanged();
     }
 
     @NonNull
@@ -122,6 +126,8 @@ public class DynamicFieldAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
             textInputLayout.setHintEnabled(true);
             textInputEditText.setTag(dynamicField.getVariantFieldName());
 
+            textInputEditText.setText(fieldMap.get(dynamicField.getVariantFieldName()));
+
             textInputEditText.setOnFocusChangeListener(new View.OnFocusChangeListener() {
                 @Override
                 public void onFocusChange(View v, boolean hasFocus) {
@@ -181,19 +187,12 @@ public class DynamicFieldAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
             textInputLayout.setHintEnabled(true);
             textInputEditText.setTag(dynamicField.getVariantFieldName());
 
-            if (dynamicField.getVariantFieldName().equalsIgnoreCase("discount")) {
+            if (dynamicField.getVariantFieldName().equalsIgnoreCase("discount") && TextUtils.isEmpty(fieldMap.get("discount"))) {
                 textInputEditText.setText("0");
                 fieldMap.put(textInputEditText.getTag().toString(), "0");
             }
 
-            if (dynamicField.getVariantFieldName().equalsIgnoreCase("price")) {
-                textInputEditText.setText(fieldMap.get("price"));
-            }
-
-            if (dynamicField.getVariantFieldName().equalsIgnoreCase("mrp_price") && isfocus) {
-                textInputEditText.setFocusableInTouchMode(true);
-                textInputEditText.requestFocus();
-            }
+            textInputEditText.setText(fieldMap.get(dynamicField.getVariantFieldName()));
 
             textInputEditText.setOnFocusChangeListener(new View.OnFocusChangeListener() {
                 @Override
@@ -215,9 +214,6 @@ public class DynamicFieldAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
                             double price = doubleMrp - (doubleMrp * doubleDiscount / 100);
                             textInputEditText.setText(String.format(Locale.getDefault(), "%.2f", price));
                         }
-                        if(textInputEditText.getTag().toString().equalsIgnoreCase("mrp_price")){
-                            isfocus = true;
-                        }
                     }
 
                     if (!hasFocus) {
@@ -226,8 +222,13 @@ public class DynamicFieldAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
                             return;
                         }
 
-                        double dValue = Double.parseDouble(value);
-                        if (dValue < 0) {
+                        try {
+                            double dValue = Double.parseDouble(value);
+                            if (dValue < 0) {
+                                Toast.makeText(context, "Invalid " + dynamicField.getLabel(), Toast.LENGTH_SHORT).show();
+                                return;
+                            }
+                        } catch (Exception e) {
                             Toast.makeText(context, "Invalid " + dynamicField.getLabel(), Toast.LENGTH_SHORT).show();
                             return;
                         }
@@ -246,23 +247,6 @@ public class DynamicFieldAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
                 public void onTextChanged(CharSequence s, int start, int before, int count) {
                     if (TextUtils.isEmpty(s)) {
                         return;
-                    }
-
-                    if (textInputEditText.getTag().toString().equalsIgnoreCase("mrp_price")) {
-
-                        String mrp = s.toString();
-                        String discount = fieldMap.get("discount");
-
-                        if (TextUtils.isEmpty(mrp) || TextUtils.isEmpty(discount)) {
-                            return;
-                        }
-
-                        double doubleMrp = Double.parseDouble(mrp);
-                        double doubleDiscount = Double.parseDouble(discount);
-
-                        double price = doubleMrp - (doubleMrp * doubleDiscount / 100);
-                        fieldMap.put("price", String.valueOf(price));
-                        notifyDataSetChanged();
                     }
 
                     if (textInputEditText.getTag().toString().equalsIgnoreCase("custom_field2")) {

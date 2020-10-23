@@ -33,6 +33,11 @@ public class VariantAdapter extends RecyclerView.Adapter<VariantAdapter.ViewHold
         notifyDataSetChanged();
     }
 
+    public void addVariantList(List<Map<String, String>> variantList) {
+        this.variantList.addAll(variantList);
+        notifyDataSetChanged();
+    }
+
     @NonNull
     @Override
     public VariantAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {

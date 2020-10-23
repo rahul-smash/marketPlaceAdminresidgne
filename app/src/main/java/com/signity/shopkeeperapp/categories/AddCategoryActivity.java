@@ -14,6 +14,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -79,6 +80,7 @@ public class AddCategoryActivity extends BaseActivity implements SubCategoryAdap
     private ImageView imageViewDeleteImage;
     private String categoryId;
     private ActivityType activityType = ActivityType.ADD;
+    private TextView textViewNext;
 
     public static Intent getStartIntent(Context context) {
         return new Intent(context, AddCategoryActivity.class);
@@ -98,7 +100,10 @@ public class AddCategoryActivity extends BaseActivity implements SubCategoryAdap
         initView();
         setUpToolbar();
         setUpAdapter();
-        getCategoryById();
+        if (activityType == ActivityType.EDIT) {
+            textViewNext.setText("Save");
+            getCategoryById();
+        }
     }
 
     private void getCategoryById() {
@@ -113,19 +118,29 @@ public class AddCategoryActivity extends BaseActivity implements SubCategoryAdap
 
                 ProgressDialogUtil.hideProgressDialog();
 
+                if (s.getData() == null) {
+                    return;
+                }
+
                 textInputEditTextCategoryName.setText(s.getData().getTitle());
-                int indexC = s.getData().getImage10080().lastIndexOf("/");
-                String nameC = s.getData().getImage10080().substring(indexC+1);
-                categoryImageUrl = nameC;
 
-                imageViewDeleteImage.setVisibility(View.VISIBLE);
-                imageViewCategory.setVisibility(View.VISIBLE);
-                linearLayoutAddCategoryImage.setVisibility(View.INVISIBLE);
+                try {
+                    if (!TextUtils.isEmpty(s.getData().getImage10080())) {
+                        int indexC = s.getData().getImage10080().lastIndexOf("/");
+                        String nameC = s.getData().getImage10080().substring(indexC + 1);
+                        categoryImageUrl = nameC;
+                        imageViewDeleteImage.setVisibility(View.VISIBLE);
+                        imageViewCategory.setVisibility(View.VISIBLE);
+                        linearLayoutAddCategoryImage.setVisibility(View.INVISIBLE);
 
-                Picasso.with(AddCategoryActivity.this)
-                        .load(s.getData().getImage10080())
-                        .placeholder(ResourcesCompat.getDrawable(getResources(), R.drawable.addimageicon, null))
-                        .into(imageViewCategory);
+                        Picasso.with(AddCategoryActivity.this)
+                                .load(s.getData().getImage10080())
+                                .placeholder(ResourcesCompat.getDrawable(getResources(), R.drawable.addimageicon, null))
+                                .into(imageViewCategory);
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
 
                 List<SubCategoryModel> models = new ArrayList<>();
                 for (SubCategory subCategory : s.getData().getSubCategory()) {
@@ -133,9 +148,11 @@ public class AddCategoryActivity extends BaseActivity implements SubCategoryAdap
                     model.setId(subCategory.getId());
                     model.setSubCategoryName(subCategory.getTitle());
                     model.setSubCategoryImageUrl(subCategory.getImage10080());
-                    int index = subCategory.getImage10080().lastIndexOf("/");
-                    String name = subCategory.getImage10080().substring(indexC+1);
-                    model.setSubCategoryImage(name);
+                    if (!TextUtils.isEmpty(subCategory.getImage10080())) {
+                        int index = subCategory.getImage10080().lastIndexOf("/");
+                        String name = subCategory.getImage10080().substring(index + 1);
+                        model.setSubCategoryImage(name);
+                    }
                     models.add(model);
                 }
 
@@ -183,6 +200,7 @@ public class AddCategoryActivity extends BaseActivity implements SubCategoryAdap
         linearLayoutAddCategoryImage = findViewById(R.id.ll_add_category_image);
         toolbar = findViewById(R.id.toolbar);
         linearLayoutNext = findViewById(R.id.ll_next);
+        textViewNext = findViewById(R.id.tv_next);
 
         linearLayoutAddCategoryImage.setOnClickListener(new View.OnClickListener() {
             @Override

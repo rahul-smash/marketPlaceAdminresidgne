@@ -191,6 +191,12 @@ public class AddProductActivity extends BaseActivity implements SubCategoryDialo
         setImagesData();
         setCategorySubCategory();
         setProductDetails();
+
+        if (productData.getVariants() != null && productData.getVariants().size() > 0) {
+            dynamicFieldAdapter.setFieldMap(productData.getVariants().get(0));
+            variantAdapter.setVariantList(productData.getVariants());
+        }
+
     }
 
     private void setProductDetails() {
@@ -221,8 +227,12 @@ public class AddProductActivity extends BaseActivity implements SubCategoryDialo
         List<MessageResponse> messageResponses = new ArrayList<>();
         for (ImageObject imageObject : productData.getImageList()) {
 
-            int index = imageObject.getImage().lastIndexOf("/");
-            String imageName = imageObject.getImage().substring(index + 1);
+            if (TextUtils.isEmpty(imageObject.getImage10080())) {
+                continue;
+            }
+
+            int index = imageObject.getImage10080().lastIndexOf("/");
+            String imageName = imageObject.getImage10080().substring(index + 1);
 
             MessageResponse messageResponse = new MessageResponse();
             messageResponse.setImageUrl(imageObject.getImage10080());
@@ -528,7 +538,7 @@ public class AddProductActivity extends BaseActivity implements SubCategoryDialo
 
                     Map<String, String> variant = (HashMap<String, String>) data.getExtras().getSerializable(VariantActivity.VARIANT_DATA);
                     variantList.add(variant);
-                    variantAdapter.setVariantList(variantList);
+                    variantAdapter.addVariantList(variantList);
                     break;
             }
         }

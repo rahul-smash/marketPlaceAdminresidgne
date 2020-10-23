@@ -5,7 +5,7 @@ import com.google.gson.annotations.SerializedName;
 
 import java.util.List;
 
-public class ProductDetail extends GetProductData {
+public class ProductDetail extends CustomProductData {
 
     @Expose
     @SerializedName("category_parent_id")
