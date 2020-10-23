@@ -32,6 +32,7 @@ public class DynamicFieldAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
     private Context context;
     private List<DynamicField> dynamicFieldList = new ArrayList<>();
     private Map<String, String> fieldMap = new HashMap<>();
+    private boolean isfocus;
 
     public DynamicFieldAdapter(Context context) {
         this.context = context;
@@ -182,6 +183,16 @@ public class DynamicFieldAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
 
             if (dynamicField.getVariantFieldName().equalsIgnoreCase("discount")) {
                 textInputEditText.setText("0");
+                fieldMap.put(textInputEditText.getTag().toString(), "0");
+            }
+
+            if (dynamicField.getVariantFieldName().equalsIgnoreCase("price")) {
+                textInputEditText.setText(fieldMap.get("price"));
+            }
+
+            if (dynamicField.getVariantFieldName().equalsIgnoreCase("mrp_price") && isfocus) {
+                textInputEditText.setFocusableInTouchMode(true);
+                textInputEditText.requestFocus();
             }
 
             textInputEditText.setOnFocusChangeListener(new View.OnFocusChangeListener() {
@@ -203,6 +214,9 @@ public class DynamicFieldAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
 
                             double price = doubleMrp - (doubleMrp * doubleDiscount / 100);
                             textInputEditText.setText(String.format(Locale.getDefault(), "%.2f", price));
+                        }
+                        if(textInputEditText.getTag().toString().equalsIgnoreCase("mrp_price")){
+                            isfocus = true;
                         }
                     }
 
@@ -232,6 +246,23 @@ public class DynamicFieldAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
                 public void onTextChanged(CharSequence s, int start, int before, int count) {
                     if (TextUtils.isEmpty(s)) {
                         return;
+                    }
+
+                    if (textInputEditText.getTag().toString().equalsIgnoreCase("mrp_price")) {
+
+                        String mrp = s.toString();
+                        String discount = fieldMap.get("discount");
+
+                        if (TextUtils.isEmpty(mrp) || TextUtils.isEmpty(discount)) {
+                            return;
+                        }
+
+                        double doubleMrp = Double.parseDouble(mrp);
+                        double doubleDiscount = Double.parseDouble(discount);
+
+                        double price = doubleMrp - (doubleMrp * doubleDiscount / 100);
+                        fieldMap.put("price", String.valueOf(price));
+                        notifyDataSetChanged();
                     }
 
                     if (textInputEditText.getTag().toString().equalsIgnoreCase("custom_field2")) {

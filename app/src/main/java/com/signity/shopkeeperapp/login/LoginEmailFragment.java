@@ -104,7 +104,7 @@ public class LoginEmailFragment extends Fragment {
         Button cancelBtn = (Button) dialog.findViewById(R.id.cancelBtn);
         Button okBtn = (Button) dialog.findViewById(R.id.okBtn);
         final EditText getEmail = (EditText) dialog.findViewById(R.id.getEmail);
-        getEmail.setText(AppPreference.getInstance().getUserEmail());
+        getEmail.setText(editTextEmail.getText().toString().trim());
 
 
         cancelBtn.setOnClickListener(new View.OnClickListener() {
@@ -117,10 +117,10 @@ public class LoginEmailFragment extends Fragment {
         okBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                dialog.dismiss();
                 if (getEmail.getText().toString().trim().isEmpty()) {
                     Toast.makeText(getActivity(), "Please enter email", Toast.LENGTH_SHORT).show();
                 } else if (Util.checkValidEmail(getEmail.getText().toString().trim())) {
+                    dialog.dismiss();
                     callNetworkForForgotPassword(getEmail.getText().toString().trim());
                 } else {
                     Toast.makeText(getActivity(), "Please enter valid email id.", Toast.LENGTH_SHORT).show();
