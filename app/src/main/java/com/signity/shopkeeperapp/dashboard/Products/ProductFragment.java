@@ -581,6 +581,16 @@ public class ProductFragment extends Fragment implements View.OnClickListener, P
         startActivity(shareIntent);
     }
 
+    private void shareIntent(String extra, String shareTitle) {
+        Intent sendIntent = new Intent();
+        sendIntent.setAction(Intent.ACTION_SEND);
+        sendIntent.putExtra(Intent.EXTRA_TEXT, extra);
+        sendIntent.setType("text/plain");
+
+        Intent shareIntent = Intent.createChooser(sendIntent, shareTitle);
+        startActivity(shareIntent);
+    }
+
     @Override
     public void onClickDeleteProduct(String id, int position) {
         deleteCategory(id, position);
@@ -593,6 +603,24 @@ public class ProductFragment extends Fragment implements View.OnClickListener, P
 
         final String storeUrl = AppPreference.getInstance().getStoreUrl();
         final String mobile = AppPreference.getInstance().getUserMobile();
+
+        if (TextUtils.isEmpty(productData.getImage300200())) {
+            String price = "";
+            if (productData.getVariants() != null && productData.getVariants().size() > 0) {
+                price = productData.getVariants().get(0).getPrice();
+            }
+            String message = String.format("Item Name: %s\nPrice:%s\n", productData.getTitle(), price);
+            String message1 = String.format("Place your order here %s/product/%s. ", storeUrl, productData.getId());
+            String message2 = String.format("Feel free to call us on %s if you need any help with ordering online. Thank you.", mobile);
+
+            StringBuilder builder = new StringBuilder();
+            builder.append(message);
+            builder.append(message1);
+            builder.append(message2);
+
+            shareIntent(builder.toString(), "Share Product");
+            return;
+        }
 
         Picasso.with(getContext())
                 .load(productData.getImage300200())
