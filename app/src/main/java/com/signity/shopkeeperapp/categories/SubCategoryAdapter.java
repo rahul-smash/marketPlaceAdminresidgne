@@ -33,6 +33,11 @@ public class SubCategoryAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
     private List<SubCategoryModel> subCategoryModels = new ArrayList<>();
     private SubCategoryAdapterListner listener;
 
+    public void setSubCategoryModels(List<SubCategoryModel> subCategoryModels) {
+        this.subCategoryModels = subCategoryModels;
+        notifyDataSetChanged();
+    }
+
     public SubCategoryAdapter(Context context) {
         this.context = context;
     }
@@ -127,6 +132,8 @@ public class SubCategoryAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
             } catch (Exception e) {
                 e.printStackTrace();
             }
+
+            textInputEditTextSubCategoryName.setText(subCategory.getSubCategoryName());
 
             textInputEditTextSubCategoryName.setOnFocusChangeListener(new View.OnFocusChangeListener() {
                 @Override

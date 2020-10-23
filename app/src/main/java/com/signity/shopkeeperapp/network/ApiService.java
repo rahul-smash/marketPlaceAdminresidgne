@@ -21,6 +21,7 @@ import com.signity.shopkeeperapp.model.ResponseForceUpdate;
 import com.signity.shopkeeperapp.model.SetOrdersModel;
 import com.signity.shopkeeperapp.model.StoresModel;
 import com.signity.shopkeeperapp.model.category.AddCategoryResponse;
+import com.signity.shopkeeperapp.model.category.CategoryDetailResponse;
 import com.signity.shopkeeperapp.model.dashboard.StoreDashboardResponse;
 import com.signity.shopkeeperapp.model.image.ImageUploadResponse;
 import com.signity.shopkeeperapp.model.notification.NotificationModel;
@@ -211,5 +212,9 @@ public interface ApiService {
 
     @FormUrlEncoded
     @POST("/categoryDetail")
-    void getCategoryById(@FieldMap Map<String, String> map,Callback<String> response);
+    void getCategoryById(@FieldMap Map<String, String> map,Callback<CategoryDetailResponse> response);
+
+    @FormUrlEncoded
+    @POST("/editCategory")
+    void editCategory(@FieldMap Map<String, String> map, Callback<AddCategoryResponse> network_is_unreachable);
 }

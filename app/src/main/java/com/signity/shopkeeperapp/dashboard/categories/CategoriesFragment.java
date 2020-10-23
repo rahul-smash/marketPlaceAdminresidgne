@@ -147,7 +147,9 @@ public class CategoriesFragment extends Fragment implements CategoriesAdapter.Ca
         linearLayoutAddCategory.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivity(AddCategoryActivity.getStartIntent(getContext()));
+                Bundle bundle = new Bundle();
+                bundle.putSerializable(AddCategoryActivity.ACTIVITY_TYPE, AddCategoryActivity.ActivityType.ADD);
+                startActivity(AddCategoryActivity.getStartIntent(getContext(), bundle));
                 AnimUtil.slideFromRightAnim(getActivity());
             }
         });
@@ -243,6 +245,7 @@ public class CategoriesFragment extends Fragment implements CategoriesAdapter.Ca
     public void onClickCategory(String id) {
         Bundle bundle = new Bundle();
         bundle.putString(AddCategoryActivity.CATEGORY_ID, id);
+        bundle.putSerializable(AddCategoryActivity.ACTIVITY_TYPE, AddCategoryActivity.ActivityType.EDIT);
         startActivity(AddCategoryActivity.getStartIntent(getContext(), bundle));
     }
 
@@ -256,7 +259,9 @@ public class CategoriesFragment extends Fragment implements CategoriesAdapter.Ca
                 new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
                         dialog.cancel();
-                        startActivity(AddCategoryActivity.getStartIntent(getContext()));
+                        Bundle bundle = new Bundle();
+                        bundle.putSerializable(AddCategoryActivity.ACTIVITY_TYPE, AddCategoryActivity.ActivityType.ADD);
+                        startActivity(AddCategoryActivity.getStartIntent(getContext(), bundle));
                         AnimUtil.slideFromRightAnim(getActivity());
                     }
                 });

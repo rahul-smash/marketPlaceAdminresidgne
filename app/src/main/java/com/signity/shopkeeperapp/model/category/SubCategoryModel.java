@@ -6,6 +6,10 @@ import com.google.gson.annotations.SerializedName;
 public class SubCategoryModel {
 
     @Expose
+    @SerializedName("id")
+    private String id;
+
+    @Expose
     @SerializedName("title")
     private String subCategoryName;
 
@@ -18,6 +22,14 @@ public class SubCategoryModel {
 
     public String getSubCategoryImageUrl() {
         return subCategoryImageUrl;
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
     }
 
     public void setSubCategoryImageUrl(String subCategoryImageUrl) {
@@ -43,7 +55,8 @@ public class SubCategoryModel {
     @Override
     public String toString() {
         return "SubCategoryModel{" +
-                "subCategoryName='" + subCategoryName + '\'' +
+                "id='" + id + '\'' +
+                ", subCategoryName='" + subCategoryName + '\'' +
                 ", subCategoryImage='" + subCategoryImage + '\'' +
                 ", subCategoryImageUrl='" + subCategoryImageUrl + '\'' +
                 '}';

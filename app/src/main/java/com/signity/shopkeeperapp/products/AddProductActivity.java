@@ -222,7 +222,7 @@ public class AddProductActivity extends BaseActivity implements SubCategoryDialo
         for (ImageObject imageObject : productData.getImageList()) {
 
             int index = imageObject.getImage().lastIndexOf("/");
-            String imageName = imageObject.getImage().substring(index);
+            String imageName = imageObject.getImage().substring(index + 1);
 
             MessageResponse messageResponse = new MessageResponse();
             messageResponse.setImageUrl(imageObject.getImage10080());
