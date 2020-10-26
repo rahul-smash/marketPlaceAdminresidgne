@@ -222,7 +222,7 @@ public class ProductsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
             }
 
             txtProductName.setText(productData.getTitle());
-            txtSubCategoryName.setText("");
+            txtSubCategoryName.setText(productData.getCategoryName());
 
             List<Variant> varientDataList = productData.getVariants();
             Variant variantData = varientDataList.get(0);
