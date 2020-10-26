@@ -3,19 +3,17 @@ package com.signity.shopkeeperapp.products;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Rect;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.text.TextUtils;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.widget.Toolbar;
-import androidx.recyclerview.widget.GridLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
+import androidx.fragment.app.FragmentTransaction;
 
 import com.signity.shopkeeperapp.R;
 import com.signity.shopkeeperapp.base.BaseActivity;
@@ -24,10 +22,10 @@ import com.signity.shopkeeperapp.model.Product.StoreAttributes;
 import com.signity.shopkeeperapp.network.NetworkAdaper;
 import com.signity.shopkeeperapp.util.AnimUtil;
 import com.signity.shopkeeperapp.util.ProgressDialogUtil;
-import com.signity.shopkeeperapp.util.Util;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -40,10 +38,8 @@ public class VariantActivity extends BaseActivity {
     public static final String VARIANT_DATA = "VARIANT_DATA";
     private static final String TAG = "VariantActivity";
     private Toolbar toolbar;
-    private LinearLayout linearLayoutSave;
-    private DynamicFieldAdapter dynamicFieldAdapter;
-    private RecyclerView recyclerViewDynamicField;
     private List<DynamicField> dynamicFieldList = new ArrayList<>();
+    private VariantFragment variantFragment;
 
     public static Intent getStartIntent(Context context) {
         return new Intent(context, VariantActivity.class);
@@ -61,31 +57,13 @@ public class VariantActivity extends BaseActivity {
         setContentView(R.layout.activity_variant);
         initViews();
         setUpToolbar();
-        setUpAdapter();
         getStoreAttributes();
-    }
-
-    private void setUpAdapter() {
-        dynamicFieldAdapter = new DynamicFieldAdapter(this);
-        recyclerViewDynamicField.setLayoutManager(new GridLayoutManager(this, 2));
-        recyclerViewDynamicField.setAdapter(dynamicFieldAdapter);
-        recyclerViewDynamicField.addItemDecoration(new RecyclerView.ItemDecoration() {
-            @Override
-            public void getItemOffsets(@NonNull Rect outRect, @NonNull View view, @NonNull RecyclerView parent, @NonNull RecyclerView.State state) {
-                outRect.left = 0;
-                outRect.right = 0;
-                outRect.bottom = (int) Util.pxFromDp(VariantActivity.this, 8);
-                outRect.top = 0;
-            }
-        });
     }
 
     private void initViews() {
         toolbar = findViewById(R.id.toolbar);
-        linearLayoutSave = findViewById(R.id.ll_save);
-        recyclerViewDynamicField = findViewById(R.id.rv_dynamic_fields);
 
-        linearLayoutSave.setOnClickListener(new View.OnClickListener() {
+        findViewById(R.id.ll_save).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 saveVariant();
@@ -95,7 +73,7 @@ public class VariantActivity extends BaseActivity {
 
     private void saveVariant() {
 
-        Map<String, String> fieldMap = dynamicFieldAdapter.getFieldMap();
+        Map<String, String> fieldMap = variantFragment != null ? variantFragment.getVariantMap() : new HashMap<String, String>();
 
         if (fieldMap.isEmpty()) {
             Toast.makeText(this, "Please add variant details", Toast.LENGTH_SHORT).show();
@@ -108,6 +86,22 @@ public class VariantActivity extends BaseActivity {
                     if (TextUtils.isEmpty(fieldMap.get(dynamicField.getVariantFieldName()))) {
                         Toast.makeText(this, String.format("%s is empty", dynamicField.getLabel()), Toast.LENGTH_SHORT).show();
                         return;
+                    }
+                    if (dynamicField.getVariantFieldName().equalsIgnoreCase("custom_field2")) {
+                        String minStocks = fieldMap.get("custom_field2");
+                        String stocks = fieldMap.get("custom_field1");
+
+                        try {
+                            int stock = Integer.parseInt(stocks);
+                            int minStock = Integer.parseInt(minStocks);
+
+                            if (minStock >= stock) {
+                                Toast.makeText(this, "Min stock should be less than stock", Toast.LENGTH_SHORT).show();
+                                return;
+                            }
+                        } catch (NumberFormatException e) {
+                            e.printStackTrace();
+                        }
                     }
                 } else {
                     Toast.makeText(this, String.format("%s is empty", dynamicField.getLabel()), Toast.LENGTH_SHORT).show();
@@ -157,8 +151,10 @@ public class VariantActivity extends BaseActivity {
                 }
                 ProgressDialogUtil.hideProgressDialog();
                 if (storeAttributes.isSuccess()) {
-                    dynamicFieldList = storeAttributes.getData().getDynamicFields();
-                    dynamicFieldAdapter.setDynamicFieldList(dynamicFieldList);
+                    if (storeAttributes.getData() != null) {
+                        dynamicFieldList = storeAttributes.getData().getDynamicFields();
+                        setVariantFragment();
+                    }
                 }
             }
 
@@ -171,5 +167,14 @@ public class VariantActivity extends BaseActivity {
                 Toast.makeText(VariantActivity.this, "Network is unreachable", Toast.LENGTH_SHORT).show();
             }
         });
+    }
+
+    private void setVariantFragment() {
+        FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
+        Bundle bundle = new Bundle();
+        bundle.putParcelableArrayList(VariantFragment.DYNAMIC_LIST, (ArrayList<? extends Parcelable>) dynamicFieldList);
+        variantFragment = VariantFragment.getInstance(bundle);
+        fragmentTransaction.replace(R.id.variant_frame, variantFragment, VariantFragment.TAG);
+        fragmentTransaction.commit();
     }
 }

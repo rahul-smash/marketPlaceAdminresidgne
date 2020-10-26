@@ -5,7 +5,6 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.graphics.Rect;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Parcelable;
@@ -33,7 +32,7 @@ import androidx.appcompat.widget.AppCompatSpinner;
 import androidx.appcompat.widget.Toolbar;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.app.ActivityCompat;
-import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -111,7 +110,6 @@ public class AddProductActivity extends BaseActivity implements SubCategoryDialo
     private LinearLayout linearLayoutVariant;
     private RecyclerView recyclerViewVariant;
     private RecyclerView recyclerViewImages;
-    private RecyclerView recyclerViewDynamicField;
     private ConstraintLayout constraintLayoutTags;
     private TextView textViewShowMoreLess;
     private VariantAdapter variantAdapter;
@@ -123,15 +121,16 @@ public class AddProductActivity extends BaseActivity implements SubCategoryDialo
     private String unitType;
     private String foodType;
     private List<Map<String, String>> variantList = new ArrayList<>();
-    private List<DynamicField> dynamicFieldList = new ArrayList<>();
-    private DynamicFieldAdapter dynamicFieldAdapter;
     private JSONArray jsonArrayVariant = new JSONArray();
     private ProductDetail productData;
     private String productId;
+    private VariantFragment variantFragment;
 
     // TODO - Get Product Details from API and fill the data
     // TODO - update the product
     // TODO - Refresh the page as in Orders Listing
+
+    private List<DynamicField> dynamicFieldList = new ArrayList<>();
 
     public static Intent getStartIntent(Context context) {
         return new Intent(context, AddProductActivity.class);
@@ -193,8 +192,15 @@ public class AddProductActivity extends BaseActivity implements SubCategoryDialo
         setProductDetails();
 
         if (productData.getVariants() != null && productData.getVariants().size() > 0) {
-            dynamicFieldAdapter.setFieldMap(productData.getVariants().get(0));
-            variantAdapter.setVariantList(productData.getVariants());
+            setVariantFragment(productData.getVariants().get(0));
+
+            if (productData.getVariants().size() > 1) {
+                List<Map<String, String>> variantMap = new ArrayList<>();
+                for (int i = 1; i < productData.getVariants().size(); i++) {
+                    variantMap.add(productData.getVariants().get(i));
+                }
+                variantAdapter.setVariantList(variantMap);
+            }
         }
 
     }
@@ -265,7 +271,9 @@ public class AddProductActivity extends BaseActivity implements SubCategoryDialo
                 if (storeAttributes.isSuccess()) {
                     if (storeAttributes.getData() != null) {
                         dynamicFieldList = storeAttributes.getData().getDynamicFields();
-                        dynamicFieldAdapter.setDynamicFieldList(storeAttributes.getData().getDynamicFields());
+                        if (TextUtils.isEmpty(productId)) {
+                            setVariantFragment(new HashMap<String, String>());
+                        }
                     }
                 }
             }
@@ -279,6 +287,16 @@ public class AddProductActivity extends BaseActivity implements SubCategoryDialo
                 Toast.makeText(AddProductActivity.this, "Network is unreachable", Toast.LENGTH_SHORT).show();
             }
         });
+    }
+
+    private void setVariantFragment(Map<String, String> map) {
+        FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
+        Bundle bundle = new Bundle();
+        bundle.putParcelableArrayList(VariantFragment.DYNAMIC_LIST, (ArrayList<? extends Parcelable>) dynamicFieldList);
+        variantFragment = VariantFragment.getInstance(bundle);
+        variantFragment.setVariantMap(map);
+        fragmentTransaction.replace(R.id.variant_frame, variantFragment, VariantFragment.TAG);
+        fragmentTransaction.commit();
     }
 
     private void setUpSpinner() {
@@ -315,19 +333,6 @@ public class AddProductActivity extends BaseActivity implements SubCategoryDialo
         recyclerViewImages.setAdapter(imagesAdapter);
         recyclerViewImages.setLayoutManager(new LinearLayoutManager(this, RecyclerView.HORIZONTAL, false));
         recyclerViewImages.addItemDecoration(new SpacesItemImageDecoration((int) Util.pxFromDp(this, 8)));
-
-        dynamicFieldAdapter = new DynamicFieldAdapter(this);
-        recyclerViewDynamicField.setLayoutManager(new GridLayoutManager(this, 2));
-        recyclerViewDynamicField.setAdapter(dynamicFieldAdapter);
-        recyclerViewDynamicField.addItemDecoration(new RecyclerView.ItemDecoration() {
-            @Override
-            public void getItemOffsets(@NonNull Rect outRect, @NonNull View view, @NonNull RecyclerView parent, @NonNull RecyclerView.State state) {
-                outRect.left = 0;
-                outRect.right = 0;
-                outRect.bottom = (int) Util.pxFromDp(AddProductActivity.this, 8);
-                outRect.top = 0;
-            }
-        });
     }
 
     private void initView() {
@@ -350,7 +355,6 @@ public class AddProductActivity extends BaseActivity implements SubCategoryDialo
         linearLayoutVariant = findViewById(R.id.ll_add_variant);
         recyclerViewVariant = findViewById(R.id.rv_variant);
         recyclerViewImages = findViewById(R.id.rv_product_images);
-        recyclerViewDynamicField = findViewById(R.id.rv_dynamic_fields);
         textViewShowMoreLess = findViewById(R.id.tv_show_less_more);
         constraintLayoutTags = findViewById(R.id.const_tags);
 
@@ -538,7 +542,7 @@ public class AddProductActivity extends BaseActivity implements SubCategoryDialo
 
                     Map<String, String> variant = (HashMap<String, String>) data.getExtras().getSerializable(VariantActivity.VARIANT_DATA);
                     variantList.add(variant);
-                    variantAdapter.addVariantList(variantList);
+                    variantAdapter.setVariantList(variantList);
                     break;
             }
         }
@@ -662,7 +666,7 @@ public class AddProductActivity extends BaseActivity implements SubCategoryDialo
         String inclusiveExclusive = switchInEx.isChecked() ? "exclusive" : "inclusive";
         boolean displayVegNonVeg = checkBoxDisplayVegNonVeg.isChecked();
         List<MessageResponse> productImages = imagesAdapter.getImageList();
-        Map<String, String> variantfieldMap = dynamicFieldAdapter.getFieldMap();
+        Map<String, String> variantfieldMap = variantFragment != null ? variantFragment.getVariantMap() : new HashMap<String, String>();
 
         // get images and check validation
         if (productImages.isEmpty()) {
@@ -708,6 +712,22 @@ public class AddProductActivity extends BaseActivity implements SubCategoryDialo
                     if (TextUtils.isEmpty(variantfieldMap.get(dynamicField.getVariantFieldName()))) {
                         Toast.makeText(this, String.format("%s is empty", dynamicField.getLabel()), Toast.LENGTH_SHORT).show();
                         return;
+                    }
+                    if (dynamicField.getVariantFieldName().equalsIgnoreCase("custom_field2")) {
+                        String minStocks = variantfieldMap.get("custom_field2");
+                        String stocks = variantfieldMap.get("custom_field1");
+
+                        try {
+                            int stock = Integer.parseInt(stocks);
+                            int minStock = Integer.parseInt(minStocks);
+
+                            if (minStock >= stock) {
+                                Toast.makeText(this, "Min stock should be less than stock", Toast.LENGTH_SHORT).show();
+                                return;
+                            }
+                        } catch (NumberFormatException e) {
+                            e.printStackTrace();
+                        }
                     }
                 } else {
                     Toast.makeText(this, String.format("%s is empty", dynamicField.getLabel()), Toast.LENGTH_SHORT).show();
@@ -755,6 +775,40 @@ public class AddProductActivity extends BaseActivity implements SubCategoryDialo
         }
 
         ProgressDialogUtil.showProgressDialog(this);
+
+        if (!TextUtils.isEmpty(productId)) {
+            productData.put("id", productId);
+
+            NetworkAdaper.getNetworkServices().editProduct(productData, new Callback<CategoryStatus>() {
+                @Override
+                public void success(CategoryStatus res, Response response) {
+
+                    if (isDestroyed()) {
+                        return;
+                    }
+
+                    ProgressDialogUtil.hideProgressDialog();
+                    if (res.getSuccess()) {
+                        finish();
+                    } else {
+                        Toast.makeText(AddProductActivity.this, res.getMessage(), Toast.LENGTH_SHORT).show();
+                    }
+                }
+
+                @Override
+                public void failure(RetrofitError error) {
+
+                    if (isDestroyed()) {
+                        return;
+                    }
+
+                    ProgressDialogUtil.hideProgressDialog();
+                    Toast.makeText(AddProductActivity.this, "Network is unreachable", Toast.LENGTH_SHORT).show();
+                }
+            });
+            return;
+        }
+
         NetworkAdaper.getNetworkServices().addProduct(productData, new Callback<CategoryStatus>() {
             @Override
             public void success(CategoryStatus res, Response response) {

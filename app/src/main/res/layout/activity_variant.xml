@@ -45,24 +45,11 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/appBarLayout">
 
-        <androidx.constraintlayout.widget.ConstraintLayout
-            android:id="@+id/const_variant"
+        <FrameLayout
+            android:id="@+id/variant_frame"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:padding="16dp"
-            android:background="@color/colorWhite">
-
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/rv_dynamic_fields"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:scrollbars="vertical"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.5"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
-
-        </androidx.constraintlayout.widget.ConstraintLayout>
+            android:layout_margin="16dp" />
 
     </androidx.core.widget.NestedScrollView>
 

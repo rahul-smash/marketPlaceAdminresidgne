@@ -71,7 +71,9 @@ public class VariantAdapter extends RecyclerView.Adapter<VariantAdapter.ViewHold
         public void bind(int positon) {
             Map<String, String> variant = variantList.get(positon);
 
-            textViewVariantDetail.setText(String.format("Weight - %s %s", variant.get("weight"), variant.get("unit_type")));
+            String weight = TextUtils.isEmpty(variant.get("weight")) ? "" : variant.get("weight");
+            String unit = TextUtils.isEmpty(variant.get("unit_type")) ? "" : variant.get("unit_type");
+            textViewVariantDetail.setText(String.format("Weight - %s %s", weight, unit));
             textViewVariantPrice.setText(Util.getPriceWithCurrency(Double.parseDouble(TextUtils.isEmpty(variant.get("mrp_price")) ? "0" : variant.get("mrp_price")), AppPreference.getInstance().getCurrency()));
             textViewVariantPriceFinal.setText(Util.getPriceWithCurrency(Double.parseDouble(TextUtils.isEmpty(variant.get("price")) ? "0" : variant.get("price")), AppPreference.getInstance().getCurrency()));
             textViewVariantDiscount.setText(String.format("Discount - %s", TextUtils.isEmpty(variant.get("discount")) ? "0" : variant.get("discount")).concat("%"));

@@ -212,9 +212,13 @@ public interface ApiService {
 
     @FormUrlEncoded
     @POST("/categoryDetail")
-    void getCategoryById(@FieldMap Map<String, String> map,Callback<CategoryDetailResponse> response);
+    void getCategoryById(@FieldMap Map<String, String> map, Callback<CategoryDetailResponse> response);
 
     @FormUrlEncoded
     @POST("/editCategory")
     void editCategory(@FieldMap Map<String, String> map, Callback<AddCategoryResponse> network_is_unreachable);
+
+    @FormUrlEncoded
+    @POST("/editProduct")
+    void editProduct(@FieldMap Map<String, String> productData, Callback<CategoryStatus> network_is_unreachable);
 }
