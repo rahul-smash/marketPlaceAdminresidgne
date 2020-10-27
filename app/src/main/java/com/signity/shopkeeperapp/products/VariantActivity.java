@@ -40,6 +40,7 @@ public class VariantActivity extends BaseActivity {
     private Toolbar toolbar;
     private List<DynamicField> dynamicFieldList = new ArrayList<>();
     private VariantFragment variantFragment;
+    private Map<String, String> fieldMap = new HashMap<>();
 
     public static Intent getStartIntent(Context context) {
         return new Intent(context, VariantActivity.class);
@@ -55,9 +56,17 @@ public class VariantActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_variant);
+        getExtra();
         initViews();
         setUpToolbar();
         getStoreAttributes();
+    }
+
+    private void getExtra() {
+        Bundle bundle = getIntent().getExtras();
+        if (bundle != null) {
+            fieldMap = (HashMap<String, String>) bundle.getSerializable(VARIANT_DATA);
+        }
     }
 
     private void initViews() {
@@ -174,6 +183,7 @@ public class VariantActivity extends BaseActivity {
         Bundle bundle = new Bundle();
         bundle.putParcelableArrayList(VariantFragment.DYNAMIC_LIST, (ArrayList<? extends Parcelable>) dynamicFieldList);
         variantFragment = VariantFragment.getInstance(bundle);
+        variantFragment.setVariantMap(fieldMap);
         fragmentTransaction.replace(R.id.variant_frame, variantFragment, VariantFragment.TAG);
         fragmentTransaction.commit();
     }

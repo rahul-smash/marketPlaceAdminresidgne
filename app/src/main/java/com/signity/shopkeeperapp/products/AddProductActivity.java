@@ -83,7 +83,7 @@ import retrofit.mime.TypedFile;
 /**
  * Created by ketan on 25/09/20.
  */
-public class AddProductActivity extends BaseActivity implements SubCategoryDialog.SubCategoryListener, CategoryDialog.CategoryListener {
+public class AddProductActivity extends BaseActivity implements SubCategoryDialog.SubCategoryListener, CategoryDialog.CategoryListener, VariantAdapter.VariantListener {
 
     public static final String CATEGORY_ID = "CATEGORY_ID";
     public static final String PRODUCT_ID = "PRODUCT_ID";
@@ -125,10 +125,6 @@ public class AddProductActivity extends BaseActivity implements SubCategoryDialo
     private ProductDetail productData;
     private String productId;
     private VariantFragment variantFragment;
-
-    // TODO - Get Product Details from API and fill the data
-    // TODO - update the product
-    // TODO - Refresh the page as in Orders Listing
 
     private List<DynamicField> dynamicFieldList = new ArrayList<>();
 
@@ -195,11 +191,10 @@ public class AddProductActivity extends BaseActivity implements SubCategoryDialo
             setVariantFragment(productData.getVariants().get(0));
 
             if (productData.getVariants().size() > 1) {
-                List<Map<String, String>> variantMap = new ArrayList<>();
                 for (int i = 1; i < productData.getVariants().size(); i++) {
-                    variantMap.add(productData.getVariants().get(i));
+                    variantList.add(productData.getVariants().get(i));
                 }
-                variantAdapter.setVariantList(variantMap);
+                variantAdapter.setVariantList(variantList);
             }
         }
 
@@ -276,6 +271,7 @@ public class AddProductActivity extends BaseActivity implements SubCategoryDialo
                         }
                     }
                 }
+                getProductById();
             }
 
             @Override
@@ -325,6 +321,7 @@ public class AddProductActivity extends BaseActivity implements SubCategoryDialo
 
     private void setUpAdapter() {
         variantAdapter = new VariantAdapter(this);
+        variantAdapter.setListener(this);
         recyclerViewVariant.setAdapter(variantAdapter);
         recyclerViewVariant.setLayoutManager(new LinearLayoutManager(this));
         recyclerViewVariant.addItemDecoration(new SpacesItemDecoration((int) Util.pxFromDp(this, 16)));
@@ -409,7 +406,9 @@ public class AddProductActivity extends BaseActivity implements SubCategoryDialo
         linearLayoutVariant.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivityForResult(VariantActivity.getStartIntent(AddProductActivity.this), REQUEST_VARIANT);
+                Bundle bundle = new Bundle();
+                bundle.putSerializable(VariantActivity.VARIANT_DATA, new HashMap<>());
+                startActivityForResult(VariantActivity.getStartIntent(AddProductActivity.this, bundle), REQUEST_VARIANT);
                 AnimUtil.slideFromRightAnim(AddProductActivity.this);
             }
         });
@@ -478,7 +477,7 @@ public class AddProductActivity extends BaseActivity implements SubCategoryDialo
                 if (imagesAdapter.getItemCount() < 4) {
                     getGalleryImage();
                 } else {
-                    Toast.makeText(AddProductActivity.this, "Max 6 image allowded", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(AddProductActivity.this, "Max 4 image allowded", Toast.LENGTH_SHORT).show();
                 }
             }
         });
@@ -621,7 +620,6 @@ public class AddProductActivity extends BaseActivity implements SubCategoryDialo
                     Toast.makeText(AddProductActivity.this, "Data not found!", Toast.LENGTH_SHORT).show();
                 }
                 getStoreAttributes();
-                getProductById();
             }
 
             @Override
@@ -789,6 +787,7 @@ public class AddProductActivity extends BaseActivity implements SubCategoryDialo
 
                     ProgressDialogUtil.hideProgressDialog();
                     if (res.getSuccess()) {
+                        publishOnline();
                         finish();
                     } else {
                         Toast.makeText(AddProductActivity.this, res.getMessage(), Toast.LENGTH_SHORT).show();
@@ -819,6 +818,7 @@ public class AddProductActivity extends BaseActivity implements SubCategoryDialo
 
                 ProgressDialogUtil.hideProgressDialog();
                 if (res.getSuccess()) {
+                    publishOnline();
                     finish();
                 } else {
                     Toast.makeText(AddProductActivity.this, res.getMessage(), Toast.LENGTH_SHORT).show();
@@ -838,6 +838,19 @@ public class AddProductActivity extends BaseActivity implements SubCategoryDialo
         });
     }
 
+    private void publishOnline() {
+        NetworkAdaper.getNetworkServices().publish(new Callback<CategoryStatus>() {
+            @Override
+            public void success(CategoryStatus categoryStatus, Response response) {
+                Toast.makeText(AddProductActivity.this, categoryStatus.getMessage(), Toast.LENGTH_SHORT).show();
+            }
+
+            @Override
+            public void failure(RetrofitError error) {
+            }
+        });
+    }
+
     @Override
     public void onSelectCategory(String categoryId, String categoryName) {
         selectedCategoryId = categoryId;
@@ -848,5 +861,12 @@ public class AddProductActivity extends BaseActivity implements SubCategoryDialo
     public void onSelectSubCategory(String subCategoryId, String subCategoryName) {
         selectedSubCategoryId = subCategoryId;
         editTextSubCategory.setText(subCategoryName);
+    }
+
+    @Override
+    public void onClickVariant(Map<String, String> variant) {
+        /*Bundle bundle = new Bundle();
+        bundle.putSerializable(VariantActivity.VARIANT_DATA, (Serializable) variant);
+        startActivity(VariantActivity.getStartIntent(this, bundle));*/
     }
 }

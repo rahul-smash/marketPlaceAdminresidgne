@@ -8,7 +8,6 @@ import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -400,12 +399,11 @@ public class AddCategoryActivity extends BaseActivity implements SubCategoryAdap
                 ProgressDialogUtil.hideProgressDialog();
 
                 if (imageUploadResponse.isSuccess()) {
-                    categoryImageUrl = imageUploadResponse.getMessage().getUrl();
-                    String imageUrl = imageUploadResponse.getMessage().getImageUrl();
-
                     switch (imageUploadType) {
                         case CATEGORY:
                             if (imageViewCategory != null) {
+                                categoryImageUrl = imageUploadResponse.getMessage().getUrl();
+                                String imageUrl = imageUploadResponse.getMessage().getImageUrl();
                                 imageViewDeleteImage.setVisibility(View.VISIBLE);
                                 imageViewCategory.setVisibility(View.VISIBLE);
                                 linearLayoutAddCategoryImage.setVisibility(View.INVISIBLE);
@@ -416,11 +414,11 @@ public class AddCategoryActivity extends BaseActivity implements SubCategoryAdap
                             }
                             break;
                         case SUBCATEGORY:
+                            String subCategoryImageUrl = imageUploadResponse.getMessage().getUrl();
+                            String imageUrl = imageUploadResponse.getMessage().getImageUrl();
                             SubCategoryModel subCategoryModel = subCategoryAdapter.getSubCategoryModels().get(position);
-                            subCategoryModel.setSubCategoryImage(categoryImageUrl);
+                            subCategoryModel.setSubCategoryImage(subCategoryImageUrl);
                             subCategoryModel.setSubCategoryImageUrl(imageUrl);
-                            Log.d(TAG, "success: " + subCategoryModel.toString());
-
                             subCategoryAdapter.notifyItemChanged(position, subCategoryModel);
                             break;
                     }

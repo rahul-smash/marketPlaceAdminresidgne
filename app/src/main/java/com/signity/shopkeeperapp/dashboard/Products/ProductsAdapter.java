@@ -138,6 +138,10 @@ public class ProductsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
         popupWindowOverView.showAsDropDown(view, 0, -offsetY);
 
         LinearLayout share = layout.findViewById(R.id.ll_share);
+
+        GetProductData getProductData = mData.get(position);
+        share.setVisibility(getProductData.getStatus().equals("1") ? View.VISIBLE : View.GONE);
+
         share.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

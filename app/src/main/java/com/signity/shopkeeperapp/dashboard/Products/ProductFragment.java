@@ -103,6 +103,7 @@ public class ProductFragment extends Fragment implements View.OnClickListener, P
             }
         }
     };
+    private boolean needRefesh;
 
     public static ProductFragment getInstance(Bundle bundle) {
         ProductFragment fragment = new ProductFragment();
@@ -238,6 +239,13 @@ public class ProductFragment extends Fragment implements View.OnClickListener, P
     @Override
     public void onResume() {
         super.onResume();
+        if (needRefesh) {
+            currentPageNumber = 1;
+            start = 0;
+            productsAdapter.clearData();
+            getAllOrdersMethod();
+            needRefesh = false;
+        }
     }
 
     public void getProductApi() {
@@ -683,6 +691,7 @@ public class ProductFragment extends Fragment implements View.OnClickListener, P
 
     @Override
     public void onClickProduct(String productId) {
+        needRefesh = true;
         Bundle bundle = new Bundle();
         bundle.putString(AddProductActivity.PRODUCT_ID, productId);
         startActivity(AddProductActivity.getStartIntent(getContext(), bundle));
