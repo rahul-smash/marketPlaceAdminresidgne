@@ -11,6 +11,7 @@ import android.text.TextUtils;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -28,6 +29,7 @@ import com.signity.shopkeeperapp.model.OrdersListModel;
 import com.signity.shopkeeperapp.model.SetOrdersModel;
 import com.signity.shopkeeperapp.model.orders.StoreOrdersReponse;
 import com.signity.shopkeeperapp.network.NetworkAdaper;
+import com.signity.shopkeeperapp.notifications.NotificationDialog;
 import com.signity.shopkeeperapp.util.AnimUtil;
 import com.signity.shopkeeperapp.util.Constant;
 import com.signity.shopkeeperapp.util.DialogUtils;
@@ -372,27 +374,34 @@ public class OrderDetailActivity extends BaseActivity implements OrderDetailsAdp
     }
 
     @Override
-    public void onRejectOrder(int position, int pageNumber) {
-        OrdersListModel order = ordersAdapter.getOrdersListModels().get(position);
-        updateOrderStatus(HomeOrdersAdapter.OrderType.REJECTED, order.getOrderId(), position);
+    public void onRejectOrder(final int position, final int pageNumber) {
+        RejectOrderDialog rejectOrderDialog = RejectOrderDialog.getInstance(null);
+        rejectOrderDialog.setListener(new RejectOrderDialog.DialogListener() {
+            @Override
+            public void onSubmit(String message) {
+                OrdersListModel order = ordersAdapter.getOrdersListModels().get(position);
+                updateOrderStatus(HomeOrdersAdapter.OrderType.REJECTED, order.getOrderId(), pageNumber,message);
+            }
+        });
+        rejectOrderDialog.show(getSupportFragmentManager(), NotificationDialog.TAG);
     }
 
     @Override
     public void onAcceptOrder(int position, int pageNumber) {
         OrdersListModel order = ordersAdapter.getOrdersListModels().get(position);
-        updateOrderStatus(HomeOrdersAdapter.OrderType.ACCEPTED, order.getOrderId(), position);
+        updateOrderStatus(HomeOrdersAdapter.OrderType.ACCEPTED, order.getOrderId(), position,"");
     }
 
     @Override
     public void onShipOrder(int position, int pageNumber) {
         OrdersListModel order = ordersAdapter.getOrdersListModels().get(position);
-        updateOrderStatus(HomeOrdersAdapter.OrderType.SHIPPED, order.getOrderId(), position);
+        updateOrderStatus(HomeOrdersAdapter.OrderType.SHIPPED, order.getOrderId(), position,"");
     }
 
     @Override
     public void onDeliverOrder(int position, int pageNumber) {
         OrdersListModel order = ordersAdapter.getOrdersListModels().get(position);
-        updateOrderStatus(HomeOrdersAdapter.OrderType.DELIVERED, order.getOrderId(), position);
+        updateOrderStatus(HomeOrdersAdapter.OrderType.DELIVERED, order.getOrderId(), position,"");
     }
 
     @Override
@@ -450,12 +459,13 @@ public class OrderDetailActivity extends BaseActivity implements OrderDetailsAdp
         }
     }
 
-    private void updateOrderStatus(HomeOrdersAdapter.OrderType orderStatus, String orderId, final int position) {
+    private void updateOrderStatus(HomeOrdersAdapter.OrderType orderStatus, String orderId, final int position,String message) {
         ProgressDialogUtil.showProgressDialog(this);
         Map<String, String> param = new HashMap<String, String>();
         param.put("user_id", AppPreference.getInstance().getUserId());
         param.put("order_status", String.valueOf(orderStatus.getStatusId()));
         param.put("order_ids", orderId);
+        param.put("message", message);
 
         NetworkAdaper.getNetworkServices().setOrderStatus(param, new Callback<SetOrdersModel>() {
             @Override
