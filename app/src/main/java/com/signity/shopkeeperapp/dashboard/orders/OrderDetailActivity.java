@@ -465,7 +465,9 @@ public class OrderDetailActivity extends BaseActivity implements OrderDetailsAdp
         param.put("user_id", AppPreference.getInstance().getUserId());
         param.put("order_status", String.valueOf(orderStatus.getStatusId()));
         param.put("order_ids", orderId);
-        param.put("message", message);
+        if (!TextUtils.isEmpty(message)) {
+            param.put("order_rejection_note", message);
+        }
 
         NetworkAdaper.getNetworkServices().setOrderStatus(param, new Callback<SetOrdersModel>() {
             @Override

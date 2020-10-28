@@ -17,7 +17,6 @@ import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.LinearLayout;
 import android.widget.PopupWindow;
 import android.widget.RadioButton;
@@ -512,7 +511,9 @@ public class HomeFragment extends Fragment implements HomeContentAdapter.HomeCon
         param.put("user_id", AppPreference.getInstance().getUserId());
         param.put("order_status", String.valueOf(orderStatus.getStatusId()));
         param.put("order_ids", orderId);
-        param.put("message", message);
+        if (!TextUtils.isEmpty(message)) {
+            param.put("order_rejection_note", message);
+        }
 
         NetworkAdaper.getNetworkServices().setOrderStatus(param, new Callback<SetOrdersModel>() {
             @Override
