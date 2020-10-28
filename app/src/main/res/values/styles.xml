@@ -145,4 +145,10 @@
         <item name="chipIcon">@drawable/deliveredicon</item>
     </style>
 
+    <style name="AppTheme.TextView.Tab" parent="TextAppearance.Design.Tab">
+        <item name="textAllCaps">false</item>
+        <item name="android:textAllCaps">false</item>
+        <item name="android:textSize">16sp</item>
+    </style>
+
 </resources>
