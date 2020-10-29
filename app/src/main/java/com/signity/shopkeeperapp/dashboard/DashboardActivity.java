@@ -30,6 +30,7 @@ import com.signity.shopkeeperapp.BuildConfig;
 import com.signity.shopkeeperapp.R;
 import com.signity.shopkeeperapp.SplashActivity;
 import com.signity.shopkeeperapp.base.BaseActivity;
+import com.signity.shopkeeperapp.customers.CustomersActivity;
 import com.signity.shopkeeperapp.dashboard.Products.ProductFragment;
 import com.signity.shopkeeperapp.dashboard.account.AccountFragment;
 import com.signity.shopkeeperapp.dashboard.categories.CategoriesFragment;
@@ -262,7 +263,7 @@ public class DashboardActivity extends BaseActivity implements BottomNavigationV
 
     @Override
     public void onClickViewCustomers() {
-
+        startActivity(CustomersActivity.getStartIntent(this));
     }
 
     @Override

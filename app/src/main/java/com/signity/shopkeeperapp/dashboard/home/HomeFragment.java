@@ -38,7 +38,6 @@ import com.google.android.material.chip.Chip;
 import com.google.android.material.chip.ChipGroup;
 import com.signity.shopkeeperapp.R;
 import com.signity.shopkeeperapp.adapter.SpacesItemDecoration;
-import com.signity.shopkeeperapp.customer.CustomerFragment;
 import com.signity.shopkeeperapp.dashboard.DashboardActivity;
 import com.signity.shopkeeperapp.dashboard.orders.HomeOrdersAdapter;
 import com.signity.shopkeeperapp.dashboard.orders.OrderDetailActivity;
@@ -485,7 +484,9 @@ public class HomeFragment extends Fragment implements HomeContentAdapter.HomeCon
                 }
                 break;
             case ALL_CUSTOMERS:
-                showFragment(CustomerFragment.getInstance(null), CustomerFragment.TAG);
+                if (listener != null) {
+                    listener.onClickViewCustomers();
+                }
                 break;
             case TOTAL_PRODUCT:
                 if (listener != null) {
