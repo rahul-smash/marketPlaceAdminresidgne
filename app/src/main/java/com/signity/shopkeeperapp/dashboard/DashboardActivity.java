@@ -264,6 +264,7 @@ public class DashboardActivity extends BaseActivity implements BottomNavigationV
     @Override
     public void onClickViewCustomers() {
         startActivity(CustomersActivity.getStartIntent(this));
+        AnimUtil.slideFromRightAnim(this);
     }
 
     @Override

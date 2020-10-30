@@ -1,13 +1,13 @@
 package com.signity.shopkeeperapp.products;
 
 import android.Manifest;
-import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Parcelable;
+import android.provider.MediaStore;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
@@ -27,11 +27,12 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.appcompat.widget.AppCompatSpinner;
 import androidx.appcompat.widget.Toolbar;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
+import androidx.core.content.FileProvider;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -84,13 +85,18 @@ import retrofit.mime.TypedFile;
  * Created by ketan on 25/09/20.
  */
 public class AddProductActivity extends BaseActivity implements SubCategoryDialog.SubCategoryListener, CategoryDialog.CategoryListener, VariantAdapter.VariantListener {
-
     public static final String CATEGORY_ID = "CATEGORY_ID";
+    public static final String SUBCATEGORY_ID = "SUBCATEGORY_ID";
     public static final String PRODUCT_ID = "PRODUCT_ID";
+    private static final int CAMERA_REQUEST = 100;
+    private static final int PICK_REQUEST = 200;
+    private static final int CAMERA_PERMISSION = 1000;
+    private static final int GALLERY_PERMISSION = 2000;
     private static final String TAG = "AddProductActivity";
     private static final int REQUEST_PERMISSION = 1001;
     private static final int REQUEST_IMAGE_GET = 2002;
     private static final int REQUEST_VARIANT = 3003;
+    private static final String PRODUCT_IMAGE = "PRODUCT_IMAGE";
     private Toolbar toolbar;
     private TextInputEditText editTextCategory;
     private TextInputEditText editTextSubCategory;
@@ -116,7 +122,7 @@ public class AddProductActivity extends BaseActivity implements SubCategoryDialo
     private ImagesAdapter imagesAdapter;
     private List<GetCategoryData> categoryDataList = new ArrayList<>();
     private String selectedCategoryId = "";
-    private String selectedSubCategoryId;
+    private String selectedSubCategoryId = "";
     private List<String> unitList = new ArrayList<>(Arrays.asList("Kg", "gram", "Ltr", "ml"));
     private String unitType;
     private String foodType;
@@ -127,6 +133,7 @@ public class AddProductActivity extends BaseActivity implements SubCategoryDialo
     private VariantFragment variantFragment;
 
     private List<DynamicField> dynamicFieldList = new ArrayList<>();
+    private Uri cameraImageUri;
 
     public static Intent getStartIntent(Context context) {
         return new Intent(context, AddProductActivity.class);
@@ -249,6 +256,7 @@ public class AddProductActivity extends BaseActivity implements SubCategoryDialo
         Bundle bundle = getIntent().getExtras();
         if (bundle != null) {
             selectedCategoryId = bundle.getString(CATEGORY_ID);
+            selectedSubCategoryId = bundle.getString(SUBCATEGORY_ID);
             productId = bundle.getString(PRODUCT_ID);
         }
     }
@@ -475,7 +483,7 @@ public class AddProductActivity extends BaseActivity implements SubCategoryDialo
             @Override
             public void onClick(View v) {
                 if (imagesAdapter.getItemCount() < 4) {
-                    getGalleryImage();
+                    openImageChooser();
                 } else {
                     Toast.makeText(AddProductActivity.this, "Max 4 image allowded", Toast.LENGTH_SHORT).show();
                 }
@@ -496,54 +504,7 @@ public class AddProductActivity extends BaseActivity implements SubCategoryDialo
         intent.addCategory(Intent.CATEGORY_OPENABLE);
         intent.setType("image/*");
         if (intent.resolveActivity(getPackageManager()) != null) {
-            startActivityForResult(intent, REQUEST_IMAGE_GET);
-        }
-    }
-
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        if (resultCode == Activity.RESULT_OK) {
-            switch (requestCode) {
-                case REQUEST_IMAGE_GET:
-
-                    if (data == null) {
-                        return;
-                    }
-
-                    File fileLogo = new File(getExternalFilesDir("ValueAppz"), "product.png");
-                    Uri output = Uri.fromFile(fileLogo);
-
-                    Uri fullPhotoUri = data.getData();
-
-                    if (fullPhotoUri == null) {
-                        return;
-                    }
-
-                    UCrop.of(fullPhotoUri, output)
-                            .withAspectRatio(1, 1)
-                            .withMaxResultSize(500, 500)
-                            .start(this);
-                    break;
-                case UCrop.REQUEST_CROP:
-
-                    if (data == null) {
-                        return;
-                    }
-
-                    final Uri resultUri = UCrop.getOutput(data);
-                    uploadImage(FileUtils.getPath(this, resultUri));
-                    break;
-                default:
-                    if (data == null || data.getExtras() == null) {
-                        return;
-                    }
-
-                    Map<String, String> variant = (HashMap<String, String>) data.getExtras().getSerializable(VariantActivity.VARIANT_DATA);
-                    variantList.add(variant);
-                    variantAdapter.setVariantList(variantList);
-                    break;
-            }
+            startActivityForResult(intent, PICK_REQUEST);
         }
     }
 
@@ -582,18 +543,6 @@ public class AddProductActivity extends BaseActivity implements SubCategoryDialo
         });
     }
 
-    @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        if (requestCode == REQUEST_PERMISSION) {
-            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                openGallery();
-            } else {
-                Toast.makeText(this, "Permission required", Toast.LENGTH_SHORT).show();
-            }
-        }
-    }
-
     public void getCategoriesApi() {
         ProgressDialogUtil.showProgressDialog(this);
         Map<String, Object> param = new HashMap<>();
@@ -613,6 +562,12 @@ public class AddProductActivity extends BaseActivity implements SubCategoryDialo
                     for (GetCategoryData categoryData : categoryDataList) {
                         if (categoryData.getId().equals(selectedCategoryId)) {
                             editTextCategory.setText(categoryData.getTitle());
+                            for (SubCategory subCategory : categoryData.getSubCategory()) {
+                                if (subCategory.getId().equals(selectedSubCategoryId)) {
+                                    editTextSubCategory.setText(subCategory.getTitle());
+                                    break;
+                                }
+                            }
                             break;
                         }
                     }
@@ -868,5 +823,93 @@ public class AddProductActivity extends BaseActivity implements SubCategoryDialo
         /*Bundle bundle = new Bundle();
         bundle.putSerializable(VariantActivity.VARIANT_DATA, (Serializable) variant);
         startActivity(VariantActivity.getStartIntent(this, bundle));*/
+    }
+
+    private void openImageChooser() {
+        if (getSupportFragmentManager().findFragmentByTag(ImageBottomDialog.TAG) == null) {
+            ImageBottomDialog imageBottomDialog = new ImageBottomDialog(new ImageBottomDialog.ImageListener() {
+                @Override
+                public void onClickGallery() {
+                    getGalleryImage();
+                }
+
+                @Override
+                public void onClickCamera() {
+                    openCamera();
+                }
+            });
+            imageBottomDialog.show(getSupportFragmentManager(), ImageBottomDialog.TAG);
+        }
+    }
+
+    public void openCamera() {
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED) {
+            cameraIntent();
+        } else {
+            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, CAMERA_PERMISSION);
+        }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+            switch (requestCode) {
+                case CAMERA_PERMISSION:
+                    cameraIntent();
+                    break;
+                case GALLERY_PERMISSION:
+                    getGalleryImage();
+                    break;
+            }
+        } else {
+            Toast.makeText(this, "Permission required", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (resultCode == RESULT_OK) {
+            switch (requestCode) {
+                case CAMERA_REQUEST:
+                    cropImage(cameraImageUri);
+                    break;
+                case PICK_REQUEST:
+                    Uri uri = data.getData();
+                    cropImage(uri);
+                    break;
+                case UCrop.REQUEST_CROP:
+                    final Uri resultUri = UCrop.getOutput(data);
+                    uploadImage(FileUtils.getPath(this, resultUri));
+                    break;
+                default:
+                    if (data.getExtras() == null) {
+                        return;
+                    }
+
+                    Map<String, String> variant = (HashMap<String, String>) data.getExtras().getSerializable(VariantActivity.VARIANT_DATA);
+                    variantList.add(variant);
+                    variantAdapter.setVariantList(variantList);
+                    break;
+            }
+        }
+    }
+
+    private void cropImage(Uri uri) {
+        File fileCamera = new File(getExternalFilesDir("VauleAppz"), PRODUCT_IMAGE.concat("out.jpg"));
+        Uri outCamera = Uri.fromFile(fileCamera);
+        UCrop.of(uri, outCamera)
+                .withAspectRatio(1, 1)
+                .withMaxResultSize(500, 500)
+                .start(this);
+    }
+
+    private void cameraIntent() {
+        Intent cameraIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+        File fileCamera = new File(getExternalFilesDir("VauleAppz"), PRODUCT_IMAGE.concat(".jpg"));
+        cameraImageUri = FileProvider.getUriForFile(this, getPackageName() + ".provider", fileCamera);
+        cameraIntent.putExtra(MediaStore.EXTRA_OUTPUT, cameraImageUri);
+        startActivityForResult(cameraIntent, CAMERA_REQUEST);
     }
 }

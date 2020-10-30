@@ -33,6 +33,7 @@ import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.google.android.material.chip.Chip;
 import com.google.android.material.chip.ChipGroup;
@@ -81,7 +82,7 @@ public class HomeFragment extends Fragment implements HomeContentAdapter.HomeCon
     private LinearLayout linearLayoutViewAllOrders;
     private ChipGroup chipGroup;
     private LinearLayout linearLayoutOverview, linearLayoutShare;
-
+    private SwipeRefreshLayout swipeRefreshLayout;
     private HomeFragmentListener listener;
     private List<OrdersListModel> ordersListModels = new ArrayList<>();
     private int notificationCount;
@@ -171,6 +172,8 @@ public class HomeFragment extends Fragment implements HomeContentAdapter.HomeCon
                     return;
                 }
 
+                swipeRefreshLayout.setRefreshing(false);
+
                 if (ordersReponse.isSuccess()) {
                     ordersListModels = ordersReponse.getData().getOrders();
 
@@ -213,6 +216,8 @@ public class HomeFragment extends Fragment implements HomeContentAdapter.HomeCon
                     return;
                 }
 
+                swipeRefreshLayout.setRefreshing(false);
+
                 if (storeDashboardResponse.isSuccess()) {
 
                     if (textViewOverView != null) {
@@ -253,6 +258,7 @@ public class HomeFragment extends Fragment implements HomeContentAdapter.HomeCon
 
     private void init(View view) {
         linearLayoutOverview = view.findViewById(R.id.ll_overview);
+        swipeRefreshLayout = view.findViewById(R.id.swipe_layout);
         linearLayoutShare = view.findViewById(R.id.ll_share);
         recyclerViewContent = view.findViewById(R.id.rv_content);
         recyclerViewOrders = view.findViewById(R.id.rv_orders);
@@ -319,6 +325,15 @@ public class HomeFragment extends Fragment implements HomeContentAdapter.HomeCon
             @Override
             public void onClick(View v) {
                 openWebsiteShare();
+            }
+        });
+
+        swipeRefreshLayout.setDistanceToTriggerSync((int) Util.pxFromDp(getContext(), 180));
+        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                getOrders();
+                storeDashboard();
             }
         });
     }

@@ -37,7 +37,7 @@
             app:layout_constraintTop_toBottomOf="@+id/tv_customer_name" />
 
         <LinearLayout
-            android:id="@+id/linearLayout7"
+            android:id="@+id/ll_area"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="4dp"
@@ -99,6 +99,7 @@
             android:paddingTop="6dp"
             android:paddingEnd="16dp"
             android:paddingBottom="6dp"
+            android:visibility="gone"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent">
 

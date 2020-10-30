@@ -75,8 +75,8 @@ public class ProductFragment extends Fragment implements View.OnClickListener, P
     private LinearLayoutManager layoutManager;
     private int pageSize = 10, currentPageNumber = 1, start, totalOrders;
     private List<GetCategoryData> categoryDataList = new ArrayList<>();
-    private String selectedCategoryId = "0";
-    private String selectedSubCategoryId = "0";
+    private String selectedCategoryId = "";
+    private String selectedSubCategoryId = "";
     private TextInputEditText txtSelectCategory, txtSubCategory;
     private boolean isFiltering;
     private boolean isLoading;
@@ -240,10 +240,16 @@ public class ProductFragment extends Fragment implements View.OnClickListener, P
     public void onResume() {
         super.onResume();
         if (needRefesh) {
-            currentPageNumber = 1;
-            start = 0;
-            productsAdapter.clearData();
-            getAllOrdersMethod();
+            if (!TextUtils.isEmpty(selectedCategoryId) && !TextUtils.isEmpty(selectedSubCategoryId)) {
+                currentPageNumber = 1;
+                start = 0;
+                getProductApiUsingFilter();
+            } else {
+                currentPageNumber = 1;
+                start = 0;
+                productsAdapter.clearData();
+                getAllOrdersMethod();
+            }
             needRefesh = false;
         }
     }
@@ -338,7 +344,11 @@ public class ProductFragment extends Fragment implements View.OnClickListener, P
     @Override
     public void onClick(View view) {
         if (view == linearLayoutAddProduct) {
-            startActivity(AddProductActivity.getStartIntent(getContext()));
+            needRefesh = true;
+            Bundle bundle = new Bundle();
+            bundle.putString(AddProductActivity.CATEGORY_ID, selectedCategoryId);
+            bundle.putString(AddProductActivity.SUBCATEGORY_ID, selectedSubCategoryId);
+            startActivity(AddProductActivity.getStartIntent(getContext(), bundle));
             AnimUtil.slideFromRightAnim(getActivity());
         }
     }

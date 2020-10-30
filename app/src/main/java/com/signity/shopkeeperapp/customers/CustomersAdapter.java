@@ -1,9 +1,11 @@
 package com.signity.shopkeeperapp.customers;
 
 import android.content.Context;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -115,6 +117,7 @@ public class CustomersAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
 
         TextView textViewActiveCount, textViewTotalCount, textViewAmountPaid;
         TextView textViewCustomerName, textViewCustomerNumber, textViewCustomerCity;
+        LinearLayout linearLayoutArea;
 
         public CustomerViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -124,6 +127,7 @@ public class CustomersAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
             textViewActiveCount = itemView.findViewById(R.id.tv_active_count);
             textViewTotalCount = itemView.findViewById(R.id.tv_total_count);
             textViewAmountPaid = itemView.findViewById(R.id.tv_amount_paid);
+            linearLayoutArea = itemView.findViewById(R.id.ll_area);
         }
 
         public void bind(int positon) {
@@ -137,6 +141,7 @@ public class CustomersAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
             textViewTotalCount.setText(String.valueOf(customersResponse.getTotalOrders()));
             textViewAmountPaid.setText(Util.getPriceWithCurrency(Double.parseDouble(customersResponse.getPaidAmount()), AppPreference.getInstance().getCurrency()));
 
+            linearLayoutArea.setVisibility(TextUtils.isEmpty(customersResponse.getArea()) ? View.GONE : View.VISIBLE);
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {

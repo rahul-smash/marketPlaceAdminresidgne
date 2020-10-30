@@ -49,9 +49,11 @@
         app:layout_constraintTop_toBottomOf="@+id/appBarLayout">
 
         <LinearLayout
+            android:id="@+id/ll_main"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            android:visibility="gone">
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
@@ -82,38 +84,30 @@
                         android:layout_height="wrap_content"
                         android:layout_marginEnd="8dp"
                         android:layout_marginRight="8dp"
-                        android:text="Rohit Sharma"
-                        app:layout_constraintEnd_toStartOf="@+id/ll_add_product"
+                        android:text=""
+                        app:layout_constraintEnd_toStartOf="@+id/linearLayout5"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toTopOf="parent" />
-
-                    <TextView
-                        android:id="@+id/textView4"
-                        style="@style/AppTheme.TextView.Small"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:text="99997XXXXX"
-                        android:textColor="@color/colorTextDark"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toBottomOf="@+id/tv_customer_name" />
 
                     <TextView
                         android:id="@+id/tv_customer_number"
                         style="@style/AppTheme.TextView.Small"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:text="99997XXXXX"
+                        android:text=""
                         android:textColor="@color/colorTextDark"
+                        app:layout_constraintEnd_toEndOf="@+id/tv_customer_name"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toBottomOf="@+id/tv_customer_name" />
 
                     <LinearLayout
                         android:id="@+id/ll_city"
-                        android:layout_width="wrap_content"
+                        android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="4dp"
-                        android:gravity="center"
+                        android:gravity="center_vertical"
                         android:orientation="horizontal"
+                        app:layout_constraintEnd_toStartOf="@+id/linearLayout9"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toBottomOf="@+id/tv_customer_number">
 
@@ -130,17 +124,18 @@
                             android:layout_height="wrap_content"
                             android:layout_marginStart="4dp"
                             android:layout_marginLeft="4dp"
-                            android:text="Mumbai" />
+                            android:text="" />
 
                     </LinearLayout>
 
                     <LinearLayout
                         android:id="@+id/ll_email"
-                        android:layout_width="wrap_content"
+                        android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="4dp"
-                        android:gravity="center"
+                        android:gravity="center_vertical"
                         android:orientation="horizontal"
+                        app:layout_constraintEnd_toStartOf="@+id/linearLayout9"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toBottomOf="@+id/ll_city">
 
@@ -157,11 +152,12 @@
                             android:layout_height="wrap_content"
                             android:layout_marginStart="4dp"
                             android:layout_marginLeft="4dp"
-                            android:text="rohit_XX@gmail.com" />
+                            android:text="" />
 
                     </LinearLayout>
 
                     <LinearLayout
+                        android:id="@+id/linearLayout9"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:gravity="end"
@@ -177,10 +173,11 @@
                             android:text="Loyalty Points" />
 
                         <TextView
+                            android:id="@+id/tv_loyalty_points"
                             style="@style/AppTheme.TextView.Small"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="250"
+                            android:text=""
                             android:textColor="@color/colorAccept" />
 
 
@@ -272,7 +269,7 @@
                             style="@style/AppTheme.TextView.Mini"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="4"
+                            android:text=""
                             android:textColor="@color/colorTextDark"
                             app:layout_constraintEnd_toEndOf="parent"
                             app:layout_constraintTop_toTopOf="parent" />
@@ -320,7 +317,7 @@
                             style="@style/AppTheme.TextView.Mini"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="4"
+                            android:text=""
                             android:textColor="@color/colorTextDark"
                             app:layout_constraintEnd_toEndOf="parent"
                             app:layout_constraintTop_toTopOf="parent" />
@@ -366,7 +363,7 @@
                             style="@style/AppTheme.TextView.Mini"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="4"
+                            android:text=""
                             android:textColor="@color/colorTextDark"
                             app:layout_constraintEnd_toEndOf="parent"
                             app:layout_constraintTop_toTopOf="parent" />
@@ -391,6 +388,9 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:padding="12dp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintHorizontal_bias="0.5"
+                    app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/view">
 
                     <TextView
@@ -410,24 +410,61 @@
                         app:layout_constraintTop_toTopOf="parent" />
 
                     <LinearLayout
+                        android:id="@+id/ll_deliver"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="12dp"
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toBottomOf="@+id/textView3">
 
-                        <TextView
-                            style="@style/AppTheme.TextView.Small"
-                            android:layout_width="200dp"
-                            android:layout_height="wrap_content"
-                            android:text="#324, Sector 22 D, Chandigarh"
-                            android:textColor="@color/colorTextDark" />
-
-                        <ImageView
+                        <LinearLayout
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:src="@drawable/mapicon" />
+                            android:orientation="vertical">
+
+                            <TextView
+                                android:id="@+id/tv_deliver_address"
+                                style="@style/AppTheme.TextView.Small"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:maxWidth="200dp"
+                                android:text=""
+                                android:textColor="@color/colorTextDark" />
+
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:gravity="center_horizontal"
+                            android:orientation="vertical">
+
+                            <LinearLayout
+                                android:id="@+id/ll_guide_me"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:background="@drawable/shape_white_oneside_rounded"
+                                android:gravity="center"
+                                android:paddingStart="12dp"
+                                android:paddingTop="4dp"
+                                android:paddingEnd="12dp"
+                                android:paddingBottom="4dp"
+                                app:layout_constraintBottom_toBottomOf="parent"
+                                app:layout_constraintEnd_toEndOf="parent"
+                                app:layout_constraintHorizontal_bias="0.5"
+                                app:layout_constraintStart_toStartOf="parent">
+
+                                <ImageView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:src="@drawable/guidemeicon"
+                                    app:tint="@color/colorTextDark" />
+
+                            </LinearLayout>
+
+                        </LinearLayout>
 
                     </LinearLayout>
 
@@ -442,10 +479,11 @@
                 android:padding="12dp">
 
                 <TextView
-                    style="@style/AppTheme.TextView.Medium"
+                    style="@style/AppTheme.TextView.Small"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Past Orders" />
+                    android:text="Past Orders"
+                    android:textColor="@color/colorTextDark" />
 
             </LinearLayout>
 

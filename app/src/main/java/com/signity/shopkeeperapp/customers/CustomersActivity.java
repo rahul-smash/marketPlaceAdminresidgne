@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.widget.Toast;
 
@@ -141,19 +142,25 @@ public class CustomersActivity extends BaseActivity implements CustomersAdapter.
     }
 
     private void runAnimation() {
-        AnimUtil.slideFromRightAnim(this);
         finish();
+        AnimUtil.slideFromLeftAnim(this);
     }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.menu_customer, menu);
         return super.onCreateOptionsMenu(menu);
     }
 
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         if (item.getItemId() == android.R.id.home) {
-            finish();
+            runAnimation();
+        }
+
+        if (item.getItemId() == R.id.action_add_customer) {
+
         }
         return super.onOptionsItemSelected(item);
     }
@@ -163,5 +170,6 @@ public class CustomersActivity extends BaseActivity implements CustomersAdapter.
         Bundle bundle = new Bundle();
         bundle.putString(CustomerDetailActivity.CUSTOMER_ID, customersResponse.getId());
         startActivity(CustomerDetailActivity.getStartIntent(this, bundle));
+        AnimUtil.slideFromRightAnim(this);
     }
 }
