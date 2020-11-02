@@ -7,6 +7,9 @@ import android.text.TextUtils;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.Spinner;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -16,11 +19,16 @@ import com.google.android.material.textfield.TextInputEditText;
 import com.signity.shopkeeperapp.R;
 import com.signity.shopkeeperapp.base.BaseActivity;
 import com.signity.shopkeeperapp.model.category.AddCategoryResponse;
+import com.signity.shopkeeperapp.model.customers.AreaCodesResp;
+import com.signity.shopkeeperapp.model.customers.DataResp;
 import com.signity.shopkeeperapp.network.NetworkAdaper;
 import com.signity.shopkeeperapp.util.AnimUtil;
 import com.signity.shopkeeperapp.util.ProgressDialogUtil;
+import com.signity.shopkeeperapp.util.Util;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import retrofit.Callback;
@@ -31,7 +39,13 @@ public class AddCustomerActivity extends BaseActivity {
 
     private static final String TAG = "AddCustomerActivity";
     private Toolbar toolbar;
-    private TextInputEditText textInputEditTextMobile, textInputEditTextName, textInputEditTextEmail, textInputEditTextAddress, textInputEditTextCity, textInputEditTextArea, textInputEditTextZip;
+    private Spinner spinner;
+    private TextInputEditText textInputEditTextMobile, textInputEditTextName, textInputEditTextEmail, textInputEditTextAddress, textInputEditTextCity, textInputEditTextZip;
+    private String areaId;
+    private List<String> areaList = new ArrayList<>();
+    private ArrayAdapter<String> stringArrayAdapter;
+    private List<DataResp> dataResps = new ArrayList<>();
+    private String areaName;
 
     public static Intent getStartIntent(Context context) {
         return new Intent(context, AddCustomerActivity.class);
@@ -43,6 +57,59 @@ public class AddCustomerActivity extends BaseActivity {
         setContentView(R.layout.activity_add_customer);
         initViews();
         setUpToolbar();
+        setUpSpinner();
+        getAreaCodes();
+    }
+
+    private void getAreaCodes() {
+
+        ProgressDialogUtil.showProgressDialog(this);
+        NetworkAdaper.getNetworkServices().getAreaCodes(new Callback<AreaCodesResp>() {
+            @Override
+            public void success(AreaCodesResp areaCodesResp, Response response) {
+
+                if (isDestroyed()) {
+                    return;
+                }
+
+                ProgressDialogUtil.hideProgressDialog();
+                areaList.clear();
+                if (areaCodesResp.isSuccess()) {
+                    dataResps = areaCodesResp.getData();
+                    for (DataResp resp : dataResps) {
+                        areaList.add(resp.getName());
+                    }
+                    stringArrayAdapter.notifyDataSetChanged();
+                }
+
+            }
+
+            @Override
+            public void failure(RetrofitError error) {
+                if (isDestroyed()) {
+                    return;
+                }
+                ProgressDialogUtil.hideProgressDialog();
+            }
+        });
+
+    }
+
+    private void setUpSpinner() {
+        stringArrayAdapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_dropdown_item, areaList);
+        spinner.setAdapter(stringArrayAdapter);
+        spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                areaId = dataResps.get(position).getId();
+                areaName = dataResps.get(position).getName();
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
     }
 
     private void initViews() {
@@ -52,8 +119,8 @@ public class AddCustomerActivity extends BaseActivity {
         textInputEditTextEmail = findViewById(R.id.edt_customer_email);
         textInputEditTextAddress = findViewById(R.id.edt_customer_address);
         textInputEditTextCity = findViewById(R.id.edt_customer_city);
-        textInputEditTextArea = findViewById(R.id.edt_customer_area);
         textInputEditTextZip = findViewById(R.id.edt_customer_zip);
+        spinner = findViewById(R.id.spinner_area);
 
         findViewById(R.id.ll_save).setOnClickListener(new View.OnClickListener() {
             @Override
@@ -69,7 +136,6 @@ public class AddCustomerActivity extends BaseActivity {
         String name = textInputEditTextName.getText().toString().trim();
         String email = textInputEditTextEmail.getText().toString().trim();
         String address = textInputEditTextAddress.getText().toString().trim();
-        String area = textInputEditTextArea.getText().toString().trim();
         String city = textInputEditTextCity.getText().toString().trim();
         String zip = textInputEditTextZip.getText().toString().trim();
 
@@ -85,14 +151,22 @@ public class AddCustomerActivity extends BaseActivity {
             return;
         }
 
+        if (!TextUtils.isEmpty(email) && !Util.checkValidEmail(email)) {
+            textInputEditTextEmail.setError("Enter valid email");
+            textInputEditTextEmail.requestFocus();
+            return;
+        }
+
         Map<String, Object> param = new HashMap<>();
         param.put("mobile", mobile);
         param.put("name", name);
         param.put("email", email);
         param.put("address", address);
-        param.put("area", area);
+        param.put("area_id", areaId);
+        param.put("area_name", areaName);
         param.put("city", city);
-        param.put("zip", zip);
+        param.put("state", "");
+        param.put("zipcode", zip);
 
         ProgressDialogUtil.showProgressDialog(this);
         NetworkAdaper.getNetworkServices().addCustomer(param, new Callback<AddCategoryResponse>() {
@@ -141,6 +215,7 @@ public class AddCustomerActivity extends BaseActivity {
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         if (item.getItemId() == android.R.id.home) {
+            hideKeyboard();
             runAnimation();
         }
         return super.onOptionsItemSelected(item);

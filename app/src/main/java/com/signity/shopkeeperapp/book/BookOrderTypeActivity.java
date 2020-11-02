@@ -11,27 +11,27 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
-import com.google.android.material.tabs.TabLayout;
 import com.signity.shopkeeperapp.R;
 import com.signity.shopkeeperapp.base.BaseActivity;
+import com.signity.shopkeeperapp.book.TypeFragment.DeliveryFragment;
+import com.signity.shopkeeperapp.book.TypeFragment.DineInFragment;
+import com.signity.shopkeeperapp.book.TypeFragment.PickUpFragment;
 import com.signity.shopkeeperapp.util.AnimUtil;
 
-public class BookOrderActivity extends BaseActivity {
-    private static final String TAG = "BookOrderActivity";
+public class BookOrderTypeActivity extends BaseActivity {
+    private static final String TAG = "BookOrderTypeActivity";
     private Toolbar toolbar;
-    private TabLayout tabLayout;
 
     public static Intent getIntent(Context context) {
-        return new Intent(context, BookOrderActivity.class);
+        return new Intent(context, BookOrderTypeActivity.class);
     }
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_book_order);
+        setContentView(R.layout.activity_book_order_type);
         initViews();
         setUpToolbar();
-        setUpTab();
         openFragment(0);
     }
 
@@ -39,51 +39,28 @@ public class BookOrderActivity extends BaseActivity {
         FragmentManager manager = getSupportFragmentManager();
         FragmentTransaction fragmentTransaction = manager.beginTransaction();
         if (manager.findFragmentByTag(tag) == null) {
-            fragmentTransaction.replace(R.id.fl_book_order, fragment, tag);
+            fragmentTransaction.replace(R.id.fl_book_order_type, fragment, tag);
             fragmentTransaction.disallowAddToBackStack();
             fragmentTransaction.commit();
         }
     }
 
-    private void setUpTab() {
-        tabLayout.addTab(tabLayout.newTab().setText("Best Sellers"));
-        tabLayout.addTab(tabLayout.newTab().setText("Categories"));
-        tabLayout.setTabMode(TabLayout.MODE_FIXED);
-        tabLayout.setTabTextColors(getResources().getColor(R.color.colorTextGrey), getResources().getColor(R.color.colorPrimary));
-        tabLayout.setSelectedTabIndicatorColor(getResources().getColor(R.color.colorPrimary));
-
-        tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
-            @Override
-            public void onTabSelected(TabLayout.Tab tab) {
-                openFragment(tab.getPosition());
-            }
-
-            @Override
-            public void onTabUnselected(TabLayout.Tab tab) {
-
-            }
-
-            @Override
-            public void onTabReselected(TabLayout.Tab tab) {
-
-            }
-        });
-    }
-
     private void openFragment(int position) {
         switch (position) {
             case 0:
-                showFragment(BestSellerFragment.getInstance(null), BestSellerFragment.TAG);
+                showFragment(DeliveryFragment.getInstance(null), DeliveryFragment.TAG);
                 break;
             case 1:
-                showFragment(CategoriesFragment.getInstance(null), CategoriesFragment.TAG);
+                showFragment(PickUpFragment.getInstance(null), PickUpFragment.TAG);
+                break;
+            case 2:
+                showFragment(DineInFragment.getInstance(null), DineInFragment.TAG);
                 break;
         }
     }
 
     private void initViews() {
         toolbar = findViewById(R.id.toolbar);
-        tabLayout = findViewById(R.id.tab_layout);
     }
 
     private void setUpToolbar() {
@@ -97,7 +74,7 @@ public class BookOrderActivity extends BaseActivity {
             @Override
             public void onClick(View v) {
                 finish();
-                AnimUtil.slideFromLeftAnim(BookOrderActivity.this);
+                AnimUtil.slideFromLeftAnim(BookOrderTypeActivity.this);
             }
         });
     }

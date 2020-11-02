@@ -30,6 +30,7 @@ import com.signity.shopkeeperapp.BuildConfig;
 import com.signity.shopkeeperapp.R;
 import com.signity.shopkeeperapp.SplashActivity;
 import com.signity.shopkeeperapp.base.BaseActivity;
+import com.signity.shopkeeperapp.book.BookOrderTypeActivity;
 import com.signity.shopkeeperapp.customers.CustomersActivity;
 import com.signity.shopkeeperapp.book.BookOrderActivity;
 import com.signity.shopkeeperapp.dashboard.Products.ProductFragment;
