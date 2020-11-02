@@ -160,7 +160,8 @@ public class CustomersActivity extends BaseActivity implements CustomersAdapter.
         }
 
         if (item.getItemId() == R.id.action_add_customer) {
-
+            startActivity(AddCustomerActivity.getStartIntent(this));
+            AnimUtil.slideFromRightAnim(this);
         }
         return super.onOptionsItemSelected(item);
     }
