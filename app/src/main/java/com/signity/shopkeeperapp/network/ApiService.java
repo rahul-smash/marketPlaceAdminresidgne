@@ -22,6 +22,8 @@ import com.signity.shopkeeperapp.model.SetOrdersModel;
 import com.signity.shopkeeperapp.model.StoresModel;
 import com.signity.shopkeeperapp.model.category.AddCategoryResponse;
 import com.signity.shopkeeperapp.model.category.CategoryDetailResponse;
+import com.signity.shopkeeperapp.model.customers.CustomerDataResponse;
+import com.signity.shopkeeperapp.model.customers.detail.CustomerDetailResponse;
 import com.signity.shopkeeperapp.model.dashboard.StoreDashboardResponse;
 import com.signity.shopkeeperapp.model.image.ImageUploadResponse;
 import com.signity.shopkeeperapp.model.notification.NotificationModel;
@@ -57,8 +59,16 @@ public interface ApiService {
     void getCustomers(@FieldMap Map<String, String> parameters, Callback<CustomersModel> response);
 
     @FormUrlEncoded
+    @POST("/storeCustomers")
+    void getCustomersNew(@FieldMap Map<String, Object> parameters, Callback<CustomerDataResponse> response);
+
+    @FormUrlEncoded
     @POST("/getCustomer")
     void getCustomerDetail(@FieldMap Map<String, String> parameters, Callback<GetCustomerDetailModel> response);
+
+    @FormUrlEncoded
+    @POST("/getCustomer")
+    void getCustomerDetailNew(@FieldMap Map<String, Object> parameters, Callback<CustomerDetailResponse> response);
 
     @FormUrlEncoded
     @POST("/storeorders")
@@ -216,9 +226,13 @@ public interface ApiService {
 
     @FormUrlEncoded
     @POST("/editCategory")
-    void editCategory(@FieldMap Map<String, String> map, Callback<AddCategoryResponse> network_is_unreachable);
+    void editCategory(@FieldMap Map<String, String> map, Callback<AddCategoryResponse> responseCallback);
 
     @FormUrlEncoded
     @POST("/editProduct")
-    void editProduct(@FieldMap Map<String, String> productData, Callback<CategoryStatus> network_is_unreachable);
+    void editProduct(@FieldMap Map<String, String> productData, Callback<CategoryStatus> responseCallback);
+
+    @FormUrlEncoded
+    @POST("/addCustomer")
+    void addCustomer(@FieldMap Map<String, Object> param, Callback<AddCategoryResponse> responseCallback);
 }

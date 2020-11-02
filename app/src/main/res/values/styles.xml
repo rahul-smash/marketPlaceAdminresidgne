@@ -2,7 +2,15 @@
 
     <!-- Base application theme. -->
     <style name="AppTheme" parent="AppTheme.Base">
+        <item name="bottomSheetDialogTheme">@style/AppBottomSheetDialogTheme</item>
+    </style>
 
+    <style name="AppBottomSheetDialogTheme" parent="Theme.Design.Light.BottomSheetDialog">
+        <item name="bottomSheetStyle">@style/AppModalStyle</item>
+    </style>
+
+    <style name="AppModalStyle" parent="Widget.Design.BottomSheet.Modal">
+        <item name="android:background">@drawable/rounded_bottom</item>
     </style>
 
     <style name="AppTheme.Base" parent="Theme.MaterialComponents.Light.NoActionBar">
@@ -55,6 +63,7 @@
         <item name="android:singleLine">true</item>
         <item name="android:imeOptions">actionNext</item>
         <item name="android:inputType">textPersonName</item>
+        <item name="android:fontFamily">@font/roboto</item>
     </style>
 
     <style name="AppTheme.EditText.MultiLine" parent="AppTheme.EditText">
@@ -71,19 +80,22 @@
     <!--TextView Styles-->
     <style name="AppTheme.TextView.Medium" parent="Widget.AppCompat.TextView">
         <item name="android:textColor">@color/colorTextDark</item>
+        <item name="android:fontFamily">@font/roboto</item>
         <item name="android:textAppearance">@style/TextAppearance.AppCompat.Medium</item>
     </style>
 
     <style name="AppTheme.TextView.MediumBold" parent="AppTheme.TextView.Medium">
-        <item name="android:textStyle">bold</item>
+        <item name="android:fontFamily">@font/roboto_medium</item>
     </style>
 
     <style name="AppTheme.TextView.MediumGrey" parent="AppTheme.TextView.Medium">
+        <item name="android:fontFamily">@font/roboto</item>
         <item name="android:textColor">@color/colorTextGrey</item>
     </style>
 
     <style name="AppTheme.TextView.Small" parent="Widget.AppCompat.TextView">
         <item name="android:textColor">@color/colorTextGrey</item>
+        <item name="android:fontFamily">@font/roboto</item>
         <item name="android:textAppearance">@style/TextAppearance.AppCompat.Small</item>
     </style>
 
@@ -98,6 +110,7 @@
     <style name="AppTheme.TextView.Small.BottomNavigation" parent="Widget.AppCompat.TextView">
         <item name="android:textColor">@color/colorTextGrey</item>
         <item name="android:textSize">10sp</item>
+        <item name="android:fontFamily">@font/roboto</item>
         <item name="android:textAppearance">@style/TextAppearance.AppCompat.Small</item>
     </style>
 
@@ -114,6 +127,7 @@
         <item name="chipStrokeWidth">1.5dp</item>
         <item name="android:textAppearance">@style/TextAppearance.AppCompat.Small</item>
         <item name="rippleColor">@android:color/transparent</item>
+        <item name="android:fontFamily">@font/roboto</item>
         <item name="android:stateListAnimator" tools:targetApi="lollipop">@null</item>
         <item name="textStartPadding">16dp</item>
         <item name="textEndPadding">16dp</item>

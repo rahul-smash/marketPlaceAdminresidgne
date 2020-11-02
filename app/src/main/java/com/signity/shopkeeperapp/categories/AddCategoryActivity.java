@@ -1,12 +1,12 @@
 package com.signity.shopkeeperapp.categories;
 
 import android.Manifest;
-import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.text.TextUtils;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -20,6 +20,8 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
+import androidx.core.content.FileProvider;
 import androidx.core.content.res.ResourcesCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -38,6 +40,7 @@ import com.signity.shopkeeperapp.model.category.SubCategoryModel;
 import com.signity.shopkeeperapp.model.image.ImageUploadResponse;
 import com.signity.shopkeeperapp.network.NetworkAdaper;
 import com.signity.shopkeeperapp.products.AddProductActivity;
+import com.signity.shopkeeperapp.products.ImageBottomDialog;
 import com.signity.shopkeeperapp.util.AnimUtil;
 import com.signity.shopkeeperapp.util.ProgressDialogUtil;
 import com.squareup.picasso.Picasso;
@@ -65,6 +68,11 @@ public class AddCategoryActivity extends BaseActivity implements SubCategoryAdap
     private static final String TAG = "AddCategoryActivity";
     private static final int REQUEST_PERMISSION = 1001;
     private static final int REQUEST_IMAGE_GET = 2002;
+    private static final int CAMERA_REQUEST = 100;
+    private static final int PICK_REQUEST = 200;
+    private static final int CAMERA_PERMISSION = 1000;
+    private static final int GALLERY_PERMISSION = 2000;
+    private static final String CATEGORY_IMAGE = "CATEGORY_IMAGE";
     private RecyclerView recyclerViewSubCategory;
     private SubCategoryAdapter subCategoryAdapter;
     private TextInputEditText textInputEditTextCategoryName;
@@ -80,6 +88,7 @@ public class AddCategoryActivity extends BaseActivity implements SubCategoryAdap
     private String categoryId;
     private ActivityType activityType = ActivityType.ADD;
     private TextView textViewNext;
+    private Uri cameraImageUri;
 
     public static Intent getStartIntent(Context context) {
         return new Intent(context, AddCategoryActivity.class);
@@ -205,7 +214,7 @@ public class AddCategoryActivity extends BaseActivity implements SubCategoryAdap
             @Override
             public void onClick(View v) {
                 imageUploadType = ImageUploadType.CATEGORY;
-                getGalleryImage();
+                openImageChooser();
             }
         });
 
@@ -349,27 +358,19 @@ public class AddCategoryActivity extends BaseActivity implements SubCategoryAdap
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (resultCode == Activity.RESULT_OK) {
+        if (resultCode == RESULT_OK) {
             switch (requestCode) {
-                case REQUEST_IMAGE_GET:
+                case CAMERA_REQUEST:
+                    cropImage(cameraImageUri);
+                    break;
+                case PICK_REQUEST:
 
-                    if (data == null) {
+                    if (data == null || data.getData() == null) {
                         return;
                     }
 
-                    File fileLogo = new File(getExternalFilesDir("ValueAppz"), "category.png");
-                    Uri output = Uri.fromFile(fileLogo);
-
-                    Uri fullPhotoUri = data.getData();
-
-                    if (fullPhotoUri == null) {
-                        return;
-                    }
-
-                    UCrop.of(fullPhotoUri, output)
-                            .withAspectRatio(1, 1)
-                            .withMaxResultSize(500, 500)
-                            .start(this);
+                    Uri uri = data.getData();
+                    cropImage(uri);
                     break;
                 case UCrop.REQUEST_CROP:
 
@@ -439,13 +440,60 @@ public class AddCategoryActivity extends BaseActivity implements SubCategoryAdap
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        if (requestCode == REQUEST_PERMISSION) {
-            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                openGallery();
-            } else {
-                Toast.makeText(this, "Permission required", Toast.LENGTH_SHORT).show();
+        if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+            switch (requestCode) {
+                case CAMERA_PERMISSION:
+                    cameraIntent();
+                    break;
+                case GALLERY_PERMISSION:
+                    getGalleryImage();
+                    break;
             }
+        } else {
+            Toast.makeText(this, "Permission required", Toast.LENGTH_SHORT).show();
         }
+    }
+
+    private void openImageChooser() {
+        if (getSupportFragmentManager().findFragmentByTag(ImageBottomDialog.TAG) == null) {
+            ImageBottomDialog imageBottomDialog = new ImageBottomDialog(new ImageBottomDialog.ImageListener() {
+                @Override
+                public void onClickGallery() {
+                    getGalleryImage();
+                }
+
+                @Override
+                public void onClickCamera() {
+                    openCamera();
+                }
+            });
+            imageBottomDialog.show(getSupportFragmentManager(), ImageBottomDialog.TAG);
+        }
+    }
+
+    public void openCamera() {
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED) {
+            cameraIntent();
+        } else {
+            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, CAMERA_PERMISSION);
+        }
+    }
+
+    private void cameraIntent() {
+        Intent cameraIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+        File fileCamera = new File(getExternalFilesDir("VauleAppz"), CATEGORY_IMAGE.concat(".jpg"));
+        cameraImageUri = FileProvider.getUriForFile(this, getPackageName() + ".provider", fileCamera);
+        cameraIntent.putExtra(MediaStore.EXTRA_OUTPUT, cameraImageUri);
+        startActivityForResult(cameraIntent, CAMERA_REQUEST);
+    }
+
+    private void cropImage(Uri uri) {
+        File fileCamera = new File(getExternalFilesDir("VauleAppz"), CATEGORY_IMAGE.concat("out.jpg"));
+        Uri outCamera = Uri.fromFile(fileCamera);
+        UCrop.of(uri, outCamera)
+                .withAspectRatio(1, 1)
+                .withMaxResultSize(500, 500)
+                .start(this);
     }
 
     private void runAnimation() {
@@ -470,7 +518,7 @@ public class AddCategoryActivity extends BaseActivity implements SubCategoryAdap
     public void onAddImage(int position) {
         imageUploadType = ImageUploadType.SUBCATEGORY;
         this.position = position;
-        getGalleryImage();
+        openImageChooser();
     }
 
     private enum ImageUploadType {

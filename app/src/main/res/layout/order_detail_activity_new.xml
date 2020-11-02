@@ -173,16 +173,31 @@
                         android:paddingRight="16dp"
                         android:paddingBottom="8dp">
 
-                        <TextView
-                            android:id="@+id/tv_order_date_time"
-                            style="@style/AppTheme.TextView.Small"
+                        <LinearLayout
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text=""
-                            android:textColor="@color/colorTextDark"
-                            app:layout_constraintBottom_toBottomOf="parent"
+                            android:gravity="start"
+                            android:orientation="vertical"
                             app:layout_constraintStart_toStartOf="parent"
-                            app:layout_constraintTop_toTopOf="parent" />
+                            app:layout_constraintTop_toTopOf="parent">
+
+                            <TextView
+                                style="@style/AppTheme.TextView.Mini"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="@string/date_time" />
+
+                            <TextView
+                                android:id="@+id/tv_order_date_time"
+                                style="@style/AppTheme.TextView.Small"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text=""
+                                android:textColor="@color/colorTextDark"
+                                app:layout_constraintBottom_toBottomOf="parent"
+                                app:layout_constraintStart_toStartOf="parent"
+                                app:layout_constraintTop_toTopOf="parent" />
+                        </LinearLayout>
 
                         <LinearLayout
                             android:layout_width="wrap_content"
@@ -192,6 +207,12 @@
                             app:layout_constraintBottom_toBottomOf="parent"
                             app:layout_constraintEnd_toEndOf="parent"
                             app:layout_constraintTop_toTopOf="parent">
+
+                            <TextView
+                                style="@style/AppTheme.TextView.Mini"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="Delivery Slot" />
 
                             <TextView
                                 android:id="@+id/tv_delivery_date_slot"

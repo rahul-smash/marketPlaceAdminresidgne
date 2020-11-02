@@ -31,8 +31,14 @@ public class HomeOrdersAdapter extends RecyclerView.Adapter<HomeOrdersAdapter.Vi
     private boolean showLoading = true;
     private Map<Integer, List<OrdersListModel>> pageOrdersMap = new HashMap<>();
     private List<OrdersListModel> ordersListModels = new ArrayList<>();
+    private boolean hideNameIcon;
 
     public HomeOrdersAdapter(Context context) {
+        this.context = context;
+    }
+
+    public HomeOrdersAdapter(Context context, boolean hideNameIcon) {
+        this.hideNameIcon = hideNameIcon;
         this.context = context;
     }
 
@@ -114,9 +120,13 @@ public class HomeOrdersAdapter extends RecyclerView.Adapter<HomeOrdersAdapter.Vi
 
     @Override
     public int getItemViewType(int position) {
-        if (position < ordersListModels.size()) {
-            OrdersListModel model = ordersListModels.get(position);
-            return Integer.parseInt(model.getStatus());
+        try {
+            if (position < ordersListModels.size()) {
+                OrdersListModel model = ordersListModels.get(position);
+                return Integer.parseInt(model.getStatus());
+            }
+        } catch (NumberFormatException e) {
+            return 1;
         }
         return 101;
     }
@@ -200,6 +210,10 @@ public class HomeOrdersAdapter extends RecyclerView.Adapter<HomeOrdersAdapter.Vi
             String orderId = String.format("#%s", ordersModel.getDisplay_order_id());
             String itemText = ordersModel.getItems().size() > 1 ? "items" : "item";
             String item = String.format("(%s %s)", ordersModel.getItems().size(), itemText);
+
+            textViewName.setVisibility(hideNameIcon ? View.GONE : View.VISIBLE);
+            imageViewWhatsapp.setVisibility(hideNameIcon ? View.GONE : View.VISIBLE);
+            imageViewPhoneCall.setVisibility(hideNameIcon ? View.GONE : View.VISIBLE);
 
             textViewOrderIdItemsTime.setText(String.format("%s %s | %s", orderId, item, ordersModel.getTime()));
             textViewName.setText(ordersModel.getCustomerName());
