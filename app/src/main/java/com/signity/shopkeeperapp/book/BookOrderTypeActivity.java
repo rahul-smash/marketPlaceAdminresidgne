@@ -11,6 +11,7 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
+import com.google.android.material.textfield.TextInputEditText;
 import com.signity.shopkeeperapp.R;
 import com.signity.shopkeeperapp.base.BaseActivity;
 import com.signity.shopkeeperapp.book.TypeFragment.DeliveryFragment;
@@ -19,6 +20,7 @@ import com.signity.shopkeeperapp.book.TypeFragment.PickUpFragment;
 import com.signity.shopkeeperapp.util.AnimUtil;
 
 public class BookOrderTypeActivity extends BaseActivity {
+    public static final String CUSTOMER_NUMBER = "CUSTOMER_NUMBER";
     private static final String TAG = "BookOrderTypeActivity";
     private Toolbar toolbar;
 

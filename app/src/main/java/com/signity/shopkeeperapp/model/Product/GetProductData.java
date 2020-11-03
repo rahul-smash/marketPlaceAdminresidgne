@@ -1,11 +1,25 @@
 package com.signity.shopkeeperapp.model.Product;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
 import java.util.List;
 
-public class GetProductData {
+public class GetProductData implements Parcelable {
+    public static final Creator<GetProductData> CREATOR = new Creator<GetProductData>() {
+        @Override
+        public GetProductData createFromParcel(Parcel in) {
+            return new GetProductData(in);
+        }
+
+        @Override
+        public GetProductData[] newArray(int size) {
+            return new GetProductData[size];
+        }
+    };
     @SerializedName("id")
     @Expose
     private String id;
@@ -78,6 +92,55 @@ public class GetProductData {
     @SerializedName("categoryName")
     @Expose
     private String categoryName;
+    @Expose(deserialize = false)
+    private boolean isSelected;
+    @Expose(deserialize = false)
+    private int count;
+
+    protected GetProductData(Parcel in) {
+        id = in.readString();
+        storeId = in.readString();
+        categoryIds = in.readString();
+        title = in.readString();
+        brand = in.readString();
+        nutrient = in.readString();
+        description = in.readString();
+        tags = in.readString();
+        image = in.readString();
+        imageType = in.readString();
+        imageUrl = in.readString();
+        showPrice = in.readString();
+        isTaxEnable = in.readString();
+        gstTaxType = in.readString();
+        gstTaxRate = in.readString();
+        status = in.readString();
+        sort = in.readString();
+        isExportFromFile = in.readString();
+        byte tmpDeleted = in.readByte();
+        deleted = tmpDeleted == 0 ? null : tmpDeleted == 1;
+        image10080 = in.readString();
+        image300200 = in.readString();
+        variants = in.createTypedArrayList(Variant.CREATOR);
+        categoryName = in.readString();
+        isSelected = in.readByte() != 0;
+        count = in.readInt();
+    }
+
+    public boolean isSelected() {
+        return isSelected;
+    }
+
+    public void setSelected(boolean selected) {
+        isSelected = selected;
+    }
+
+    public int getCount() {
+        return count;
+    }
+
+    public void setCount(int count) {
+        this.count = count;
+    }
 
     public String getCategoryName() {
         return categoryName;
@@ -269,5 +332,39 @@ public class GetProductData {
 
     public void setSelectedVariant(SelectedVariant selectedVariant) {
         this.selectedVariant = selectedVariant;
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(id);
+        dest.writeString(storeId);
+        dest.writeString(categoryIds);
+        dest.writeString(title);
+        dest.writeString(brand);
+        dest.writeString(nutrient);
+        dest.writeString(description);
+        dest.writeString(tags);
+        dest.writeString(image);
+        dest.writeString(imageType);
+        dest.writeString(imageUrl);
+        dest.writeString(showPrice);
+        dest.writeString(isTaxEnable);
+        dest.writeString(gstTaxType);
+        dest.writeString(gstTaxRate);
+        dest.writeString(status);
+        dest.writeString(sort);
+        dest.writeString(isExportFromFile);
+        dest.writeByte((byte) (deleted == null ? 0 : deleted ? 1 : 2));
+        dest.writeString(image10080);
+        dest.writeString(image300200);
+        dest.writeTypedList(variants);
+        dest.writeString(categoryName);
+        dest.writeByte((byte) (isSelected ? 1 : 0));
+        dest.writeInt(count);
     }
 }

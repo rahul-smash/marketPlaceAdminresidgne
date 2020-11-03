@@ -15,26 +15,32 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.signity.shopkeeperapp.R;
+import com.signity.shopkeeperapp.model.Product.GetProductData;
 import com.signity.shopkeeperapp.model.Product.GetProductResponse;
 import com.signity.shopkeeperapp.network.NetworkAdaper;
 import com.signity.shopkeeperapp.util.DialogUtils;
 import com.signity.shopkeeperapp.util.Util;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import retrofit.Callback;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
 
-public class BestSellerFragment extends Fragment {
+public class BestSellerFragment extends Fragment implements OrderCartListener {
 
     public static final String TAG = "BestSellerFragment";
+    public static final String SELECTED_PRODUCTS = "SELECTED_PRODUCTS";
     private RecyclerView recyclerView;
     private BestSellerAdapter bestSellerAdapter;
     private int pageSize = 10, currentPageNumber = 1, start, totalOrders;
     private boolean isLoading;
     private GridLayoutManager layoutManager;
+    private BookOrderActivity bookOrderActivity;
+    private List<GetProductData> selectedProductList = new ArrayList<>();
     private RecyclerView.OnScrollListener recyclerViewOnScrollListener = new RecyclerView.OnScrollListener() {
         @Override
         public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
@@ -74,8 +80,15 @@ public class BestSellerFragment extends Fragment {
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
+        getExtra();
         setUpAdapter();
         getBestSelling();
+    }
+
+    private void getExtra() {
+        if (getArguments() != null) {
+            selectedProductList = getArguments().getParcelableArrayList(SELECTED_PRODUCTS);
+        }
     }
 
     private void getBestSelling() {
@@ -103,7 +116,19 @@ public class BestSellerFragment extends Fragment {
                     start += pageSize;
                     totalOrders = getProductResponse.getTotal();
                     if (getProductResponse.getData() != null) {
-                        bestSellerAdapter.addProductData(getProductResponse.getData());
+
+                        List<GetProductData> data = getProductResponse.getData();
+                        for (GetProductData getProductData : data) {
+                            for (GetProductData selectedData : selectedProductList) {
+                                if (selectedData.getId().equals(getProductData.getId())) {
+                                    getProductData.setCount(selectedData.getCount());
+                                    getProductData.setSelected(selectedData.isSelected());
+                                    break;
+                                }
+                            }
+                        }
+
+                        bestSellerAdapter.addProductData(data);
                     } else {
                         Toast.makeText(getActivity(), "Data not Found!", Toast.LENGTH_SHORT).show();
                     }
@@ -128,7 +153,7 @@ public class BestSellerFragment extends Fragment {
 
     private void setUpAdapter() {
         layoutManager = new GridLayoutManager(getContext(), 3, LinearLayoutManager.VERTICAL, false);
-        bestSellerAdapter = new BestSellerAdapter(getContext());
+        bestSellerAdapter = new BestSellerAdapter(getContext(), this);
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.setAdapter(bestSellerAdapter);
         recyclerView.addOnScrollListener(recyclerViewOnScrollListener);
@@ -147,6 +172,18 @@ public class BestSellerFragment extends Fragment {
     @Override
     public void onAttach(@NonNull Context context) {
         super.onAttach(context);
+        if (context instanceof BookOrderActivity) {
+            bookOrderActivity = (BookOrderActivity) context;
+        }
     }
 
+    @Override
+    public void onAddProduct(GetProductData getProductData) {
+        bookOrderActivity.addOrders(getProductData);
+    }
+
+    @Override
+    public void onRemoveProduct(GetProductData getProductData) {
+        bookOrderActivity.removeOrders(getProductData);
+    }
 }

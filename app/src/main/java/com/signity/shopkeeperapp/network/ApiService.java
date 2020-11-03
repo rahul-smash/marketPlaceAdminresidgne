@@ -28,6 +28,7 @@ import com.signity.shopkeeperapp.model.customers.detail.CustomerDetailResponse;
 import com.signity.shopkeeperapp.model.dashboard.StoreDashboardResponse;
 import com.signity.shopkeeperapp.model.image.ImageUploadResponse;
 import com.signity.shopkeeperapp.model.notification.NotificationModel;
+import com.signity.shopkeeperapp.model.orders.CustomerData;
 import com.signity.shopkeeperapp.model.orders.StoreOrdersReponse;
 import com.signity.shopkeeperapp.model.productStatus.ProductStatus;
 import com.signity.shopkeeperapp.model.stores.StoresResponse;
@@ -240,6 +241,11 @@ public interface ApiService {
     @GET("/getAreaList")
     void getAreaCodes(Callback<AreaCodesResp> responseCallback);
 
-    @GET("/getBestProducts")
-    void getBestSelling(@FieldMap Map<String, Object> param,Callback<GetProductResponse> responseCallback);
+    @FormUrlEncoded
+    @POST("/getBestProducts")
+    void getBestSelling(@FieldMap Map<String, Object> param, Callback<GetProductResponse> responseCallback);
+
+    @FormUrlEncoded
+    @POST("/getCustomerByPhone")
+    void checkNumber(@FieldMap Map<String, Object> param, Callback<CustomerData> response);
 }
