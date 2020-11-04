@@ -55,7 +55,7 @@
 
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="90dp"
+                android:layout_height="80dp"
                 android:layout_weight="3"
                 android:baselineAligned="false"
                 android:orientation="horizontal">
@@ -70,8 +70,9 @@
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:layout_margin="12dp"
-                        app:cardBackgroundColor="@color/colorPrimary"
-                        app:cardCornerRadius="8dp">
+                        app:cardBackgroundColor="@color/colorPrimaryDarker"
+                        app:cardCornerRadius="8dp"
+                        app:cardElevation="0dp">
 
                         <LinearLayout
                             android:layout_width="match_parent"
@@ -90,9 +91,9 @@
                     </com.google.android.material.card.MaterialCardView>
 
                     <ImageView
+                        android:id="@+id/iv_delivery_check"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:elevation="4dp"
                         android:src="@drawable/check_on"
                         app:layout_constraintBottom_toTopOf="@+id/card_delivery"
                         app:layout_constraintEnd_toEndOf="@+id/card_delivery"
@@ -111,8 +112,9 @@
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:layout_margin="12dp"
-                        app:cardBackgroundColor="@color/colorPrimary"
-                        app:cardCornerRadius="8dp">
+                        app:cardBackgroundColor="@color/colorPrimaryDarker"
+                        app:cardCornerRadius="8dp"
+                        app:cardElevation="0dp">
 
                         <LinearLayout
                             android:layout_width="match_parent"
@@ -131,10 +133,11 @@
                     </com.google.android.material.card.MaterialCardView>
 
                     <ImageView
+                        android:id="@+id/iv_pickup_check"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:elevation="4dp"
                         android:src="@drawable/check_on"
+                        android:visibility="gone"
                         app:layout_constraintBottom_toTopOf="@+id/card_pickup"
                         app:layout_constraintEnd_toEndOf="@+id/card_pickup"
                         app:layout_constraintStart_toEndOf="@+id/card_pickup"
@@ -152,8 +155,9 @@
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:layout_margin="12dp"
-                        app:cardBackgroundColor="@color/colorPrimary"
-                        app:cardCornerRadius="8dp">
+                        app:cardBackgroundColor="@color/colorPrimaryDarker"
+                        app:cardCornerRadius="8dp"
+                        app:cardElevation="0dp">
 
                         <LinearLayout
                             android:layout_width="match_parent"
@@ -172,10 +176,11 @@
                     </com.google.android.material.card.MaterialCardView>
 
                     <ImageView
+                        android:id="@+id/iv_dinein_check"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:elevation="4dp"
                         android:src="@drawable/check_on"
+                        android:visibility="gone"
                         app:layout_constraintBottom_toTopOf="@+id/card_dine"
                         app:layout_constraintEnd_toEndOf="@+id/card_dine"
                         app:layout_constraintStart_toEndOf="@+id/card_dine"

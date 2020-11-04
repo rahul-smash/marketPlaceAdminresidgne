@@ -20,13 +20,11 @@
             style="@style/AppTheme.TextView.Medium"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginEnd="8dp"
-            android:layout_marginRight="8dp"
             android:ellipsize="end"
             android:maxLines="1"
             android:text="Coconut Cookies"
             android:textColor="@color/colorTextDark"
-            app:layout_constraintEnd_toStartOf="@+id/linearLayout2"
+            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 

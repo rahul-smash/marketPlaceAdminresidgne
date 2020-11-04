@@ -1,12 +1,25 @@
 package com.signity.shopkeeperapp.model.Product;
 
 
+import android.os.Parcel;
+import android.os.Parcelable;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-public class SelectedVariant {
+public class SelectedVariant implements Parcelable {
 
+    public static final Creator<SelectedVariant> CREATOR = new Creator<SelectedVariant>() {
+        @Override
+        public SelectedVariant createFromParcel(Parcel in) {
+            return new SelectedVariant(in);
+        }
+
+        @Override
+        public SelectedVariant[] newArray(int size) {
+            return new SelectedVariant[size];
+        }
+    };
     @SerializedName("variant_id")
     @Expose
     private String variantId;
@@ -43,6 +56,21 @@ public class SelectedVariant {
     @SerializedName("custom_field4")
     @Expose
     private String customField4;
+
+    protected SelectedVariant(Parcel in) {
+        variantId = in.readString();
+        sku = in.readString();
+        weight = in.readString();
+        mrpPrice = in.readString();
+        price = in.readString();
+        discount = in.readString();
+        unitType = in.readString();
+        quantity = in.readString();
+        customField1 = in.readString();
+        customField2 = in.readString();
+        customField3 = in.readString();
+        customField4 = in.readString();
+    }
 
     public String getVariantId() {
         return variantId;
@@ -140,4 +168,24 @@ public class SelectedVariant {
         this.customField4 = customField4;
     }
 
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(variantId);
+        dest.writeString(sku);
+        dest.writeString(weight);
+        dest.writeString(mrpPrice);
+        dest.writeString(price);
+        dest.writeString(discount);
+        dest.writeString(unitType);
+        dest.writeString(quantity);
+        dest.writeString(customField1);
+        dest.writeString(customField2);
+        dest.writeString(customField3);
+        dest.writeString(customField4);
+    }
 }

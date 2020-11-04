@@ -332,4 +332,21 @@ public class Util {
         isValid = matcher.matches();
         return isValid;
     }
+
+    public static String getTimeFrom(String format) {
+        String output = "";
+
+        SimpleDateFormat inputFormat = new SimpleDateFormat("hh:mm", Locale.getDefault());
+        SimpleDateFormat outputFormat = new SimpleDateFormat("hh:mm a", Locale.getDefault());
+        try {
+            Date date = inputFormat.parse(format);
+            if (date != null) {
+                output = outputFormat.format(date);
+            }
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+
+        return output;
+    }
 }

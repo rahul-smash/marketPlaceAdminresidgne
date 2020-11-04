@@ -11,8 +11,8 @@ import java.util.List;
 public class GetProductData implements Parcelable {
     public static final Creator<GetProductData> CREATOR = new Creator<GetProductData>() {
         @Override
-        public GetProductData createFromParcel(Parcel in) {
-            return new GetProductData(in);
+        public GetProductData createFromParcel(Parcel source) {
+            return new GetProductData(source);
         }
 
         @Override
@@ -96,34 +96,48 @@ public class GetProductData implements Parcelable {
     private boolean isSelected;
     @Expose(deserialize = false)
     private int count;
+    @Expose(deserialize = false)
+    private int selectedVariantIndex;
+
+    public GetProductData() {
+    }
 
     protected GetProductData(Parcel in) {
-        id = in.readString();
-        storeId = in.readString();
-        categoryIds = in.readString();
-        title = in.readString();
-        brand = in.readString();
-        nutrient = in.readString();
-        description = in.readString();
-        tags = in.readString();
-        image = in.readString();
-        imageType = in.readString();
-        imageUrl = in.readString();
-        showPrice = in.readString();
-        isTaxEnable = in.readString();
-        gstTaxType = in.readString();
-        gstTaxRate = in.readString();
-        status = in.readString();
-        sort = in.readString();
-        isExportFromFile = in.readString();
-        byte tmpDeleted = in.readByte();
-        deleted = tmpDeleted == 0 ? null : tmpDeleted == 1;
-        image10080 = in.readString();
-        image300200 = in.readString();
-        variants = in.createTypedArrayList(Variant.CREATOR);
-        categoryName = in.readString();
-        isSelected = in.readByte() != 0;
-        count = in.readInt();
+        this.id = in.readString();
+        this.storeId = in.readString();
+        this.categoryIds = in.readString();
+        this.title = in.readString();
+        this.brand = in.readString();
+        this.nutrient = in.readString();
+        this.description = in.readString();
+        this.tags = in.readString();
+        this.image = in.readString();
+        this.imageType = in.readString();
+        this.imageUrl = in.readString();
+        this.showPrice = in.readString();
+        this.isTaxEnable = in.readString();
+        this.gstTaxType = in.readString();
+        this.gstTaxRate = in.readString();
+        this.status = in.readString();
+        this.sort = in.readString();
+        this.isExportFromFile = in.readString();
+        this.deleted = (Boolean) in.readValue(Boolean.class.getClassLoader());
+        this.image10080 = in.readString();
+        this.image300200 = in.readString();
+        this.variants = in.createTypedArrayList(Variant.CREATOR);
+        this.selectedVariant = in.readParcelable(SelectedVariant.class.getClassLoader());
+        this.categoryName = in.readString();
+        this.isSelected = in.readByte() != 0;
+        this.count = in.readInt();
+        this.selectedVariantIndex = in.readInt();
+    }
+
+    public int getSelectedVariantIndex() {
+        return selectedVariantIndex;
+    }
+
+    public void setSelectedVariantIndex(int selectedVariantIndex) {
+        this.selectedVariantIndex = selectedVariantIndex;
     }
 
     public boolean isSelected() {
@@ -341,30 +355,32 @@ public class GetProductData implements Parcelable {
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
-        dest.writeString(id);
-        dest.writeString(storeId);
-        dest.writeString(categoryIds);
-        dest.writeString(title);
-        dest.writeString(brand);
-        dest.writeString(nutrient);
-        dest.writeString(description);
-        dest.writeString(tags);
-        dest.writeString(image);
-        dest.writeString(imageType);
-        dest.writeString(imageUrl);
-        dest.writeString(showPrice);
-        dest.writeString(isTaxEnable);
-        dest.writeString(gstTaxType);
-        dest.writeString(gstTaxRate);
-        dest.writeString(status);
-        dest.writeString(sort);
-        dest.writeString(isExportFromFile);
-        dest.writeByte((byte) (deleted == null ? 0 : deleted ? 1 : 2));
-        dest.writeString(image10080);
-        dest.writeString(image300200);
-        dest.writeTypedList(variants);
-        dest.writeString(categoryName);
-        dest.writeByte((byte) (isSelected ? 1 : 0));
-        dest.writeInt(count);
+        dest.writeString(this.id);
+        dest.writeString(this.storeId);
+        dest.writeString(this.categoryIds);
+        dest.writeString(this.title);
+        dest.writeString(this.brand);
+        dest.writeString(this.nutrient);
+        dest.writeString(this.description);
+        dest.writeString(this.tags);
+        dest.writeString(this.image);
+        dest.writeString(this.imageType);
+        dest.writeString(this.imageUrl);
+        dest.writeString(this.showPrice);
+        dest.writeString(this.isTaxEnable);
+        dest.writeString(this.gstTaxType);
+        dest.writeString(this.gstTaxRate);
+        dest.writeString(this.status);
+        dest.writeString(this.sort);
+        dest.writeString(this.isExportFromFile);
+        dest.writeValue(this.deleted);
+        dest.writeString(this.image10080);
+        dest.writeString(this.image300200);
+        dest.writeTypedList(this.variants);
+        dest.writeParcelable(this.selectedVariant, flags);
+        dest.writeString(this.categoryName);
+        dest.writeByte(this.isSelected ? (byte) 1 : (byte) 0);
+        dest.writeInt(this.count);
+        dest.writeInt(this.selectedVariantIndex);
     }
 }

@@ -29,6 +29,7 @@ import java.util.List;
 import java.util.Locale;
 
 public class BookOrderActivity extends BaseActivity {
+    public static final String CUSTOMER_NUMBER = "CUSTOMER_NUMBER";
     private static final String TAG = "BookOrderActivity";
     private Toolbar toolbar;
     private TabLayout tabLayout;
@@ -36,15 +37,23 @@ public class BookOrderActivity extends BaseActivity {
     private TextView textViewOrderItems, textViewOrderTotal;
     private TranslateAnimation animationBottomUp, animationBottomDown;
     private boolean alreadyVisible;
+    private String customerNumber = "";
 
     public static Intent getIntent(Context context) {
         return new Intent(context, BookOrderActivity.class);
+    }
+
+    public static Intent getIntent(Context context, Bundle bundle) {
+        Intent intent = getIntent(context);
+        intent.putExtras(bundle);
+        return intent;
     }
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_book_order);
+        getExtra();
         initViews();
         setUpToolbar();
         setUpTab();
@@ -53,6 +62,13 @@ public class BookOrderActivity extends BaseActivity {
         if (!OrderCart.isCartEmpty()) {
             updateOrderData();
             showLayout();
+        }
+    }
+
+    private void getExtra() {
+        Bundle bundle = getIntent().getExtras();
+        if (bundle != null) {
+            customerNumber = bundle.getString(CUSTOMER_NUMBER);
         }
     }
 
@@ -102,18 +118,18 @@ public class BookOrderActivity extends BaseActivity {
     }
 
     private void openFragment(int position) {
+        List<GetProductData> selected = new ArrayList<>();
+        if (!OrderCart.isCartEmpty()) {
+            selected.addAll(OrderCart.getOrderCartMap().values());
+        }
+        Bundle bundle = new Bundle();
+        bundle.putParcelableArrayList(BestSellerFragment.SELECTED_PRODUCTS, (ArrayList<? extends Parcelable>) selected);
         switch (position) {
             case 0:
-                List<GetProductData> selected = new ArrayList<>();
-                if (!OrderCart.isCartEmpty()) {
-                    selected.addAll(OrderCart.getOrderCartMap().values());
-                }
-                Bundle bundle = new Bundle();
-                bundle.putParcelableArrayList(BestSellerFragment.SELECTED_PRODUCTS, (ArrayList<? extends Parcelable>) selected);
                 showFragment(BestSellerFragment.getInstance(bundle), BestSellerFragment.TAG);
                 break;
             case 1:
-                showFragment(CategoriesFragment.getInstance(null), CategoriesFragment.TAG);
+                showFragment(CategoriesFragment.getInstance(bundle), CategoriesFragment.TAG);
                 break;
         }
     }
@@ -128,7 +144,9 @@ public class BookOrderActivity extends BaseActivity {
         constraintLayoutProceed.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivity(BookOrderTypeActivity.getIntent(BookOrderActivity.this));
+                Bundle bundle = new Bundle();
+                bundle.putString(BookOrderTypeActivity.CUSTOMER_NUMBER, customerNumber);
+                startActivity(BookOrderTypeActivity.getIntent(BookOrderActivity.this, bundle));
                 AnimUtil.slideFromRightAnim(BookOrderActivity.this);
             }
         });

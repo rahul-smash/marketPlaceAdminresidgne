@@ -104,6 +104,8 @@ public class CustomersAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
 
     public interface CustomerAdapterListener {
         void onClickCustomer(CustomersResponse customersResponse);
+
+        void onClickBookOrder(CustomersResponse customersResponse);
     }
 
     static class ViewHolderLoading extends RecyclerView.ViewHolder {
@@ -117,7 +119,7 @@ public class CustomersAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
 
         TextView textViewActiveCount, textViewTotalCount, textViewAmountPaid;
         TextView textViewCustomerName, textViewCustomerNumber, textViewCustomerCity;
-        LinearLayout linearLayoutArea;
+        LinearLayout linearLayoutArea, linearLayoutBookOrder;
 
         public CustomerViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -128,6 +130,7 @@ public class CustomersAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
             textViewTotalCount = itemView.findViewById(R.id.tv_total_count);
             textViewAmountPaid = itemView.findViewById(R.id.tv_amount_paid);
             linearLayoutArea = itemView.findViewById(R.id.ll_area);
+            linearLayoutBookOrder = itemView.findViewById(R.id.ll_book_order);
         }
 
         public void bind(int positon) {
@@ -147,6 +150,15 @@ public class CustomersAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
                 public void onClick(View v) {
                     if (listener != null) {
                         listener.onClickCustomer(customersList.get(getAdapterPosition()));
+                    }
+                }
+            });
+
+            linearLayoutBookOrder.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (listener != null) {
+                        listener.onClickBookOrder(customersList.get(getAdapterPosition()));
                     }
                 }
             });

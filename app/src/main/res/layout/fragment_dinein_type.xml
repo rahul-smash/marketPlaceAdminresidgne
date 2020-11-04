@@ -6,23 +6,47 @@
     android:gravity="center_horizontal"
     android:orientation="vertical">
 
-    <com.google.android.material.textfield.TextInputLayout
-        style="@style/Widget.Design.TextInputLayout"
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:hint="Mobile Number"
-        app:hintTextColor="@color/colorTextGrey">
+        android:layout_height="wrap_content">
 
-        <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/edt_dinein_mobile"
-            style="@style/AppTheme.TextView.Medium"
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/textInputLayout9"
+            style="@style/Widget.Design.TextInputLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:imeOptions="actionNext"
-            android:inputType="number"
-            android:maxLines="1" />
+            android:hint="Mobile Number"
+            app:hintTextColor="@color/colorTextGrey"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
 
-    </com.google.android.material.textfield.TextInputLayout>
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/edt_dinein_mobile"
+                style="@style/AppTheme.TextView.Medium"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:imeOptions="actionSearch"
+                android:inputType="number"
+                android:maxLines="1" />
+
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <ImageView
+            android:id="@+id/iv_dinein_search"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:clickable="true"
+            android:padding="12dp"
+            android:src="@drawable/searchicon"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:tint="@color/colorTextDark" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
     <com.google.android.material.textfield.TextInputLayout
         style="@style/Widget.Design.TextInputLayout"
@@ -90,12 +114,10 @@
         app:hintTextColor="@color/colorTextGrey">
 
         <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/edt_dinein_wiater"
+            android:id="@+id/edt_dinein_waiter"
             style="@style/AppTheme.TextView.Medium"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:drawableEnd="@drawable/producticon"
-            android:drawableRight="@drawable/producticon"
             android:imeOptions="actionNext"
             android:inputType="textCapWords"
             android:maxLines="1" />

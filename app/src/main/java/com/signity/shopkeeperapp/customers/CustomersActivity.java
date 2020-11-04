@@ -16,6 +16,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.signity.shopkeeperapp.R;
 import com.signity.shopkeeperapp.adapter.SpacesItemDecoration;
 import com.signity.shopkeeperapp.base.BaseActivity;
+import com.signity.shopkeeperapp.book.BookOrderActivity;
 import com.signity.shopkeeperapp.model.customers.CustomerDataResponse;
 import com.signity.shopkeeperapp.model.customers.CustomersResponse;
 import com.signity.shopkeeperapp.network.NetworkAdaper;
@@ -171,6 +172,14 @@ public class CustomersActivity extends BaseActivity implements CustomersAdapter.
         Bundle bundle = new Bundle();
         bundle.putString(CustomerDetailActivity.CUSTOMER_ID, customersResponse.getId());
         startActivity(CustomerDetailActivity.getStartIntent(this, bundle));
+        AnimUtil.slideFromRightAnim(this);
+    }
+
+    @Override
+    public void onClickBookOrder(CustomersResponse customersResponse) {
+        Bundle bundle = new Bundle();
+        bundle.putString(BookOrderActivity.CUSTOMER_NUMBER, customersResponse.getPhone());
+        startActivity(BookOrderActivity.getIntent(this, bundle));
         AnimUtil.slideFromRightAnim(this);
     }
 }
