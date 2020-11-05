@@ -1,10 +1,13 @@
 package com.signity.shopkeeperapp.book.TypeFragment;
 
+import android.app.Activity;
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -47,13 +50,16 @@ import retrofit.client.Response;
 public class DeliveryFragment extends Fragment {
 
     public static final String TAG = "DeliveryFragment";
+    private static final int ADDRESS_CODE = 101;
     private TextInputEditText editTextMobileNumber, editTextName, editTextLoyaltyPoints, editTextEmail;
-    private TextView textViewCustomerName, textViewCustomerNumber, textViewCustomerAddress, textViewAddressType;
+    private TextView textViewCustomerName, textViewCustomerNumber, textViewCustomerAddress, textViewAddressType, txtChangeAddress;
     private TextInputEditText editTextScheduleDate, editTextScheduleTime, editTextDescription;
     private ImageView imageViewSearch;
     private LinearLayout linearLayoutAddDelivery, linearLayoutDeliveryAddress, linearLayoutNext;
     private String mobile;
     private int yearInt, dayInt, monthInt, hourOfDayInt, minuteInt;
+    private String customerAddress,customerAreaName,customerCity,customerState,customerZipcode;
+
 
     public static DeliveryFragment getInstance(Bundle bundle) {
         DeliveryFragment fragment = new DeliveryFragment();
@@ -98,6 +104,7 @@ public class DeliveryFragment extends Fragment {
         textViewCustomerNumber = view.findViewById(R.id.tv_customer_number);
         textViewCustomerAddress = view.findViewById(R.id.tv_customer_address);
         textViewAddressType = view.findViewById(R.id.tv_address_type);
+        txtChangeAddress = view.findViewById(R.id.tv_change_address);
 
         imageViewSearch.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -122,10 +129,30 @@ public class DeliveryFragment extends Fragment {
             }
         });
 
+        txtChangeAddress.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //TODO - open dialog or activity with address filled to change current address
+
+
+
+                Intent intent = new Intent(getActivity(),AddAddressActivity.class);
+                intent.putExtra("address",customerAddress);
+                intent.putExtra("area_name",customerAreaName);
+                intent.putExtra("city",customerCity);
+                intent.putExtra("state",customerState);
+                intent.putExtra("zipcode",customerZipcode);
+                startActivityForResult(intent, ADDRESS_CODE);
+
+            }
+        });
+
         linearLayoutAddDelivery.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 // TODO - Open dialog to add address
+
+
             }
         });
 
@@ -230,6 +257,7 @@ public class DeliveryFragment extends Fragment {
             return;
         }
 
+        //TODO - hit API
         startActivity(BookOrderCheckoutActivity.getIntent(getContext()));
         AnimUtil.slideFromRightAnim(getActivity());
     }
@@ -286,6 +314,8 @@ public class DeliveryFragment extends Fragment {
             return;
         }
 
+        getAddressData(data);
+
         editTextName.setText(data.getFullName());
         editTextEmail.setText(data.getEmail());
         editTextLoyaltyPoints.setText(String.valueOf(data.getLoyalityPoints()));
@@ -303,6 +333,20 @@ public class DeliveryFragment extends Fragment {
 
     }
 
+    public void getAddressData(Data data)
+    {
+        if (data.getCustomerAddress() != null && !data.getCustomerAddress().isEmpty()) {
+
+            CustomerAddressResponse response = data.getCustomerAddress().get(0);
+            customerAddress = response.getAddress();
+            customerAreaName = response.getAreaName();
+            customerCity = response.getCity();
+            customerState = response.getState();
+            customerZipcode = response.getZipcode();
+        }
+
+    }
+
     private boolean validMobile() {
 
         mobile = editTextMobileNumber.getText().toString().trim();
@@ -314,6 +358,36 @@ public class DeliveryFragment extends Fragment {
         }
 
         return true;
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        if (requestCode == ADDRESS_CODE) {
+            if(resultCode == Activity.RESULT_OK){
+//                String result=data.getStringExtra("result");
+                Log.e("Return result",data.getExtras().toString());
+                try {
+                    Bundle bundle = data.getExtras();
+                    String address = bundle.getString("address");
+                    String area_name = bundle.getString("area_name");
+                    String city = bundle.getString("city");
+                    String state = bundle.getString("state");
+                    String zipcode = bundle.getString("zipcode");
+
+                    textViewCustomerAddress.setText(String.format("%s, %s,\n%s,\n %s, %s", address, city, area_name, state, zipcode));
+
+
+                    Log.e("Return result",address);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    Log.e("Return result",e.getMessage());
+                }
+
+            }
+            if (resultCode == Activity.RESULT_CANCELED) {
+                //Write your code if there's no result
+            }
+        }
     }
 
     @Nullable

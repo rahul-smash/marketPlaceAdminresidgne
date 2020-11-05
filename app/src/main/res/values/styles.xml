@@ -109,8 +109,7 @@
 
     <style name="AppTheme.TextView.Mini" parent="AppTheme.TextView.Small">
         <item name="android:textSize">12sp</item>
-    </style>
-
+    </style>e
     <style name="AppTheme.TextView.Small.BottomNavigation" parent="Widget.AppCompat.TextView">
         <item name="android:textColor">@color/colorTextGrey</item>
         <item name="android:textSize">10sp</item>
