@@ -24,6 +24,7 @@ import com.signity.shopkeeperapp.model.category.AddCategoryResponse;
 import com.signity.shopkeeperapp.model.category.CategoryDetailResponse;
 import com.signity.shopkeeperapp.model.customers.AreaCodesResp;
 import com.signity.shopkeeperapp.model.customers.CustomerDataResponse;
+import com.signity.shopkeeperapp.model.customers.addCustomer.AddCustomerResponse;
 import com.signity.shopkeeperapp.model.customers.detail.CustomerDetailResponse;
 import com.signity.shopkeeperapp.model.dashboard.StoreDashboardResponse;
 import com.signity.shopkeeperapp.model.image.ImageUploadResponse;
@@ -236,7 +237,7 @@ public interface ApiService {
 
     @FormUrlEncoded
     @POST("/addCustomer")
-    void addCustomer(@FieldMap Map<String, Object> param, Callback<AddCategoryResponse> responseCallback);
+    void addCustomer(@FieldMap Map<String, Object> param, Callback<AddCustomerResponse> responseCallback);
 
     @GET("/getAreaList")
     void getAreaCodes(Callback<AreaCodesResp> responseCallback);
