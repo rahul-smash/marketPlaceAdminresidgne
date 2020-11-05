@@ -31,6 +31,8 @@ import com.signity.shopkeeperapp.model.image.ImageUploadResponse;
 import com.signity.shopkeeperapp.model.notification.NotificationModel;
 import com.signity.shopkeeperapp.model.orders.CustomerData;
 import com.signity.shopkeeperapp.model.orders.StoreOrdersReponse;
+import com.signity.shopkeeperapp.model.orders.loyalty.LoyaltyPointsResponse;
+import com.signity.shopkeeperapp.model.orders.offers.StoreOffersResponse;
 import com.signity.shopkeeperapp.model.productStatus.ProductStatus;
 import com.signity.shopkeeperapp.model.stores.StoresResponse;
 import com.signity.shopkeeperapp.model.verify.EmailVerifyResponse;
@@ -249,4 +251,11 @@ public interface ApiService {
     @FormUrlEncoded
     @POST("/getCustomerByPhone")
     void checkNumber(@FieldMap Map<String, Object> param, Callback<CustomerData> response);
+
+    @GET("/storeOffers")
+    void getCoupons(Callback<StoreOffersResponse> response);
+
+    @FormUrlEncoded
+    @POST("/getLoyalityPoints")
+    void getLoyalityPoints(@FieldMap Map<String, String> param, Callback<LoyaltyPointsResponse> response);
 }

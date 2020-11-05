@@ -9,6 +9,7 @@ public class NetworkConstant {
 
     public static final String STORE_ID = "/393";
     public static final String APISTORE = "/apistore_v3";
+    public static final String APISTORE_ORDER = "/api_v1";
 
 
 //   public static final String BASE = "https://app.restroapp.com";     // staging Url

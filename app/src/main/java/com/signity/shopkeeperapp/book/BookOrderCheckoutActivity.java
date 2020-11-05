@@ -8,6 +8,7 @@ import android.widget.TextView;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.widget.Toolbar;
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -32,6 +33,7 @@ public class BookOrderCheckoutActivity extends BaseActivity {
     private RecyclerView recyclerViewPaymentMode;
     private TextView textViewCount;
     private String userId;
+    private ConstraintLayout constraintLayoutLoyalty, constraintLayoutCoupon;
 
     public static Intent getIntent(Context context) {
         return new Intent(context, BookOrderCheckoutActivity.class);
@@ -50,7 +52,7 @@ public class BookOrderCheckoutActivity extends BaseActivity {
     }
 
     private void calculateAmount() {
-
+        // TODO - Calculate Amount
     }
 
     private void getExtra() {
@@ -61,21 +63,14 @@ public class BookOrderCheckoutActivity extends BaseActivity {
     }
 
     private void populateData() {
+        String item = OrderCart.getOrderCartMap().size() > 1 ? "Items" : "Item";
+        textViewCount.setText(String.format("%s %s", OrderCart.getOrderCartMap().size(), item));
+
         List<GetProductData> list = new ArrayList<>();
         if (!OrderCart.isCartEmpty()) {
             list.addAll(OrderCart.getOrderCartMap().values());
         }
         bookOrderCheckoutAdapter.setProductData(list);
-        String item = OrderCart.getOrderCartMap().size() > 1 ? "Items" : "Item";
-        textViewCount.setText(String.format("%s %s", OrderCart.getOrderCartMap().size(), item));
-
-        List<String> paymentModels = new ArrayList<>();
-        paymentModels.add("Paytm");
-        paymentModels.add("Credit/Debit Card");
-        paymentModels.add("BHIM UPI");
-        paymentModels.add("Google Pay");
-        paymentModels.add("Cash");
-        paymentModeAdapter.setPaymentModeList(paymentModels);
     }
 
     private void setUpAdapter() {
@@ -94,6 +89,24 @@ public class BookOrderCheckoutActivity extends BaseActivity {
         recyclerViewOrders = findViewById(R.id.rv_orders_checkout);
         recyclerViewPaymentMode = findViewById(R.id.rv_payment_mode);
         textViewCount = findViewById(R.id.tv_product_count);
+        constraintLayoutCoupon = findViewById(R.id.const_apply_coupon);
+        constraintLayoutLoyalty = findViewById(R.id.const_apply_loyalty);
+
+        constraintLayoutCoupon.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(CouponsActivity.getStartIntent(BookOrderCheckoutActivity.this));
+                AnimUtil.slideFromRightAnim(BookOrderCheckoutActivity.this);
+            }
+        });
+
+        constraintLayoutLoyalty.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(LoyaltyPointsActivity.getStartIntent(BookOrderCheckoutActivity.this));
+                AnimUtil.slideFromRightAnim(BookOrderCheckoutActivity.this);
+            }
+        });
     }
 
     private void setUpToolbar() {

@@ -13,21 +13,18 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.signity.shopkeeperapp.R;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class PaymentModeAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
     private Context context;
-    private List<String> paymentModeList = new ArrayList<>();
+    private List<PaymentModes> paymentModeList = new ArrayList<>();
     private int selectedId = -1;
 
     public PaymentModeAdapter(Context context) {
         this.context = context;
-    }
-
-    public void setPaymentModeList(List<String> paymentModeList) {
-        this.paymentModeList = paymentModeList;
-        notifyDataSetChanged();
+        this.paymentModeList.addAll(Arrays.asList(PaymentModes.values()));
     }
 
     @NonNull
@@ -47,6 +44,20 @@ public class PaymentModeAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
         return paymentModeList.size();
     }
 
+    public enum PaymentModes {
+        PAYTM("Paytm"), CARD("Credit/Debit Card"), UPI("BHIM UPI"), GOOGLE_PAY("Google Pay"), CASH("Cash");
+
+        private String title;
+
+        PaymentModes(String title) {
+            this.title = title;
+        }
+
+        public String getTitle() {
+            return title;
+        }
+    }
+
     public class ViewHolder extends RecyclerView.ViewHolder {
 
         TextView textViewPaymentMode;
@@ -59,11 +70,9 @@ public class PaymentModeAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
         }
 
         public void onBind(int position) {
-            final String paymentModel = paymentModeList.get(position);
-            textViewPaymentMode.setText(paymentModel);
+            textViewPaymentMode.setText(paymentModeList.get(position).getTitle());
 
-            linearLayoutPayment.setBackground(context.getResources().getDrawable(selectedId == position ? R.drawable.item_background_rounded_stroke_primary :
-                    R.drawable.item_background_rounded_stroke));
+            linearLayoutPayment.setBackground(context.getResources().getDrawable(selectedId == position ? R.drawable.item_background_rounded_stroke_primary : R.drawable.item_background_rounded_stroke));
 
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
