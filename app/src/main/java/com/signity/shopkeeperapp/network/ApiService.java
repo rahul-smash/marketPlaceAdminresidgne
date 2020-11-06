@@ -1,5 +1,6 @@
 package com.signity.shopkeeperapp.network;
 
+import com.signity.shopkeeperapp.model.AddAddressModel;
 import com.signity.shopkeeperapp.model.Categories.GetCategoryResponse;
 import com.signity.shopkeeperapp.model.CategoryStatus.CategoryStatus;
 import com.signity.shopkeeperapp.model.CustomersModel;
@@ -42,7 +43,10 @@ import com.signity.shopkeeperapp.model.verify.OtpVerifyResponse;
 
 import java.util.Map;
 
+import okhttp3.ResponseBody;
 import retrofit.Callback;
+import retrofit.ResponseCallback;
+import retrofit.client.Response;
 import retrofit.http.FieldMap;
 import retrofit.http.FormUrlEncoded;
 import retrofit.http.GET;
@@ -263,4 +267,8 @@ public interface ApiService {
     @FormUrlEncoded
     @POST("/multiple_tax_calculation_new")
     void calculateOrder(@FieldMap Map<String, Object> param, Callback<OrderCalculationResponse> response);
+
+    @FormUrlEncoded
+    @POST("/deliveryAddress")
+    void addAddressForDelivery(@FieldMap Map<String, Object> param, Callback<AddAddressModel> response);
 }

@@ -125,4 +125,11 @@ public class BookOrderTypeActivity extends BaseActivity implements OrderTypeAdap
         hideKeyboard();
         openFragment(position);
     }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        Fragment fragment = getSupportFragmentManager().findFragmentByTag(DeliveryFragment.TAG);
+        fragment.onActivityResult(requestCode, resultCode, data);
+    }
 }

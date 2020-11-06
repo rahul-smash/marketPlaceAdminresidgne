@@ -1,6 +1,8 @@
 package com.signity.shopkeeperapp.util;
 
 import android.Manifest;
+import android.content.Context;
+import android.widget.Toast;
 
 /**
  * Created by rajesh on 30/9/15.
@@ -96,6 +98,11 @@ public class Constant {
         public String getTitle() {
             return title;
         }
+    }
+
+    public static void showToast(Context context,String message)
+    {
+        Toast.makeText(context, message, Toast.LENGTH_SHORT).show();
     }
 
 }
