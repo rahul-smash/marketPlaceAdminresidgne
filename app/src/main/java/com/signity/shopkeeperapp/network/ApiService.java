@@ -31,6 +31,7 @@ import com.signity.shopkeeperapp.model.image.ImageUploadResponse;
 import com.signity.shopkeeperapp.model.notification.NotificationModel;
 import com.signity.shopkeeperapp.model.orders.CustomerData;
 import com.signity.shopkeeperapp.model.orders.StoreOrdersReponse;
+import com.signity.shopkeeperapp.model.orders.checkout.OrderCalculationResponse;
 import com.signity.shopkeeperapp.model.orders.loyalty.LoyaltyPointsResponse;
 import com.signity.shopkeeperapp.model.orders.offers.StoreOffersResponse;
 import com.signity.shopkeeperapp.model.productStatus.ProductStatus;
@@ -258,4 +259,8 @@ public interface ApiService {
     @FormUrlEncoded
     @POST("/getLoyalityPoints")
     void getLoyalityPoints(@FieldMap Map<String, String> param, Callback<LoyaltyPointsResponse> response);
+
+    @FormUrlEncoded
+    @POST("/multiple_tax_calculation_new")
+    void calculateOrder(@FieldMap Map<String, Object> param, Callback<OrderCalculationResponse> response);
 }

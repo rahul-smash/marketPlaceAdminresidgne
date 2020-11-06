@@ -176,10 +176,7 @@ public class DineInFragment extends Fragment {
                 ProgressDialogUtil.hideProgressDialog();
                 if (customerData.isSuccess()) {
                     if (customerData.getData() != null) {
-                        Bundle bundle = new Bundle();
-                        bundle.putString(BookOrderCheckoutActivity.CUSTOMER_ID, customerData.getData().getId());
-                        startActivity(BookOrderCheckoutActivity.getIntent(getContext()));
-                        AnimUtil.slideFromRightAnim(getActivity());
+                        startCheckout(customerData.getData().getId());
                     }
                 } else {
                     addCustomer();
@@ -235,10 +232,7 @@ public class DineInFragment extends Fragment {
                 ProgressDialogUtil.hideProgressDialog();
                 if (addCategoryResponse.isSuccess()) {
                     if (addCategoryResponse.getData() != null) {
-                        Bundle bundle = new Bundle();
-                        bundle.putString(BookOrderCheckoutActivity.CUSTOMER_ID, addCategoryResponse.getData().getStoreUser().getUserId());
-                        startActivity(BookOrderCheckoutActivity.getIntent(getContext()));
-                        AnimUtil.slideFromRightAnim(getActivity());
+                        startCheckout(addCategoryResponse.getData().getStoreUser().getUserId());
                     }
                 }
             }
@@ -251,6 +245,13 @@ public class DineInFragment extends Fragment {
                 ProgressDialogUtil.hideProgressDialog();
             }
         });
+    }
+
+    private void startCheckout(String userId) {
+        Bundle bundle = new Bundle();
+        bundle.putString(BookOrderCheckoutActivity.CUSTOMER_ID, userId);
+        startActivity(BookOrderCheckoutActivity.getIntent(getContext(), bundle));
+        AnimUtil.slideFromRightAnim(getActivity());
     }
 
     public void hideKeyboard() {
