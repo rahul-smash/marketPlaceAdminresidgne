@@ -28,6 +28,7 @@ import androidx.fragment.app.Fragment;
 import com.google.android.material.textfield.TextInputEditText;
 import com.signity.shopkeeperapp.R;
 import com.signity.shopkeeperapp.book.BookOrderCheckoutActivity;
+import com.signity.shopkeeperapp.model.customers.addCustomer.AddCustomerResponse;
 import com.signity.shopkeeperapp.model.customers.detail.CustomerAddressResponse;
 import com.signity.shopkeeperapp.model.orders.CustomerData;
 import com.signity.shopkeeperapp.model.orders.Data;
@@ -57,8 +58,9 @@ public class DeliveryFragment extends Fragment {
     private ImageView imageViewSearch;
     private LinearLayout linearLayoutAddDelivery, linearLayoutDeliveryAddress, linearLayoutNext;
     private String mobile;
+    private String customerFirstName,customerNumber,customerID,customerAddressId;
     private int yearInt, dayInt, monthInt, hourOfDayInt, minuteInt;
-    private String customerAddress,customerAreaName,customerCity,customerState,customerZipcode;
+    private String customerAddress,customerAreaId,customerAreaName,customerCity,customerState,customerZipcode,areaId;
 
 
     public static DeliveryFragment getInstance(Bundle bundle) {
@@ -134,14 +136,17 @@ public class DeliveryFragment extends Fragment {
             public void onClick(View v) {
                 //TODO - open dialog or activity with address filled to change current address
 
-
-
                 Intent intent = new Intent(getActivity(),AddAddressActivity.class);
                 intent.putExtra("address",customerAddress);
                 intent.putExtra("area_name",customerAreaName);
+                intent.putExtra("area_id",customerAreaId);
                 intent.putExtra("city",customerCity);
                 intent.putExtra("state",customerState);
                 intent.putExtra("zipcode",customerZipcode);
+                intent.putExtra("customer_id",customerID);
+                intent.putExtra("customer_first_name",customerFirstName);
+                intent.putExtra("customer_mobile",customerNumber);
+                intent.putExtra("customer_address_id",customerAddressId);
                 startActivityForResult(intent, ADDRESS_CODE);
 
             }
@@ -151,7 +156,7 @@ public class DeliveryFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 // TODO - Open dialog to add address
-
+                checkNumberForAddAddress(editTextMobileNumber.getText().toString());
 
             }
         });
@@ -258,8 +263,9 @@ public class DeliveryFragment extends Fragment {
         }
 
         //TODO - hit API
-        startActivity(BookOrderCheckoutActivity.getIntent(getContext()));
-        AnimUtil.slideFromRightAnim(getActivity());
+
+        getCustomerId(mobile);
+
     }
 
     public void hideKeyboard() {
@@ -308,6 +314,55 @@ public class DeliveryFragment extends Fragment {
         });
     }
 
+    private void checkNumberForAddAddress(String mobile) {
+
+        if (TextUtils.isEmpty(mobile)) {
+            for_empty_field();
+            return;
+        }
+
+        Map<String, Object> param = new HashMap<>();
+        param.put("mobile", mobile);
+
+        ProgressDialogUtil.showProgressDialog(getContext());
+
+        NetworkAdaper.getNetworkServices().checkNumber(param, new Callback<CustomerData>() {
+            @Override
+            public void success(CustomerData customerData, Response response) {
+
+                if (!isAdded()) {
+                    return;
+                }
+                ProgressDialogUtil.hideProgressDialog();
+
+                if (customerData.isSuccess()) {
+                    CustomerAddressResponse customerResponse = customerData.getData().getCustomerAddress().get(0);
+
+                    Intent intent = new Intent(getActivity(),AddAddressActivity.class);
+                    intent.putExtra("customer_id",customerResponse.getUserId());
+                    intent.putExtra("customer_first_name",customerResponse.getFirstName());
+                    intent.putExtra("customer_mobile",customerResponse.getMobile());
+                    intent.putExtra("customer_address_id",customerResponse.getId());
+                    startActivityForResult(intent, ADDRESS_CODE);
+
+                } else {
+                    for_empty_field();
+
+//                    Toast.makeText(getContext(), customerData.getMessage(), Toast.LENGTH_SHORT).show();
+                }
+
+            }
+
+            @Override
+            public void failure(RetrofitError error) {
+                if (!isAdded()) {
+                    return;
+                }
+                ProgressDialogUtil.hideProgressDialog();
+            }
+        });
+    }
+
     private void populateFields(Data data) {
 
         if (data == null) {
@@ -340,9 +395,15 @@ public class DeliveryFragment extends Fragment {
             CustomerAddressResponse response = data.getCustomerAddress().get(0);
             customerAddress = response.getAddress();
             customerAreaName = response.getAreaName();
+            customerAreaId = response.getAreaId();
             customerCity = response.getCity();
             customerState = response.getState();
             customerZipcode = response.getZipcode();
+
+            customerFirstName = response.getFirstName();
+            customerNumber = response.getMobile();
+            customerID = response.getUserId();
+            customerAddressId = response.getId();
         }
 
     }
@@ -368,16 +429,25 @@ public class DeliveryFragment extends Fragment {
                 Log.e("Return result",data.getExtras().toString());
                 try {
                     Bundle bundle = data.getExtras();
-                    String address = bundle.getString("address");
-                    String area_name = bundle.getString("area_name");
-                    String city = bundle.getString("city");
-                    String state = bundle.getString("state");
-                    String zipcode = bundle.getString("zipcode");
+                    customerAddress = bundle.getString("address");
+                    customerAreaName = bundle.getString("area_name");
+                    customerAreaId = bundle.getString("area_id");
+                    customerCity = bundle.getString("city");
+                    customerState = bundle.getString("state");
+                    customerZipcode = bundle.getString("zipcode");
 
-                    textViewCustomerAddress.setText(String.format("%s, %s,\n%s,\n %s, %s", address, city, area_name, state, zipcode));
+                    if (customerAddress != null && !customerAddress.isEmpty()) {
+                        linearLayoutAddDelivery.setVisibility(View.GONE);
+                        linearLayoutDeliveryAddress.setVisibility(View.VISIBLE);
 
+                        textViewCustomerNumber.setText(editTextMobileNumber.getText().toString().trim());
+                        textViewCustomerName.setText(editTextName.getText().toString().trim());
 
-                    Log.e("Return result",address);
+                        textViewCustomerAddress.setText(String.format("%s, %s,\n%s,\n %s, %s",
+                                customerAddress, customerCity, customerAreaName, customerState, customerZipcode));
+                    }
+
+                    Log.e("Return result",customerAddress);
                 } catch (Exception e) {
                     e.printStackTrace();
                     Log.e("Return result",e.getMessage());
@@ -390,6 +460,111 @@ public class DeliveryFragment extends Fragment {
         }
     }
 
+
+    private void getCustomerId(String mobile) {
+
+        Map<String, Object> param = new HashMap<>();
+        param.put("mobile", mobile);
+
+        ProgressDialogUtil.showProgressDialog(getContext());
+        NetworkAdaper.getNetworkServices().checkNumber(param, new Callback<CustomerData>() {
+            @Override
+            public void success(CustomerData customerData, Response response) {
+
+                if (!isAdded()) {
+                    return;
+                }
+                ProgressDialogUtil.hideProgressDialog();
+                if (customerData.isSuccess()) {
+                    if (customerData.getData() != null) {
+                        /*Bundle bundle = new Bundle();
+                        bundle.putString(BookOrderCheckoutActivity.CUSTOMER_ID, customerData.getData().getId());
+                        startActivity(BookOrderCheckoutActivity.getIntent(getContext()));
+                        AnimUtil.slideFromRightAnim(getActivity());*/
+
+                    }
+                } else {
+                    addCustomer();
+                }
+
+            }
+
+            private void addCustomer() {
+
+                String mobile = editTextMobileNumber.getText().toString().trim();
+                String name = editTextName.getText().toString().trim();
+                String email = editTextEmail.getText().toString().trim();
+
+                if (TextUtils.isEmpty(mobile)) {
+                    Toast.makeText(getContext(), "Mobile Number can't be empty", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+
+                if (TextUtils.isEmpty(name)) {
+                    Toast.makeText(getContext(), "Name can't be empty", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+                if (TextUtils.isEmpty(customerAddress))
+                {
+                    Toast.makeText(getContext(), "Area can't be empty", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+
+                Map<String, Object> param = new HashMap<>();
+                param.put("mobile", mobile);
+                param.put("name", name);
+                param.put("email", email);
+                param.put("address", customerAddress);
+                param.put("area_id", customerAreaId);
+                param.put("area_name", customerAreaName);
+                param.put("city", customerCity);
+                param.put("state", customerState);
+                param.put("zipcode", customerZipcode);
+
+                ProgressDialogUtil.showProgressDialog(getContext());
+                NetworkAdaper.getNetworkServices().addCustomer(param, new Callback<AddCustomerResponse>() {
+                    @Override
+                    public void success(AddCustomerResponse addCategoryResponse, Response response) {
+
+                        if (!isAdded()) {
+                            return;
+                        }
+                        ProgressDialogUtil.hideProgressDialog();
+                        if (addCategoryResponse.isSuccess()) {
+                            if (addCategoryResponse.getData() != null) {
+                                /*Bundle bundle = new Bundle();
+                                bundle.putString(BookOrderCheckoutActivity.CUSTOMER_ID, addCategoryResponse.getData().getStoreUser().getUserId());
+                                startActivity(BookOrderCheckoutActivity.getIntent(getContext()));
+                                AnimUtil.slideFromRightAnim(getActivity());*/
+                                ProgressDialogUtil.hideProgressDialog();
+                                Toast.makeText(getActivity(), ""+addCategoryResponse.getMessage(), Toast.LENGTH_SHORT).show();
+                            }
+                        }else {
+                            Toast.makeText(getActivity(), ""+addCategoryResponse.getMessage(), Toast.LENGTH_SHORT).show();
+                        }
+                    }
+
+                    @Override
+                    public void failure(RetrofitError error) {
+                        if (!isAdded()) {
+                            return;
+                        }
+                        ProgressDialogUtil.hideProgressDialog();
+                    }
+                });
+            }
+
+
+            @Override
+            public void failure(RetrofitError error) {
+                if (!isAdded()) {
+                    return;
+                }
+                ProgressDialogUtil.hideProgressDialog();
+            }
+        });
+    }
+
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -399,6 +574,31 @@ public class DeliveryFragment extends Fragment {
     @Override
     public void onAttach(@NonNull Context context) {
         super.onAttach(context);
+        Log.e(TAG, "onAttach: " );
+
+        if(textViewCustomerAddress != null)
+        {
+            if (!TextUtils.isEmpty(textViewCustomerAddress.getText().toString()))
+            {
+                linearLayoutAddDelivery.setVisibility(View.GONE);
+                linearLayoutDeliveryAddress.setVisibility(View.VISIBLE);
+            }
+        }
+
+
     }
+
+
+    public void for_empty_field()
+    {
+        Intent intent = new Intent(getActivity(),AddAddressActivity.class);
+        intent.putExtra("customer_id","");
+        intent.putExtra("customer_first_name","");
+        intent.putExtra("customer_mobile","");
+        intent.putExtra("customer_address_id","");
+        startActivityForResult(intent, ADDRESS_CODE);
+    }
+
+
 
 }

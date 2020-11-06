@@ -4,32 +4,33 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
-import android.widget.ImageView;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
+import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
-import com.google.android.material.card.MaterialCardView;
 import com.signity.shopkeeperapp.R;
 import com.signity.shopkeeperapp.base.BaseActivity;
 import com.signity.shopkeeperapp.book.TypeFragment.DeliveryFragment;
 import com.signity.shopkeeperapp.book.TypeFragment.DineInFragment;
+import com.signity.shopkeeperapp.book.TypeFragment.OrderTypeAdapter;
 import com.signity.shopkeeperapp.book.TypeFragment.PickUpFragment;
 import com.signity.shopkeeperapp.util.AnimUtil;
 
-public class BookOrderTypeActivity extends BaseActivity {
+public class BookOrderTypeActivity extends BaseActivity implements OrderTypeAdapter.OrderTypeListener {
     public static final String CUSTOMER_NUMBER = "CUSTOMER_NUMBER";
     private static final String TAG = "BookOrderTypeActivity";
     private Toolbar toolbar;
-    private MaterialCardView cardViewDelivery, cardViewPickUp, cardViewDineIn;
-    private ImageView imageViewDeliveryTick, imageViewPickUpTick, imageViewDineInTick;
     private DeliveryFragment deliveryFragment;
     private DineInFragment dineInFragment;
     private PickUpFragment pickUpFragment;
     private String customerNumber = "";
+    private RecyclerView recyclerViewOrderType;
+    private OrderTypeAdapter orderTypeAdapter;
 
     public static Intent getIntent(Context context) {
         return new Intent(context, BookOrderTypeActivity.class);
@@ -48,8 +49,15 @@ public class BookOrderTypeActivity extends BaseActivity {
         getExtra();
         initViews();
         setUpToolbar();
+        setUpAdapter();
         initFragments();
         openFragment(0);
+    }
+
+    private void setUpAdapter() {
+        orderTypeAdapter = new OrderTypeAdapter(this, this);
+        recyclerViewOrderType.setAdapter(orderTypeAdapter);
+        recyclerViewOrderType.setLayoutManager(new GridLayoutManager(this, 3));
     }
 
     private void initFragments() {
@@ -93,42 +101,7 @@ public class BookOrderTypeActivity extends BaseActivity {
 
     private void initViews() {
         toolbar = findViewById(R.id.toolbar);
-        cardViewDelivery = findViewById(R.id.card_delivery);
-        cardViewPickUp = findViewById(R.id.card_pickup);
-        cardViewDineIn = findViewById(R.id.card_dine);
-        imageViewDeliveryTick = findViewById(R.id.iv_delivery_check);
-        imageViewPickUpTick = findViewById(R.id.iv_pickup_check);
-        imageViewDineInTick = findViewById(R.id.iv_dinein_check);
-
-        cardViewDelivery.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                openFragment(0);
-                imageViewDeliveryTick.setVisibility(View.VISIBLE);
-                imageViewPickUpTick.setVisibility(View.GONE);
-                imageViewDineInTick.setVisibility(View.GONE);
-            }
-        });
-
-        cardViewPickUp.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                openFragment(1);
-                imageViewDeliveryTick.setVisibility(View.GONE);
-                imageViewPickUpTick.setVisibility(View.VISIBLE);
-                imageViewDineInTick.setVisibility(View.GONE);
-            }
-        });
-
-        cardViewDineIn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                openFragment(2);
-                imageViewDeliveryTick.setVisibility(View.GONE);
-                imageViewPickUpTick.setVisibility(View.GONE);
-                imageViewDineInTick.setVisibility(View.VISIBLE);
-            }
-        });
+        recyclerViewOrderType = findViewById(R.id.rv_order_type);
     }
 
     private void setUpToolbar() {
@@ -145,6 +118,12 @@ public class BookOrderTypeActivity extends BaseActivity {
                 AnimUtil.slideFromLeftAnim(BookOrderTypeActivity.this);
             }
         });
+    }
+
+    @Override
+    public void onSelectOrderType(int position) {
+        hideKeyboard();
+        openFragment(position);
     }
 
     @Override

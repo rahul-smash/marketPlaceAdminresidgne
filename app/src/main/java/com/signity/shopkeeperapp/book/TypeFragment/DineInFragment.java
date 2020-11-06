@@ -21,6 +21,7 @@ import androidx.fragment.app.Fragment;
 import com.google.android.material.textfield.TextInputEditText;
 import com.signity.shopkeeperapp.R;
 import com.signity.shopkeeperapp.book.BookOrderCheckoutActivity;
+import com.signity.shopkeeperapp.model.customers.addCustomer.AddCustomerResponse;
 import com.signity.shopkeeperapp.model.orders.CustomerData;
 import com.signity.shopkeeperapp.model.orders.Data;
 import com.signity.shopkeeperapp.network.NetworkAdaper;
@@ -149,13 +150,107 @@ public class DineInFragment extends Fragment {
 
     private void orderCheckout() {
 
-        mobile = editTextMobileNumber.getText().toString().trim();
+        String mobile = editTextMobileNumber.getText().toString().trim();
+
+        if (TextUtils.isEmpty(mobile)) {
+            Toast.makeText(getContext(), "Mobile Number can't be empty", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        getCustomerId(mobile);
+    }
+
+    private void getCustomerId(String mobile) {
+
+        Map<String, Object> param = new HashMap<>();
+        param.put("mobile", mobile);
+
+        ProgressDialogUtil.showProgressDialog(getContext());
+        NetworkAdaper.getNetworkServices().checkNumber(param, new Callback<CustomerData>() {
+            @Override
+            public void success(CustomerData customerData, Response response) {
+
+                if (!isAdded()) {
+                    return;
+                }
+                ProgressDialogUtil.hideProgressDialog();
+                if (customerData.isSuccess()) {
+                    if (customerData.getData() != null) {
+                        Bundle bundle = new Bundle();
+                        bundle.putString(BookOrderCheckoutActivity.CUSTOMER_ID, customerData.getData().getId());
+                        startActivity(BookOrderCheckoutActivity.getIntent(getContext()));
+                        AnimUtil.slideFromRightAnim(getActivity());
+                    }
+                } else {
+                    addCustomer();
+                }
+
+            }
+
+            @Override
+            public void failure(RetrofitError error) {
+                if (!isAdded()) {
+                    return;
+                }
+                ProgressDialogUtil.hideProgressDialog();
+            }
+        });
+    }
+
+    private void addCustomer() {
+
+        String mobile = editTextMobileNumber.getText().toString().trim();
         String name = editTextName.getText().toString().trim();
         String email = editTextEmail.getText().toString().trim();
-        String loyalty = editTextLoyaltyPoints.getText().toString().trim();
 
-        startActivity(BookOrderCheckoutActivity.getIntent(getContext()));
-        AnimUtil.slideFromRightAnim(getActivity());
+        if (TextUtils.isEmpty(mobile)) {
+            Toast.makeText(getContext(), "Mobile Number can't be empty", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        if (TextUtils.isEmpty(name)) {
+            Toast.makeText(getContext(), "Name can't be empty", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        Map<String, Object> param = new HashMap<>();
+        param.put("mobile", mobile);
+        param.put("name", name);
+        param.put("email", email);
+        param.put("address", "");
+        param.put("area_id", "");
+        param.put("area_name", "");
+        param.put("city", "");
+        param.put("state", "");
+        param.put("zipcode", "");
+
+        ProgressDialogUtil.showProgressDialog(getContext());
+        NetworkAdaper.getNetworkServices().addCustomer(param, new Callback<AddCustomerResponse>() {
+            @Override
+            public void success(AddCustomerResponse addCategoryResponse, Response response) {
+
+                if (!isAdded()) {
+                    return;
+                }
+                ProgressDialogUtil.hideProgressDialog();
+                if (addCategoryResponse.isSuccess()) {
+                    if (addCategoryResponse.getData() != null) {
+                        Bundle bundle = new Bundle();
+                        bundle.putString(BookOrderCheckoutActivity.CUSTOMER_ID, addCategoryResponse.getData().getStoreUser().getUserId());
+                        startActivity(BookOrderCheckoutActivity.getIntent(getContext()));
+                        AnimUtil.slideFromRightAnim(getActivity());
+                    }
+                }
+            }
+
+            @Override
+            public void failure(RetrofitError error) {
+                if (!isAdded()) {
+                    return;
+                }
+                ProgressDialogUtil.hideProgressDialog();
+            }
+        });
     }
 
     public void hideKeyboard() {

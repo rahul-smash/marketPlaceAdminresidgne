@@ -23,6 +23,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class BookOrderCheckoutActivity extends BaseActivity {
+    public static final String CUSTOMER_ID = "CUSTOMER_ID";
     private static final String TAG = "BookOrderCheckoutActivity";
     private Toolbar toolbar;
     private BookOrderCheckoutAdapter bookOrderCheckoutAdapter;
@@ -30,6 +31,7 @@ public class BookOrderCheckoutActivity extends BaseActivity {
     private RecyclerView recyclerViewOrders;
     private RecyclerView recyclerViewPaymentMode;
     private TextView textViewCount;
+    private String userId;
 
     public static Intent getIntent(Context context) {
         return new Intent(context, BookOrderCheckoutActivity.class);
@@ -39,10 +41,23 @@ public class BookOrderCheckoutActivity extends BaseActivity {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_book_order_checkout);
+        getExtra();
         initViews();
         setUpToolbar();
         setUpAdapter();
         populateData();
+        calculateAmount();
+    }
+
+    private void calculateAmount() {
+
+    }
+
+    private void getExtra() {
+        Bundle bundle = getIntent().getExtras();
+        if (bundle != null) {
+            userId = bundle.getString(CUSTOMER_ID);
+        }
     }
 
     private void populateData() {
