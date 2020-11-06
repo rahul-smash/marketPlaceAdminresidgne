@@ -13,6 +13,7 @@ import android.widget.LinearLayout;
 import android.widget.Spinner;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 
 import com.google.android.material.textfield.TextInputEditText;
 import com.signity.shopkeeperapp.R;
@@ -20,6 +21,7 @@ import com.signity.shopkeeperapp.model.AddAddressModel;
 import com.signity.shopkeeperapp.model.customers.AreaCodesResp;
 import com.signity.shopkeeperapp.model.customers.DataResp;
 import com.signity.shopkeeperapp.network.NetworkAdaper;
+import com.signity.shopkeeperapp.util.AnimUtil;
 import com.signity.shopkeeperapp.util.Constant;
 import com.signity.shopkeeperapp.util.ProgressDialogUtil;
 
@@ -45,15 +47,33 @@ public class AddAddressActivity extends AppCompatActivity {
     private String areaId, areaName;
     private String deliveryCharges, minAmount;
     private boolean isNotAllow;
+    private Toolbar toolbar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_address);
         initViews();
+        setUpToolbar();
         setUpSpinner();
         getAreaCodes();
         getExtras();
+    }
+
+    private void setUpToolbar() {
+        setSupportActionBar(toolbar);
+        getSupportActionBar().setHomeAsUpIndicator(R.drawable.backicon);
+        getSupportActionBar().setDisplayShowHomeEnabled(true);
+        getSupportActionBar().setDisplayShowTitleEnabled(false);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
+        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+                AnimUtil.slideFromLeftAnim(AddAddressActivity.this);
+            }
+        });
     }
 
     private void getAreaCodes() {
