@@ -1,11 +1,5 @@
 package com.signity.shopkeeperapp.book.TypeFragment;
 
-import androidx.appcompat.app.AppCompatActivity;
-import okhttp3.ResponseBody;
-import retrofit.Callback;
-import retrofit.RetrofitError;
-import retrofit.client.Response;
-
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
@@ -17,8 +11,8 @@ import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.Spinner;
-import android.widget.TextView;
-import android.widget.Toast;
+
+import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.android.material.textfield.TextInputEditText;
 import com.signity.shopkeeperapp.R;
@@ -34,19 +28,21 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import retrofit.Callback;
+import retrofit.RetrofitError;
+import retrofit.client.Response;
+
 public class AddAddressActivity extends AppCompatActivity {
 
-    String address,area_name,area_id,city,state,zipcode,customerId,customerMobile,customerFirstName,customerAddressId;
+    String address, area_name, area_id, city, state, zipcode, customerId, customerMobile, customerFirstName, customerAddressId;
+    ImageView back;
+    TextInputEditText editAddress, editAreaName, editCity, editState, editZipcode;
+    LinearLayout save_address_lay;
     private ArrayAdapter<String> stringArrayAdapter;
     private List<String> areaList = new ArrayList<>();
     private List<DataResp> dataResps = new ArrayList<>();
-    ImageView back;
-
-
-    TextInputEditText editAddress,editAreaName,editCity,editState,editZipcode;
-    LinearLayout save_address_lay;
     private Spinner spinner;
-    private String areaId,areaName;
+    private String areaId, areaName;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -66,7 +62,8 @@ public class AddAddressActivity extends AppCompatActivity {
             public void success(AreaCodesResp areaCodesResp, Response response) {
 
 
-                int position =0; int selected_index =0;
+                int position = 0;
+                int selected_index = 0;
 
                 ProgressDialogUtil.hideProgressDialog();
                 areaList.clear();
@@ -75,8 +72,8 @@ public class AddAddressActivity extends AppCompatActivity {
 
                     for (DataResp resp : dataResps) {
                         areaList.add(resp.getName());
-                        if (!TextUtils.isEmpty(area_id)){
-                            if (area_id.equals(resp.getId())){
+                        if (!TextUtils.isEmpty(area_id)) {
+                            if (area_id.equals(resp.getId())) {
                                 selected_index = position;
                             }
                         }
@@ -86,7 +83,7 @@ public class AddAddressActivity extends AppCompatActivity {
 
                     spinner.setSelection(selected_index);
 
-                    Log.e("area_name",areaList.toString());
+                    Log.e("area_name", areaList.toString());
                     stringArrayAdapter.notifyDataSetChanged();
 
                 }
@@ -111,7 +108,7 @@ public class AddAddressActivity extends AppCompatActivity {
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 areaId = dataResps.get(position).getId();
                 areaName = dataResps.get(position).getName();
-                Log.e("dataResps",dataResps.get(position).getName());
+                Log.e("dataResps", dataResps.get(position).getName());
             }
 
             @Override
@@ -121,8 +118,7 @@ public class AddAddressActivity extends AppCompatActivity {
         });
     }
 
-    void initViews()
-    {
+    void initViews() {
         editAddress = findViewById(R.id.edt_customer_address);
 //        editAreaName = findViewById(R.id.edt_customer_address);
         editCity = findViewById(R.id.edt_customer_city);
@@ -134,7 +130,7 @@ public class AddAddressActivity extends AppCompatActivity {
         back.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-             finish();
+                finish();
             }
         });
 
@@ -143,44 +139,38 @@ public class AddAddressActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
 
-                if (TextUtils.isEmpty(customerId))
-                {
+                if (TextUtils.isEmpty(customerId)) {
                     if (TextUtils.isEmpty(editAddress.getText().toString()) || TextUtils.isEmpty(areaName) ||
                             TextUtils.isEmpty(editCity.getText().toString()) || TextUtils.isEmpty(editState.getText().toString())
-                            || TextUtils.isEmpty(editZipcode.getText().toString()))
-                    {
-                        Constant.showToast(AddAddressActivity.this,"Please enter the empty fields.");
+                            || TextUtils.isEmpty(editZipcode.getText().toString())) {
+                        Constant.showToast(AddAddressActivity.this, "Please enter the empty fields.");
                         return;
                     }
                     Intent intent = new Intent();
-                    intent.putExtra("address",editAddress.getText().toString());
-                    intent.putExtra("area_name",areaName);
-                    intent.putExtra("area_id",areaId);
-                    intent.putExtra("city",editCity.getText().toString());
-                    intent.putExtra("state",editState.getText().toString());
-                    intent.putExtra("zipcode",editZipcode.getText().toString());
-                    setResult(Activity.RESULT_OK,intent);
+                    intent.putExtra("address", editAddress.getText().toString());
+                    intent.putExtra("area_name", areaName);
+                    intent.putExtra("area_id", areaId);
+                    intent.putExtra("city", editCity.getText().toString());
+                    intent.putExtra("state", editState.getText().toString());
+                    intent.putExtra("zipcode", editZipcode.getText().toString());
+                    setResult(Activity.RESULT_OK, intent);
                     finish();
-                }else{
-                    if (!TextUtils.isEmpty(customerAddressId))
-                    {
-                        addAddress("EDIT",customerAddressId);
-                    }else {
-                        addAddress("ADD","");
+                } else {
+                    if (!TextUtils.isEmpty(customerAddressId)) {
+                        addAddress("EDIT", customerAddressId);
+                    } else {
+                        addAddress("ADD", "");
                     }
 
                 }
-
 
 
             }
         });
     }
 
-    void getExtras()
-    {
-        if(getIntent().getExtras() != null)
-        {
+    void getExtras() {
+        if (getIntent().getExtras() != null) {
             address = getIntent().getStringExtra("address");
             area_name = getIntent().getStringExtra("area_name");
             area_id = getIntent().getStringExtra("area_id");
@@ -200,13 +190,10 @@ public class AddAddressActivity extends AppCompatActivity {
             editState.setText(state);
             editZipcode.setText(zipcode);
 //            editAddress.setText(address);
-
-
         }
     }
 
-    public void addAddress(String method,String addressId)
-    {
+    public void addAddress(String method, String addressId) {
         Map<String, Object> param = new HashMap<>();
         param.put("user_id", customerId);
         param.put("method", method);
@@ -226,22 +213,21 @@ public class AddAddressActivity extends AppCompatActivity {
             public void success(AddAddressModel responseBody, Response response) {
                 ProgressDialogUtil.hideProgressDialog();
 
-                if (responseBody.isSuccess())
-                {
-                    Log.e("Add Delivery response",response.toString());
-                    Log.e("Add Delivery response",responseBody.getMessage());
-                    Constant.showToast(AddAddressActivity.this,responseBody.getMessage());
+                if (responseBody.isSuccess()) {
+                    Log.e("Add Delivery response", response.toString());
+                    Log.e("Add Delivery response", responseBody.getMessage());
+                    Constant.showToast(AddAddressActivity.this, responseBody.getMessage());
                     Intent intent = new Intent();
-                    intent.putExtra("address",editAddress.getText().toString());
-                    intent.putExtra("area_name",areaName);
-                    intent.putExtra("area_id",areaId);
-                    intent.putExtra("city",editCity.getText().toString());
-                    intent.putExtra("state",editState.getText().toString());
-                    intent.putExtra("zipcode",editZipcode.getText().toString());
-                    setResult(Activity.RESULT_OK,intent);
+                    intent.putExtra("address", editAddress.getText().toString());
+                    intent.putExtra("area_name", areaName);
+                    intent.putExtra("area_id", areaId);
+                    intent.putExtra("city", editCity.getText().toString());
+                    intent.putExtra("state", editState.getText().toString());
+                    intent.putExtra("zipcode", editZipcode.getText().toString());
+                    setResult(Activity.RESULT_OK, intent);
                     finish();
-                }else{
-                    Constant.showToast(AddAddressActivity.this,responseBody.getMessage());
+                } else {
+                    Constant.showToast(AddAddressActivity.this, responseBody.getMessage());
                 }
 
             }
@@ -249,8 +235,8 @@ public class AddAddressActivity extends AppCompatActivity {
             @Override
             public void failure(RetrofitError error) {
                 ProgressDialogUtil.hideProgressDialog();
-                Constant.showToast(AddAddressActivity.this,"Something went wrong");
-                Log.e("Add address", "failure: "+error.getMessage());
+                Constant.showToast(AddAddressActivity.this, "Something went wrong");
+                Log.e("Add address", "failure: " + error.getMessage());
             }
         });
     }
