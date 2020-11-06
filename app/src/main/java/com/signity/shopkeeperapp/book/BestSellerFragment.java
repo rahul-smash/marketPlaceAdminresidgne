@@ -123,6 +123,7 @@ public class BestSellerFragment extends Fragment implements OrderCartListener {
                                 if (selectedData.getId().equals(getProductData.getId())) {
                                     getProductData.setCount(selectedData.getCount());
                                     getProductData.setSelected(selectedData.isSelected());
+                                    getProductData.setSelectedVariantIndex(selectedData.getSelectedVariantIndex());
                                     break;
                                 }
                             }

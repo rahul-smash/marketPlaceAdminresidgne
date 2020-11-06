@@ -21,10 +21,15 @@ public class PaymentModeAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
     private Context context;
     private List<PaymentModes> paymentModeList = new ArrayList<>();
     private int selectedId = -1;
+    private PaymentModeListener listener;
 
     public PaymentModeAdapter(Context context) {
         this.context = context;
         this.paymentModeList.addAll(Arrays.asList(PaymentModes.values()));
+    }
+
+    public void setListener(PaymentModeListener listener) {
+        this.listener = listener;
     }
 
     @NonNull
@@ -58,6 +63,10 @@ public class PaymentModeAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
         }
     }
 
+    public interface PaymentModeListener {
+        void onPaymentMode(String mode);
+    }
+
     public class ViewHolder extends RecyclerView.ViewHolder {
 
         TextView textViewPaymentMode;
@@ -70,13 +79,19 @@ public class PaymentModeAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
         }
 
         public void onBind(int position) {
-            textViewPaymentMode.setText(paymentModeList.get(position).getTitle());
+
+            final PaymentModes modes = paymentModeList.get(position);
+
+            textViewPaymentMode.setText(modes.getTitle());
 
             linearLayoutPayment.setBackground(context.getResources().getDrawable(selectedId == position ? R.drawable.item_background_rounded_stroke_primary : R.drawable.item_background_rounded_stroke));
 
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
+                    if (listener != null) {
+                        listener.onPaymentMode(modes.getTitle());
+                    }
                     selectedId = getAdapterPosition();
                     notifyDataSetChanged();
                 }

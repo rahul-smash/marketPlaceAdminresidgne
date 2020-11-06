@@ -23,6 +23,7 @@ import com.signity.shopkeeperapp.util.AnimUtil;
 
 public class BookOrderTypeActivity extends BaseActivity implements OrderTypeAdapter.OrderTypeListener {
     public static final String CUSTOMER_NUMBER = "CUSTOMER_NUMBER";
+    public static final String TOTAL = "TOTAL";
     private static final String TAG = "BookOrderTypeActivity";
     private Toolbar toolbar;
     private DeliveryFragment deliveryFragment;
@@ -31,6 +32,7 @@ public class BookOrderTypeActivity extends BaseActivity implements OrderTypeAdap
     private String customerNumber = "";
     private RecyclerView recyclerViewOrderType;
     private OrderTypeAdapter orderTypeAdapter;
+    private double total;
 
     public static Intent getIntent(Context context) {
         return new Intent(context, BookOrderTypeActivity.class);
@@ -63,6 +65,7 @@ public class BookOrderTypeActivity extends BaseActivity implements OrderTypeAdap
     private void initFragments() {
         Bundle bundle = new Bundle();
         bundle.putString("NUMBER", customerNumber);
+        bundle.putDouble("TOTAL", total);
         deliveryFragment = DeliveryFragment.getInstance(bundle);
         pickUpFragment = PickUpFragment.getInstance(bundle);
         dineInFragment = DineInFragment.getInstance(bundle);
@@ -72,6 +75,7 @@ public class BookOrderTypeActivity extends BaseActivity implements OrderTypeAdap
         Bundle bundle = getIntent().getExtras();
         if (bundle != null) {
             customerNumber = bundle.getString(CUSTOMER_NUMBER);
+            total = bundle.getDouble(TOTAL);
         }
     }
 

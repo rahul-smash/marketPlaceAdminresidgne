@@ -172,6 +172,7 @@ public class CategoriesFragment extends Fragment implements ExpandableCategories
                                 if (selectedData.getId().equals(getProductData.getId())) {
                                     getProductData.setCount(selectedData.getCount());
                                     getProductData.setSelected(selectedData.isSelected());
+                                    getProductData.setSelectedVariantIndex(selectedData.getSelectedVariantIndex());
                                     break;
                                 }
                             }

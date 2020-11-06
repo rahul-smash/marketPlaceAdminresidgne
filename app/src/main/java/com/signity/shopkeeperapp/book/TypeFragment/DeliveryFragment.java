@@ -29,6 +29,7 @@ import com.google.android.material.textfield.TextInputEditText;
 import com.signity.shopkeeperapp.R;
 import com.signity.shopkeeperapp.book.BookOrderCheckoutActivity;
 import com.signity.shopkeeperapp.model.customers.addCustomer.AddCustomerResponse;
+import com.signity.shopkeeperapp.model.customers.addCustomer.DataResponse;
 import com.signity.shopkeeperapp.model.customers.detail.CustomerAddressResponse;
 import com.signity.shopkeeperapp.model.orders.CustomerData;
 import com.signity.shopkeeperapp.model.orders.Data;
@@ -58,10 +59,11 @@ public class DeliveryFragment extends Fragment {
     private ImageView imageViewSearch;
     private LinearLayout linearLayoutAddDelivery, linearLayoutDeliveryAddress, linearLayoutNext;
     private String mobile;
-    private String customerFirstName, customerNumber, customerID, customerAddressId;
+    private String customerFirstName, customerNumber, customerID, customerAddressId, addressCharges, minAmount;
     private int yearInt, dayInt, monthInt, hourOfDayInt, minuteInt;
     private String customerAddress, customerAreaId, customerAreaName, customerCity, customerState, customerZipcode, areaId;
-
+    private boolean isNotAllow;
+    private double total;
 
     public static DeliveryFragment getInstance(Bundle bundle) {
         DeliveryFragment fragment = new DeliveryFragment();
@@ -85,6 +87,7 @@ public class DeliveryFragment extends Fragment {
     private void getExtra() {
         if (getArguments() != null) {
             mobile = getArguments().getString("NUMBER");
+            total = getArguments().getDouble("TOTAL");
             editTextMobileNumber.setText(mobile);
         }
     }
@@ -192,7 +195,7 @@ public class DeliveryFragment extends Fragment {
                         if (getTime())
                             editTextScheduleTime.setText(Util.getTimeFrom(String.format(Locale.getDefault(), "%02d:%02d", hourOfDay, minute)));
                     }
-                }, calendar.get(Calendar.HOUR_OF_DAY), calendar.get(Calendar.MINUTE) + 30, false);
+                }, calendar.get(Calendar.HOUR_OF_DAY) + 1, calendar.get(Calendar.MINUTE), false);
 
                 timePickerDialog.show();
             }
@@ -329,6 +332,27 @@ public class DeliveryFragment extends Fragment {
                 ProgressDialogUtil.hideProgressDialog();
 
                 if (customerData.isSuccess()) {
+
+                    if (customerData.getData().getCustomerAddress() == null) {
+                        Intent intent = new Intent(getActivity(), AddAddressActivity.class);
+                        intent.putExtra("customer_id", customerData.getData().getId());
+                        intent.putExtra("customer_first_name", customerData.getData().getFullName());
+                        intent.putExtra("customer_mobile", customerData.getData().getPhone());
+                        intent.putExtra("customer_address_id", "");
+                        startActivityForResult(intent, ADDRESS_CODE);
+                        return;
+                    }
+
+                    if (customerData.getData().getCustomerAddress().size() == 0) {
+                        Intent intent = new Intent(getActivity(), AddAddressActivity.class);
+                        intent.putExtra("customer_id", customerData.getData().getId());
+                        intent.putExtra("customer_first_name", customerData.getData().getFullName());
+                        intent.putExtra("customer_mobile", customerData.getData().getPhone());
+                        intent.putExtra("customer_address_id", "");
+                        startActivityForResult(intent, ADDRESS_CODE);
+                        return;
+                    }
+
                     CustomerAddressResponse customerResponse = customerData.getData().getCustomerAddress().get(0);
 
                     Intent intent = new Intent(getActivity(), AddAddressActivity.class);
@@ -340,8 +364,6 @@ public class DeliveryFragment extends Fragment {
 
                 } else {
                     for_empty_field();
-
-//                    Toast.makeText(getContext(), customerData.getMessage(), Toast.LENGTH_SHORT).show();
                 }
 
             }
@@ -396,6 +418,9 @@ public class DeliveryFragment extends Fragment {
             customerNumber = response.getMobile();
             customerID = response.getUserId();
             customerAddressId = response.getId();
+            addressCharges = response.getAreaCharges();
+            isNotAllow = response.isNotAllow();
+            minAmount = response.getMinAmount();
         }
 
     }
@@ -427,6 +452,9 @@ public class DeliveryFragment extends Fragment {
                     customerCity = bundle.getString("city");
                     customerState = bundle.getString("state");
                     customerZipcode = bundle.getString("zipcode");
+                    addressCharges = bundle.getString("charges");
+                    isNotAllow = bundle.getBoolean("isNotAllow");
+                    minAmount = bundle.getString("minAmount");
 
                     if (customerAddress != null && !customerAddress.isEmpty()) {
                         linearLayoutAddDelivery.setVisibility(View.GONE);
@@ -469,7 +497,7 @@ public class DeliveryFragment extends Fragment {
                 ProgressDialogUtil.hideProgressDialog();
                 if (customerData.isSuccess()) {
                     if (customerData.getData() != null) {
-                        openCheckout(customerData.getData().getId());
+                        openCheckout(customerData.getData());
                     }
                 } else {
                     addCustomer();
@@ -529,7 +557,7 @@ public class DeliveryFragment extends Fragment {
                 ProgressDialogUtil.hideProgressDialog();
                 if (addCategoryResponse.isSuccess()) {
                     if (addCategoryResponse.getData() != null) {
-                        openCheckout(addCategoryResponse.getData().getStoreUser().getUserId());
+                        openCheckout(addCategoryResponse.getData());
                     }
                 } else {
                     Toast.makeText(getActivity(), addCategoryResponse.getMessage(), Toast.LENGTH_SHORT).show();
@@ -546,9 +574,59 @@ public class DeliveryFragment extends Fragment {
         });
     }
 
-    private void openCheckout(String userId) {
+    private void openCheckout(Data data) {
+
+        try {
+            if (!TextUtils.isEmpty(addressCharges)) {
+                double min = Double.parseDouble(minAmount);
+                if (total >= min) {
+                    addressCharges = "0";
+                }
+                if (total < min && isNotAllow) {
+                    Toast.makeText(getContext(), "Minimum order amount required " + minAmount, Toast.LENGTH_SHORT).show();
+                    return;
+                }
+            }
+        } catch (NumberFormatException e) {
+            e.printStackTrace();
+        }
+
         Bundle bundle = new Bundle();
-        bundle.putString(BookOrderCheckoutActivity.CUSTOMER_ID, userId);
+        bundle.putString(BookOrderCheckoutActivity.CUSTOMER_ID, data.getId());
+
+        if (data.getCustomerAddress() != null) {
+            bundle.putString(BookOrderCheckoutActivity.CUSTOMER_ADDRESS, data.getCustomerAddress().get(0).getAddress());
+            bundle.putString(BookOrderCheckoutActivity.CUSTOMER_ADDRESS_ID, data.getCustomerAddress().get(0).getId());
+        }
+        bundle.putString(BookOrderCheckoutActivity.ORDER_TYPE, "Delivery");
+        bundle.putString(BookOrderCheckoutActivity.CHARGES, addressCharges);
+        startActivity(BookOrderCheckoutActivity.getIntent(getContext(), bundle));
+        AnimUtil.slideFromRightAnim(getActivity());
+    }
+
+    private void openCheckout(DataResponse data) {
+
+        try {
+            if (!TextUtils.isEmpty(addressCharges)) {
+                double min = Double.parseDouble(minAmount);
+                if (total >= min) {
+                    addressCharges = "0";
+                }
+                if (total < min && isNotAllow) {
+                    Toast.makeText(getContext(), "Minimum order amount required " + minAmount, Toast.LENGTH_SHORT).show();
+                    return;
+                }
+            }
+        } catch (NumberFormatException e) {
+            e.printStackTrace();
+        }
+
+        Bundle bundle = new Bundle();
+        bundle.putString(BookOrderCheckoutActivity.CUSTOMER_ID, data.getStoreUser().getUserId());
+        bundle.putString(BookOrderCheckoutActivity.CUSTOMER_ADDRESS, data.getAddress().getUserAddress().getAddress());
+        bundle.putString(BookOrderCheckoutActivity.CUSTOMER_ADDRESS_ID, data.getAddress().getUserAddress().getId());
+        bundle.putString(BookOrderCheckoutActivity.CHARGES, addressCharges);
+        bundle.putString(BookOrderCheckoutActivity.ORDER_TYPE, "Delivery");
         startActivity(BookOrderCheckoutActivity.getIntent(getContext(), bundle));
         AnimUtil.slideFromRightAnim(getActivity());
     }

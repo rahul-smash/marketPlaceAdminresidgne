@@ -5,8 +5,11 @@ import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.Spinner;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -61,6 +64,7 @@ public class BestSellerAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         TextView textViewProductName, textViewProductPrice;
         TextView textViewCount;
         LinearLayout linearLayoutAdd, linearLayoutMinus, linearLayoutCountMinus;
+        Spinner spinnerOrders;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -71,6 +75,7 @@ public class BestSellerAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
             linearLayoutAdd = itemView.findViewById(R.id.ll_add);
             linearLayoutMinus = itemView.findViewById(R.id.ll_minus);
             linearLayoutCountMinus = itemView.findViewById(R.id.ll_count_minus);
+            spinnerOrders = itemView.findViewById(R.id.spinner_orders);
         }
 
         public void onBind(int position) {
@@ -83,10 +88,33 @@ public class BestSellerAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                         .into(imageViewProduct);
             }
 
+            List<String> variantList = new ArrayList<>();
+            for (Variant variant : getProductData.getVariants()) {
+                variantList.add(String.format("%s %s", variant.getWeight(), variant.getUnitType()));
+            }
+
+            final ArrayAdapter<String> stringArrayAdapter = new ArrayAdapter<String>(context, R.layout.spinner_text, variantList);
+            spinnerOrders.setAdapter(stringArrayAdapter);
+            spinnerOrders.setSelection(getProductData.getSelectedVariantIndex());
+            spinnerOrders.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+                @Override
+                public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                    if (getProductData.getSelectedVariantIndex() != position) {
+                        getProductData.setSelectedVariantIndex(position);
+                        notifyItemChanged(getAdapterPosition(), getProductData);
+                    }
+                }
+
+                @Override
+                public void onNothingSelected(AdapterView<?> parent) {
+
+                }
+            });
+
             textViewProductName.setText(getProductData.getTitle());
 
             List<Variant> varientDataList = getProductData.getVariants();
-            Variant variantData = varientDataList.get(0);
+            Variant variantData = varientDataList.get(getProductData.getSelectedVariantIndex());
 
             textViewProductPrice.setText(Util.getPriceWithCurrency(Double.parseDouble(variantData.getPrice()), AppPreference.getInstance().getCurrency()));
 

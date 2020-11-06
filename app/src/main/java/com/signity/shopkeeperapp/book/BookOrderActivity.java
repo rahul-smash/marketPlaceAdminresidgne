@@ -38,6 +38,8 @@ public class BookOrderActivity extends BaseActivity {
     private TranslateAnimation animationBottomUp, animationBottomDown;
     private boolean alreadyVisible;
     private String customerNumber = "";
+    private double totalPrice;
+    private int selectedTab;
 
     public static Intent getIntent(Context context) {
         return new Intent(context, BookOrderActivity.class);
@@ -58,11 +60,6 @@ public class BookOrderActivity extends BaseActivity {
         setUpToolbar();
         setUpTab();
         setUpAnimation();
-        openFragment(0);
-        if (!OrderCart.isCartEmpty()) {
-            updateOrderData();
-            showLayout();
-        }
     }
 
     private void getExtra() {
@@ -102,7 +99,8 @@ public class BookOrderActivity extends BaseActivity {
         tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @Override
             public void onTabSelected(TabLayout.Tab tab) {
-                openFragment(tab.getPosition());
+                selectedTab = tab.getPosition();
+                openFragment(selectedTab);
             }
 
             @Override
@@ -146,6 +144,7 @@ public class BookOrderActivity extends BaseActivity {
             public void onClick(View v) {
                 Bundle bundle = new Bundle();
                 bundle.putString(BookOrderTypeActivity.CUSTOMER_NUMBER, customerNumber);
+                bundle.putDouble(BookOrderTypeActivity.TOTAL, totalPrice);
                 startActivity(BookOrderTypeActivity.getIntent(BookOrderActivity.this, bundle));
                 AnimUtil.slideFromRightAnim(BookOrderActivity.this);
             }
@@ -176,10 +175,10 @@ public class BookOrderActivity extends BaseActivity {
 
     private void updateOrderData() {
         int totalItems = 0;
-        double totalPrice = 0;
+        totalPrice = 0;
         for (GetProductData productData1 : OrderCart.getOrderCartMap().values()) {
             totalItems += 1;
-            totalPrice += Double.parseDouble(productData1.getVariants().get(0).getPrice()) * productData1.getCount();
+            totalPrice += Double.parseDouble(productData1.getVariants().get(productData1.getSelectedVariantIndex()).getPrice()) * productData1.getCount();
         }
 
         textViewOrderItems.setText(String.format(Locale.getDefault(), "%d %s", totalItems, totalItems > 1 ? "Items" : "Item"));
@@ -213,6 +212,18 @@ public class BookOrderActivity extends BaseActivity {
             alreadyVisible = false;
             constraintLayoutProceed.setAnimation(animationBottomDown);
             constraintLayoutProceed.setVisibility(View.GONE);
+        }
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        openFragment(selectedTab);
+        if (!OrderCart.isCartEmpty()) {
+            updateOrderData();
+            showLayout();
+        } else {
+            hideLayout();
         }
     }
 }

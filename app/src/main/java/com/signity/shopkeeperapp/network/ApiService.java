@@ -26,6 +26,7 @@ import com.signity.shopkeeperapp.model.category.CategoryDetailResponse;
 import com.signity.shopkeeperapp.model.customers.AreaCodesResp;
 import com.signity.shopkeeperapp.model.customers.CustomerDataResponse;
 import com.signity.shopkeeperapp.model.customers.addCustomer.AddCustomerResponse;
+import com.signity.shopkeeperapp.model.customers.addCustomer.AddressResponse;
 import com.signity.shopkeeperapp.model.customers.detail.CustomerDetailResponse;
 import com.signity.shopkeeperapp.model.dashboard.StoreDashboardResponse;
 import com.signity.shopkeeperapp.model.image.ImageUploadResponse;
@@ -43,10 +44,7 @@ import com.signity.shopkeeperapp.model.verify.OtpVerifyResponse;
 
 import java.util.Map;
 
-import okhttp3.ResponseBody;
 import retrofit.Callback;
-import retrofit.ResponseCallback;
-import retrofit.client.Response;
 import retrofit.http.FieldMap;
 import retrofit.http.FormUrlEncoded;
 import retrofit.http.GET;
@@ -271,4 +269,12 @@ public interface ApiService {
     @FormUrlEncoded
     @POST("/deliveryAddress")
     void addAddressForDelivery(@FieldMap Map<String, Object> param, Callback<AddAddressModel> response);
+
+    @FormUrlEncoded
+    @POST("/placeOrder")
+    void placeOrder(@FieldMap Map<String, Object> param, Callback<AddAddressModel> response);
+
+    @FormUrlEncoded
+    @POST("/pickupPlaceOrder")
+    void placeOrderPickDine(@FieldMap Map<String, Object> param, Callback<AddAddressModel> response);
 }

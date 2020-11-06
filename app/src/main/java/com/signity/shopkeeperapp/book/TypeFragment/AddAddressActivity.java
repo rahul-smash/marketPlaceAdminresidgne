@@ -43,6 +43,8 @@ public class AddAddressActivity extends AppCompatActivity {
     private List<DataResp> dataResps = new ArrayList<>();
     private Spinner spinner;
     private String areaId, areaName;
+    private String deliveryCharges, minAmount;
+    private boolean isNotAllow;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -108,6 +110,9 @@ public class AddAddressActivity extends AppCompatActivity {
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 areaId = dataResps.get(position).getId();
                 areaName = dataResps.get(position).getName();
+                deliveryCharges = dataResps.get(position).getCharges();
+                isNotAllow = dataResps.get(position).isNotAllow();
+                minAmount = dataResps.get(position).getMinamount();
                 Log.e("dataResps", dataResps.get(position).getName());
             }
 
@@ -153,6 +158,9 @@ public class AddAddressActivity extends AppCompatActivity {
                     intent.putExtra("city", editCity.getText().toString());
                     intent.putExtra("state", editState.getText().toString());
                     intent.putExtra("zipcode", editZipcode.getText().toString());
+                    intent.putExtra("charges", deliveryCharges);
+                    intent.putExtra("isNotAllow", isNotAllow);
+                    intent.putExtra("minAmount", minAmount);
                     setResult(Activity.RESULT_OK, intent);
                     finish();
                 } else {
@@ -224,6 +232,9 @@ public class AddAddressActivity extends AppCompatActivity {
                     intent.putExtra("city", editCity.getText().toString());
                     intent.putExtra("state", editState.getText().toString());
                     intent.putExtra("zipcode", editZipcode.getText().toString());
+                    intent.putExtra("charges", deliveryCharges);
+                    intent.putExtra("isNotAllow", isNotAllow);
+                    intent.putExtra("minAmount", minAmount);
                     setResult(Activity.RESULT_OK, intent);
                     finish();
                 } else {

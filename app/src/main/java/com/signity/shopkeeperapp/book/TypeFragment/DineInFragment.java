@@ -22,11 +22,13 @@ import com.google.android.material.textfield.TextInputEditText;
 import com.signity.shopkeeperapp.R;
 import com.signity.shopkeeperapp.book.BookOrderCheckoutActivity;
 import com.signity.shopkeeperapp.model.customers.addCustomer.AddCustomerResponse;
+import com.signity.shopkeeperapp.model.customers.addCustomer.DataResponse;
 import com.signity.shopkeeperapp.model.orders.CustomerData;
 import com.signity.shopkeeperapp.model.orders.Data;
 import com.signity.shopkeeperapp.network.NetworkAdaper;
 import com.signity.shopkeeperapp.util.AnimUtil;
 import com.signity.shopkeeperapp.util.ProgressDialogUtil;
+import com.signity.shopkeeperapp.util.prefs.AppPreference;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -176,7 +178,7 @@ public class DineInFragment extends Fragment {
                 ProgressDialogUtil.hideProgressDialog();
                 if (customerData.isSuccess()) {
                     if (customerData.getData() != null) {
-                        startCheckout(customerData.getData().getId());
+                        startCheckout(customerData.getData());
                     }
                 } else {
                     addCustomer();
@@ -232,7 +234,7 @@ public class DineInFragment extends Fragment {
                 ProgressDialogUtil.hideProgressDialog();
                 if (addCategoryResponse.isSuccess()) {
                     if (addCategoryResponse.getData() != null) {
-                        startCheckout(addCategoryResponse.getData().getStoreUser().getUserId());
+                        startCheckout(addCategoryResponse.getData());
                     }
                 }
             }
@@ -247,9 +249,24 @@ public class DineInFragment extends Fragment {
         });
     }
 
-    private void startCheckout(String userId) {
+    private void startCheckout(Data data) {
         Bundle bundle = new Bundle();
-        bundle.putString(BookOrderCheckoutActivity.CUSTOMER_ID, userId);
+        bundle.putString(BookOrderCheckoutActivity.CUSTOMER_ID, data.getId());
+        bundle.putString(BookOrderCheckoutActivity.CUSTOMER_ADDRESS, AppPreference.getInstance().getLocation());
+        bundle.putString(BookOrderCheckoutActivity.CUSTOMER_ADDRESS_ID, "");
+        bundle.putString(BookOrderCheckoutActivity.ORDER_TYPE, "DineIn");
+        bundle.putString(BookOrderCheckoutActivity.CHARGES, "0");
+        startActivity(BookOrderCheckoutActivity.getIntent(getContext(), bundle));
+        AnimUtil.slideFromRightAnim(getActivity());
+    }
+
+    private void startCheckout(DataResponse data) {
+        Bundle bundle = new Bundle();
+        bundle.putString(BookOrderCheckoutActivity.CUSTOMER_ID, data.getStoreUser().getUserId());
+        bundle.putString(BookOrderCheckoutActivity.CUSTOMER_ADDRESS, AppPreference.getInstance().getLocation());
+        bundle.putString(BookOrderCheckoutActivity.CUSTOMER_ADDRESS_ID, "");
+        bundle.putString(BookOrderCheckoutActivity.CHARGES, "0");
+        bundle.putString(BookOrderCheckoutActivity.ORDER_TYPE, "DineIn");
         startActivity(BookOrderCheckoutActivity.getIntent(getContext(), bundle));
         AnimUtil.slideFromRightAnim(getActivity());
     }
