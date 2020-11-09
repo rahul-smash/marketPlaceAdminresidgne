@@ -114,7 +114,7 @@
                         <ImageView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:src="@drawable/ordersicon"
+                            android:src="@drawable/locationicon"
                             app:tint="@color/colorTextGrey" />
 
                         <TextView
@@ -142,7 +142,7 @@
                         <ImageView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:src="@drawable/producticonoff"
+                            android:src="@drawable/emailicon"
                             app:tint="@color/colorTextGrey" />
 
                         <TextView
@@ -243,15 +243,15 @@
                             android:id="@+id/ll_active"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:background="@drawable/item_background_rounded_stroke"
-                            android:padding="4dp"
+                            android:background="@drawable/item_background_rounded_stroke_active"
+                            android:padding="6dp"
                             app:layout_constraintStart_toStartOf="parent"
                             app:layout_constraintTop_toTopOf="parent">
 
                             <ImageView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:src="@drawable/ordersicon" />
+                                android:src="@drawable/activeordersicon" />
 
                         </LinearLayout>
 
@@ -291,15 +291,15 @@
                             android:id="@+id/ll_total"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:background="@drawable/item_background_rounded_stroke"
-                            android:padding="4dp"
+                            android:background="@drawable/item_background_rounded_stroke_total"
+                            android:padding="6dp"
                             app:layout_constraintStart_toStartOf="parent"
                             app:layout_constraintTop_toTopOf="parent">
 
                             <ImageView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:src="@drawable/ordersicon" />
+                                android:src="@drawable/totalorderplacedicon" />
 
                         </LinearLayout>
 
@@ -337,15 +337,15 @@
                             android:id="@+id/ll_amount"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:background="@drawable/item_background_rounded_stroke"
-                            android:padding="4dp"
+                            android:background="@drawable/item_background_rounded_stroke_amount"
+                            android:padding="6dp"
                             app:layout_constraintStart_toStartOf="parent"
                             app:layout_constraintTop_toTopOf="parent">
 
                             <ImageView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:src="@drawable/ordersicon" />
+                                android:src="@drawable/totalamountpaidiconm" />
 
                         </LinearLayout>
 
@@ -403,6 +403,7 @@
                         app:layout_constraintTop_toTopOf="parent" />
 
                     <ImageView
+                        android:id="@+id/iv_arrow"
                         android:layout_width="12dp"
                         android:layout_height="12dp"
                         android:src="@drawable/dropdownarrow"

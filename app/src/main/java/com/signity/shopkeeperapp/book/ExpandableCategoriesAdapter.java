@@ -25,10 +25,10 @@ import java.util.Map;
 
 public class ExpandableCategoriesAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
+    public int selectedId = -1;
     private Context context;
     private List<SubCategory> categoryDataList = new ArrayList<>();
     private ExpandableCategoriesListener listener;
-    private int selectedId = -1;
     private Map<Integer, List<GetProductData>> productMap = new HashMap<>();
 
     public ExpandableCategoriesAdapter(Context context) {
@@ -90,25 +90,32 @@ public class ExpandableCategoriesAdapter extends RecyclerView.Adapter<RecyclerVi
             constraintLayoutCategories = itemView.findViewById(R.id.const_categories);
         }
 
-        public void onBind(int position) {
+        public void onBind(final int position) {
             final SubCategory categoryData = categoryDataList.get(position);
             textView.setText(categoryData.getTitle());
 
-            BestSellerAdapter bestSellerAdapter = new BestSellerAdapter(context, this);
+            final BestSellerAdapter bestSellerAdapter = new BestSellerAdapter(context, this);
             recyclerView.setAdapter(bestSellerAdapter);
-
             if (productMap.get(position) != null) {
                 List<GetProductData> productData = productMap.get(position);
                 bestSellerAdapter.addProductData(productData);
             }
-            recyclerView.setLayoutManager(new GridLayoutManager(context, 3, LinearLayoutManager.VERTICAL, false));
 
+            imageViewArrow.setImageDrawable(context.getResources().getDrawable(categoryData.isOpen() ? R.drawable.collapsearrow2 : R.drawable.collapsearrow1));
+
+            recyclerView.setVisibility(categoryData.isOpen() ? View.VISIBLE : View.GONE);
+            recyclerView.setLayoutManager(new GridLayoutManager(context, 3, LinearLayoutManager.VERTICAL, false));
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     selectedId = getAdapterPosition();
-                    if (listener != null) {
-                        listener.onClickCategory(categoryData.getId(), categoryData.getCategoryId());
+                    categoryData.setOpen(!categoryData.isOpen());
+                    if (productMap.get(position) == null) {
+                        if (listener != null) {
+                            listener.onClickCategory(categoryData.getId(), categoryData.getCategoryId());
+                        }
+                    } else {
+                        notifyDataSetChanged();
                     }
                 }
             });

@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <item
         android:id="@+id/action_add_customer"
-        android:icon="@drawable/ic_add_32"
+        android:icon="@drawable/addcustomericon"
         android:title="Add Customer"
         android:visible="true"
         app:showAsAction="always" />

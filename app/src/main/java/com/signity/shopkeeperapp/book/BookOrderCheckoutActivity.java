@@ -1,11 +1,13 @@
 package com.signity.shopkeeperapp.book;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.provider.Settings;
 import android.text.TextUtils;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -31,6 +33,7 @@ import com.signity.shopkeeperapp.model.orders.ProductModel;
 import com.signity.shopkeeperapp.model.orders.checkout.DataResponse;
 import com.signity.shopkeeperapp.model.orders.checkout.OrderCalculationResponse;
 import com.signity.shopkeeperapp.model.orders.checkout.OrderDetailResponse;
+import com.signity.shopkeeperapp.model.orders.offers.ApplyCouponDTO;
 import com.signity.shopkeeperapp.network.NetworkAdaper;
 import com.signity.shopkeeperapp.util.AnimUtil;
 import com.signity.shopkeeperapp.util.ProgressDialogUtil;
@@ -53,6 +56,8 @@ public class BookOrderCheckoutActivity extends BaseActivity {
     public static final String ORDER_TYPE = "ORDER_TYPE";
     public static final String CHARGES = "CHARGES";
     private static final String TAG = "BookOrderCheckoutActivity";
+    private static final int REQUEST_COUPON = 1122;
+    private static final int REQUEST_LOYALTY = 3344;
     private Toolbar toolbar;
     private BookOrderCheckoutAdapter bookOrderCheckoutAdapter;
     private PaymentModeAdapter paymentModeAdapter;
@@ -68,6 +73,13 @@ public class BookOrderCheckoutActivity extends BaseActivity {
     private String orderType, customerAddress, customerAddressId, charges;
     private DataResponse dataResponse;
     private String paymentMode;
+    private List<ProductModel> productModels = new ArrayList<>();
+    private String coupon = "";
+    private String discount = "0";
+    private TextView textViewApplyLoyalty, textViewApplyCoupon, textViewLoyaltyPoint;
+    private ImageView imageViewLoyalty, imageViewCoupon;
+    private String loyalty = "0";
+    private String point = "";
 
     public static Intent getIntent(Context context) {
         return new Intent(context, BookOrderCheckoutActivity.class);
@@ -92,7 +104,7 @@ public class BookOrderCheckoutActivity extends BaseActivity {
 
     private void calculateAmount() {
 
-        List<ProductModel> productModels = new ArrayList<>();
+        productModels.clear();
         for (GetProductData productData : OrderCart.getOrderCartMap().values()) {
             ProductModel model = new ProductModel();
             model.setProductId(productData.getId());
@@ -120,7 +132,7 @@ public class BookOrderCheckoutActivity extends BaseActivity {
         param.put("shipping", charges);
         param.put("discount", 0);
         param.put("tax", 0);
-        param.put("fixed_discount_amount", 0);
+        param.put("fixed_discount_amount", discount);
         param.put("user_id", userId);
         param.put("order_detail", jsonArrayImage.toString());
 
@@ -179,12 +191,17 @@ public class BookOrderCheckoutActivity extends BaseActivity {
             textViewTotal.setText(Util.getPriceWithCurrency(Double.parseDouble(dataResponse.getItemSubTotal()), AppPreference.getInstance().getCurrency()));
             textViewDeliveryCharges.setText(Util.getPriceWithCurrency(Double.parseDouble(dataResponse.getShipping()), AppPreference.getInstance().getCurrency()));
             textViewTax.setText(Util.getPriceWithCurrency(Double.parseDouble(dataResponse.getTax()), AppPreference.getInstance().getCurrency()));
-            textViewCouponDiscount.setText(Util.getPriceWithCurrency(Double.parseDouble(dataResponse.getDiscount()), AppPreference.getInstance().getCurrency()));
+            textViewCouponDiscount.setText(Util.getPriceWithCurrency(Double.parseDouble(loyalty.equalsIgnoreCase("0") ? dataResponse.getDiscount() : "0"), AppPreference.getInstance().getCurrency()));
             textViewMrpDiscount.setText(Util.getPriceWithCurrency(0, AppPreference.getInstance().getCurrency()));
-            textViewLoyaltyPoints.setText(Util.getPriceWithCurrency(0, AppPreference.getInstance().getCurrency()));
+            textViewLoyaltyPoints.setText(Util.getPriceWithCurrency(Double.parseDouble(loyalty), AppPreference.getInstance().getCurrency()));
             textViewCartSaving.setText(String.format("Cart Savings: %s", Util.getPriceWithCurrency(Double.parseDouble(dataResponse.getDiscount()), AppPreference.getInstance().getCurrency())));
             textViewFinalAmount.setText(Util.getPriceWithCurrency(Double.parseDouble(dataResponse.getTotal()), AppPreference.getInstance().getCurrency()));
             textViewOrderTotal.setText(Util.getPriceWithCurrency(Double.parseDouble(dataResponse.getTotal()), AppPreference.getInstance().getCurrency()));
+            if (!TextUtils.isEmpty(point)) {
+                textViewLoyaltyPoint.setText(String.format("(%s Points)", point));
+            } else {
+                textViewLoyaltyPoint.setText("");
+            }
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -228,20 +245,60 @@ public class BookOrderCheckoutActivity extends BaseActivity {
 
         textviewOrderItemsCount = findViewById(R.id.tv_order_items);
         textViewOrderTotal = findViewById(R.id.tv_order_total);
+        textViewApplyLoyalty = findViewById(R.id.tv_apply_loyalty);
+        textViewApplyCoupon = findViewById(R.id.tv_apply_coupon);
+        imageViewLoyalty = findViewById(R.id.iv_apply_loyalty);
+        imageViewCoupon = findViewById(R.id.iv_apply_coupon);
+        textViewLoyaltyPoint = findViewById(R.id.tv_loyalty_point);
+
+        constraintLayoutLoyalty.setTag(0);
+        constraintLayoutCoupon.setTag(0);
 
         constraintLayoutCoupon.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivity(CouponsActivity.getStartIntent(BookOrderCheckoutActivity.this));
-                AnimUtil.slideFromRightAnim(BookOrderCheckoutActivity.this);
+                int tag = (int) constraintLayoutCoupon.getTag();
+                int tagLoyalty = (int) constraintLayoutLoyalty.getTag();
+
+                if (tagLoyalty == 1) {
+                    Toast.makeText(BookOrderCheckoutActivity.this, "Please remove existing discount first", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+
+                if (tag == 0) {
+                    startActivityForResult(CouponsActivity.getStartIntent(BookOrderCheckoutActivity.this), REQUEST_COUPON);
+                    AnimUtil.slideFromRightAnim(BookOrderCheckoutActivity.this);
+                } else {
+                    couponLayoutVisibility(false);
+                    coupon = "";
+                    discount = "0";
+                    calculateAmount();
+                }
             }
         });
 
         constraintLayoutLoyalty.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivity(LoyaltyPointsActivity.getStartIntent(BookOrderCheckoutActivity.this));
-                AnimUtil.slideFromRightAnim(BookOrderCheckoutActivity.this);
+                int tag = (int) constraintLayoutLoyalty.getTag();
+                int tagCoupon = (int) constraintLayoutCoupon.getTag();
+
+                if (tagCoupon == 1) {
+                    Toast.makeText(BookOrderCheckoutActivity.this, "Please remove existing discount first", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+
+                if (tag == 0) {
+                    startActivityForResult(LoyaltyPointsActivity.getStartIntent(BookOrderCheckoutActivity.this), REQUEST_LOYALTY);
+                    AnimUtil.slideFromRightAnim(BookOrderCheckoutActivity.this);
+                } else {
+                    loyaltyLayoutVisibility(false);
+                    loyalty = "0";
+                    coupon = "";
+                    discount = "0";
+                    point = "";
+                    calculateAmount();
+                }
             }
         });
 
@@ -279,7 +336,7 @@ public class BookOrderCheckoutActivity extends BaseActivity {
         Map<String, Object> param = new HashMap<>();
         param.put("user_id", userId);
         param.put("device_id", deviceId);
-        param.put("platform", 2);
+        param.put("platform", "android");
         param.put("payment_method", paymentMode.equalsIgnoreCase("Cash") ? "cod" : "online");
         param.put("user_address_id", customerAddressId);
         param.put("total", dataResponse.getItemSubTotal());
@@ -289,7 +346,7 @@ public class BookOrderCheckoutActivity extends BaseActivity {
         param.put("cart_saving", dataResponse.getDiscount());
         param.put("checkout", dataResponse.getTotal());
         param.put("wallet_refund", dataResponse.getWalletRefund());
-        param.put("coupon_code", "");
+        param.put("coupon_code", coupon);
         param.put("tax", dataResponse.getTax());
         if (dataResponse.getTaxDetail() != null && dataResponse.getTaxDetail().size() > 0) {
             param.put("tax_rate", dataResponse.getTaxDetail().get(0).getRate());
@@ -340,7 +397,7 @@ public class BookOrderCheckoutActivity extends BaseActivity {
         Map<String, Object> param = new HashMap<>();
         param.put("user_id", userId);
         param.put("device_id", deviceId);
-        param.put("platform", 2);
+        param.put("platform", "android");
         param.put("payment_method", paymentMode.equalsIgnoreCase("Cash") ? "cod" : "online");
         param.put("user_address_id", TextUtils.isEmpty(customerAddressId) ? "1" : customerAddressId);
         param.put("total", dataResponse.getItemSubTotal());
@@ -350,7 +407,7 @@ public class BookOrderCheckoutActivity extends BaseActivity {
         param.put("cart_saving", dataResponse.getDiscount());
         param.put("checkout", dataResponse.getTotal());
         param.put("wallet_refund", dataResponse.getWalletRefund());
-        param.put("coupon_code", "");
+        param.put("coupon_code", coupon);
         param.put("tax", dataResponse.getTax());
         if (dataResponse.getTaxDetail() != null && dataResponse.getTaxDetail().size() > 0) {
             param.put("tax_rate", dataResponse.getTaxDetail().get(0).getRate());
@@ -411,5 +468,98 @@ public class BookOrderCheckoutActivity extends BaseActivity {
                 AnimUtil.slideFromLeftAnim(BookOrderCheckoutActivity.this);
             }
         });
+    }
+
+    private void applyCoupon(String couponCode, final String type) {
+        if (productModels.isEmpty()) {
+            return;
+        }
+
+        Gson gson = new Gson();
+        JsonElement element = gson.toJsonTree(productModels, new TypeToken<List<ProductModel>>() {
+        }.getType());
+        JsonArray jsonArrayImage = element.getAsJsonArray();
+
+        String deviceId = Settings.Secure.getString(getApplicationContext().getContentResolver(), Settings.Secure.ANDROID_ID);
+
+        Map<String, Object> param = new HashMap<>();
+        param.put("platform", "android");
+        param.put("payment_method", 3);
+        param.put("device_token", AppPreference.getInstance().getDeviceToken());
+        param.put("device_id", deviceId);
+        param.put("user_id", userId);
+        param.put("coupon_code", couponCode);
+        param.put("orders", jsonArrayImage.toString());
+
+        ProgressDialogUtil.showProgressDialog(this);
+        NetworkAdaper.orderNetworkServices(AppPreference.getInstance().getStoreId())
+                .applyCoupon(param, new Callback<ApplyCouponDTO>() {
+                    @Override
+                    public void success(ApplyCouponDTO applyCouponDTO, Response response) {
+
+                        if (isDestroyed()) {
+                            return;
+                        }
+                        ProgressDialogUtil.hideProgressDialog();
+                        if (applyCouponDTO.isSuccess()) {
+                            coupon = applyCouponDTO.getData().getCouponCode();
+                            discount = applyCouponDTO.getDiscountAmount();
+                            calculateAmount();
+                            if (type.equalsIgnoreCase("coupon")) {
+                                couponLayoutVisibility(true);
+                            } else {
+                                loyaltyLayoutVisibility(true);
+                            }
+                        } else {
+                            Toast.makeText(BookOrderCheckoutActivity.this, applyCouponDTO.getMessage(), Toast.LENGTH_SHORT).show();
+                        }
+
+                    }
+
+                    @Override
+                    public void failure(RetrofitError error) {
+                        if (isDestroyed()) {
+                            return;
+                        }
+                        ProgressDialogUtil.hideProgressDialog();
+                    }
+                });
+    }
+
+    private void couponLayoutVisibility(boolean value) {
+        constraintLayoutCoupon.setTag(value ? 1 : 0);
+        textViewApplyCoupon.setText(value ? coupon.concat(" Applied!") : "Apply Coupon");
+        imageViewCoupon.setImageDrawable(getResources().getDrawable(value ? R.drawable.popupcancelicon : R.drawable.backicon));
+    }
+
+    private void loyaltyLayoutVisibility(boolean value) {
+        constraintLayoutLoyalty.setTag(value ? 1 : 0);
+        textViewApplyLoyalty.setText(value ? coupon.concat(" Applied!") : "Apply Loyalty Points");
+        imageViewLoyalty.setImageDrawable(getResources().getDrawable(value ? R.drawable.popupcancelicon : R.drawable.backicon));
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (resultCode == Activity.RESULT_OK) {
+            switch (requestCode) {
+                case REQUEST_COUPON:
+                    if (data != null) {
+                        String coupon = data.getStringExtra(CouponsActivity.COUPON);
+                        applyCoupon(coupon, "coupon");
+                    }
+                    break;
+                case REQUEST_LOYALTY:
+                    if (data != null) {
+                        coupon = data.getStringExtra(LoyaltyPointsActivity.LOYALTY);
+                        discount = data.getStringExtra(LoyaltyPointsActivity.DISCOUNT);
+                        loyalty = data.getStringExtra(LoyaltyPointsActivity.DISCOUNT);
+                        point = data.getStringExtra(LoyaltyPointsActivity.POINT);
+                        calculateAmount();
+                        loyaltyLayoutVisibility(true);
+                    }
+                    break;
+            }
+        }
     }
 }

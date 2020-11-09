@@ -116,7 +116,7 @@ public class BestSellerAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
             List<Variant> varientDataList = getProductData.getVariants();
             Variant variantData = varientDataList.get(getProductData.getSelectedVariantIndex());
 
-            textViewProductPrice.setText(Util.getPriceWithCurrency(Double.parseDouble(variantData.getPrice()), AppPreference.getInstance().getCurrency()));
+            textViewProductPrice.setText(Util.getPriceWithCurrency(Double.parseDouble(!TextUtils.isEmpty(variantData.getPrice()) ? variantData.getPrice() : "0"), AppPreference.getInstance().getCurrency()));
 
             linearLayoutCountMinus.setVisibility(getProductData.isSelected() ? View.VISIBLE : View.GONE);
             textViewCount.setText(String.valueOf(getProductData.getCount()));

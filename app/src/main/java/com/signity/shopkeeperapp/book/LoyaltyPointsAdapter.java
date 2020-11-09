@@ -57,7 +57,7 @@ public class LoyaltyPointsAdapter extends RecyclerView.Adapter<RecyclerView.View
     }
 
     public interface LoyaltyPointsAdapterListener {
-        void onClickApply();
+        void onClickApply(String coupon, String discount, String points);
     }
 
     class LoyaltyPointsViewHolder extends RecyclerView.ViewHolder {
@@ -76,7 +76,7 @@ public class LoyaltyPointsAdapter extends RecyclerView.Adapter<RecyclerView.View
 
         public void bind(int positon) {
 
-            DataResponse response = pointsResponses.get(positon);
+            final DataResponse response = pointsResponses.get(positon);
 
             String discount = Util.getCurrencySymbol(AppPreference.getInstance().getCurrency()).concat(response.getAmount());
 
@@ -88,7 +88,7 @@ public class LoyaltyPointsAdapter extends RecyclerView.Adapter<RecyclerView.View
                 @Override
                 public void onClick(View v) {
                     if (listener != null) {
-                        listener.onClickApply();
+                        listener.onClickApply(response.getCouponCode(), response.getAmount(),response.getPoints());
                     }
                 }
             });

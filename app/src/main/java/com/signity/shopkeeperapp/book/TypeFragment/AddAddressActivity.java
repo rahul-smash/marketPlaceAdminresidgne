@@ -150,14 +150,7 @@ public class AddAddressActivity extends AppCompatActivity {
         editState = findViewById(R.id.edt_customer_state);
         editZipcode = findViewById(R.id.edt_customer_zip);
         spinner = findViewById(R.id.spinner_area);
-
-        back = findViewById(R.id.iv_back);
-        back.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                finish();
-            }
-        });
+        toolbar = findViewById(R.id.toolbar);
 
         save_address_lay = findViewById(R.id.edit_address_save);
         save_address_lay.setOnClickListener(new View.OnClickListener() {

@@ -125,7 +125,7 @@
                 <ImageView
                     android:layout_width="16dp"
                     android:layout_height="16dp"
-                    android:src="@drawable/dots"
+                    android:src="@drawable/ic_action_minus"
                     app:tint="@color/colorWhite" />
 
             </LinearLayout>

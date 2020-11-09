@@ -9,7 +9,6 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_margin="12dp"
-        app:cardBackgroundColor="@color/colorPrimaryDarker"
         app:cardCornerRadius="6dp"
         app:cardElevation="0dp"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -19,8 +18,10 @@
         app:layout_constraintTop_toTopOf="parent">
 
         <LinearLayout
+            android:id="@+id/ll_order_type"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:background="@drawable/deliverybg"
             android:gravity="center">
 
             <TextView
@@ -35,14 +36,23 @@
 
     </com.google.android.material.card.MaterialCardView>
 
-    <ImageView
+    <LinearLayout
         android:id="@+id/iv_check"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:src="@drawable/check_on"
+        android:background="@drawable/item_background_rounded_stroke_tick"
+        android:padding="6dp"
         app:layout_constraintBottom_toTopOf="@+id/card_order_type"
         app:layout_constraintEnd_toEndOf="@+id/card_order_type"
         app:layout_constraintStart_toEndOf="@+id/card_order_type"
-        app:layout_constraintTop_toTopOf="@+id/card_order_type" />
+        app:layout_constraintTop_toTopOf="@+id/card_order_type">
+
+        <ImageView
+            android:id="@+id/iv_check_image"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/selectedtick" />
+
+    </LinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

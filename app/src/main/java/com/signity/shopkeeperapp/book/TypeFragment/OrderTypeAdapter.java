@@ -4,13 +4,12 @@ import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.google.android.material.card.MaterialCardView;
 import com.signity.shopkeeperapp.R;
 
 import java.util.ArrayList;
@@ -48,12 +47,18 @@ public class OrderTypeAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
     }
 
     public enum OrderType {
-        DELIVERY("Delivery"), PICKUP("Pick Up"), DINEIN("Dine In");
+        DELIVERY("Delivery", R.drawable.deliverybg), PICKUP("Pick Up", R.drawable.pickupbg), DINEIN("Dine In", R.drawable.dineinbg);
 
         private String title;
+        private int icon;
 
-        OrderType(String title) {
+        OrderType(String title, int deliverybg) {
             this.title = title;
+            this.icon = deliverybg;
+        }
+
+        public int getIcon() {
+            return icon;
         }
 
         public String getTitle() {
@@ -68,20 +73,21 @@ public class OrderTypeAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
     public class ViewHolder extends RecyclerView.ViewHolder {
 
         TextView textView;
-        ImageView imageView;
-        MaterialCardView materialCardView;
+        LinearLayout imageView;
+        LinearLayout materialCardView;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
             textView = itemView.findViewById(R.id.tv_order_type);
             imageView = itemView.findViewById(R.id.iv_check);
-            materialCardView = itemView.findViewById(R.id.card_order_type);
+            materialCardView = itemView.findViewById(R.id.ll_order_type);
         }
 
         public void onBind(int position) {
 
             textView.setText(orderTypes.get(position).getTitle());
             imageView.setVisibility(selectedId == position ? View.VISIBLE : View.GONE);
+            materialCardView.setBackground(context.getResources().getDrawable(orderTypes.get(position).getIcon()));
 
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override

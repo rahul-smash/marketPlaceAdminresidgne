@@ -1,5 +1,6 @@
 package com.signity.shopkeeperapp.book;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -28,9 +29,12 @@ import retrofit.Callback;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
 
-public class LoyaltyPointsActivity extends BaseActivity implements CouponsAdapter.CouponsAdapterListener, LoyaltyPointsAdapter.LoyaltyPointsAdapterListener {
+public class LoyaltyPointsActivity extends BaseActivity implements LoyaltyPointsAdapter.LoyaltyPointsAdapterListener {
 
+    public static final String LOYALTY = "LOYALTY";
+    public static final String POINT = "POINT";
     private static final String TAG = "LoyaltyPointsActivity";
+    public static final String DISCOUNT = "DISCOUNT";
     private Toolbar toolbar;
     private RecyclerView recyclerViewLoyalty;
     private LoyaltyPointsAdapter loyaltyPointsAdapter;
@@ -119,8 +123,12 @@ public class LoyaltyPointsActivity extends BaseActivity implements CouponsAdapte
     }
 
     @Override
-    public void onClickApply() {
-        // TODO - Pass the coupon code back to the activity
+    public void onClickApply(String coupon, String discount,String point) {
+        Intent intent = new Intent();
+        intent.putExtra(LOYALTY, coupon);
+        intent.putExtra(DISCOUNT, discount);
+        intent.putExtra(POINT, point);
+        setResult(Activity.RESULT_OK, intent);
         finish();
         AnimUtil.slideFromLeftAnim(this);
     }

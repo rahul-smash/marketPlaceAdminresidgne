@@ -34,8 +34,7 @@
                 android:id="@+id/iv_arrow"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:src="@drawable/downward"
-                app:tint="@color/colorTextDark" />
+                android:src="@drawable/collapsearrow1" />
 
             <TextView
                 android:id="@+id/tv_category_name"

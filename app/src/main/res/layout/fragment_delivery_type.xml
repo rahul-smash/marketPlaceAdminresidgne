@@ -80,8 +80,8 @@
             style="@style/AppTheme.TextView.Medium"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:imeOptions="actionNext"
             android:focusable="false"
+            android:imeOptions="actionNext"
             android:maxLines="1" />
 
     </com.google.android.material.textfield.TextInputLayout>
@@ -247,8 +247,8 @@
             style="@style/AppTheme.TextView.Medium"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:drawableEnd="@drawable/producticon"
-            android:drawableRight="@drawable/producticon"
+            android:drawableEnd="@drawable/calendericon"
+            android:drawableRight="@drawable/calendericon"
             android:focusable="false"
             android:maxLines="1" />
 
@@ -267,8 +267,8 @@
             style="@style/AppTheme.TextView.Medium"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:drawableEnd="@drawable/producticon"
-            android:drawableRight="@drawable/producticon"
+            android:drawableEnd="@drawable/timeicon1"
+            android:drawableRight="@drawable/timeicon1"
             android:focusable="false"
             android:maxLines="1" />
 

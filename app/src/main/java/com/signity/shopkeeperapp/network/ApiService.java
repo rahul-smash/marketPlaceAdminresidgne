@@ -26,7 +26,6 @@ import com.signity.shopkeeperapp.model.category.CategoryDetailResponse;
 import com.signity.shopkeeperapp.model.customers.AreaCodesResp;
 import com.signity.shopkeeperapp.model.customers.CustomerDataResponse;
 import com.signity.shopkeeperapp.model.customers.addCustomer.AddCustomerResponse;
-import com.signity.shopkeeperapp.model.customers.addCustomer.AddressResponse;
 import com.signity.shopkeeperapp.model.customers.detail.CustomerDetailResponse;
 import com.signity.shopkeeperapp.model.dashboard.StoreDashboardResponse;
 import com.signity.shopkeeperapp.model.image.ImageUploadResponse;
@@ -35,6 +34,7 @@ import com.signity.shopkeeperapp.model.orders.CustomerData;
 import com.signity.shopkeeperapp.model.orders.StoreOrdersReponse;
 import com.signity.shopkeeperapp.model.orders.checkout.OrderCalculationResponse;
 import com.signity.shopkeeperapp.model.orders.loyalty.LoyaltyPointsResponse;
+import com.signity.shopkeeperapp.model.orders.offers.ApplyCouponDTO;
 import com.signity.shopkeeperapp.model.orders.offers.StoreOffersResponse;
 import com.signity.shopkeeperapp.model.productStatus.ProductStatus;
 import com.signity.shopkeeperapp.model.stores.StoresResponse;
@@ -277,4 +277,8 @@ public interface ApiService {
     @FormUrlEncoded
     @POST("/pickupPlaceOrder")
     void placeOrderPickDine(@FieldMap Map<String, Object> param, Callback<AddAddressModel> response);
+
+    @FormUrlEncoded
+    @POST("/validateAllCoupons")
+    void applyCoupon(@FieldMap Map<String, Object> param, Callback<ApplyCouponDTO> response);
 }

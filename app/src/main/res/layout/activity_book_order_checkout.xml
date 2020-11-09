@@ -55,7 +55,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:orientation="vertical"
-            android:visibility="gone">
+            android:visibility="visible">
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -102,6 +102,7 @@
                     app:layout_constraintStart_toStartOf="parent">
 
                     <TextView
+                        android:id="@+id/tv_apply_coupon"
                         style="@style/AppTheme.TextView.Small"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
@@ -112,7 +113,7 @@
                         app:layout_constraintTop_toTopOf="parent" />
 
                     <ImageView
-                        android:id="@+id/imageView5"
+                        android:id="@+id/iv_apply_coupon"
                         android:layout_width="12dp"
                         android:layout_height="12dp"
                         android:rotation="180"
@@ -144,6 +145,7 @@
                     app:layout_constraintStart_toStartOf="parent">
 
                     <TextView
+                        android:id="@+id/tv_apply_loyalty"
                         style="@style/AppTheme.TextView.Small"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
@@ -154,7 +156,7 @@
                         app:layout_constraintTop_toTopOf="parent" />
 
                     <ImageView
-                        android:id="@+id/imageView51"
+                        android:id="@+id/iv_apply_loyalty"
                         android:layout_width="12dp"
                         android:layout_height="12dp"
                         android:rotation="180"
@@ -314,6 +316,19 @@
                         android:textColor="@color/colorTextDark"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toBottomOf="@+id/textView10" />
+
+                    <TextView
+                        android:id="@+id/tv_loyalty_point"
+                        style="@style/AppTheme.TextView.Tiny"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="2dp"
+                        android:layout_marginLeft="2dp"
+                        android:text=""
+                        android:textColor="@color/colorAccept"
+                        app:layout_constraintBottom_toBottomOf="@+id/loyalty"
+                        app:layout_constraintStart_toEndOf="@+id/loyalty"
+                        app:layout_constraintTop_toTopOf="@+id/loyalty" />
 
                     <TextView
                         android:id="@+id/tv_cart_saving"

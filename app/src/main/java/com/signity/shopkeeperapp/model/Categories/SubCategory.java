@@ -49,6 +49,8 @@ public class SubCategory implements Parcelable {
     private String categoryName;
     @Expose(serialize = false, deserialize = false)
     private String categoryId;
+    @Expose(serialize = false, deserialize = false)
+    private boolean isOpen;
 
     public SubCategory() {
     }
@@ -65,6 +67,14 @@ public class SubCategory implements Parcelable {
         this.image300200 = in.readString();
         this.categoryName = in.readString();
         this.categoryId = in.readString();
+    }
+
+    public boolean isOpen() {
+        return isOpen;
+    }
+
+    public void setOpen(boolean open) {
+        isOpen = open;
     }
 
     public String getCategoryId() {

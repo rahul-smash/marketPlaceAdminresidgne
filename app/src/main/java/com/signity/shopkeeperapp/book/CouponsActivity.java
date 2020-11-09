@@ -1,5 +1,6 @@
 package com.signity.shopkeeperapp.book;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -31,6 +32,7 @@ public class CouponsActivity extends BaseActivity implements CouponsAdapter.Coup
     private Toolbar toolbar;
     private RecyclerView recyclerViewCoupons;
     private CouponsAdapter couponsAdapter;
+    public static final String COUPON = "COUPON";
 
     public static Intent getStartIntent(Context context) {
         return new Intent(context, CouponsActivity.class);
@@ -113,8 +115,10 @@ public class CouponsActivity extends BaseActivity implements CouponsAdapter.Coup
     }
 
     @Override
-    public void onClickApply() {
-        // TODO - Pass the coupon code back to the activity
+    public void onClickApply(String coupon) {
+        Intent intent = new Intent();
+        intent.putExtra(COUPON, coupon);
+        setResult(Activity.RESULT_OK, intent);
         finish();
         AnimUtil.slideFromLeftAnim(this);
     }

@@ -57,7 +57,7 @@ public class CouponsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
     }
 
     public interface CouponsAdapterListener {
-        void onClickApply();
+        void onClickApply(String coupon);
     }
 
     class CouponsViewHolder extends RecyclerView.ViewHolder {
@@ -76,18 +76,18 @@ public class CouponsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
         }
 
         public void bind(int positon) {
-            DataResponse response = couponsList.get(positon);
+            final DataResponse response = couponsList.get(positon);
 
             String uptoPrice = Util.getCurrencySymbol(AppPreference.getInstance().getCurrency()).concat(response.getDiscountUpto());
             String minPrice = Util.getCurrencySymbol(AppPreference.getInstance().getCurrency()).concat(response.getMinimumOrderAmount());
 
             String discount = response.getDiscount().concat("%");
-
+            discount = discount.concat(" OFF ");
             if (Integer.parseInt(response.getDiscount()) == 0) {
                 discount = "";
             }
 
-            textViewDiscount.setText(String.format("%s OFF Upto %s", discount, uptoPrice));
+            textViewDiscount.setText(String.format("%sUpto %s", discount, uptoPrice));
             textViewCouponCode.setText(response.getCouponCode());
             textViewMinOrder.setText(String.format("Min Order - %s", minPrice));
             textViewValidDate.setText(String.format("Valid Till - %s", response.getValidTo()));
@@ -96,7 +96,7 @@ public class CouponsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
                 @Override
                 public void onClick(View v) {
                     if (listener != null) {
-                        listener.onClickApply();
+                        listener.onClickApply(response.getCouponCode());
                     }
                 }
             });
