@@ -25,6 +25,7 @@ import com.signity.shopkeeperapp.model.customers.addCustomer.AddCustomerResponse
 import com.signity.shopkeeperapp.model.customers.addCustomer.DataResponse;
 import com.signity.shopkeeperapp.model.orders.CustomerData;
 import com.signity.shopkeeperapp.model.orders.Data;
+import com.signity.shopkeeperapp.model.orders.storeAddress.StoreAddressDTO;
 import com.signity.shopkeeperapp.network.NetworkAdaper;
 import com.signity.shopkeeperapp.util.AnimUtil;
 import com.signity.shopkeeperapp.util.ProgressDialogUtil;
@@ -44,6 +45,8 @@ public class DineInFragment extends Fragment {
     private ImageView imageViewSearch;
     private String mobile;
     private LinearLayout linearLayoutNext;
+    private String address = "";
+    private String addressId = "0";
 
     public static DineInFragment getInstance(Bundle bundle) {
         DineInFragment fragment = new DineInFragment();
@@ -57,6 +60,33 @@ public class DineInFragment extends Fragment {
         initView(view);
         getExtra();
         checkNumber();
+        getStoreAddress();
+    }
+
+    private void getStoreAddress() {
+        NetworkAdaper.orderNetworkServices(AppPreference.getInstance().getStoreId()).getStoreAddress(new Callback<StoreAddressDTO>() {
+            @Override
+            public void success(StoreAddressDTO addressDTO, Response response) {
+
+                if (!isAdded()) {
+                    return;
+                }
+                if (addressDTO.isSuccess()) {
+                    if (addressDTO.getData() != null && !addressDTO.getData().isEmpty()) {
+                        if (addressDTO.getData().get(0).getArea() != null && !addressDTO.getData().get(0).getArea().isEmpty()) {
+                            address = addressDTO.getData().get(0).getArea().get(0).getPickupAdd();
+                            addressId = addressDTO.getData().get(0).getArea().get(0).getAreaId();
+                        }
+                    }
+                }
+
+            }
+
+            @Override
+            public void failure(RetrofitError error) {
+
+            }
+        });
     }
 
     private void checkNumber() {
@@ -252,10 +282,11 @@ public class DineInFragment extends Fragment {
     private void startCheckout(Data data) {
         Bundle bundle = new Bundle();
         bundle.putString(BookOrderCheckoutActivity.CUSTOMER_ID, data.getId());
-        bundle.putString(BookOrderCheckoutActivity.CUSTOMER_ADDRESS, AppPreference.getInstance().getLocation());
-        bundle.putString(BookOrderCheckoutActivity.CUSTOMER_ADDRESS_ID, "");
+        bundle.putString(BookOrderCheckoutActivity.CUSTOMER_ADDRESS, !TextUtils.isEmpty(address) ? address : AppPreference.getInstance().getLocation());
+        bundle.putString(BookOrderCheckoutActivity.CUSTOMER_ADDRESS_ID, addressId);
         bundle.putString(BookOrderCheckoutActivity.ORDER_TYPE, "DineIn");
         bundle.putString(BookOrderCheckoutActivity.CHARGES, "0");
+        bundle.putInt(BookOrderCheckoutActivity.LOYALTY, data.getLoyalityPoints());
         startActivity(BookOrderCheckoutActivity.getIntent(getContext(), bundle));
         AnimUtil.slideFromRightAnim(getActivity());
     }
@@ -263,10 +294,15 @@ public class DineInFragment extends Fragment {
     private void startCheckout(DataResponse data) {
         Bundle bundle = new Bundle();
         bundle.putString(BookOrderCheckoutActivity.CUSTOMER_ID, data.getStoreUser().getUserId());
-        bundle.putString(BookOrderCheckoutActivity.CUSTOMER_ADDRESS, AppPreference.getInstance().getLocation());
-        bundle.putString(BookOrderCheckoutActivity.CUSTOMER_ADDRESS_ID, "");
+        bundle.putString(BookOrderCheckoutActivity.CUSTOMER_ADDRESS, !TextUtils.isEmpty(address) ? address : AppPreference.getInstance().getLocation());
+        bundle.putString(BookOrderCheckoutActivity.CUSTOMER_ADDRESS_ID, addressId);
         bundle.putString(BookOrderCheckoutActivity.CHARGES, "0");
         bundle.putString(BookOrderCheckoutActivity.ORDER_TYPE, "DineIn");
+        String loyalty = editTextLoyaltyPoints.getText().toString();
+        if (TextUtils.isEmpty(loyalty)) {
+            loyalty = "0";
+        }
+        bundle.putInt(BookOrderCheckoutActivity.LOYALTY, Integer.parseInt(loyalty));
         startActivity(BookOrderCheckoutActivity.getIntent(getContext(), bundle));
         AnimUtil.slideFromRightAnim(getActivity());
     }

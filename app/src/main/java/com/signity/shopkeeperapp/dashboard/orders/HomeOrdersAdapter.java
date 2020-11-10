@@ -217,7 +217,7 @@ public class HomeOrdersAdapter extends RecyclerView.Adapter<HomeOrdersAdapter.Vi
 
             textViewOrderIdItemsTime.setText(String.format("%s %s | %s", orderId, item, ordersModel.getTime()));
             textViewName.setText(ordersModel.getCustomerName());
-            textViewPrice.setText(String.format(Locale.getDefault(), "%s", Util.getPriceWithCurrency(ordersModel.getTotal(), AppPreference.getInstance().getCurrency())));
+            textViewPrice.setText(String.format(Locale.getDefault(), "%s", Util.getPriceWithCurrency(ordersModel.getCheckout(), AppPreference.getInstance().getCurrency())));
             textViewPaymentType.setText(ordersModel.getPaymentMethod().toUpperCase());
             textViewDeliveryType.setText(ordersModel.getOrderFacility());
 

@@ -9,6 +9,7 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.core.widget.ContentLoadingProgressBar;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -20,7 +21,6 @@ import com.signity.shopkeeperapp.model.Categories.SubCategory;
 import com.signity.shopkeeperapp.model.Product.GetProductData;
 import com.signity.shopkeeperapp.model.Product.GetProductResponse;
 import com.signity.shopkeeperapp.network.NetworkAdaper;
-import com.signity.shopkeeperapp.util.ProgressDialogUtil;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -38,7 +38,9 @@ public class CategoriesFragment extends Fragment implements ExpandableCategories
     private ExpandableCategoriesAdapter expandableCategoriesAdapter;
     private RecyclerView recyclerView;
     private BookOrderActivity bookOrderActivity;
+    private ContentLoadingProgressBar progressBar;
     private List<GetProductData> selectedProductList = new ArrayList<>();
+    private ArrayList<SubCategory> categoryList = new ArrayList<>();
 
     public static CategoriesFragment getInstance(Bundle bundle) {
         CategoriesFragment fragment = new CategoriesFragment();
@@ -68,6 +70,7 @@ public class CategoriesFragment extends Fragment implements ExpandableCategories
 
     private void initView(View view) {
         recyclerView = view.findViewById(R.id.rv_categories);
+        progressBar = view.findViewById(R.id.category_progress);
     }
 
     @Nullable
@@ -92,8 +95,9 @@ public class CategoriesFragment extends Fragment implements ExpandableCategories
                 if (!isAdded()) {
                     return;
                 }
+                progressBar.hide();
                 if (getCategoryResponse.getSuccess()) {
-                    List<SubCategory> categoryList = new ArrayList<>();
+                    categoryList.clear();
                     for (GetCategoryData categoryResponse : getCategoryResponse.getData()) {
                         for (SubCategory category : categoryResponse.getSubCategory()) {
                             category.setCategoryName(categoryResponse.getTitle());
@@ -112,6 +116,7 @@ public class CategoriesFragment extends Fragment implements ExpandableCategories
                 if (!isAdded()) {
                     return;
                 }
+                progressBar.hide();
                 if (getContext() != null)
                     Toast.makeText(getContext(), "Network is unreachable", Toast.LENGTH_SHORT).show();
             }
@@ -124,6 +129,25 @@ public class CategoriesFragment extends Fragment implements ExpandableCategories
         if (context instanceof BookOrderActivity) {
             bookOrderActivity = (BookOrderActivity) context;
         }
+    }
+
+    public void searchFilterCategories(String query) {
+
+        if (categoryList.isEmpty()) {
+            return;
+        }
+
+        List<SubCategory> filterList = new ArrayList<>();
+        for (SubCategory subCategory : categoryList) {
+            if (subCategory.getTitle().toLowerCase().startsWith(query.toLowerCase())) {
+                filterList.add(subCategory);
+            }
+        }
+        expandableCategoriesAdapter.setCategoryDataList(filterList);
+    }
+
+    public void onCloseSearch() {
+        expandableCategoriesAdapter.setCategoryDataList(categoryList);
     }
 
     private void setUpAdapter() {
@@ -155,7 +179,6 @@ public class CategoriesFragment extends Fragment implements ExpandableCategories
         param.put("cat_id", categoryId);
         param.put("sub_cat_ids", subCategoryId);
 
-        ProgressDialogUtil.showProgressDialog(getContext());
         NetworkAdaper.getNetworkServices().getAllProducts(param, new Callback<GetProductResponse>() {
             @Override
             public void success(GetProductResponse getProductResponse, Response response) {
@@ -163,7 +186,6 @@ public class CategoriesFragment extends Fragment implements ExpandableCategories
                     return;
                 }
 
-                ProgressDialogUtil.hideProgressDialog();
                 if (getProductResponse.getSuccess()) {
                     if (getProductResponse.getData() != null) {
                         List<GetProductData> data = getProductResponse.getData();
@@ -180,9 +202,11 @@ public class CategoriesFragment extends Fragment implements ExpandableCategories
                         expandableCategoriesAdapter.setProductDataList(data);
                     } else {
                         Toast.makeText(getActivity(), "Data not Found!", Toast.LENGTH_SHORT).show();
+                        expandableCategoriesAdapter.notifyDataSetChanged();
                     }
                 } else {
                     Toast.makeText(getActivity(), "Data not Found!", Toast.LENGTH_SHORT).show();
+                    expandableCategoriesAdapter.notifyDataSetChanged();
                 }
             }
 
@@ -191,6 +215,7 @@ public class CategoriesFragment extends Fragment implements ExpandableCategories
                 if (!isAdded()) {
                     return;
                 }
+                expandableCategoriesAdapter.notifyDataSetChanged();
                 if (getContext() != null)
                     Toast.makeText(getContext(), "Network is unreachable", Toast.LENGTH_SHORT).show();
             }

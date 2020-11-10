@@ -58,6 +58,11 @@ public class BestSellerAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         return productData.size();
     }
 
+    public void clearData() {
+        this.productData.clear();
+        notifyDataSetChanged();
+    }
+
     public class ViewHolder extends RecyclerView.ViewHolder {
 
         ImageView imageViewProduct;

@@ -24,6 +24,8 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.textfield.TextInputEditText;
 import com.signity.shopkeeperapp.R;
@@ -33,14 +35,20 @@ import com.signity.shopkeeperapp.model.customers.addCustomer.DataResponse;
 import com.signity.shopkeeperapp.model.customers.detail.CustomerAddressResponse;
 import com.signity.shopkeeperapp.model.orders.CustomerData;
 import com.signity.shopkeeperapp.model.orders.Data;
+import com.signity.shopkeeperapp.model.orders.delivery.DateTimeCollectionDTO;
+import com.signity.shopkeeperapp.model.orders.delivery.DeliverySlotDTO;
+import com.signity.shopkeeperapp.model.orders.delivery.TimeslotDTO;
 import com.signity.shopkeeperapp.network.NetworkAdaper;
 import com.signity.shopkeeperapp.util.AnimUtil;
 import com.signity.shopkeeperapp.util.ProgressDialogUtil;
 import com.signity.shopkeeperapp.util.Util;
+import com.signity.shopkeeperapp.util.prefs.AppPreference;
 
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.TimeZone;
@@ -64,6 +72,11 @@ public class DeliveryFragment extends Fragment {
     private String customerAddress, customerAreaId, customerAreaName, customerCity, customerState, customerZipcode, areaId;
     private boolean isNotAllow;
     private double total;
+    private RecyclerView recyclerViewDate, recyclerViewTime;
+    private DeliveryDateAdapter deliveryDateAdapter;
+    private DeliveryTimeAdapter deliveryTimeAdapter;
+    private int selectedTimeSlot, selectedDateSlot;
+    private String deliverySlot = "";
 
     public static DeliveryFragment getInstance(Bundle bundle) {
         DeliveryFragment fragment = new DeliveryFragment();
@@ -75,6 +88,17 @@ public class DeliveryFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         initView(view);
+        setUpAdapter();
+    }
+
+    private void setUpAdapter() {
+        deliveryDateAdapter = new DeliveryDateAdapter();
+        recyclerViewDate.setAdapter(deliveryDateAdapter);
+        recyclerViewDate.setLayoutManager(new LinearLayoutManager(getContext(), RecyclerView.HORIZONTAL, false));
+
+        deliveryTimeAdapter = new DeliveryTimeAdapter();
+        recyclerViewTime.setAdapter(deliveryTimeAdapter);
+        recyclerViewTime.setLayoutManager(new LinearLayoutManager(getContext(), RecyclerView.HORIZONTAL, false));
     }
 
     @Override
@@ -82,6 +106,7 @@ public class DeliveryFragment extends Fragment {
         super.onActivityCreated(savedInstanceState);
         getExtra();
         checkNumber();
+        getDeliverSlots();
     }
 
     private void getExtra() {
@@ -110,6 +135,9 @@ public class DeliveryFragment extends Fragment {
         textViewCustomerAddress = view.findViewById(R.id.tv_customer_address);
         textViewAddressType = view.findViewById(R.id.tv_address_type);
         txtChangeAddress = view.findViewById(R.id.tv_change_address);
+
+        recyclerViewDate = view.findViewById(R.id.rv_delivery_date);
+        recyclerViewTime = view.findViewById(R.id.rv_delivery_time_slot);
 
         imageViewSearch.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -251,15 +279,20 @@ public class DeliveryFragment extends Fragment {
             return;
         }
 
-        if (TextUtils.isEmpty(date)) {
-            Toast.makeText(getContext(), "Delivery Date can't be empty", Toast.LENGTH_SHORT).show();
+        String datee = deliveryDateAdapter.getDate();
+        String timee = deliveryTimeAdapter.getTime();
+
+        if (TextUtils.isEmpty(datee)) {
+            Toast.makeText(getContext(), "Select delivery slot date", Toast.LENGTH_SHORT).show();
             return;
         }
 
-        if (TextUtils.isEmpty(time)) {
-            Toast.makeText(getContext(), "Delivery Time can't be empty", Toast.LENGTH_SHORT).show();
+        if (TextUtils.isEmpty(timee)) {
+            Toast.makeText(getContext(), "Select delivery slot time", Toast.LENGTH_SHORT).show();
             return;
         }
+
+        deliverySlot = String.format("%s, %s", Util.getDeliverySlotDate1(datee), timee);
 
         getCustomerId(mobile);
     }
@@ -463,8 +496,7 @@ public class DeliveryFragment extends Fragment {
                         textViewCustomerNumber.setText(editTextMobileNumber.getText().toString().trim());
                         textViewCustomerName.setText(editTextName.getText().toString().trim());
 
-                        textViewCustomerAddress.setText(String.format("%s, %s,\n%s,\n %s, %s",
-                                customerAddress, customerCity, customerAreaName, customerState, customerZipcode));
+                        textViewCustomerAddress.setText(String.format("%s, %s", customerAddress, customerCity));
                     }
 
                     Log.e("Return result", customerAddress);
@@ -600,6 +632,8 @@ public class DeliveryFragment extends Fragment {
         }
         bundle.putString(BookOrderCheckoutActivity.ORDER_TYPE, "Delivery");
         bundle.putString(BookOrderCheckoutActivity.CHARGES, addressCharges);
+        bundle.putInt(BookOrderCheckoutActivity.LOYALTY, data.getLoyalityPoints());
+        bundle.putString(BookOrderCheckoutActivity.DELIVERY_SLOT, deliverySlot);
         startActivity(BookOrderCheckoutActivity.getIntent(getContext(), bundle));
         AnimUtil.slideFromRightAnim(getActivity());
     }
@@ -627,6 +661,12 @@ public class DeliveryFragment extends Fragment {
         bundle.putString(BookOrderCheckoutActivity.CUSTOMER_ADDRESS_ID, data.getAddress().getUserAddress().getId());
         bundle.putString(BookOrderCheckoutActivity.CHARGES, addressCharges);
         bundle.putString(BookOrderCheckoutActivity.ORDER_TYPE, "Delivery");
+        bundle.putString(BookOrderCheckoutActivity.DELIVERY_SLOT, deliverySlot);
+        String loyalty = editTextLoyaltyPoints.getText().toString();
+        if (TextUtils.isEmpty(loyalty)) {
+            loyalty = "0";
+        }
+        bundle.putInt(BookOrderCheckoutActivity.LOYALTY, Integer.parseInt(loyalty));
         startActivity(BookOrderCheckoutActivity.getIntent(getContext(), bundle));
         AnimUtil.slideFromRightAnim(getActivity());
     }
@@ -640,18 +680,19 @@ public class DeliveryFragment extends Fragment {
     @Override
     public void onAttach(@NonNull Context context) {
         super.onAttach(context);
-        Log.e(TAG, "onAttach: ");
-
         if (textViewCustomerAddress != null) {
             if (!TextUtils.isEmpty(textViewCustomerAddress.getText().toString())) {
                 linearLayoutAddDelivery.setVisibility(View.GONE);
                 linearLayoutDeliveryAddress.setVisibility(View.VISIBLE);
             }
         }
-
-
     }
 
+    public void setDateSelection(int position) {
+        List<TimeslotDTO> time = deliveryDateAdapter.getDateList().get(position).getTimeslot();
+        deliveryTimeAdapter.setTimeList(time);
+        deliveryTimeAdapter.setSelectedIndex(0);
+    }
 
     public void for_empty_field() {
         Intent intent = new Intent(getActivity(), AddAddressActivity.class);
@@ -662,5 +703,192 @@ public class DeliveryFragment extends Fragment {
         startActivityForResult(intent, ADDRESS_CODE);
     }
 
+    private void getDeliverSlots() {
+        NetworkAdaper.orderNetworkServices(AppPreference.getInstance().getStoreId())
+                .getDeliverySlots(new Callback<DeliverySlotDTO>() {
+                    @Override
+                    public void success(DeliverySlotDTO slotDTO, Response response) {
+
+                        if (slotDTO.isSuccess()) {
+                            boolean isSlotSelected = false;
+
+                            if (slotDTO.getData() != null && slotDTO.getData().getDateTimeCollection() != null) {
+                                for (int i = 0; i < slotDTO.getData().getDateTimeCollection().size(); i++) {
+                                    List<TimeslotDTO> timeslotDTO = slotDTO.getData().getDateTimeCollection().get(i).getTimeslot();
+                                    for (int j = 0; j < timeslotDTO.size(); j++) {
+                                        if (timeslotDTO.get(j).isIsEnable()) {
+                                            selectedTimeSlot = j;
+                                            isSlotSelected = true;
+                                            break;
+                                        }
+                                    }
+                                    if (isSlotSelected) {
+                                        selectedDateSlot = i;
+                                        break;
+                                    }
+                                }
+
+                                deliveryDateAdapter.setDateList(slotDTO.getData().getDateTimeCollection());
+                                deliveryDateAdapter.setSelectedIndex(selectedDateSlot);
+
+                                deliveryTimeAdapter.setTimeList(slotDTO.getData().getDateTimeCollection().get(selectedDateSlot).getTimeslot());
+                                deliveryTimeAdapter.setSelectedIndex(selectedTimeSlot);
+                            }
+                        }
+                    }
+
+                    @Override
+                    public void failure(RetrofitError error) {
+
+                    }
+                });
+    }
+
+    class DeliveryDateAdapter extends RecyclerView.Adapter<DeliveryDateAdapter.ViewHolder> {
+
+        private List<DateTimeCollectionDTO> dateList = new ArrayList<>();
+        private int selectedIndex = 0;
+
+        public List<DateTimeCollectionDTO> getDateList() {
+            return dateList;
+        }
+
+        public void setDateList(List<DateTimeCollectionDTO> dateList) {
+            this.dateList = dateList;
+            notifyDataSetChanged();
+        }
+
+        public String getDate() {
+            if (dateList.isEmpty()) {
+                return null;
+            }
+
+            return dateList.get(selectedIndex).getLabel();
+        }
+
+        public void setSelectedIndex(int selectedIndex) {
+            this.selectedIndex = selectedIndex;
+            notifyDataSetChanged();
+        }
+
+        @NonNull
+        @Override
+        public DeliveryDateAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+            View view = LayoutInflater.from(getContext()).inflate(R.layout.itemview_delivery_date, parent, false);
+            return new ViewHolder(view);
+        }
+
+        @Override
+        public void onBindViewHolder(@NonNull final DeliveryDateAdapter.ViewHolder holder, int position) {
+
+            String lable = dateList.get(position).getLabel();
+            String date = lable.substring(0, lable.lastIndexOf(" "));
+
+            holder.textViewDate.setText(date);
+            holder.textViewDate.setTextColor(getContext().getResources().getColor(position == selectedIndex ? R.color.colorAccept : R.color.colorTextDark));
+            holder.linearLayoutDate.setBackgroundColor(getContext().getResources().getColor(position == selectedIndex ? R.color.colorBackground : R.color.colorWhite));
+
+            holder.itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    selectedIndex = holder.getAdapterPosition();
+                    notifyDataSetChanged();
+                    setDateSelection(selectedIndex);
+                }
+            });
+        }
+
+        @Override
+        public int getItemCount() {
+            return dateList.size();
+        }
+
+        public class ViewHolder extends RecyclerView.ViewHolder {
+            TextView textViewDate;
+            LinearLayout linearLayoutDate;
+
+            public ViewHolder(@NonNull View itemView) {
+                super(itemView);
+                textViewDate = itemView.findViewById(R.id.tv_delivery_date_time);
+                linearLayoutDate = itemView.findViewById(R.id.ll_date_time);
+            }
+        }
+    }
+
+    class DeliveryTimeAdapter extends RecyclerView.Adapter<DeliveryTimeAdapter.ViewHolder> {
+
+        private List<TimeslotDTO> timeList = new ArrayList<>();
+        private int selectedIndex = 0;
+
+        public void setTimeList(List<TimeslotDTO> timeList) {
+            this.timeList = timeList;
+            notifyDataSetChanged();
+        }
+
+        public void setSelectedIndex(int selectedIndex) {
+            this.selectedIndex = selectedIndex;
+            notifyDataSetChanged();
+        }
+
+        public String getTime() {
+
+            if (timeList.isEmpty()) {
+                return null;
+            }
+
+            TimeslotDTO dto = timeList.get(selectedIndex);
+            if (dto.isIsEnable()) {
+                return dto.getValue();
+            } else {
+                return null;
+            }
+        }
+
+        @NonNull
+        @Override
+        public DeliveryTimeAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+            View view = LayoutInflater.from(getContext()).inflate(R.layout.itemview_delivery_date, parent, false);
+            return new ViewHolder(view);
+        }
+
+        @Override
+        public void onBindViewHolder(@NonNull final DeliveryTimeAdapter.ViewHolder holder, int position) {
+
+            final TimeslotDTO timeslotDTO = timeList.get(position);
+            holder.textViewTime.setText(timeslotDTO.getLabel());
+            holder.textViewTime.setTextColor(getContext().getResources().getColor(position == selectedIndex ? R.color.colorAccept : R.color.colorTextDark));
+
+            if (!timeslotDTO.isIsEnable()) {
+                holder.textViewTime.setText(String.format("%s(%s)", timeslotDTO.getLabel(), timeslotDTO.getInnerText()));
+                holder.textViewTime.setTextColor(getContext().getResources().getColor(R.color.colorTextGrey));
+            }
+
+            holder.itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (timeslotDTO.isIsEnable()) {
+                        selectedIndex = holder.getAdapterPosition();
+                        notifyDataSetChanged();
+                    } else {
+                        Toast.makeText(getContext(), timeslotDTO.getInnerText(), Toast.LENGTH_SHORT).show();
+                    }
+                }
+            });
+        }
+
+        @Override
+        public int getItemCount() {
+            return timeList.size();
+        }
+
+        public class ViewHolder extends RecyclerView.ViewHolder {
+            TextView textViewTime;
+
+            public ViewHolder(@NonNull View itemView) {
+                super(itemView);
+                textViewTime = itemView.findViewById(R.id.tv_delivery_date_time);
+            }
+        }
+    }
 
 }

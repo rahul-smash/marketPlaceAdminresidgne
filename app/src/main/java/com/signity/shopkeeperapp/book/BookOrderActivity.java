@@ -4,12 +4,14 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Parcelable;
+import android.text.TextUtils;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.TranslateAnimation;
 import android.widget.TextView;
 
 import androidx.annotation.Nullable;
+import androidx.appcompat.widget.SearchView;
 import androidx.appcompat.widget.Toolbar;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.fragment.app.Fragment;
@@ -39,7 +41,10 @@ public class BookOrderActivity extends BaseActivity {
     private boolean alreadyVisible;
     private String customerNumber = "";
     private double totalPrice;
-    private int selectedTab;
+    private FragmentType selectedTab = FragmentType.BEST_SELLER;
+    private SearchView searchView;
+    private CategoriesFragment categoriesFragment;
+    private BestSellerFragment bestSellerFragment;
 
     public static Intent getIntent(Context context) {
         return new Intent(context, BookOrderActivity.class);
@@ -99,7 +104,7 @@ public class BookOrderActivity extends BaseActivity {
         tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @Override
             public void onTabSelected(TabLayout.Tab tab) {
-                selectedTab = tab.getPosition();
+                selectedTab = FragmentType.values()[tab.getPosition()];
                 openFragment(selectedTab);
             }
 
@@ -115,19 +120,22 @@ public class BookOrderActivity extends BaseActivity {
         });
     }
 
-    private void openFragment(int position) {
+    private void openFragment(FragmentType fragmentType) {
+        searchView.clearFocus();
         List<GetProductData> selected = new ArrayList<>();
         if (!OrderCart.isCartEmpty()) {
             selected.addAll(OrderCart.getOrderCartMap().values());
         }
         Bundle bundle = new Bundle();
         bundle.putParcelableArrayList(BestSellerFragment.SELECTED_PRODUCTS, (ArrayList<? extends Parcelable>) selected);
-        switch (position) {
-            case 0:
-                showFragment(BestSellerFragment.getInstance(bundle), BestSellerFragment.TAG);
+        switch (fragmentType) {
+            case BEST_SELLER:
+                bestSellerFragment = BestSellerFragment.getInstance(bundle);
+                showFragment(bestSellerFragment, BestSellerFragment.TAG);
                 break;
-            case 1:
-                showFragment(CategoriesFragment.getInstance(bundle), CategoriesFragment.TAG);
+            case CATEGORIES:
+                categoriesFragment = CategoriesFragment.getInstance(bundle);
+                showFragment(categoriesFragment, CategoriesFragment.TAG);
                 break;
         }
     }
@@ -138,6 +146,7 @@ public class BookOrderActivity extends BaseActivity {
         textViewOrderTotal = findViewById(R.id.tv_order_total);
         textViewOrderItems = findViewById(R.id.tv_order_items);
         constraintLayoutProceed = findViewById(R.id.const_proceed);
+        searchView = findViewById(R.id.search_book_order);
 
         constraintLayoutProceed.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -149,6 +158,73 @@ public class BookOrderActivity extends BaseActivity {
                 AnimUtil.slideFromRightAnim(BookOrderActivity.this);
             }
         });
+
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                if (!TextUtils.isEmpty(query)) {
+                    searchProductCategory(query.trim());
+                }
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                if (!TextUtils.isEmpty(newText) && selectedTab == FragmentType.CATEGORIES) {
+                    searchProductCategory(newText.trim());
+                }
+
+                if (TextUtils.isEmpty(newText)) {
+                    onCloseSearch();
+                }
+
+                return false;
+            }
+        });
+
+        searchView.setOnQueryTextFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View v, boolean hasFocus) {
+            }
+        });
+
+        searchView.setOnCloseListener(new SearchView.OnCloseListener() {
+            @Override
+            public boolean onClose() {
+                onCloseSearch();
+                return false;
+            }
+        });
+    }
+
+    private void searchProductCategory(String query) {
+        switch (selectedTab) {
+            case BEST_SELLER:
+                if (bestSellerFragment != null) {
+                    bestSellerFragment.filterProduct(query);
+                }
+                break;
+            case CATEGORIES:
+                if (categoriesFragment != null) {
+                    categoriesFragment.searchFilterCategories(query);
+                }
+                break;
+        }
+    }
+
+    private void onCloseSearch() {
+        switch (selectedTab) {
+            case BEST_SELLER:
+                if (bestSellerFragment != null) {
+                    bestSellerFragment.onCloseSearch();
+                }
+                break;
+            case CATEGORIES:
+                if (categoriesFragment != null) {
+                    categoriesFragment.onCloseSearch();
+                }
+                break;
+        }
     }
 
     private void setUpToolbar() {
@@ -178,7 +254,13 @@ public class BookOrderActivity extends BaseActivity {
         totalPrice = 0;
         for (GetProductData productData1 : OrderCart.getOrderCartMap().values()) {
             totalItems += 1;
-            totalPrice += Double.parseDouble(productData1.getVariants().get(productData1.getSelectedVariantIndex()).getPrice()) * productData1.getCount();
+            if (productData1.getVariants() != null && !productData1.getVariants().isEmpty()) {
+                String price = productData1.getVariants().get(productData1.getSelectedVariantIndex()).getPrice();
+                if (TextUtils.isEmpty(price)) {
+                    price = "0";
+                }
+                totalPrice += Double.parseDouble(price) * productData1.getCount();
+            }
         }
 
         textViewOrderItems.setText(String.format(Locale.getDefault(), "%d %s", totalItems, totalItems > 1 ? "Items" : "Item"));
@@ -225,5 +307,9 @@ public class BookOrderActivity extends BaseActivity {
         } else {
             hideLayout();
         }
+    }
+
+    public enum FragmentType {
+        BEST_SELLER, CATEGORIES
     }
 }

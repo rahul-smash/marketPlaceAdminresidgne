@@ -28,14 +28,17 @@ import com.signity.shopkeeperapp.model.customers.CustomerDataResponse;
 import com.signity.shopkeeperapp.model.customers.addCustomer.AddCustomerResponse;
 import com.signity.shopkeeperapp.model.customers.detail.CustomerDetailResponse;
 import com.signity.shopkeeperapp.model.dashboard.StoreDashboardResponse;
+import com.signity.shopkeeperapp.model.dashboard.StoreVersionDTO;
 import com.signity.shopkeeperapp.model.image.ImageUploadResponse;
 import com.signity.shopkeeperapp.model.notification.NotificationModel;
 import com.signity.shopkeeperapp.model.orders.CustomerData;
 import com.signity.shopkeeperapp.model.orders.StoreOrdersReponse;
 import com.signity.shopkeeperapp.model.orders.checkout.OrderCalculationResponse;
+import com.signity.shopkeeperapp.model.orders.delivery.DeliverySlotDTO;
 import com.signity.shopkeeperapp.model.orders.loyalty.LoyaltyPointsResponse;
 import com.signity.shopkeeperapp.model.orders.offers.ApplyCouponDTO;
 import com.signity.shopkeeperapp.model.orders.offers.StoreOffersResponse;
+import com.signity.shopkeeperapp.model.orders.storeAddress.StoreAddressDTO;
 import com.signity.shopkeeperapp.model.productStatus.ProductStatus;
 import com.signity.shopkeeperapp.model.stores.StoresResponse;
 import com.signity.shopkeeperapp.model.verify.EmailVerifyResponse;
@@ -281,4 +284,14 @@ public interface ApiService {
     @FormUrlEncoded
     @POST("/validateAllCoupons")
     void applyCoupon(@FieldMap Map<String, Object> param, Callback<ApplyCouponDTO> response);
+
+    @FormUrlEncoded
+    @POST("/storeappversions")
+    void storeAppVersion(@FieldMap Map<String, Object> param, Callback<StoreVersionDTO> response);
+
+    @GET("/storePickupAddress")
+    void getStoreAddress(Callback<StoreAddressDTO> response);
+
+    @GET("/deliveryTimeSlot")
+    void getDeliverySlots(Callback<DeliverySlotDTO> response);
 }

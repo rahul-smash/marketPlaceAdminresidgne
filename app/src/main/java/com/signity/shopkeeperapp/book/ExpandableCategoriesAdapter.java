@@ -9,6 +9,7 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.core.widget.ContentLoadingProgressBar;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -81,6 +82,7 @@ public class ExpandableCategoriesAdapter extends RecyclerView.Adapter<RecyclerVi
         ImageView imageViewArrow;
         RecyclerView recyclerView;
         ConstraintLayout constraintLayoutCategories;
+        ContentLoadingProgressBar progressBar;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -88,6 +90,7 @@ public class ExpandableCategoriesAdapter extends RecyclerView.Adapter<RecyclerVi
             imageViewArrow = itemView.findViewById(R.id.iv_arrow);
             recyclerView = itemView.findViewById(R.id.rv_itemview_categories);
             constraintLayoutCategories = itemView.findViewById(R.id.const_categories);
+            progressBar = itemView.findViewById(R.id.expand_progress);
         }
 
         public void onBind(final int position) {
@@ -101,6 +104,7 @@ public class ExpandableCategoriesAdapter extends RecyclerView.Adapter<RecyclerVi
                 bestSellerAdapter.addProductData(productData);
             }
 
+            progressBar.hide();
             imageViewArrow.setImageDrawable(context.getResources().getDrawable(categoryData.isOpen() ? R.drawable.collapsearrow2 : R.drawable.collapsearrow1));
 
             recyclerView.setVisibility(categoryData.isOpen() ? View.VISIBLE : View.GONE);
@@ -112,6 +116,7 @@ public class ExpandableCategoriesAdapter extends RecyclerView.Adapter<RecyclerVi
                     categoryData.setOpen(!categoryData.isOpen());
                     if (productMap.get(position) == null) {
                         if (listener != null) {
+                            progressBar.show();
                             listener.onClickCategory(categoryData.getId(), categoryData.getCategoryId());
                         }
                     } else {

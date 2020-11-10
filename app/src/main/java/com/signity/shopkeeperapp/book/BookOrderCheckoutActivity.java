@@ -55,6 +55,8 @@ public class BookOrderCheckoutActivity extends BaseActivity {
     public static final String CUSTOMER_ADDRESS_ID = "CUSTOMER_ADDRESS_ID";
     public static final String ORDER_TYPE = "ORDER_TYPE";
     public static final String CHARGES = "CHARGES";
+    public static final String LOYALTY = "LOYALTY";
+    public static final String DELIVERY_SLOT = "DELIVERY_SLOT";
     private static final String TAG = "BookOrderCheckoutActivity";
     private static final int REQUEST_COUPON = 1122;
     private static final int REQUEST_LOYALTY = 3344;
@@ -80,6 +82,8 @@ public class BookOrderCheckoutActivity extends BaseActivity {
     private ImageView imageViewLoyalty, imageViewCoupon;
     private String loyalty = "0";
     private String point = "";
+    private int showLoyalty = 0;
+    private String deliverySlot = "";
 
     public static Intent getIntent(Context context) {
         return new Intent(context, BookOrderCheckoutActivity.class);
@@ -169,6 +173,8 @@ public class BookOrderCheckoutActivity extends BaseActivity {
             customerAddressId = bundle.getString(CUSTOMER_ADDRESS_ID);
             orderType = bundle.getString(ORDER_TYPE);
             charges = bundle.getString(CHARGES);
+            showLoyalty = bundle.getInt(LOYALTY);
+            deliverySlot = bundle.getString(DELIVERY_SLOT);
         }
     }
 
@@ -254,6 +260,8 @@ public class BookOrderCheckoutActivity extends BaseActivity {
         constraintLayoutLoyalty.setTag(0);
         constraintLayoutCoupon.setTag(0);
 
+        constraintLayoutLoyalty.setVisibility(showLoyalty > 0 ? View.VISIBLE : View.GONE);
+
         constraintLayoutCoupon.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -289,7 +297,9 @@ public class BookOrderCheckoutActivity extends BaseActivity {
                 }
 
                 if (tag == 0) {
-                    startActivityForResult(LoyaltyPointsActivity.getStartIntent(BookOrderCheckoutActivity.this), REQUEST_LOYALTY);
+                    Bundle bundle = new Bundle();
+                    bundle.putString(LoyaltyPointsActivity.USER_ID, userId);
+                    startActivityForResult(LoyaltyPointsActivity.getStartIntent(BookOrderCheckoutActivity.this, bundle), REQUEST_LOYALTY);
                     AnimUtil.slideFromRightAnim(BookOrderCheckoutActivity.this);
                 } else {
                     loyaltyLayoutVisibility(false);
@@ -337,6 +347,7 @@ public class BookOrderCheckoutActivity extends BaseActivity {
         param.put("user_id", userId);
         param.put("device_id", deviceId);
         param.put("platform", "android");
+        param.put("online_method", paymentMode.equalsIgnoreCase("Cash") ? "" : paymentMode);
         param.put("payment_method", paymentMode.equalsIgnoreCase("Cash") ? "cod" : "online");
         param.put("user_address_id", customerAddressId);
         param.put("total", dataResponse.getItemSubTotal());
@@ -348,13 +359,13 @@ public class BookOrderCheckoutActivity extends BaseActivity {
         param.put("wallet_refund", dataResponse.getWalletRefund());
         param.put("coupon_code", coupon);
         param.put("tax", dataResponse.getTax());
+        param.put("delivery_time_slot", deliverySlot);
         if (dataResponse.getTaxDetail() != null && dataResponse.getTaxDetail().size() > 0) {
             param.put("tax_rate", dataResponse.getTaxDetail().get(0).getRate());
         }
         param.put("store_tax_rate_detail", "");
         param.put("calculated_tax_detail", "");
         param.put("store_fixed_tax_detail", "");
-        param.put("delivery_time_slot", "");
         param.put("orders", jsonArrayImage.toString());
 
         ProgressDialogUtil.showProgressDialog(this);
@@ -398,6 +409,7 @@ public class BookOrderCheckoutActivity extends BaseActivity {
         param.put("user_id", userId);
         param.put("device_id", deviceId);
         param.put("platform", "android");
+        param.put("online_method", paymentMode.equalsIgnoreCase("Cash") ? "" : paymentMode);
         param.put("payment_method", paymentMode.equalsIgnoreCase("Cash") ? "cod" : "online");
         param.put("user_address_id", TextUtils.isEmpty(customerAddressId) ? "1" : customerAddressId);
         param.put("total", dataResponse.getItemSubTotal());
@@ -470,7 +482,7 @@ public class BookOrderCheckoutActivity extends BaseActivity {
         });
     }
 
-    private void applyCoupon(String couponCode, final String type) {
+    private void applyCoupon(String couponCode) {
         if (productModels.isEmpty()) {
             return;
         }
@@ -505,11 +517,7 @@ public class BookOrderCheckoutActivity extends BaseActivity {
                             coupon = applyCouponDTO.getData().getCouponCode();
                             discount = applyCouponDTO.getDiscountAmount();
                             calculateAmount();
-                            if (type.equalsIgnoreCase("coupon")) {
-                                couponLayoutVisibility(true);
-                            } else {
-                                loyaltyLayoutVisibility(true);
-                            }
+                            couponLayoutVisibility(true);
                         } else {
                             Toast.makeText(BookOrderCheckoutActivity.this, applyCouponDTO.getMessage(), Toast.LENGTH_SHORT).show();
                         }
@@ -546,7 +554,7 @@ public class BookOrderCheckoutActivity extends BaseActivity {
                 case REQUEST_COUPON:
                     if (data != null) {
                         String coupon = data.getStringExtra(CouponsActivity.COUPON);
-                        applyCoupon(coupon, "coupon");
+                        applyCoupon(coupon);
                     }
                     break;
                 case REQUEST_LOYALTY:
@@ -555,6 +563,18 @@ public class BookOrderCheckoutActivity extends BaseActivity {
                         discount = data.getStringExtra(LoyaltyPointsActivity.DISCOUNT);
                         loyalty = data.getStringExtra(LoyaltyPointsActivity.DISCOUNT);
                         point = data.getStringExtra(LoyaltyPointsActivity.POINT);
+
+                        try {
+                            if (!TextUtils.isEmpty(point)) {
+                                if (showLoyalty < Integer.parseInt(point)) {
+                                    Toast.makeText(this, "Not enough loyalty points", Toast.LENGTH_SHORT).show();
+                                    return;
+                                }
+                            }
+                        } catch (NumberFormatException e) {
+                            e.printStackTrace();
+                        }
+
                         calculateAmount();
                         loyaltyLayoutVisibility(true);
                     }

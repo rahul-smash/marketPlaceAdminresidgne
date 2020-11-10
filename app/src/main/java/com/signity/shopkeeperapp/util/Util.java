@@ -319,6 +319,23 @@ public class Util {
         return output;
     }
 
+    public static String getDeliverySlotDate1(String format) {
+        String output = "";
+
+        SimpleDateFormat inputFormat = new SimpleDateFormat("dd MMM yyyy", Locale.getDefault());
+        SimpleDateFormat outputFormat = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
+        try {
+            Date date = inputFormat.parse(format);
+            if (date != null) {
+                output = outputFormat.format(date);
+            }
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+
+        return output;
+    }
+
     public static boolean checkValidEmail(String email) {
         if (TextUtils.isEmpty(email)) {
             return false;

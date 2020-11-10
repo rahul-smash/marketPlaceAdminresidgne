@@ -11,7 +11,6 @@ import android.text.TextUtils;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -64,6 +63,7 @@ public class OrderDetailActivity extends BaseActivity implements OrderDetailsAdp
     private HomeOrdersAdapter ordersAdapter;
     private TextView textViewCustomerName;
     private TextView textViewCustomerNumber;
+    private TextView textViewOrderTax;
     private LinearLayout linearLayoutDeliveryDetail;
     private ConstraintLayout constraintLayoutPaymentDetail;
     private TextView textViewCouponCode;
@@ -205,12 +205,13 @@ public class OrderDetailActivity extends BaseActivity implements OrderDetailsAdp
             linearLayoutDiscountCoupon.setVisibility(View.VISIBLE);
             textViewCouponCode.setText(String.format("Coupon Applied(%s)", ordersListModel.getCouponCode().toUpperCase()));
         }
-        textViewTotalPrice.setText(Util.getPriceWithCurrency(ordersListModel.getCheckout(), AppPreference.getInstance().getCurrency()));
+        textViewTotalPrice.setText(Util.getPriceWithCurrency(ordersListModel.getTotal(), AppPreference.getInstance().getCurrency()));
         textViewMrpDiscount.setText(Util.getPriceWithCurrency(0, AppPreference.getInstance().getCurrency()));
         textViewCouponDiscount.setText(Util.getPriceWithCurrency(ordersListModel.getDiscount(), AppPreference.getInstance().getCurrency()));
         textViewDeliveryCharges.setText(Util.getPriceWithCurrency(ordersListModel.getShippingCharges(), AppPreference.getInstance().getCurrency()));
-        textViewPayableAmount.setText(Util.getPriceWithCurrency(ordersListModel.getTotal(), AppPreference.getInstance().getCurrency()));
+        textViewPayableAmount.setText(Util.getPriceWithCurrency(ordersListModel.getCheckout(), AppPreference.getInstance().getCurrency()));
         textViewCartSavings.setText(String.format("Cart Savings: %s", Util.getPriceWithCurrency(ordersListModel.getDiscount(), AppPreference.getInstance().getCurrency())));
+        textViewOrderTax.setText(Util.getPriceWithCurrency(ordersListModel.getTax(), AppPreference.getInstance().getCurrency()));
     }
 
     private void initView() {
@@ -235,6 +236,7 @@ public class OrderDetailActivity extends BaseActivity implements OrderDetailsAdp
         constraintLayoutPaymentDetail = findViewById(R.id.const_payment_details);
         textViewCouponCode = findViewById(R.id.tv_coupon_code);
         linearLayoutDiscountCoupon = findViewById(R.id.ll_discount_coupon);
+        textViewOrderTax = findViewById(R.id.tv_tax);
 
         findViewById(R.id.ll_guide_me).setOnClickListener(new View.OnClickListener() {
             @Override
@@ -380,7 +382,7 @@ public class OrderDetailActivity extends BaseActivity implements OrderDetailsAdp
             @Override
             public void onSubmit(String message) {
                 OrdersListModel order = ordersAdapter.getOrdersListModels().get(position);
-                updateOrderStatus(HomeOrdersAdapter.OrderType.REJECTED, order.getOrderId(), pageNumber,message);
+                updateOrderStatus(HomeOrdersAdapter.OrderType.REJECTED, order.getOrderId(), pageNumber, message);
             }
         });
         rejectOrderDialog.show(getSupportFragmentManager(), NotificationDialog.TAG);
@@ -389,19 +391,19 @@ public class OrderDetailActivity extends BaseActivity implements OrderDetailsAdp
     @Override
     public void onAcceptOrder(int position, int pageNumber) {
         OrdersListModel order = ordersAdapter.getOrdersListModels().get(position);
-        updateOrderStatus(HomeOrdersAdapter.OrderType.ACCEPTED, order.getOrderId(), position,"");
+        updateOrderStatus(HomeOrdersAdapter.OrderType.ACCEPTED, order.getOrderId(), position, "");
     }
 
     @Override
     public void onShipOrder(int position, int pageNumber) {
         OrdersListModel order = ordersAdapter.getOrdersListModels().get(position);
-        updateOrderStatus(HomeOrdersAdapter.OrderType.SHIPPED, order.getOrderId(), position,"");
+        updateOrderStatus(HomeOrdersAdapter.OrderType.SHIPPED, order.getOrderId(), position, "");
     }
 
     @Override
     public void onDeliverOrder(int position, int pageNumber) {
         OrdersListModel order = ordersAdapter.getOrdersListModels().get(position);
-        updateOrderStatus(HomeOrdersAdapter.OrderType.DELIVERED, order.getOrderId(), position,"");
+        updateOrderStatus(HomeOrdersAdapter.OrderType.DELIVERED, order.getOrderId(), position, "");
     }
 
     @Override
@@ -459,7 +461,7 @@ public class OrderDetailActivity extends BaseActivity implements OrderDetailsAdp
         }
     }
 
-    private void updateOrderStatus(HomeOrdersAdapter.OrderType orderStatus, String orderId, final int position,String message) {
+    private void updateOrderStatus(HomeOrdersAdapter.OrderType orderStatus, String orderId, final int position, String message) {
         ProgressDialogUtil.showProgressDialog(this);
         Map<String, String> param = new HashMap<String, String>();
         param.put("user_id", AppPreference.getInstance().getUserId());

@@ -315,6 +315,17 @@
                         app:layout_constraintTop_toTopOf="@+id/textView8" />
 
                     <TextView
+                        android:id="@+id/tax"
+                        style="@style/AppTheme.TextView.Small"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="12dp"
+                        android:text="Tax &amp; Charges"
+                        android:textColor="@color/colorTextDark"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/textView11" />
+
+                    <TextView
                         android:id="@+id/textView8"
                         style="@style/AppTheme.TextView.Small"
                         android:layout_width="wrap_content"
@@ -380,6 +391,16 @@
                             android:textSize="8sp" />
 
                     </LinearLayout>
+
+                    <TextView
+                        android:id="@+id/tv_tax"
+                        style="@style/AppTheme.TextView.Small"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text=""
+                        android:textColor="@color/colorTextDark"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintTop_toTopOf="@+id/tax" />
 
                     <TextView
                         android:id="@+id/textView10"
@@ -456,7 +477,7 @@
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintHorizontal_bias="0.5"
                         app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toBottomOf="@+id/textView11" />
+                        app:layout_constraintTop_toBottomOf="@+id/tax" />
 
                 </androidx.constraintlayout.widget.ConstraintLayout>
 

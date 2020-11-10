@@ -39,7 +39,7 @@
     </com.google.android.material.appbar.AppBarLayout>
 
     <LinearLayout
-        android:visibility="gone"
+        android:visibility="visible"
         android:id="@+id/linearLayout7"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -53,12 +53,14 @@
         app:layout_constraintTop_toBottomOf="@+id/appBarLayout">
 
         <androidx.appcompat.widget.SearchView
+            android:id="@+id/search_book_order"
             style="@style/Widget.AppCompat.SearchView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@drawable/opt_background"
             app:defaultQueryHint="Search for category, product..."
             app:iconifiedByDefault="false"
+            app:closeIcon="@drawable/popupcancelicon"
             app:queryBackground="@null" />
 
     </LinearLayout>

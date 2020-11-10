@@ -9,6 +9,7 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.core.widget.ContentLoadingProgressBar;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -41,6 +42,8 @@ public class BestSellerFragment extends Fragment implements OrderCartListener {
     private GridLayoutManager layoutManager;
     private BookOrderActivity bookOrderActivity;
     private List<GetProductData> selectedProductList = new ArrayList<>();
+    private ContentLoadingProgressBar progressBar;
+    private String keyword = "";
     private RecyclerView.OnScrollListener recyclerViewOnScrollListener = new RecyclerView.OnScrollListener() {
         @Override
         public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
@@ -101,6 +104,7 @@ public class BestSellerFragment extends Fragment implements OrderCartListener {
         Map<String, Object> param = new HashMap<>();
         param.put("page", currentPageNumber);
         param.put("pagelength", pageSize);
+        param.put("keyword", keyword);
 
         isLoading = true;
         NetworkAdaper.getNetworkServices().getBestSelling(param, new Callback<GetProductResponse>() {
@@ -111,6 +115,7 @@ public class BestSellerFragment extends Fragment implements OrderCartListener {
                     return;
                 }
                 isLoading = false;
+                progressBar.hide();
                 if (getProductResponse.getSuccess()) {
                     currentPageNumber++;
                     start += pageSize;
@@ -144,6 +149,7 @@ public class BestSellerFragment extends Fragment implements OrderCartListener {
                 if (!isAdded()) {
                     return;
                 }
+                progressBar.hide();
                 isLoading = false;
                 if (getContext() != null) {
                     Toast.makeText(getContext(), "Network is unreachable", Toast.LENGTH_SHORT).show();
@@ -162,6 +168,7 @@ public class BestSellerFragment extends Fragment implements OrderCartListener {
 
     private void initView(View view) {
         recyclerView = view.findViewById(R.id.rv_best_seller);
+        progressBar = view.findViewById(R.id.best_progress);
     }
 
     @Nullable
@@ -186,5 +193,31 @@ public class BestSellerFragment extends Fragment implements OrderCartListener {
     @Override
     public void onRemoveProduct(GetProductData getProductData) {
         bookOrderActivity.removeOrders(getProductData);
+    }
+
+    public void filterProduct(String query) {
+        keyword = query;
+        start = 0;
+        currentPageNumber = 1;
+        if (bestSellerAdapter != null) {
+            if (progressBar != null) {
+                progressBar.show();
+            }
+            bestSellerAdapter.clearData();
+            getBestSelling();
+        }
+    }
+
+    public void onCloseSearch() {
+        keyword = "";
+        start = 0;
+        currentPageNumber = 1;
+        if (bestSellerAdapter != null) {
+            if (progressBar != null) {
+                progressBar.show();
+            }
+            bestSellerAdapter.clearData();
+            getBestSelling();
+        }
     }
 }

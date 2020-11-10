@@ -80,6 +80,8 @@ public class ProductFragment extends Fragment implements View.OnClickListener, P
     private TextInputEditText txtSelectCategory, txtSubCategory;
     private boolean isFiltering;
     private boolean isLoading;
+    private String keyword = "";
+
     private RecyclerView.OnScrollListener recyclerViewOnScrollListener = new RecyclerView.OnScrollListener() {
         @Override
         public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
@@ -132,12 +134,20 @@ public class ProductFragment extends Fragment implements View.OnClickListener, P
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
+                if (!TextUtils.isEmpty(query))
+                    filterProducts(query.trim());
                 return false;
             }
 
             @Override
             public boolean onQueryTextChange(String newText) {
-                filterProducts(newText.trim());
+                if (TextUtils.isEmpty(newText)) {
+                    start = 0;
+                    currentPageNumber = 1;
+                    keyword = "";
+                    productsAdapter.clearData();
+                    getAllOrdersMethod();
+                }
                 return false;
             }
         });
@@ -166,20 +176,11 @@ public class ProductFragment extends Fragment implements View.OnClickListener, P
     }
 
     private void filterProducts(String trim) {
-
-        List<GetProductData> newFilterProducts = new ArrayList<>();
-
-        if (productData.size() == 0) {
-            return;
-        }
-
-        for (GetProductData data : productData) {
-            if (data.getTitle().toLowerCase().startsWith(trim.toLowerCase())) {
-                newFilterProducts.add(data);
-            }
-        }
-
-        productsAdapter.setmData(newFilterProducts, newFilterProducts.size(), false);
+        keyword = trim;
+        currentPageNumber = 1;
+        start = 0;
+        productsAdapter.clearData();
+        getAllOrdersMethod();
     }
 
     @Override
@@ -260,6 +261,7 @@ public class ProductFragment extends Fragment implements View.OnClickListener, P
         param.put("pagelength", pageSize);
         param.put("cat_id", selectedCategoryId);
         param.put("sub_cat_ids", selectedSubCategoryId);
+        param.put("keyword", keyword);
 
         isLoading = true;
         NetworkAdaper.getNetworkServices().getAllProducts(param, new Callback<GetProductResponse>() {
@@ -277,10 +279,12 @@ public class ProductFragment extends Fragment implements View.OnClickListener, P
                         productsAdapter.addData(getProductResponse.getData(), totalOrders);
                     } else {
                         Toast.makeText(getActivity(), "Data not Found!", Toast.LENGTH_SHORT).show();
+                        productsAdapter.setShowLoading(false);
                     }
 
                 } else {
                     Toast.makeText(getActivity(), "Data not Found!", Toast.LENGTH_SHORT).show();
+                    productsAdapter.setShowLoading(false);
                 }
             }
 

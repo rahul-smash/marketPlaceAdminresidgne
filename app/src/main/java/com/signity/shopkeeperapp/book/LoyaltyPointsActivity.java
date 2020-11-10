@@ -33,30 +33,45 @@ public class LoyaltyPointsActivity extends BaseActivity implements LoyaltyPoints
 
     public static final String LOYALTY = "LOYALTY";
     public static final String POINT = "POINT";
-    private static final String TAG = "LoyaltyPointsActivity";
     public static final String DISCOUNT = "DISCOUNT";
+    public static final String USER_ID = "USER_ID";
+    private static final String TAG = "LoyaltyPointsActivity";
     private Toolbar toolbar;
     private RecyclerView recyclerViewLoyalty;
     private LoyaltyPointsAdapter loyaltyPointsAdapter;
+    private String userId = "";
 
     public static Intent getStartIntent(Context context) {
         return new Intent(context, LoyaltyPointsActivity.class);
+    }
+
+    public static Intent getStartIntent(Context context, Bundle bundle) {
+        Intent intent = getStartIntent(context);
+        intent.putExtras(bundle);
+        return intent;
     }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_loyalty_points);
+        getExtra();
         initViews();
         setUpToolbar();
         setUpAdapter();
         getLoyaltyPoints();
     }
 
+    private void getExtra() {
+        if (getIntent().getExtras() != null) {
+            userId = getIntent().getExtras().getString(USER_ID);
+        }
+    }
+
     private void getLoyaltyPoints() {
 
         Map<String, String> param = new HashMap<>();
-        param.put("user_id", "3246");
+        param.put("user_id", userId);
 
         ProgressDialogUtil.showProgressDialog(this);
         NetworkAdaper.orderNetworkServices(AppPreference.getInstance().getStoreId()).getLoyalityPoints(param, new Callback<LoyaltyPointsResponse>() {
@@ -123,7 +138,7 @@ public class LoyaltyPointsActivity extends BaseActivity implements LoyaltyPoints
     }
 
     @Override
-    public void onClickApply(String coupon, String discount,String point) {
+    public void onClickApply(String coupon, String discount, String point) {
         Intent intent = new Intent();
         intent.putExtra(LOYALTY, coupon);
         intent.putExtra(DISCOUNT, discount);

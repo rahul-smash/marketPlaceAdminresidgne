@@ -16,4 +16,17 @@
         app:layout_constraintTop_toTopOf="parent"
         tools:listitem="@layout/itemview_expandable_categories" />
 
+    <androidx.core.widget.ContentLoadingProgressBar
+        android:id="@+id/category_progress"
+        style="@style/Widget.AppCompat.ProgressBar"
+        android:layout_width="24dp"
+        android:layout_height="24dp"
+        android:layout_margin="16dp"
+        android:indeterminate="true"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>

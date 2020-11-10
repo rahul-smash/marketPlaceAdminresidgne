@@ -3,8 +3,10 @@ package com.signity.shopkeeperapp.dashboard;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
+import android.provider.Settings;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.MenuItem;
@@ -40,6 +42,7 @@ import com.signity.shopkeeperapp.dashboard.orders.OrdersFragment;
 import com.signity.shopkeeperapp.model.LoginModel;
 import com.signity.shopkeeperapp.model.ModelForceUpdate;
 import com.signity.shopkeeperapp.model.ResponseForceUpdate;
+import com.signity.shopkeeperapp.model.dashboard.StoreVersionDTO;
 import com.signity.shopkeeperapp.network.NetworkAdaper;
 import com.signity.shopkeeperapp.stores.StoresActivity;
 import com.signity.shopkeeperapp.util.AnimUtil;
@@ -47,6 +50,7 @@ import com.signity.shopkeeperapp.util.DialogHandler;
 import com.signity.shopkeeperapp.util.ProgressDialogUtil;
 import com.signity.shopkeeperapp.util.prefs.AppPreference;
 
+import java.lang.reflect.Field;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -83,6 +87,7 @@ public class DashboardActivity extends BaseActivity implements BottomNavigationV
         setUpNavigationAdapter();
         setUpDrawerToggle();
         setUpBottomNavigation();
+        storeAppVersion();
     }
 
     private void setUpStoreData() {
@@ -314,6 +319,48 @@ public class DashboardActivity extends BaseActivity implements BottomNavigationV
                         e.printStackTrace();
                     }
                 }
+            }
+
+            @Override
+            public void failure(RetrofitError error) {
+            }
+        });
+    }
+
+    private String getDeviceOSName() {
+        Field[] fields = Build.VERSION_CODES.class.getFields();
+        String codeName = "UNKNOWN";
+        for (Field field : fields) {
+            try {
+                if (field.getInt(Build.VERSION_CODES.class) == Build.VERSION.SDK_INT) {
+                    codeName = field.getName();
+                    Log.d(TAG, "Version name: " + codeName);
+                }
+            } catch (IllegalAccessException e) {
+                e.printStackTrace();
+            }
+        }
+        return codeName;
+    }
+
+    private void storeAppVersion() {
+
+        String deviceId = Settings.Secure.getString(getApplicationContext().getContentResolver(), Settings.Secure.ANDROID_ID);
+
+        Map<String, Object> param = new HashMap<>();
+        param.put("user_id", AppPreference.getInstance().getUserId());
+        param.put("app_version", BuildConfig.VERSION_NAME);
+        param.put("device_id", deviceId);
+        param.put("device_token", AppPreference.getInstance().getDeviceToken());
+        param.put("device_brand", Build.BRAND);
+        param.put("device_model", Build.MODEL);
+        param.put("device_os", Build.VERSION.RELEASE);
+        param.put("device_os_version", getDeviceOSName());
+        param.put("device_type", "android");
+
+        NetworkAdaper.getNetworkServices().storeAppVersion(param, new Callback<StoreVersionDTO>() {
+            @Override
+            public void success(StoreVersionDTO storeVersionDTO, Response response) {
             }
 
             @Override
