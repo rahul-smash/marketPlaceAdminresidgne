@@ -10,8 +10,8 @@ public class Variant implements Parcelable {
 
     public static final Creator<Variant> CREATOR = new Creator<Variant>() {
         @Override
-        public Variant createFromParcel(Parcel in) {
-            return new Variant(in);
+        public Variant createFromParcel(Parcel source) {
+            return new Variant(source);
         }
 
         @Override
@@ -49,21 +49,57 @@ public class Variant implements Parcelable {
     @SerializedName("order_by")
     @Expose
     private String orderBy;
+    @Expose
+    @SerializedName("custom_field1")
+    private String stock;
+    @Expose
+    @SerializedName("custom_field2")
+    private String minStock;
+    @Expose
+    @SerializedName("custom_field3")
+    private String sellingChooser;
 
     public Variant() {
     }
 
     protected Variant(Parcel in) {
-        id = in.readString();
-        storeId = in.readString();
-        productId = in.readString();
-        sku = in.readString();
-        unitType = in.readString();
-        weight = in.readString();
-        mrpPrice = in.readString();
-        discount = in.readString();
-        price = in.readString();
-        orderBy = in.readString();
+        this.id = in.readString();
+        this.storeId = in.readString();
+        this.productId = in.readString();
+        this.sku = in.readString();
+        this.unitType = in.readString();
+        this.weight = in.readString();
+        this.mrpPrice = in.readString();
+        this.discount = in.readString();
+        this.price = in.readString();
+        this.orderBy = in.readString();
+        this.stock = in.readString();
+        this.minStock = in.readString();
+        this.sellingChooser = in.readString();
+    }
+
+    public String getStock() {
+        return stock;
+    }
+
+    public void setStock(String stock) {
+        this.stock = stock;
+    }
+
+    public String getMinStock() {
+        return minStock;
+    }
+
+    public void setMinStock(String minStock) {
+        this.minStock = minStock;
+    }
+
+    public String getSellingChooser() {
+        return sellingChooser;
+    }
+
+    public void setSellingChooser(String sellingChooser) {
+        this.sellingChooser = sellingChooser;
     }
 
     public String getId() {
@@ -153,15 +189,18 @@ public class Variant implements Parcelable {
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
-        dest.writeString(id);
-        dest.writeString(storeId);
-        dest.writeString(productId);
-        dest.writeString(sku);
-        dest.writeString(unitType);
-        dest.writeString(weight);
-        dest.writeString(mrpPrice);
-        dest.writeString(discount);
-        dest.writeString(price);
-        dest.writeString(orderBy);
+        dest.writeString(this.id);
+        dest.writeString(this.storeId);
+        dest.writeString(this.productId);
+        dest.writeString(this.sku);
+        dest.writeString(this.unitType);
+        dest.writeString(this.weight);
+        dest.writeString(this.mrpPrice);
+        dest.writeString(this.discount);
+        dest.writeString(this.price);
+        dest.writeString(this.orderBy);
+        dest.writeString(this.stock);
+        dest.writeString(this.minStock);
+        dest.writeString(this.sellingChooser);
     }
 }

@@ -11,6 +11,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
@@ -68,7 +69,7 @@ public class BestSellerAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         ImageView imageViewProduct;
         TextView textViewProductName, textViewProductPrice;
         TextView textViewCount;
-        LinearLayout linearLayoutAdd, linearLayoutMinus, linearLayoutCountMinus;
+        LinearLayout linearLayoutAdd, linearLayoutMinus, linearLayoutCountMinus, linearLayoutOutStock;
         Spinner spinnerOrders;
 
         public ViewHolder(@NonNull View itemView) {
@@ -80,6 +81,7 @@ public class BestSellerAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
             linearLayoutAdd = itemView.findViewById(R.id.ll_add);
             linearLayoutMinus = itemView.findViewById(R.id.ll_minus);
             linearLayoutCountMinus = itemView.findViewById(R.id.ll_count_minus);
+            linearLayoutOutStock = itemView.findViewById(R.id.ll_out_stock);
             spinnerOrders = itemView.findViewById(R.id.spinner_orders);
         }
 
@@ -120,18 +122,35 @@ public class BestSellerAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
 
             List<Variant> varientDataList = getProductData.getVariants();
             Variant variantData = varientDataList.get(getProductData.getSelectedVariantIndex());
+            boolean showOutOfStock = false;
+            if (!TextUtils.isEmpty(variantData.getSellingChooser()) && !variantData.getSellingChooser().equalsIgnoreCase("continue_selling")) {
+                if (!TextUtils.isEmpty(variantData.getStock()) && !TextUtils.isEmpty(variantData.getMinStock())) {
+                    try {
+                        showOutOfStock = isOutOfStock(variantData.getStock(), variantData.getMinStock());
+                    } catch (NumberFormatException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
 
+            linearLayoutOutStock.setVisibility(showOutOfStock ? View.VISIBLE : View.GONE);
             textViewProductPrice.setText(Util.getPriceWithCurrency(Double.parseDouble(!TextUtils.isEmpty(variantData.getPrice()) ? variantData.getPrice() : "0"), AppPreference.getInstance().getCurrency()));
 
             linearLayoutCountMinus.setVisibility(getProductData.isSelected() ? View.VISIBLE : View.GONE);
             textViewCount.setText(String.valueOf(getProductData.getCount()));
 
+            final boolean finalShowOutOfStock = showOutOfStock;
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     int count = getProductData.getCount();
 
                     if (count >= 20) {
+                        return;
+                    }
+
+                    if (finalShowOutOfStock) {
+                        Toast.makeText(context, "Out Of Stock", Toast.LENGTH_SHORT).show();
                         return;
                     }
 
@@ -146,6 +165,12 @@ public class BestSellerAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
             linearLayoutMinus.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
+
+                    if (finalShowOutOfStock) {
+                        Toast.makeText(context, "Out Of Stock", Toast.LENGTH_SHORT).show();
+                        return;
+                    }
+
                     int count = getProductData.getCount() - 1;
                     if (count < 1) {
                         getProductData.setSelected(false);
@@ -157,6 +182,21 @@ public class BestSellerAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                     listener.onRemoveProduct(getProductData);
                 }
             });
+        }
+
+        private boolean isOutOfStock(String stock, String minStock) throws NumberFormatException {
+            int stockValue = Integer.parseInt(stock);
+            int minStockValue = Integer.parseInt(minStock);
+
+            if (stockValue <= 0) {
+                return true;
+            }
+
+            if (stockValue < minStockValue) {
+                return true;
+            }
+
+            return false;
         }
     }
 }
