@@ -134,7 +134,6 @@
             android:name=".dashboard.DashboardActivity"
             android:launchMode="singleTask"
             android:screenOrientation="portrait"
-            android:taskAffinity="com.signity.shopkeeperapp.bookorder"
             android:windowSoftInputMode="adjustPan|stateHidden" />
         <activity
             android:name=".stores.StoresActivity"
@@ -180,6 +179,7 @@
             android:name=".book.BookOrderActivity"
             android:launchMode="singleTop"
             android:screenOrientation="portrait"
+            android:taskAffinity="com.signity.shopkeeperapp.bookorder"
             android:windowSoftInputMode="adjustPan|stateHidden" />
         <activity
             android:name=".book.BookOrderTypeActivity"

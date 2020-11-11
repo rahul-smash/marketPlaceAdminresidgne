@@ -84,6 +84,7 @@ public class BookOrderCheckoutActivity extends BaseActivity {
     private String point = "";
     private int showLoyalty = 0;
     private String deliverySlot = "";
+    private double cartSaving;
 
     public static Intent getIntent(Context context) {
         return new Intent(context, BookOrderCheckoutActivity.class);
@@ -187,20 +188,40 @@ public class BookOrderCheckoutActivity extends BaseActivity {
         textViewCount.setText(String.format("%s %s", OrderCart.getOrderCartMap().size(), item));
         textviewOrderItemsCount.setText(String.format("%s %s", OrderCart.getOrderCartMap().size(), item));
 
+        double mrpDiscount = 0;
+        try {
+            for (OrderDetailResponse response : dataResponse.getOrderDetail()) {
+                double mrp = Double.parseDouble(response.getMrpPrice());
+                double price = Double.parseDouble(response.getPrice());
+                mrpDiscount += (mrp - price) * response.getQuantity();
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
         List<GetProductData> list = new ArrayList<>();
         if (!OrderCart.isCartEmpty()) {
             list.addAll(OrderCart.getOrderCartMap().values());
         }
         bookOrderCheckoutAdapter.setProductData(list);
 
+        cartSaving = mrpDiscount;
+        if (!TextUtils.isEmpty(dataResponse.getDiscount())) {
+            try {
+                cartSaving += Double.parseDouble(dataResponse.getDiscount());
+            } catch (NumberFormatException e) {
+                e.printStackTrace();
+            }
+        }
+
         try {
             textViewTotal.setText(Util.getPriceWithCurrency(Double.parseDouble(dataResponse.getItemSubTotal()), AppPreference.getInstance().getCurrency()));
             textViewDeliveryCharges.setText(Util.getPriceWithCurrency(Double.parseDouble(dataResponse.getShipping()), AppPreference.getInstance().getCurrency()));
             textViewTax.setText(Util.getPriceWithCurrency(Double.parseDouble(dataResponse.getTax()), AppPreference.getInstance().getCurrency()));
             textViewCouponDiscount.setText(Util.getPriceWithCurrency(Double.parseDouble(loyalty.equalsIgnoreCase("0") ? dataResponse.getDiscount() : "0"), AppPreference.getInstance().getCurrency()));
-            textViewMrpDiscount.setText(Util.getPriceWithCurrency(0, AppPreference.getInstance().getCurrency()));
+            textViewMrpDiscount.setText(Util.getPriceWithCurrency(mrpDiscount, AppPreference.getInstance().getCurrency()));
             textViewLoyaltyPoints.setText(Util.getPriceWithCurrency(Double.parseDouble(loyalty), AppPreference.getInstance().getCurrency()));
-            textViewCartSaving.setText(String.format("Cart Savings: %s", Util.getPriceWithCurrency(Double.parseDouble(dataResponse.getDiscount()), AppPreference.getInstance().getCurrency())));
+            textViewCartSaving.setText(String.format("Cart Savings: %s", Util.getPriceWithCurrency(cartSaving, AppPreference.getInstance().getCurrency())));
             textViewFinalAmount.setText(Util.getPriceWithCurrency(Double.parseDouble(dataResponse.getTotal()), AppPreference.getInstance().getCurrency()));
             textViewOrderTotal.setText(Util.getPriceWithCurrency(Double.parseDouble(dataResponse.getTotal()), AppPreference.getInstance().getCurrency()));
             if (!TextUtils.isEmpty(point)) {
@@ -350,12 +371,12 @@ public class BookOrderCheckoutActivity extends BaseActivity {
         param.put("online_method", paymentMode.equalsIgnoreCase("Cash") ? "" : paymentMode);
         param.put("payment_method", paymentMode.equalsIgnoreCase("Cash") ? "cod" : "online");
         param.put("user_address_id", customerAddressId);
-        param.put("total", dataResponse.getItemSubTotal());
+        param.put("total", dataResponse.getTotal());
         param.put("user_address", customerAddress);
         param.put("shipping_charges", dataResponse.getShipping());
         param.put("discount", dataResponse.getDiscount());
-        param.put("cart_saving", dataResponse.getDiscount());
-        param.put("checkout", dataResponse.getTotal());
+        param.put("cart_saving", cartSaving);
+        param.put("checkout", dataResponse.getItemSubTotal());
         param.put("wallet_refund", dataResponse.getWalletRefund());
         param.put("coupon_code", coupon);
         param.put("tax", dataResponse.getTax());
@@ -412,12 +433,12 @@ public class BookOrderCheckoutActivity extends BaseActivity {
         param.put("online_method", paymentMode.equalsIgnoreCase("Cash") ? "" : paymentMode);
         param.put("payment_method", paymentMode.equalsIgnoreCase("Cash") ? "cod" : "online");
         param.put("user_address_id", TextUtils.isEmpty(customerAddressId) ? "1" : customerAddressId);
-        param.put("total", dataResponse.getItemSubTotal());
+        param.put("total", dataResponse.getTotal());
         param.put("user_address", customerAddress);
         param.put("shipping_charges", dataResponse.getShipping());
         param.put("discount", dataResponse.getDiscount());
-        param.put("cart_saving", dataResponse.getDiscount());
-        param.put("checkout", dataResponse.getTotal());
+        param.put("cart_saving", cartSaving);
+        param.put("checkout", dataResponse.getItemSubTotal());
         param.put("wallet_refund", dataResponse.getWalletRefund());
         param.put("coupon_code", coupon);
         param.put("tax", dataResponse.getTax());

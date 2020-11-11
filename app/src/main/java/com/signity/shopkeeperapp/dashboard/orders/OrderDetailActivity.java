@@ -23,6 +23,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.signity.shopkeeperapp.R;
 import com.signity.shopkeeperapp.base.BaseActivity;
+import com.signity.shopkeeperapp.model.ItemListModel;
 import com.signity.shopkeeperapp.model.OrderItemResponseModel;
 import com.signity.shopkeeperapp.model.OrdersListModel;
 import com.signity.shopkeeperapp.model.SetOrdersModel;
@@ -201,16 +202,30 @@ public class OrderDetailActivity extends BaseActivity implements OrderDetailsAdp
             }
         }
 
+        double mrpDiscount = 0;
+        try {
+            for (ItemListModel response : ordersListModel.getItems()) {
+                double mrp = response.getMrpPrice();
+                double price = response.getPrice();
+                int quantity = Integer.parseInt(response.getQuantity());
+                mrpDiscount += (mrp - price) * quantity;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        double cartSaving = mrpDiscount + ordersListModel.getDiscount();
+
         if (ordersListModel.getDiscount() != 0) {
             linearLayoutDiscountCoupon.setVisibility(View.VISIBLE);
             textViewCouponCode.setText(String.format("Coupon Applied(%s)", ordersListModel.getCouponCode().toUpperCase()));
         }
-        textViewTotalPrice.setText(Util.getPriceWithCurrency(ordersListModel.getTotal(), AppPreference.getInstance().getCurrency()));
-        textViewMrpDiscount.setText(Util.getPriceWithCurrency(0, AppPreference.getInstance().getCurrency()));
+        textViewTotalPrice.setText(Util.getPriceWithCurrency(ordersListModel.getCheckout(), AppPreference.getInstance().getCurrency()));
+        textViewMrpDiscount.setText(Util.getPriceWithCurrency(mrpDiscount, AppPreference.getInstance().getCurrency()));
         textViewCouponDiscount.setText(Util.getPriceWithCurrency(ordersListModel.getDiscount(), AppPreference.getInstance().getCurrency()));
         textViewDeliveryCharges.setText(Util.getPriceWithCurrency(ordersListModel.getShippingCharges(), AppPreference.getInstance().getCurrency()));
-        textViewPayableAmount.setText(Util.getPriceWithCurrency(ordersListModel.getCheckout(), AppPreference.getInstance().getCurrency()));
-        textViewCartSavings.setText(String.format("Cart Savings: %s", Util.getPriceWithCurrency(ordersListModel.getDiscount(), AppPreference.getInstance().getCurrency())));
+        textViewPayableAmount.setText(Util.getPriceWithCurrency(ordersListModel.getTotal(), AppPreference.getInstance().getCurrency()));
+        textViewCartSavings.setText(String.format("Cart Savings: %s", Util.getPriceWithCurrency(cartSaving, AppPreference.getInstance().getCurrency())));
         textViewOrderTax.setText(Util.getPriceWithCurrency(ordersListModel.getTax(), AppPreference.getInstance().getCurrency()));
     }
 
