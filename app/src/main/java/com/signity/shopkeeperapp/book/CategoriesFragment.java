@@ -39,7 +39,6 @@ public class CategoriesFragment extends Fragment implements ExpandableCategories
     private RecyclerView recyclerView;
     private BookOrderActivity bookOrderActivity;
     private ContentLoadingProgressBar progressBar;
-    private List<GetProductData> selectedProductList = new ArrayList<>();
     private ArrayList<SubCategory> categoryList = new ArrayList<>();
 
     public static CategoriesFragment getInstance(Bundle bundle) {
@@ -57,14 +56,15 @@ public class CategoriesFragment extends Fragment implements ExpandableCategories
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        getExtra();
         setUpAdapter();
         getCategoriesApi();
     }
 
-    private void getExtra() {
-        if (getArguments() != null) {
-            selectedProductList = getArguments().getParcelableArrayList(SELECTED_PRODUCTS);
+    @Override
+    public void onResume() {
+        super.onResume();
+        if (OrderCart.isCartEmpty()) {
+            onCloseSearch();
         }
     }
 
@@ -143,11 +143,14 @@ public class CategoriesFragment extends Fragment implements ExpandableCategories
                 filterList.add(subCategory);
             }
         }
+        expandableCategoriesAdapter.clearMap();
         expandableCategoriesAdapter.setCategoryDataList(filterList);
     }
 
     public void onCloseSearch() {
-        expandableCategoriesAdapter.setCategoryDataList(categoryList);
+        if (expandableCategoriesAdapter != null)
+            expandableCategoriesAdapter.clearMap();
+        getCategoriesApi();
     }
 
     private void setUpAdapter() {
@@ -188,6 +191,12 @@ public class CategoriesFragment extends Fragment implements ExpandableCategories
 
                 if (getProductResponse.getSuccess()) {
                     if (getProductResponse.getData() != null) {
+                        List<GetProductData> selectedProductList = new ArrayList<>();
+
+                        if (!OrderCart.isCartEmpty()) {
+                            selectedProductList.addAll(OrderCart.getOrderCartMap().values());
+                        }
+
                         List<GetProductData> data = getProductResponse.getData();
                         for (GetProductData getProductData : data) {
                             for (GetProductData selectedData : selectedProductList) {

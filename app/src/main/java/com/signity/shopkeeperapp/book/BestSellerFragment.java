@@ -41,7 +41,6 @@ public class BestSellerFragment extends Fragment implements OrderCartListener {
     private boolean isLoading;
     private GridLayoutManager layoutManager;
     private BookOrderActivity bookOrderActivity;
-    private List<GetProductData> selectedProductList = new ArrayList<>();
     private ContentLoadingProgressBar progressBar;
     private String keyword = "";
     private RecyclerView.OnScrollListener recyclerViewOnScrollListener = new RecyclerView.OnScrollListener() {
@@ -83,15 +82,7 @@ public class BestSellerFragment extends Fragment implements OrderCartListener {
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        getExtra();
         setUpAdapter();
-        getBestSelling();
-    }
-
-    private void getExtra() {
-        if (getArguments() != null) {
-            selectedProductList = getArguments().getParcelableArrayList(SELECTED_PRODUCTS);
-        }
     }
 
     private void getBestSelling() {
@@ -121,6 +112,11 @@ public class BestSellerFragment extends Fragment implements OrderCartListener {
                     start += pageSize;
                     totalOrders = getProductResponse.getTotal();
                     if (getProductResponse.getData() != null) {
+
+                        List<GetProductData> selectedProductList = new ArrayList<>();
+                        if (!OrderCart.isCartEmpty()) {
+                            selectedProductList.addAll(OrderCart.getOrderCartMap().values());
+                        }
 
                         List<GetProductData> data = getProductResponse.getData();
                         for (GetProductData getProductData : data) {
@@ -169,6 +165,14 @@ public class BestSellerFragment extends Fragment implements OrderCartListener {
     private void initView(View view) {
         recyclerView = view.findViewById(R.id.rv_best_seller);
         progressBar = view.findViewById(R.id.best_progress);
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        if (OrderCart.isCartEmpty()) {
+            onCloseSearch();
+        }
     }
 
     @Nullable

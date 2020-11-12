@@ -1,14 +1,16 @@
 package com.signity.shopkeeperapp.book;
 
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Bundle;
-import android.os.Parcelable;
 import android.text.TextUtils;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.TranslateAnimation;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.widget.SearchView;
@@ -17,6 +19,7 @@ import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
+import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 
 import com.google.android.material.tabs.TabLayout;
 import com.signity.shopkeeperapp.R;
@@ -26,8 +29,6 @@ import com.signity.shopkeeperapp.util.AnimUtil;
 import com.signity.shopkeeperapp.util.Util;
 import com.signity.shopkeeperapp.util.prefs.AppPreference;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Locale;
 
 public class BookOrderActivity extends BaseActivity {
@@ -122,19 +123,13 @@ public class BookOrderActivity extends BaseActivity {
 
     private void openFragment(FragmentType fragmentType) {
         searchView.clearFocus();
-        List<GetProductData> selected = new ArrayList<>();
-        if (!OrderCart.isCartEmpty()) {
-            selected.addAll(OrderCart.getOrderCartMap().values());
-        }
-        Bundle bundle = new Bundle();
-        bundle.putParcelableArrayList(BestSellerFragment.SELECTED_PRODUCTS, (ArrayList<? extends Parcelable>) selected);
         switch (fragmentType) {
             case BEST_SELLER:
-                bestSellerFragment = BestSellerFragment.getInstance(bundle);
+                bestSellerFragment = BestSellerFragment.getInstance(null);
                 showFragment(bestSellerFragment, BestSellerFragment.TAG);
                 break;
             case CATEGORIES:
-                categoriesFragment = CategoriesFragment.getInstance(bundle);
+                categoriesFragment = CategoriesFragment.getInstance(null);
                 showFragment(categoriesFragment, CategoriesFragment.TAG);
                 break;
         }
