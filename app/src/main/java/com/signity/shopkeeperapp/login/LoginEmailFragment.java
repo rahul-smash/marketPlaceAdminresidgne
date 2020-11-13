@@ -170,6 +170,7 @@ public class LoginEmailFragment extends Fragment {
                 if (otpVerifyResponse.isSuccess()) {
                     AppPreference.getInstance().setLoginType("email");
                     if (otpVerifyResponse.getStore().size() > 1) {
+                        AppPreference.getInstance().saveUser(otpVerifyResponse.getUser());
                         listener.onEmailVerified(true);
                     } else {
                         AppPreference.getInstance().setLoggedIn(Constant.Mode.LOGGED_IN);
