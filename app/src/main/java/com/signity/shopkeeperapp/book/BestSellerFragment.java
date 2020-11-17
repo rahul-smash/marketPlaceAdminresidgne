@@ -83,6 +83,7 @@ public class BestSellerFragment extends Fragment implements OrderCartListener {
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         setUpAdapter();
+        getBestSelling();
     }
 
     private void getBestSelling() {

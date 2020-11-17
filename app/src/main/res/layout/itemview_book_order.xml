@@ -52,6 +52,7 @@
             android:background="@drawable/item_background_rounded_stroke">
 
             <Spinner
+                android:spinnerMode="dialog"
                 android:id="@+id/spinner_orders"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content" />
