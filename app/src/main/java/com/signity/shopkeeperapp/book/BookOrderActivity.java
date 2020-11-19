@@ -1,16 +1,13 @@
 package com.signity.shopkeeperapp.book;
 
-import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
-import android.content.IntentFilter;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.TranslateAnimation;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.widget.SearchView;
@@ -19,7 +16,6 @@ import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
-import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 
 import com.google.android.material.tabs.TabLayout;
 import com.signity.shopkeeperapp.R;
@@ -123,12 +119,15 @@ public class BookOrderActivity extends BaseActivity {
 
     private void openFragment(FragmentType fragmentType) {
         searchView.clearFocus();
+        searchView.setQuery("", false);
         switch (fragmentType) {
             case BEST_SELLER:
+                searchView.setQueryHint("Search for product");
                 bestSellerFragment = BestSellerFragment.getInstance(null);
                 showFragment(bestSellerFragment, BestSellerFragment.TAG);
                 break;
             case CATEGORIES:
+                searchView.setQueryHint("Search for category");
                 categoriesFragment = CategoriesFragment.getInstance(null);
                 showFragment(categoriesFragment, CategoriesFragment.TAG);
                 break;

@@ -120,7 +120,7 @@ public class OrderDetailActivity extends BaseActivity implements OrderDetailsAdp
                         if (getValues.getData().getOrders().size() > 0) {
                             ordersListModel = getValues.getData().getOrders().get(0);
                             setOrderDetails();
-                            linearLayoutDeliveryDetail.setVisibility(ordersListModel.getOrderFacility().equalsIgnoreCase("pickup") ? View.GONE : View.VISIBLE);
+                            linearLayoutDeliveryDetail.setVisibility(ordersListModel.getOrderFacility().equalsIgnoreCase("delivery") ? View.VISIBLE : View.GONE);
                             constraintLayoutPaymentDetail.setVisibility(View.VISIBLE);
                             boolean val = ordersListModel.getStatus().equals("0");
                             orderDetailsAdpater.setItemListModels(ordersListModel.getItems(), val);
@@ -236,8 +236,8 @@ public class OrderDetailActivity extends BaseActivity implements OrderDetailsAdp
         textViewPayableAmount = (TextView) findViewById(R.id.tv_payable_amount);
         textViewCartSavings = (TextView) findViewById(R.id.tv_cart_saving);
         textViewAddress = (TextView) findViewById(R.id.tv_address);
-        textViewCustomerName = (TextView) findViewById(R.id.tv_customer_name);
-        textViewCustomerNumber = (TextView) findViewById(R.id.tv_customer_number);
+        textViewCustomerName = (TextView) findViewById(R.id.tv_customer_address);
+        textViewCustomerNumber = (TextView) findViewById(R.id.tv_customer_state_area);
         textViewDateTime = (TextView) findViewById(R.id.tv_order_date_time);
         textViewDeliveryTimeSlot = (TextView) findViewById(R.id.tv_delivery_time_slot);
         textViewDeliveryDateSlot = (TextView) findViewById(R.id.tv_delivery_date_slot);

@@ -108,7 +108,10 @@ public class BestSellerAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                 public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                     if (getProductData.getSelectedVariantIndex() != position) {
                         getProductData.setSelectedVariantIndex(position);
+                        getProductData.setCount(0);
+                        getProductData.setSelected(false);
                         notifyItemChanged(getAdapterPosition(), getProductData);
+                        listener.onRemoveProduct(getProductData);
                     }
                 }
 
@@ -144,10 +147,6 @@ public class BestSellerAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                 @Override
                 public void onClick(View v) {
                     int count = getProductData.getCount();
-
-                    if (count >= 20) {
-                        return;
-                    }
 
                     if (finalShowOutOfStock) {
                         Toast.makeText(context, "Out Of Stock", Toast.LENGTH_SHORT).show();

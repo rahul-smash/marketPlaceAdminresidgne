@@ -90,7 +90,7 @@ public class PaymentModeAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
                 @Override
                 public void onClick(View v) {
                     if (listener != null) {
-                        listener.onPaymentMode(modes.getTitle());
+                        listener.onPaymentMode(modes.getTitle().equalsIgnoreCase("Cash") ? "Cash" : "Online");
                     }
                     selectedId = getAdapterPosition();
                     notifyDataSetChanged();

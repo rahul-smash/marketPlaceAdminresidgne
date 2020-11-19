@@ -123,8 +123,8 @@ public class CustomersAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
 
         public CustomerViewHolder(@NonNull View itemView) {
             super(itemView);
-            textViewCustomerName = itemView.findViewById(R.id.tv_customer_name);
-            textViewCustomerNumber = itemView.findViewById(R.id.tv_customer_number);
+            textViewCustomerName = itemView.findViewById(R.id.tv_customer_address);
+            textViewCustomerNumber = itemView.findViewById(R.id.tv_customer_state_area);
             textViewCustomerCity = itemView.findViewById(R.id.tv_customer_city);
             textViewActiveCount = itemView.findViewById(R.id.tv_active_count);
             textViewTotalCount = itemView.findViewById(R.id.tv_total_count);

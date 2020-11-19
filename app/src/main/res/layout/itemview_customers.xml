@@ -16,7 +16,7 @@
         app:layout_constraintTop_toTopOf="parent">
 
         <TextView
-            android:id="@+id/tv_customer_name"
+            android:id="@+id/tv_customer_address"
             style="@style/AppTheme.TextView.MediumBold"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
@@ -27,14 +27,14 @@
             app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
-            android:id="@+id/tv_customer_number"
+            android:id="@+id/tv_customer_state_area"
             style="@style/AppTheme.TextView.Small"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:text="99978XXXXX"
             android:textColor="@color/colorTextDark"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/tv_customer_name" />
+            app:layout_constraintTop_toBottomOf="@+id/tv_customer_address" />
 
         <LinearLayout
             android:id="@+id/ll_area"
@@ -44,7 +44,7 @@
             android:gravity="center"
             android:orientation="horizontal"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/tv_customer_number">
+            app:layout_constraintTop_toBottomOf="@+id/tv_customer_state_area">
 
             <ImageView
                 android:layout_width="wrap_content"
@@ -70,7 +70,7 @@
             android:gravity="center"
             android:orientation="horizontal"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/tv_customer_number">
+            app:layout_constraintTop_toBottomOf="@+id/tv_customer_state_area">
 
             <TextView
                 style="@style/AppTheme.TextView.Small"

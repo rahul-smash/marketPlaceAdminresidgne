@@ -141,7 +141,8 @@ public class CustomerDetailActivity extends BaseActivity implements HomeOrdersAd
 
         if (customerData.getCustomerAddress() != null) {
             textViewCustomerCity.setText(customerData.getCustomerAddress().getAreaName());
-            textViewDeliveryAddress.setText(customerData.getCustomerAddress().getAddress());
+
+            textViewDeliveryAddress.setText(String.format("%s, %s, %s", customerData.getCustomerAddress().getAddress(), customerData.getCustomerAddress().getCity(), customerData.getCustomerAddress().getState()));
             linearLayoutArea.setVisibility(TextUtils.isEmpty(customerData.getCustomerAddress().getAreaName()) ? View.GONE : View.VISIBLE);
         } else {
             constraintLayoutDelivery.setVisibility(View.GONE);
@@ -173,8 +174,8 @@ public class CustomerDetailActivity extends BaseActivity implements HomeOrdersAd
         toolbar = findViewById(R.id.toolbar);
         recyclerView = findViewById(R.id.rv_orders);
         linearLayoutMain = findViewById(R.id.ll_main);
-        textViewCustomerName = findViewById(R.id.tv_customer_name);
-        textViewCustomerNumber = findViewById(R.id.tv_customer_number);
+        textViewCustomerName = findViewById(R.id.tv_customer_address);
+        textViewCustomerNumber = findViewById(R.id.tv_customer_state_area);
         textViewCustomerEmail = findViewById(R.id.tv_customer_email);
         textViewCustomerCity = findViewById(R.id.tv_customer_city);
         textViewActiveCount = findViewById(R.id.tv_active_count);

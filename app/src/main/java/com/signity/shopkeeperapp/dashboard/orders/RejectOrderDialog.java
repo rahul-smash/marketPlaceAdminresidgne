@@ -5,7 +5,6 @@ import android.content.Context;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
-import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,7 +14,6 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -115,10 +113,10 @@ public class RejectOrderDialog extends DialogFragment {
                 if (listener != null) {
                     String msg = editText.getText().toString().trim();
 
-                    if (TextUtils.isEmpty(msg)) {
+                    /*if (TextUtils.isEmpty(msg)) {
                         Toast.makeText(getContext(), "Add message", Toast.LENGTH_SHORT).show();
                         return;
-                    }
+                    }*/
 
                     hideKeyboard(editText);
                     dismiss();

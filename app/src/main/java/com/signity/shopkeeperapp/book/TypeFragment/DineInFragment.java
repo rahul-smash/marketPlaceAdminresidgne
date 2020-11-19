@@ -111,6 +111,7 @@ public class DineInFragment extends Fragment {
                 if (customerData.isSuccess()) {
                     populateFields(customerData.getData());
                 } else {
+                    populateEmptyData();
                     Toast.makeText(getContext(), customerData.getMessage(), Toast.LENGTH_SHORT).show();
                 }
 
@@ -266,6 +267,8 @@ public class DineInFragment extends Fragment {
                     if (addCategoryResponse.getData() != null) {
                         startCheckout(addCategoryResponse.getData());
                     }
+                } else {
+                    Toast.makeText(getActivity(), addCategoryResponse.getMessage(), Toast.LENGTH_SHORT).show();
                 }
             }
 
@@ -277,6 +280,12 @@ public class DineInFragment extends Fragment {
                 ProgressDialogUtil.hideProgressDialog();
             }
         });
+    }
+
+    private void populateEmptyData() {
+        editTextName.setText("");
+        editTextEmail.setText("");
+        editTextLoyaltyPoints.setText("");
     }
 
     private void startCheckout(Data data) {

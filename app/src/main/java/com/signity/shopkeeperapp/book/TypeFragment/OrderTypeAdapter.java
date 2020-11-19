@@ -47,7 +47,8 @@ public class OrderTypeAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
     }
 
     public enum OrderType {
-        DELIVERY("Delivery", R.drawable.deliverybg), PICKUP("Pick Up", R.drawable.pickupbg), DINEIN("Dine In", R.drawable.dineinbg);
+        DELIVERY("Delivery", R.drawable.deliverybg), PICKUP("Pick Up", R.drawable.pickupbg);
+//        DINEIN("Dine In", R.drawable.dineinbg);
 
         private String title;
         private int icon;

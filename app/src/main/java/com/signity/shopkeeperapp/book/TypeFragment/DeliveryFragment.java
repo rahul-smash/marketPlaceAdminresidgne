@@ -62,7 +62,7 @@ public class DeliveryFragment extends Fragment {
     public static final String TAG = "DeliveryFragment";
     private static final int ADDRESS_CODE = 101;
     private TextInputEditText editTextMobileNumber, editTextName, editTextLoyaltyPoints, editTextEmail;
-    private TextView textViewCustomerName, textViewCustomerNumber, textViewCustomerAddress, textViewAddressType, txtChangeAddress;
+    private TextView textViewCustomerAddress, textViewCustomerState, textViewCustomerPincode, textViewAddressType, txtChangeAddress;
     private TextInputEditText editTextScheduleDate, editTextScheduleTime, editTextDescription;
     private ImageView imageViewSearch;
     private LinearLayout linearLayoutAddDelivery, linearLayoutDeliveryAddress, linearLayoutNext;
@@ -130,9 +130,9 @@ public class DeliveryFragment extends Fragment {
         linearLayoutAddDelivery = view.findViewById(R.id.ll_add_address);
         linearLayoutNext = view.findViewById(R.id.ll_next);
 
-        textViewCustomerName = view.findViewById(R.id.tv_customer_name);
-        textViewCustomerNumber = view.findViewById(R.id.tv_customer_number);
         textViewCustomerAddress = view.findViewById(R.id.tv_customer_address);
+        textViewCustomerState = view.findViewById(R.id.tv_customer_state_area);
+        textViewCustomerPincode = view.findViewById(R.id.tv_customer_pincode);
         textViewAddressType = view.findViewById(R.id.tv_address_type);
         txtChangeAddress = view.findViewById(R.id.tv_change_address);
 
@@ -328,6 +328,7 @@ public class DeliveryFragment extends Fragment {
                 if (customerData.isSuccess()) {
                     populateFields(customerData.getData());
                 } else {
+                    populateEmptyData();
                     Toast.makeText(getContext(), customerData.getMessage(), Toast.LENGTH_SHORT).show();
                 }
 
@@ -366,20 +367,21 @@ public class DeliveryFragment extends Fragment {
 
                 if (customerData.isSuccess()) {
 
-                    if (customerData.getData().getCustomerAddress() == null) {
-                        Intent intent = new Intent(getActivity(), AddAddressActivity.class);
-                        intent.putExtra("customer_id", customerData.getData().getId());
-                        intent.putExtra("customer_first_name", customerData.getData().getFullName());
-                        intent.putExtra("customer_mobile", customerData.getData().getPhone());
-                        intent.putExtra("customer_address_id", "");
-                        startActivityForResult(intent, ADDRESS_CODE);
-                        return;
-                    }
+                    if (customerData.getData().getCustomerAddress() == null || customerData.getData().getCustomerAddress().isEmpty()) {
 
-                    if (customerData.getData().getCustomerAddress().size() == 0) {
+                        String name = "";
+                        if (!TextUtils.isEmpty(customerData.getData().getFullName())) {
+                            name = customerData.getData().getFullName();
+                        } else if (!TextUtils.isEmpty(editTextName.getText().toString())) {
+                            name = editTextName.getText().toString();
+                        } else {
+                            Toast.makeText(getContext(), "Name can't be empty", Toast.LENGTH_SHORT).show();
+                            return;
+                        }
+
                         Intent intent = new Intent(getActivity(), AddAddressActivity.class);
                         intent.putExtra("customer_id", customerData.getData().getId());
-                        intent.putExtra("customer_first_name", customerData.getData().getFullName());
+                        intent.putExtra("customer_first_name", name);
                         intent.putExtra("customer_mobile", customerData.getData().getPhone());
                         intent.putExtra("customer_address_id", "");
                         startActivityForResult(intent, ADDRESS_CODE);
@@ -388,9 +390,19 @@ public class DeliveryFragment extends Fragment {
 
                     CustomerAddressResponse customerResponse = customerData.getData().getCustomerAddress().get(0);
 
+                    String name = "";
+                    if (!TextUtils.isEmpty(customerResponse.getFirstName())) {
+                        name = customerResponse.getFirstName();
+                    } else if (!TextUtils.isEmpty(editTextName.getText().toString())) {
+                        name = editTextName.getText().toString();
+                    } else {
+                        Toast.makeText(getContext(), "Name can't be empty", Toast.LENGTH_SHORT).show();
+                        return;
+                    }
+
                     Intent intent = new Intent(getActivity(), AddAddressActivity.class);
                     intent.putExtra("customer_id", customerResponse.getUserId());
-                    intent.putExtra("customer_first_name", customerResponse.getFirstName());
+                    intent.putExtra("customer_first_name", name);
                     intent.putExtra("customer_mobile", customerResponse.getMobile());
                     intent.putExtra("customer_address_id", customerResponse.getId());
                     startActivityForResult(intent, ADDRESS_CODE);
@@ -411,6 +423,20 @@ public class DeliveryFragment extends Fragment {
         });
     }
 
+    private void populateEmptyData() {
+
+        linearLayoutAddDelivery.setVisibility(View.VISIBLE);
+        linearLayoutDeliveryAddress.setVisibility(View.GONE);
+
+        editTextName.setText("");
+        editTextEmail.setText("");
+        editTextLoyaltyPoints.setText("");
+
+        textViewCustomerAddress.setText("");
+        textViewCustomerState.setText("");
+        textViewCustomerPincode.setText("");
+    }
+
     private void populateFields(Data data) {
 
         if (data == null) {
@@ -428,10 +454,21 @@ public class DeliveryFragment extends Fragment {
 
             CustomerAddressResponse response = data.getCustomerAddress().get(0);
 
-            textViewCustomerName.setText(response.getFirstName());
-            textViewCustomerNumber.setText(response.getMobile());
-            textViewCustomerAddress.setText(String.format("%s, %s", response.getAddress(), response.getCity()));
-            textViewAddressType.setText("Home");
+            textViewCustomerState.setText(String.format("%s, %s", response.getCity(), response.getState()));
+            textViewCustomerAddress.setText(String.format("%s, %s", response.getAddress(), response.getAreaName()));
+            textViewCustomerPincode.setText(response.getZipcode());
+
+            if (TextUtils.isEmpty(response.getCity()) && TextUtils.isEmpty(response.getState())) {
+                textViewCustomerState.setVisibility(View.GONE);
+            } else {
+                textViewCustomerState.setVisibility(View.VISIBLE);
+            }
+
+            if (TextUtils.isEmpty(response.getZipcode())) {
+                textViewCustomerPincode.setVisibility(View.GONE);
+            } else {
+                textViewCustomerPincode.setVisibility(View.VISIBLE);
+            }
         }
 
     }
@@ -493,10 +530,21 @@ public class DeliveryFragment extends Fragment {
                         linearLayoutAddDelivery.setVisibility(View.GONE);
                         linearLayoutDeliveryAddress.setVisibility(View.VISIBLE);
 
-                        textViewCustomerNumber.setText(editTextMobileNumber.getText().toString().trim());
-                        textViewCustomerName.setText(editTextName.getText().toString().trim());
+                        textViewCustomerState.setText(String.format("%s, %s", customerCity, customerState));
+                        textViewCustomerAddress.setText(String.format("%s, %s", customerAddress, customerAreaName));
+                        textViewCustomerPincode.setText(customerZipcode);
 
-                        textViewCustomerAddress.setText(String.format("%s, %s", customerAddress, customerCity));
+                        if (TextUtils.isEmpty(customerCity) && TextUtils.isEmpty(customerState)) {
+                            textViewCustomerState.setVisibility(View.GONE);
+                        } else {
+                            textViewCustomerState.setVisibility(View.VISIBLE);
+                        }
+
+                        if (TextUtils.isEmpty(customerZipcode)) {
+                            textViewCustomerPincode.setVisibility(View.GONE);
+                        } else {
+                            textViewCustomerPincode.setVisibility(View.VISIBLE);
+                        }
                     }
 
                     Log.e("Return result", customerAddress);
@@ -634,6 +682,7 @@ public class DeliveryFragment extends Fragment {
         bundle.putString(BookOrderCheckoutActivity.CHARGES, addressCharges);
         bundle.putInt(BookOrderCheckoutActivity.LOYALTY, data.getLoyalityPoints());
         bundle.putString(BookOrderCheckoutActivity.DELIVERY_SLOT, deliverySlot);
+        bundle.putString(BookOrderCheckoutActivity.ORDER_COMMENT, editTextDescription.getText().toString());
         startActivity(BookOrderCheckoutActivity.getIntent(getContext(), bundle));
         AnimUtil.slideFromRightAnim(getActivity());
     }
@@ -662,6 +711,7 @@ public class DeliveryFragment extends Fragment {
         bundle.putString(BookOrderCheckoutActivity.CHARGES, addressCharges);
         bundle.putString(BookOrderCheckoutActivity.ORDER_TYPE, "Delivery");
         bundle.putString(BookOrderCheckoutActivity.DELIVERY_SLOT, deliverySlot);
+        bundle.putString(BookOrderCheckoutActivity.ORDER_COMMENT, editTextDescription.getText().toString());
         String loyalty = editTextLoyaltyPoints.getText().toString();
         if (TextUtils.isEmpty(loyalty)) {
             loyalty = "0";

@@ -128,7 +128,7 @@ public class ProductFragment extends Fragment implements View.OnClickListener, P
     public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull final MenuInflater inflater) {
         super.onCreateOptionsMenu(menu, inflater);
         inflater.inflate(R.menu.menu_products, menu);
-        SearchView searchView = (SearchView) menu.findItem(R.id.action_search).getActionView();
+        final SearchView searchView = (SearchView) menu.findItem(R.id.action_search).getActionView();
         searchView.setInputType(InputType.TYPE_CLASS_TEXT);
         searchView.setQueryHint("Search Product");
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
@@ -145,6 +145,7 @@ public class ProductFragment extends Fragment implements View.OnClickListener, P
                     start = 0;
                     currentPageNumber = 1;
                     keyword = "";
+                    searchView.clearFocus();
                     productsAdapter.clearData();
                     getAllOrdersMethod();
                 }
@@ -227,6 +228,10 @@ public class ProductFragment extends Fragment implements View.OnClickListener, P
     }
 
     public void getAllOrdersMethod() {
+
+        if (getContext() == null) {
+            return;
+        }
 
         if (!Util.checkIntenetConnection(getContext())) {
             productsAdapter.setShowLoading(false);

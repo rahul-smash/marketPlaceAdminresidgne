@@ -15,7 +15,6 @@ import android.widget.Toast;
 import androidx.annotation.Nullable;
 import androidx.appcompat.widget.Toolbar;
 import androidx.constraintlayout.widget.ConstraintLayout;
-import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -58,6 +57,7 @@ public class BookOrderCheckoutActivity extends BaseActivity {
     public static final String CHARGES = "CHARGES";
     public static final String LOYALTY = "LOYALTY";
     public static final String DELIVERY_SLOT = "DELIVERY_SLOT";
+    public static final String ORDER_COMMENT = "ORDER_COMMENT";
     private static final String TAG = "BookOrderCheckoutActivity";
     private static final int REQUEST_COUPON = 1122;
     private static final int REQUEST_LOYALTY = 3344;
@@ -85,6 +85,7 @@ public class BookOrderCheckoutActivity extends BaseActivity {
     private String point = "";
     private int showLoyalty = 0;
     private String deliverySlot = "";
+    private String comment = "";
     private double cartSaving;
 
     public static Intent getIntent(Context context) {
@@ -173,6 +174,7 @@ public class BookOrderCheckoutActivity extends BaseActivity {
             userId = bundle.getString(CUSTOMER_ID);
             customerAddress = bundle.getString(CUSTOMER_ADDRESS);
             customerAddressId = bundle.getString(CUSTOMER_ADDRESS_ID);
+            comment = bundle.getString(ORDER_COMMENT);
             orderType = bundle.getString(ORDER_TYPE);
             charges = bundle.getString(CHARGES);
             showLoyalty = bundle.getInt(LOYALTY);
@@ -244,6 +246,16 @@ public class BookOrderCheckoutActivity extends BaseActivity {
         paymentModeAdapter.setListener(new PaymentModeAdapter.PaymentModeListener() {
             @Override
             public void onPaymentMode(String mode) {
+
+                if ((int) constraintLayoutLoyalty.getTag() == 0) {
+                    if (!TextUtils.isEmpty(paymentMode) && !paymentMode.equalsIgnoreCase(mode)) {
+                        couponLayoutVisibility(false);
+                        coupon = "";
+                        discount = "0";
+                        calculateAmount();
+                    }
+                }
+
                 paymentMode = mode;
             }
         });
@@ -287,6 +299,12 @@ public class BookOrderCheckoutActivity extends BaseActivity {
         constraintLayoutCoupon.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
+                if (TextUtils.isEmpty(paymentMode)) {
+                    Toast.makeText(BookOrderCheckoutActivity.this, "Select payment mode", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+
                 int tag = (int) constraintLayoutCoupon.getTag();
                 int tagLoyalty = (int) constraintLayoutLoyalty.getTag();
 
@@ -382,6 +400,7 @@ public class BookOrderCheckoutActivity extends BaseActivity {
         param.put("coupon_code", coupon);
         param.put("tax", dataResponse.getTax());
         param.put("delivery_time_slot", deliverySlot);
+        param.put("note", comment);
         if (dataResponse.getTaxDetail() != null && dataResponse.getTaxDetail().size() > 0) {
             param.put("tax_rate", dataResponse.getTaxDetail().get(0).getRate());
         }
@@ -518,7 +537,7 @@ public class BookOrderCheckoutActivity extends BaseActivity {
 
         Map<String, Object> param = new HashMap<>();
         param.put("platform", "android");
-        param.put("payment_method", 3);
+        param.put("payment_method", paymentMode.equalsIgnoreCase("Cash") ? 2 : 3);
         param.put("device_token", AppPreference.getInstance().getDeviceToken());
         param.put("device_id", deviceId);
         param.put("user_id", userId);

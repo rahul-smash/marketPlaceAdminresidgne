@@ -116,6 +116,7 @@ public class PickUpFragment extends Fragment {
                 if (customerData.isSuccess()) {
                     populateFields(customerData.getData());
                 } else {
+                    populateEmptyData();
                     Toast.makeText(getContext(), customerData.getMessage(), Toast.LENGTH_SHORT).show();
                 }
 
@@ -205,6 +206,8 @@ public class PickUpFragment extends Fragment {
                     if (addCategoryResponse.getData() != null) {
                         startCheckout(addCategoryResponse.getData());
                     }
+                } else {
+                    Toast.makeText(getActivity(), addCategoryResponse.getMessage(), Toast.LENGTH_SHORT).show();
                 }
             }
 
@@ -251,6 +254,12 @@ public class PickUpFragment extends Fragment {
             mobile = getArguments().getString("NUMBER");
             editTextMobileNumber.setText(mobile);
         }
+    }
+
+    private void populateEmptyData() {
+        editTextName.setText("");
+        editTextEmail.setText("");
+        editTextLoyaltyPoints.setText("");
     }
 
     private void initView(View view) {

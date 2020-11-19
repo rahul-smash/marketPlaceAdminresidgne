@@ -59,7 +59,7 @@ public class BookOrderTypeActivity extends BaseActivity implements OrderTypeAdap
     private void setUpAdapter() {
         orderTypeAdapter = new OrderTypeAdapter(this, this);
         recyclerViewOrderType.setAdapter(orderTypeAdapter);
-        recyclerViewOrderType.setLayoutManager(new GridLayoutManager(this, 3));
+        recyclerViewOrderType.setLayoutManager(new GridLayoutManager(this, 2));
     }
 
     private void initFragments() {
@@ -118,6 +118,7 @@ public class BookOrderTypeActivity extends BaseActivity implements OrderTypeAdap
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                hideKeyboard();
                 finish();
                 AnimUtil.slideFromLeftAnim(BookOrderTypeActivity.this);
             }
