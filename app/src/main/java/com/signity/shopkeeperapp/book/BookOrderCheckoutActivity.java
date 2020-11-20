@@ -608,6 +608,10 @@ public class BookOrderCheckoutActivity extends BaseActivity {
                         try {
                             if (!TextUtils.isEmpty(point)) {
                                 if (showLoyalty < Integer.parseInt(point)) {
+                                    coupon = "";
+                                    discount = "0";
+                                    loyalty = "0";
+                                    point = "";
                                     Toast.makeText(this, "Not enough loyalty points", Toast.LENGTH_SHORT).show();
                                     return;
                                 }
