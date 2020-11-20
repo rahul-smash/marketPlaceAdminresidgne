@@ -1,6 +1,7 @@
 package com.signity.shopkeeperapp.dashboard.orders;
 
 import android.content.Context;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -196,13 +197,14 @@ public class HomeOrdersAdapter extends RecyclerView.Adapter<HomeOrdersAdapter.Vi
 
     class ViewHolder extends RecyclerView.ViewHolder {
         ImageView imageViewWhatsapp, imageViewPhoneCall;
-        TextView textViewName, textViewPrice, textViewOrderIdItemsTime, textViewDateTime, textViewDeliveryType, textViewPaymentType;
+        TextView textViewName, textViewOrderPlatform, textViewPrice, textViewOrderIdItemsTime, textViewDateTime, textViewDeliveryType, textViewPaymentType;
 
         public ViewHolder(final View convertView) {
             super(convertView);
             textViewPrice = convertView.findViewById(R.id.tv_order_price);
             textViewOrderIdItemsTime = convertView.findViewById(R.id.tv_order_id_items_time);
             textViewName = convertView.findViewById(R.id.tv_store_name);
+            textViewOrderPlatform = convertView.findViewById(R.id.tv_order_platform);
             textViewPaymentType = convertView.findViewById(R.id.tv_order_type);
             textViewDeliveryType = convertView.findViewById(R.id.tv_delivery_time_slot);
             imageViewWhatsapp = convertView.findViewById(R.id.iv_whatsapp);
@@ -221,6 +223,22 @@ public class HomeOrdersAdapter extends RecyclerView.Adapter<HomeOrdersAdapter.Vi
             imageViewWhatsapp.setVisibility(hideNameIcon ? View.GONE : View.VISIBLE);
             imageViewPhoneCall.setVisibility(hideNameIcon ? View.GONE : View.VISIBLE);
 
+
+            String platform = ordersModel.getPlatform();
+            if (!TextUtils.isEmpty(platform)) {
+                textViewOrderPlatform.setVisibility(View.VISIBLE);
+                if (platform.equalsIgnoreCase("admin_android")) {
+                    platform = "Admin App Order";
+                } else if (platform.equalsIgnoreCase("web")) {
+                    platform = "Web Order";
+                } else {
+                    platform = "Customer App Order";
+                }
+            } else {
+                textViewOrderPlatform.setVisibility(View.GONE);
+            }
+
+            textViewOrderPlatform.setText(platform);
             textViewOrderIdItemsTime.setText(String.format("%s %s | %s", orderId, item, ordersModel.getTime()));
             textViewName.setText(ordersModel.getCustomerName());
             textViewPrice.setText(String.format(Locale.getDefault(), "%s", Util.getPriceWithCurrency(ordersModel.getTotal(), AppPreference.getInstance().getCurrency())));
@@ -372,7 +390,7 @@ public class HomeOrdersAdapter extends RecyclerView.Adapter<HomeOrdersAdapter.Vi
         public ViewHolderCanceled(final View convertView) {
             super(convertView);
             TextView textViewStatus = convertView.findViewById(R.id.tv_order_status);
-            textViewStatus.setText("Canceled");
+            textViewStatus.setText("Cancelled");
         }
 
         @Override

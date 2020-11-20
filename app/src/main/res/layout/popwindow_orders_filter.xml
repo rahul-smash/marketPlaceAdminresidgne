@@ -96,7 +96,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:buttonTint="@color/colorPrimary"
-                    android:text="Canceled"
+                    android:text="Cancelled"
                     android:textColor="@color/colorTextDark" />
 
             </RadioGroup>

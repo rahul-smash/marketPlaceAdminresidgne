@@ -55,15 +55,14 @@
             android:id="@+id/ll_type"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="4dp"
-            android:layout_marginLeft="4dp"
+            android:layout_marginStart="2dp"
+            android:layout_marginLeft="2dp"
             android:background="@drawable/shape_order_payment_type_background_round"
             android:gravity="center"
-            android:paddingStart="6dp"
+            android:paddingStart="4dp"
             android:paddingTop="2dp"
-            android:paddingEnd="6dp"
+            android:paddingEnd="4dp"
             android:paddingBottom="2dp"
-            app:layout_constraintBottom_toBottomOf="@+id/tv_order_price"
             app:layout_constraintStart_toEndOf="@+id/tv_order_price"
             app:layout_constraintTop_toTopOf="@+id/tv_order_price">
 
@@ -73,9 +72,22 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="COD"
-                android:textColor="@color/colorTextDark" />
+                android:textColor="@color/colorTextDark"
+                android:textSize="8sp" />
 
         </LinearLayout>
+
+        <TextView
+            android:id="@+id/tv_order_platform"
+            style="@style/AppTheme.TextView.Tiny"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="4dp"
+            android:text=""
+            android:textStyle="italic"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/chipGroup" />
 
         <LinearLayout
             android:id="@+id/linearLayout5"
