@@ -22,7 +22,7 @@
             android:layout_height="wrap_content"
             android:layout_marginEnd="8dp"
             android:layout_marginRight="8dp"
-            android:text="Rohit Sharma"
+            android:text=""
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
@@ -31,7 +31,7 @@
             style="@style/AppTheme.TextView.Small"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:text="99978XXXXX"
+            android:text=""
             android:textColor="@color/colorTextDark"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/tv_customer_address" />
@@ -59,7 +59,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="4dp"
                 android:layout_marginLeft="4dp"
-                android:text="Mumbai" />
+                android:text="" />
 
         </LinearLayout>
 
@@ -163,7 +163,7 @@
                 style="@style/AppTheme.TextView.Mini"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="4"
+                android:text=""
                 android:textColor="@color/colorTextDark"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
@@ -211,7 +211,7 @@
                 style="@style/AppTheme.TextView.Mini"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="4"
+                android:text=""
                 android:textColor="@color/colorTextDark"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
@@ -257,7 +257,7 @@
                 style="@style/AppTheme.TextView.Mini"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="4"
+                android:text=""
                 android:textColor="@color/colorTextDark"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
