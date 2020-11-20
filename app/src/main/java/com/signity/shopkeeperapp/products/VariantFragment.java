@@ -114,6 +114,11 @@ public class VariantFragment extends Fragment {
                         variantMap.put(textInputEditText.getTag().toString(), "0");
                     }
 
+                    if (dynamicField.getVariantFieldName().equalsIgnoreCase("sort") && TextUtils.isEmpty(variantMap.get("sort"))) {
+                        textInputEditText.setText("10");
+                        variantMap.put(textInputEditText.getTag().toString(), "10");
+                    }
+
                     textInputEditText.setText(variantMap.get(dynamicField.getVariantFieldName()));
 
                     textInputEditText.addTextChangedListener(new CustomTextWatcher() {

@@ -1,6 +1,7 @@
 package com.signity.shopkeeperapp.book;
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
@@ -62,6 +63,9 @@ public class BookOrderActivity extends BaseActivity {
         setUpToolbar();
         setUpTab();
         setUpAnimation();
+        if (!OrderCart.isCartEmpty()) {
+            showCartDialog();
+        }
     }
 
     private void getExtra() {
@@ -231,6 +235,7 @@ public class BookOrderActivity extends BaseActivity {
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                hideKeyboard();
                 finish();
                 AnimUtil.slideFromLeftAnim(BookOrderActivity.this);
             }
@@ -301,6 +306,27 @@ public class BookOrderActivity extends BaseActivity {
         } else {
             hideLayout();
         }
+    }
+
+    private void showCartDialog() {
+        androidx.appcompat.app.AlertDialog.Builder adb = new androidx.appcompat.app.AlertDialog.Builder(this);
+        adb.setTitle("Proceed with existing cart?");
+        adb.setIcon(R.mipmap.ic_launcher);
+        adb.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.dismiss();
+            }
+        });
+        adb.setNegativeButton("Clear", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.dismiss();
+                OrderCart.clearOrderCartMap();
+                hideLayout();
+                updateOrderData();
+                onCloseSearch();
+            }
+        });
+        adb.show();
     }
 
     public enum FragmentType {

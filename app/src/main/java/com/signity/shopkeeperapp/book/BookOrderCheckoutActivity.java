@@ -386,7 +386,7 @@ public class BookOrderCheckoutActivity extends BaseActivity {
         Map<String, Object> param = new HashMap<>();
         param.put("user_id", userId);
         param.put("device_id", deviceId);
-        param.put("platform", "android");
+        param.put("platform", "admin_android");
         param.put("online_method", paymentMode.equalsIgnoreCase("Cash") ? "" : paymentMode);
         param.put("payment_method", paymentMode.equalsIgnoreCase("Cash") ? "cod" : "online");
         param.put("user_address_id", customerAddressId);
@@ -449,7 +449,7 @@ public class BookOrderCheckoutActivity extends BaseActivity {
         Map<String, Object> param = new HashMap<>();
         param.put("user_id", userId);
         param.put("device_id", deviceId);
-        param.put("platform", "android");
+        param.put("platform", "admin_android");
         param.put("online_method", paymentMode.equalsIgnoreCase("Cash") ? "" : paymentMode);
         param.put("payment_method", paymentMode.equalsIgnoreCase("Cash") ? "cod" : "online");
         param.put("user_address_id", TextUtils.isEmpty(customerAddressId) ? "1" : customerAddressId);

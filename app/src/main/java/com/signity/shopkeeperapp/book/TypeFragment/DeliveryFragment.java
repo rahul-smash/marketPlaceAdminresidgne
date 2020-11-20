@@ -77,6 +77,7 @@ public class DeliveryFragment extends Fragment {
     private DeliveryTimeAdapter deliveryTimeAdapter;
     private int selectedTimeSlot, selectedDateSlot;
     private String deliverySlot = "";
+    private LinearLayout linearLayoutDeliverySlot;
 
     public static DeliveryFragment getInstance(Bundle bundle) {
         DeliveryFragment fragment = new DeliveryFragment();
@@ -135,6 +136,7 @@ public class DeliveryFragment extends Fragment {
         textViewCustomerPincode = view.findViewById(R.id.tv_customer_pincode);
         textViewAddressType = view.findViewById(R.id.tv_address_type);
         txtChangeAddress = view.findViewById(R.id.tv_change_address);
+        linearLayoutDeliverySlot = view.findViewById(R.id.ll_delivery_slot);
 
         recyclerViewDate = view.findViewById(R.id.rv_delivery_date);
         recyclerViewTime = view.findViewById(R.id.rv_delivery_time_slot);
@@ -279,20 +281,22 @@ public class DeliveryFragment extends Fragment {
             return;
         }
 
-        String datee = deliveryDateAdapter.getDate();
-        String timee = deliveryTimeAdapter.getTime();
+        if (linearLayoutDeliverySlot.getVisibility() == View.VISIBLE) {
+            String datee = deliveryDateAdapter.getDate();
+            String timee = deliveryTimeAdapter.getTime();
 
-        if (TextUtils.isEmpty(datee)) {
-            Toast.makeText(getContext(), "Select delivery slot date", Toast.LENGTH_SHORT).show();
-            return;
+            if (TextUtils.isEmpty(datee)) {
+                Toast.makeText(getContext(), "Select delivery slot date", Toast.LENGTH_SHORT).show();
+                return;
+            }
+
+            if (TextUtils.isEmpty(timee)) {
+                Toast.makeText(getContext(), "Select delivery slot time", Toast.LENGTH_SHORT).show();
+                return;
+            }
+
+            deliverySlot = String.format("%s, %s", Util.getDeliverySlotDate1(datee), timee);
         }
-
-        if (TextUtils.isEmpty(timee)) {
-            Toast.makeText(getContext(), "Select delivery slot time", Toast.LENGTH_SHORT).show();
-            return;
-        }
-
-        deliverySlot = String.format("%s, %s", Util.getDeliverySlotDate1(datee), timee);
 
         getCustomerId(mobile);
     }
@@ -784,6 +788,8 @@ public class DeliveryFragment extends Fragment {
                                 deliveryTimeAdapter.setTimeList(slotDTO.getData().getDateTimeCollection().get(selectedDateSlot).getTimeslot());
                                 deliveryTimeAdapter.setSelectedIndex(selectedTimeSlot);
                             }
+                        } else {
+                            linearLayoutDeliverySlot.setVisibility(View.GONE);
                         }
                     }
 

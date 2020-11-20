@@ -66,7 +66,6 @@ import com.yalantis.ucrop.UCrop;
 import com.yalantis.ucrop.util.FileUtils;
 
 import org.json.JSONArray;
-import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.File;
@@ -695,9 +694,9 @@ public class AddProductActivity extends BaseActivity implements SubCategoryDialo
             jsonArray.put(jsonObject);
 
             for (Map<String, String> map : variantList) {
-                jsonArray.put(new JSONObject(map.toString()));
+                jsonArray.put(new JSONObject(map));
             }
-        } catch (JSONException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
 

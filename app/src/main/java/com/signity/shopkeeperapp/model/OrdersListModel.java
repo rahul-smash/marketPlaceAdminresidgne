@@ -79,6 +79,8 @@ public class OrdersListModel implements Serializable {
     @SerializedName("payment_method")
     @Expose
     private String paymentMethod;
+    @Expose
+    private String platform;
     @SerializedName("order_facility")
     @Expose
     private String orderFacility;
@@ -87,6 +89,14 @@ public class OrdersListModel implements Serializable {
     private String deliveryTimeSlot;
     @Expose(serialize = false)
     private int pageNumber;
+
+    public String getPlatform() {
+        return platform;
+    }
+
+    public void setPlatform(String platform) {
+        this.platform = platform;
+    }
 
     public int getPageNumber() {
         return pageNumber;
