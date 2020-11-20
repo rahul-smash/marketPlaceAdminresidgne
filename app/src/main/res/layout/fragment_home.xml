@@ -301,9 +301,18 @@
                                 style="@style/AppTheme.Chip.Normal"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
+                                android:text="Rejected"
+                                app:layout_constraintStart_toStartOf="parent"
+                                app:layout_constraintTop_toBottomOf="@+id/textView51" />
+
+                            <com.google.android.material.chip.Chip
+                                android:id="@+id/chip_canceled"
+                                style="@style/AppTheme.Chip.Normal"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
                                 android:layout_marginEnd="32dp"
                                 android:layout_marginRight="32dp"
-                                android:text="Rejected"
+                                android:text="Canceled"
                                 app:layout_constraintStart_toStartOf="parent"
                                 app:layout_constraintTop_toBottomOf="@+id/textView51" />
 

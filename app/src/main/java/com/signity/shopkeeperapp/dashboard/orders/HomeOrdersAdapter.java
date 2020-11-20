@@ -63,6 +63,9 @@ public class HomeOrdersAdapter extends RecyclerView.Adapter<HomeOrdersAdapter.Vi
             case 2:
                 viewHolder = new ViewHolderRejected(LayoutInflater.from(context).inflate(R.layout.itemview_orders_rejected, parent, false));
                 break;
+            case 6:
+                viewHolder = new ViewHolderCanceled(LayoutInflater.from(context).inflate(R.layout.itemview_orders_rejected, parent, false));
+                break;
             case 101:
                 viewHolder = new ViewHolderLoading(LayoutInflater.from(context).inflate(R.layout.itemview_loading, parent, false));
                 break;
@@ -156,7 +159,7 @@ public class HomeOrdersAdapter extends RecyclerView.Adapter<HomeOrdersAdapter.Vi
     }
 
     public enum OrderType {
-        ALL(9, "all"), PENDING(0, "pending"), ACCEPTED(1, "active"), SHIPPED(4, "shipped"), DELIVERED(5, "delivered"), REJECTED(2, "rejected");
+        ALL(9, "all"), PENDING(0, "pending"), ACCEPTED(1, "active"), SHIPPED(4, "shipped"), DELIVERED(5, "delivered"), REJECTED(2, "rejected"), CANCELED(6, "cancel");
 
         private int statusId;
         private String slug;
@@ -356,6 +359,20 @@ public class HomeOrdersAdapter extends RecyclerView.Adapter<HomeOrdersAdapter.Vi
 
         public ViewHolderRejected(final View convertView) {
             super(convertView);
+        }
+
+        @Override
+        public void bind(int position) {
+            super.bind(position);
+        }
+    }
+
+    class ViewHolderCanceled extends ViewHolder {
+
+        public ViewHolderCanceled(final View convertView) {
+            super(convertView);
+            TextView textViewStatus = convertView.findViewById(R.id.tv_order_status);
+            textViewStatus.setText("Canceled");
         }
 
         @Override
