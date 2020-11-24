@@ -27,6 +27,7 @@ import com.signity.shopkeeperapp.R;
 import com.signity.shopkeeperapp.model.creatives.Creative;
 import com.signity.shopkeeperapp.model.creatives.CreativeModel;
 import com.signity.shopkeeperapp.network.NetworkAdaper;
+import com.signity.shopkeeperapp.util.AnimUtil;
 import com.signity.shopkeeperapp.util.Constant;
 import com.signity.shopkeeperapp.util.ProgressDialogUtil;
 
@@ -65,13 +66,17 @@ public class CreativeFragment extends Fragment implements CreativeRecycleAdapter
     }
 
     protected void setUp() {
-        // TODO - Init Views
         getExtra();
         setUpCreativeAdapter();
         setUpSwipe();
         setHasOptionsMenu(true);
         showLoading();
         fetchApiData();
+    }
+
+    private void initViews(View view) {
+        recyclerViewCreative = view.findViewById(R.id.rv_creative);
+        swipeRefreshLayout = view.findViewById(R.id.swipe);
     }
 
     private void showLoading() {
@@ -81,6 +86,7 @@ public class CreativeFragment extends Fragment implements CreativeRecycleAdapter
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        initViews(view);
         setUp();
     }
 
@@ -128,13 +134,14 @@ public class CreativeFragment extends Fragment implements CreativeRecycleAdapter
 
     private void getCreatives() {
 
-        NetworkAdaper.marketStore().getCreatives(new Callback<List<CreativeModel>>() {
+        NetworkAdaper.marketStore().getCreatives(1, 1, new Callback<List<CreativeModel>>() {
             @Override
             public void success(List<CreativeModel> creativeModels, Response response) {
                 if (!isAdded()) {
                     return;
                 }
 
+                ProgressDialogUtil.hideProgressDialog();
                 swipeRefreshLayout.setRefreshing(false);
 
                 if (creativeModels.size() == 0) {
@@ -158,6 +165,7 @@ public class CreativeFragment extends Fragment implements CreativeRecycleAdapter
             @Override
             public void failure(RetrofitError error) {
                 if (isAdded()) {
+                    ProgressDialogUtil.hideProgressDialog();
                     swipeRefreshLayout.setRefreshing(false);
                 }
             }
@@ -165,13 +173,13 @@ public class CreativeFragment extends Fragment implements CreativeRecycleAdapter
     }
 
     private void getFrames() {
-        NetworkAdaper.marketStore().getFrames(new Callback<List<CreativeModel>>() {
+        NetworkAdaper.marketStore().getFrames(1, 1, new Callback<List<CreativeModel>>() {
             @Override
             public void success(List<CreativeModel> creativeModels, Response response) {
                 if (!isAdded()) {
                     return;
                 }
-
+                ProgressDialogUtil.hideProgressDialog();
                 swipeRefreshLayout.setRefreshing(false);
 
                 if (creativeModels.size() == 0) {
@@ -194,7 +202,10 @@ public class CreativeFragment extends Fragment implements CreativeRecycleAdapter
 
             @Override
             public void failure(RetrofitError error) {
-
+                if (isAdded()) {
+                    ProgressDialogUtil.hideProgressDialog();
+                    swipeRefreshLayout.setRefreshing(false);
+                }
             }
         });
     }
@@ -300,6 +311,7 @@ public class CreativeFragment extends Fragment implements CreativeRecycleAdapter
         intent.putExtra("type", viewShared);
         intent.putExtra(CreativeDetailActivity.MARKET_MODE, this.marketMode);
         startActivity(intent);
+        AnimUtil.slideFromRightAnim(getActivity());
     }
 
     @Override

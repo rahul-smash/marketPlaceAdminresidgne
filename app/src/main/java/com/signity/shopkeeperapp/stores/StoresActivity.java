@@ -92,6 +92,12 @@ public class StoresActivity extends BaseActivity implements StoresAdapter.Stores
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
     }
 
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        AnimUtil.slideFromLeftAnim(this);
+    }
+
     private void getAllStores() {
         ProgressDialogUtil.showProgressDialog(this);
         String deviceId = Settings.Secure.getString(getApplicationContext().getContentResolver(), Settings.Secure.ANDROID_ID);

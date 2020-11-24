@@ -39,6 +39,7 @@ import com.signity.shopkeeperapp.dashboard.account.AccountFragment;
 import com.signity.shopkeeperapp.dashboard.categories.CategoriesFragment;
 import com.signity.shopkeeperapp.dashboard.home.HomeFragment;
 import com.signity.shopkeeperapp.dashboard.orders.OrdersFragment;
+import com.signity.shopkeeperapp.market.MarketActivity;
 import com.signity.shopkeeperapp.model.LoginModel;
 import com.signity.shopkeeperapp.model.ModelForceUpdate;
 import com.signity.shopkeeperapp.model.ResponseForceUpdate;
@@ -292,6 +293,10 @@ public class DashboardActivity extends BaseActivity implements BottomNavigationV
                 break;
             case CUSTOMERS:
                 onClickViewCustomers();
+                break;
+            case MARKET:
+                startActivity(new Intent(this, MarketActivity.class));
+                AnimUtil.slideFromRightAnim(DashboardActivity.this);
                 break;
             case BOOK:
                 startActivity(BookOrderActivity.getIntent(DashboardActivity.this));

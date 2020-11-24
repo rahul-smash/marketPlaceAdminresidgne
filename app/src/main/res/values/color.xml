@@ -20,6 +20,8 @@
     <color name="colorRejectNew">#df4c4c</color>
     <color name="colorBadge">#fee240</color>
     <color name="colorYellow">#d2c231</color>
+    <color name="colorPrimaryBlackAlpha">#99271f44</color>
+    <color name="colorFacebook">#4267B2</color>
 
     <color name="divider">#919191</color>
     <color name="color_text_dashboar_lbl2">#373737</color>

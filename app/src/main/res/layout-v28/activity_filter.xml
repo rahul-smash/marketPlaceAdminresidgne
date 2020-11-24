@@ -19,6 +19,7 @@
         android:id="@+id/imageView2"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:adjustViewBounds="true"
         android:scaleType="centerCrop"
         android:src="@drawable/filter_bg"
         app:layout_constraintEnd_toEndOf="parent"
@@ -38,13 +39,13 @@
 
         <TextView
             android:id="@+id/tv_clear_all"
+            style="@style/AppTheme.TextView.Medium"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_margin="16dp"
             android:background="@null"
             android:text="Clear all"
-            android:layout_margin="16dp"
             android:textAllCaps="false"
-            style="@style/AppTheme.TextView.Medium"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@+id/view"
             app:layout_constraintHorizontal_bias="0.5"
@@ -53,13 +54,13 @@
 
         <TextView
             android:id="@+id/tv_apply"
+            style="@style/AppTheme.TextView.Medium"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_margin="16dp"
             android:background="@null"
             android:text="Apply"
-            style="@style/AppTheme.TextView.Medium"
             android:textAllCaps="false"
-            android:layout_margin="16dp"
             android:textColor="@color/colorPrimaryDark"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
@@ -71,7 +72,7 @@
             android:id="@+id/view"
             android:layout_width="1dp"
             android:layout_height="20dp"
-            android:background="@color/colorTextLightGrey"
+            android:background="@color/colorBackgroundGrey"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@+id/tv_apply"
             app:layout_constraintHorizontal_bias="0.5"
@@ -110,12 +111,12 @@
             app:popupTheme="@style/AppTheme.PopupOverlay">
 
             <TextView
+                style="@style/AppTheme.TextView.Medium"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="start"
-                style="@style/AppTheme.TextView.Medium"
                 android:text="Filter by"
-                android:textAlignment="viewStart"/>
+                android:textAlignment="viewStart" />
 
         </androidx.appcompat.widget.Toolbar>
 

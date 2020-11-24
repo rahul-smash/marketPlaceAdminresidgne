@@ -19,7 +19,6 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.widget.SearchView;
 import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -31,6 +30,7 @@ import com.signity.shopkeeperapp.classes.StatusBarView;
 import com.signity.shopkeeperapp.model.creatives.Creative;
 import com.signity.shopkeeperapp.model.creatives.CreativeModel;
 import com.signity.shopkeeperapp.network.NetworkAdaper;
+import com.signity.shopkeeperapp.util.AnimUtil;
 import com.signity.shopkeeperapp.util.Constant;
 import com.signity.shopkeeperapp.util.ProgressDialogUtil;
 
@@ -67,7 +67,7 @@ public class CreativeDetailActivity extends BaseActivity implements CreativeDeta
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_creative_detail);
-        setStatusBarGradient(true);
+        initViews();
         getExtra();
         setUpToolbar();
         setUpAdapter();
@@ -75,6 +75,12 @@ public class CreativeDetailActivity extends BaseActivity implements CreativeDeta
         ProgressDialogUtil.showProgressDialog(this);
         fetchApiData();
         textViewCreative.setText(title);
+    }
+
+    private void initViews() {
+        toolbar = findViewById(R.id.toolbar);
+        textViewCreative = findViewById(R.id.tv_creative_tag);
+        recyclerViewCreativeDetail = findViewById(R.id.rv_creative_detail);
     }
 
     private void fetchApiData() {
@@ -102,12 +108,23 @@ public class CreativeDetailActivity extends BaseActivity implements CreativeDeta
 
     private void setUpToolbar() {
         setSupportActionBar(toolbar);
-        getSupportActionBar().setDisplayOptions(ActionBar.DISPLAY_HOME_AS_UP);
+        getSupportActionBar().setHomeAsUpIndicator(R.drawable.backicon);
+        getSupportActionBar().setDisplayShowHomeEnabled(true);
+        getSupportActionBar().setDisplayShowTitleEnabled(false);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
+        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+                AnimUtil.slideFromLeftAnim(CreativeDetailActivity.this);
+            }
+        });
     }
 
     private void getCreativeByTagApi() {
 
-        NetworkAdaper.marketStore().getCreativesById(12, new Callback<CreativeModel>() {
+        NetworkAdaper.marketStore().getCreativesById(tagId, 1, new Callback<CreativeModel>() {
             @Override
             public void success(CreativeModel creativeModel, Response response) {
 

@@ -1,0 +1,20 @@
+R_DEF: Internal format may change without notice
+local
+drawable ic_android_black_24dp
+string app_name
+string connect_method
+string connect_service
+string disconnect_service
+string info_title
+string print_density
+string printer_settings
+string printing_inprogress
+string size_paper
+string toast_1
+string toast_2
+string toast_3
+string toast_4
+string toast_5
+string toast_6
+string toast_7
+string toast_8

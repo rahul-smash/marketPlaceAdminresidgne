@@ -99,7 +99,7 @@ public class FilterActivity extends BaseActivity {
     }
 
     private void getCreatives() {
-        NetworkAdaper.marketStore().getCreatives(new Callback<List<CreativeModel>>() {
+        NetworkAdaper.marketStore().getCreatives(1,1,new Callback<List<CreativeModel>>() {
             @Override
             public void success(List<CreativeModel> creativeModels, Response response) {
 
@@ -129,7 +129,7 @@ public class FilterActivity extends BaseActivity {
 
     private void getFrames() {
 
-        NetworkAdaper.marketStore().getFrames(new Callback<List<CreativeModel>>() {
+        NetworkAdaper.marketStore().getFrames(1,1,new Callback<List<CreativeModel>>() {
             @Override
             public void success(List<CreativeModel> creativeModels, Response response) {
                 ProgressDialogUtil.hideProgressDialog();

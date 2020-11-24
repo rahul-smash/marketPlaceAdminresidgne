@@ -1,14 +1,9 @@
 package com.signity.shopkeeperapp.market;
 
 import android.os.Bundle;
-import android.view.View;
 
-import com.signitysolutions.digisalon.R;
-import com.signitysolutions.digisalon.ui.base.BaseDialogFragment;
-
-import butterknife.ButterKnife;
-import butterknife.OnClick;
-import butterknife.Unbinder;
+import com.signity.shopkeeperapp.R;
+import com.signity.shopkeeperapp.base.BaseDialogFragment;
 
 /**
  * FeedbackDialog
@@ -31,20 +26,13 @@ public class FacebookPostDialog extends BaseDialogFragment {
     }
 
     @Override
-    protected Unbinder setUnBinder(View view) {
-        return ButterKnife.bind(this, view);
-    }
-
-    @Override
     protected void setUp() {
     }
 
-    @OnClick(R.id.iv_close_dialog)
     void onClickClose() {
         dismiss();
     }
 
-    @OnClick(R.id.btn_update_dialog)
     void doUpdateClick() {
         onClickClose();
         if (listener != null) {

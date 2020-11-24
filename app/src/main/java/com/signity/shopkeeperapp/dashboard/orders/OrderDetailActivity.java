@@ -513,4 +513,10 @@ public class OrderDetailActivity extends BaseActivity implements OrderDetailsAdp
             }
         });
     }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        AnimUtil.slideFromLeftAnim(this);
+    }
 }

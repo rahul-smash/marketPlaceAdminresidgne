@@ -91,6 +91,7 @@ public class NavDrawerAdapter extends BaseAdapter {
         PRODUCTS("Products", R.drawable.producticon),
         CUSTOMERS("Customers", R.drawable.ordersicon),
         BOOK("Book Order", R.drawable.transactionicon),
+        MARKET("Market Store", R.drawable.dashboardicon),
         SWITCH_STORE("Switch Store", R.drawable.switchstoreicon);
 
         private String title;

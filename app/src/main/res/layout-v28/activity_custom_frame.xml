@@ -2,9 +2,9 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/constt"
-    android:background="#000"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="#000">
 
     <com.google.android.material.appbar.AppBarLayout
         android:id="@+id/appBarLayout"
@@ -35,7 +35,7 @@
 
     </com.google.android.material.appbar.AppBarLayout>
 
-    <com.signitysolutions.digisalon.classes.CustomUCropView
+    <com.signity.shopkeeperapp.market.CustomUCropView
         android:id="@+id/custom_crop_view"
         android:layout_width="match_parent"
         android:layout_height="0dp"
@@ -59,8 +59,8 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:gravity="center"
-        android:visibility="gone"
         android:orientation="vertical"
+        android:visibility="gone"
         app:layout_constraintBottom_toTopOf="@+id/iv_frame"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
@@ -74,7 +74,7 @@
             android:layout_gravity="center"
             android:text="Move the image to adjust \n in the frame"
             android:textAlignment="center"
-            android:textColor="@color/white_gray" />
+            android:textColor="@color/colorBackgroundGrey" />
 
         <ImageView
             android:layout_width="wrap_content"
@@ -89,8 +89,8 @@
         android:id="@+id/iv_frame"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:padding="16dp"
         android:adjustViewBounds="true"
+        android:padding="16dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
@@ -101,10 +101,10 @@
         android:id="@+id/iv_add_image"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:src="@drawable/frame_upperbg"
-        android:padding="16dp"
-        android:visibility="gone"
         android:adjustViewBounds="true"
+        android:padding="16dp"
+        android:src="@drawable/frame_upperbg"
+        android:visibility="gone"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
@@ -151,8 +151,8 @@
                 android:id="@+id/img_change"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:adjustViewBounds="true"
                 android:layout_marginEnd="8dp"
+                android:adjustViewBounds="true"
                 android:src="@drawable/changeimage" />
 
             <TextView
@@ -161,14 +161,14 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Change image"
-                android:textColor="@color/white_gray" />
+                android:textColor="@color/colorBackgroundGrey" />
         </LinearLayout>
 
         <View
             android:id="@+id/view"
             android:layout_width="1dp"
             android:layout_height="24dp"
-            android:background="@color/colorTextLightGrey"
+            android:background="@color/colorBackgroundGrey"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@+id/ll_save_frame"
             app:layout_constraintHorizontal_bias="0.5"
@@ -180,9 +180,9 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:gravity="center"
+            android:orientation="horizontal"
             android:paddingTop="16dp"
             android:paddingBottom="16dp"
-            android:orientation="horizontal"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.5"
@@ -193,8 +193,8 @@
                 android:id="@+id/img_save"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:adjustViewBounds="true"
                 android:layout_marginEnd="8dp"
+                android:adjustViewBounds="true"
                 android:src="@drawable/saveframe" />
 
             <TextView

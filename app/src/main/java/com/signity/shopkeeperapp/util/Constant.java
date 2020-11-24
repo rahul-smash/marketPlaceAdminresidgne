@@ -112,4 +112,8 @@ public class Constant {
         VIEW_ALL, VIEW_SHARED
     }
 
+    public enum ShareMode {
+        SCHEDULE, RESCHEDULE
+    }
+
 }

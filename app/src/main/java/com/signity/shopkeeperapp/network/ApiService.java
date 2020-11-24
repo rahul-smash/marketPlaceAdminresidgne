@@ -57,6 +57,7 @@ import retrofit.http.Multipart;
 import retrofit.http.POST;
 import retrofit.http.Part;
 import retrofit.http.Path;
+import retrofit.http.Query;
 import retrofit.mime.TypedFile;
 
 /**
@@ -299,13 +300,13 @@ public interface ApiService {
     void getDeliverySlots(Callback<DeliverySlotDTO> response);
 
     @GET("/tags")
-    void getCreatives(Callback<List<CreativeModel>> response);
+    void getCreatives(@Query("brand") long brandId, @Query("package") int packageId, Callback<List<CreativeModel>> response);
 
     @GET("/frames")
-    void getFrames(Callback<List<CreativeModel>> response);
+    void getFrames(@Query("brand") long brandId, @Query("package") int packageId, Callback<List<CreativeModel>> response);
 
     @GET("/tags/{id}")
-    void getCreativesById(@Path("id") long id, Callback<CreativeModel> response);
+    void getCreativesById(@Path("id") long id, @Query("brand") long brandId, Callback<CreativeModel> response);
 
     @GET("/frames/{id}")
     void getFramesById(@Path("id") long id, Callback<CreativeModel> creativeModelCallback);

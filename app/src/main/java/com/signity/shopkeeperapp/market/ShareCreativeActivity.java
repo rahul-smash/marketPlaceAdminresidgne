@@ -66,6 +66,9 @@ import com.facebook.share.widget.ShareDialog;
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
 import com.signity.shopkeeperapp.R;
 import com.signity.shopkeeperapp.base.BaseActivity;
+import com.signity.shopkeeperapp.classes.ApplicationSelectorReceiver;
+import com.signity.shopkeeperapp.model.market.SharePermissionResponse;
+import com.signity.shopkeeperapp.model.market.facebook.SharedFacebookRequest;
 import com.signity.shopkeeperapp.util.Constant;
 
 import org.json.JSONException;
@@ -155,7 +158,7 @@ public class ShareCreativeActivity extends BaseActivity implements FacebookPages
             }
         });
 
-        AlphaAnimation alphaAnimation = new AlphaAnimation(0.0f, 1.0f);
+        final AlphaAnimation alphaAnimation = new AlphaAnimation(0.0f, 1.0f);
         alphaAnimation.setDuration(100);
 
         sheetBehavior = BottomSheetBehavior.from(layoutBottomSheet);
@@ -179,7 +182,7 @@ public class ShareCreativeActivity extends BaseActivity implements FacebookPages
                         blackView.setVisibility(View.GONE);
                         flag = false;
                         reverseRotate(arrow);
-                        bottomSheet.setBackground(getResources().getDrawable(R.drawable.background_top_round_gray));
+//                        bottomSheet.setBackground(getResources().getDrawable(R.drawable.background_top_round_gray));
                     }
                     break;
                     case BottomSheetBehavior.STATE_DRAGGING:
@@ -187,7 +190,7 @@ public class ShareCreativeActivity extends BaseActivity implements FacebookPages
                             blackView.setVisibility(View.VISIBLE);
                             blackView.startAnimation(alphaAnimation);
                             rotate(arrow);
-                            bottomSheet.setBackground(getResources().getDrawable(R.drawable.background_top_round_white));
+//                            bottomSheet.setBackground(getResources().getDrawable(R.drawable.background_top_round_white));
                             flag = true;
                         }
                         break;
@@ -207,7 +210,7 @@ public class ShareCreativeActivity extends BaseActivity implements FacebookPages
         View decorView = getWindow().getDecorView();
         int uiOptions = View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN;
         decorView.setSystemUiVisibility(uiOptions);
-        getWindow().setStatusBarColor(getResources().getColor(R.color.colorWhiteTransparent));
+//        getWindow().setStatusBarColor(getResources().getColor(R.color.colorWhiteTransparent));
     }
 
     public void rotate(View view) {
@@ -224,7 +227,7 @@ public class ShareCreativeActivity extends BaseActivity implements FacebookPages
 
     public void onClickOutside() {
         editTextAbout.clearFocus();
-        hideKeyboard(editTextAbout);
+        hideKeyboard();
     }
 
     @Override
@@ -237,7 +240,6 @@ public class ShareCreativeActivity extends BaseActivity implements FacebookPages
         }
     }
 
-    @OnClick(R.id.tv_already_shared)
     void onClickDate() {
     }
 
@@ -268,7 +270,6 @@ public class ShareCreativeActivity extends BaseActivity implements FacebookPages
             @Override
             public void onCompleted(JSONObject object, GraphResponse response) {
                 openPagesDialog();
-                Analytics.log(AppConstants.FACEBOOK_LOGIN);
                 try {
                     String userId = object.getString("id");
                 } catch (JSONException e) {
@@ -290,9 +291,9 @@ public class ShareCreativeActivity extends BaseActivity implements FacebookPages
 
     private void checkLogin() {
         AccessToken accessToken = AccessToken.getCurrentAccessToken();
-        hasPage = AppPreferenceHelper.getInstance().getFacebookPageId() != null;
+//        hasPage = AppPreferenceHelper.getInstance().getFacebookPageId() != null;
         isLogged = accessToken != null;
-        hasPermission = AppPreferenceHelper.getInstance().getRoleType().equalsIgnoreCase("store_owner");
+//        hasPermission = AppPreferenceHelper.getInstance().getRoleType().equalsIgnoreCase("store_owner");
 
         textViewFacebook.setText((isLogged || hasPage) ? "Share on Facebook" : "Login with Facebook");
         constraintLayoutFacebook.setVisibility(hasPermission ? View.VISIBLE : View.GONE);
@@ -307,13 +308,12 @@ public class ShareCreativeActivity extends BaseActivity implements FacebookPages
         }
     }
 
-    @OnClick(R.id.tv_preview_fb)
     public void onClickPreview() {
         if (sheetBehavior.getState() != BottomSheetBehavior.STATE_EXPANDED) {
             onClickOutside();
             rotate(arrow);
             sheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
-            layoutBottomSheet.setBackground(getResources().getDrawable(R.drawable.background_top_round_white));
+//            layoutBottomSheet.setBackground(getResources().getDrawable(R.drawable.background_top_round_white));
         } else {
             sheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
         }
@@ -334,7 +334,7 @@ public class ShareCreativeActivity extends BaseActivity implements FacebookPages
             file = new File(filePath);
             Bitmap bitmap = BitmapFactory.decodeFile(file.getAbsolutePath());
             if (userCreative) {
-                processedBitMap(BitmapFactory.decodeFile(filePath), AppPreferenceHelper.getInstance().getDisplayName(), AppPreferenceHelper.getInstance().getStoreAddress(), AppPreferenceHelper.getInstance().getDisplayNumber());
+//                processedBitMap(BitmapFactory.decodeFile(filePath), AppPreferenceHelper.getInstance().getDisplayName(), AppPreferenceHelper.getInstance().getStoreAddress(), AppPreferenceHelper.getInstance().getDisplayNumber());
             } else {
                 imageView.setImageBitmap(BitmapFactory.decodeFile(filePath));
                 imageView.setScaleType(ImageView.ScaleType.FIT_CENTER);
@@ -368,7 +368,7 @@ public class ShareCreativeActivity extends BaseActivity implements FacebookPages
                             runOnUiThread(new Runnable() {
                                 @Override
                                 public void run() {
-                                    processedBitMap(resource, AppPreferenceHelper.getInstance().getDisplayName(), AppPreferenceHelper.getInstance().getStoreAddress(), AppPreferenceHelper.getInstance().getDisplayNumber());
+//                                    processedBitMap(resource, AppPreferenceHelper.getInstance().getDisplayName(), AppPreferenceHelper.getInstance().getStoreAddress(), AppPreferenceHelper.getInstance().getDisplayNumber());
                                 }
                             });
                             return false;
@@ -376,18 +376,19 @@ public class ShareCreativeActivity extends BaseActivity implements FacebookPages
                     }).submit();
         } else {
             File file = null;
-            if (marketMode == AppConstants.MarketMode.FRAME) {
+            if (marketMode == Constant.MarketMode.FRAME) {
                 file = new File(getExternalFilesDir("Digi"), "CustomFrame.png");
-            } else if (marketMode == AppConstants.MarketMode.GALLERY) {
+            } else if (marketMode == Constant.MarketMode.GALLERY) {
                 file = new File(getExternalFilesDir("Digi"), "style.jpg");
             }
 
-            if (file != null)
-                processedBitMap(BitmapFactory.decodeFile(file.getAbsolutePath()), AppPreferenceHelper.getInstance().getDisplayName(), AppPreferenceHelper.getInstance().getStoreAddress(), AppPreferenceHelper.getInstance().getDisplayNumber());
+            if (file != null) {
+//                processedBitMap(BitmapFactory.decodeFile(file.getAbsolutePath()), AppPreferenceHelper.getInstance().getDisplayName(), AppPreferenceHelper.getInstance().getStoreAddress(), AppPreferenceHelper.getInstance().getDisplayNumber());
+            }
         }
 
-        final String descFormat = String.format("%s https://%s/#appointment", desc, AppPreferenceHelper.getInstance().getWebsite());
-        editTextAbout.setText(descFormat);
+//        final String descFormat = String.format("%s https://%s/#appointment", desc, AppPreferenceHelper.getInstance().getWebsite());
+//        editTextAbout.setText(descFormat);
         textViewTitle.setText(title);
         textViewFb.setText(desc);
         textViewShared.setVisibility(isShared ? View.VISIBLE : View.GONE);
@@ -396,7 +397,7 @@ public class ShareCreativeActivity extends BaseActivity implements FacebookPages
         editTextAbout.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
             public void onFocusChange(View v, boolean hasFocus) {
-                editTextAbout.setBackground(hasFocus ? getResources().getDrawable(R.drawable.border_shape_stroke2) : getResources().getDrawable(R.drawable.border_shape_stroke));
+//                editTextAbout.setBackground(hasFocus ? getResources().getDrawable(R.drawable.border_shape_stroke2) : getResources().getDrawable(R.drawable.border_shape_stroke));
                 editTextAbout.setTextColor(hasFocus ? getResources().getColor(R.color.colorTextDark) : getResources().getColor(R.color.colorTextGrey));
             }
         });
@@ -412,7 +413,7 @@ public class ShareCreativeActivity extends BaseActivity implements FacebookPages
             creativeId = getIntent().getExtras().getString("creativeId");
             isShared = getIntent().getExtras().getBoolean("isShared");
             tagId = getIntent().getExtras().getInt("tagId", 0);
-            marketMode = (AppConstants.MarketMode) getIntent().getSerializableExtra(CreativeFragment.MARKET_MODE);
+            marketMode = (Constant.MarketMode) getIntent().getSerializableExtra(CreativeFragment.MARKET_MODE);
         }
     }
 
@@ -421,11 +422,10 @@ public class ShareCreativeActivity extends BaseActivity implements FacebookPages
         getSupportActionBar().setDisplayOptions(ActionBar.DISPLAY_HOME_AS_UP);
     }
 
-    @OnClick(R.id.const_share)
     public void onClickShare() {
 
         if (file == null) {
-            showMessage("Loading Image...");
+            Toast.makeText(this, "Loading Image...", Toast.LENGTH_SHORT).show();
             return;
         }
 
@@ -436,12 +436,10 @@ public class ShareCreativeActivity extends BaseActivity implements FacebookPages
     }
 
 
-    @OnClick({R.id.const_preview, R.id.bottomlayout})
     public void onClickPreviewPost() {
 
     }
 
-    @OnClick(R.id.const_facebook)
     public void onClickFacebook() {
 
         if (isLogged) {
@@ -467,7 +465,7 @@ public class ShareCreativeActivity extends BaseActivity implements FacebookPages
         if (getSupportFragmentManager().findFragmentByTag(ShareCreativeChooserDialog.TAG) == null) {
             ShareCreativeChooserDialog chooserDialog = new ShareCreativeChooserDialog(this);
             Bundle bundle = new Bundle();
-            bundle.putSerializable("Type", AppConstants.ShareMode.SCHEDULE);
+            bundle.putSerializable("Type", Constant.ShareMode.SCHEDULE);
             chooserDialog.setArguments(bundle);
             chooserDialog.show(getSupportFragmentManager(), ShareCreativeChooserDialog.TAG);
         }
@@ -490,12 +488,12 @@ public class ShareCreativeActivity extends BaseActivity implements FacebookPages
                 break;
             case R.id.action_edit_creative:
                 if (file == null) {
-                    showMessage("Loading Image...");
+                    Toast.makeText(this, "Loading Image...", Toast.LENGTH_SHORT).show();
                     return false;
                 }
-                Intent intent = new Intent(this, EditImageActivity.class);
-                intent.putExtra("imagebitmap", file.getAbsolutePath());
-                startActivityForResult(intent, 123);
+//                Intent intent = new Intent(this, EditImageActivity.class);
+//                intent.putExtra("imagebitmap", file.getAbsolutePath());
+//                startActivityForResult(intent, 123);
                 break;
         }
         return super.onOptionsItemSelected(item);
@@ -572,9 +570,9 @@ public class ShareCreativeActivity extends BaseActivity implements FacebookPages
         shareDialog.registerCallback(callbackManager, new FacebookCallback<Sharer.Result>() {
             @Override
             public void onSuccess(Sharer.Result result) {
-                showMessage("Post published on facebook profile");
+                Toast.makeText(ShareCreativeActivity.this, "Post published on facebook profile", Toast.LENGTH_SHORT).show();
                 saveShared("facebook_profile", false, result.getPostId());
-                if (marketMode != AppConstants.MarketMode.GALLERY) {
+                if (marketMode != Constant.MarketMode.GALLERY) {
                     updateCounter();
                 }
             }
@@ -599,7 +597,7 @@ public class ShareCreativeActivity extends BaseActivity implements FacebookPages
             facebookPostDialog.setListener(new FacebookPostDialog.ProfileShareListener() {
                 @Override
                 public void postOnProfile() {
-                    if (marketMode == AppConstants.MarketMode.GALLERY) {
+                    if (marketMode == Constant.MarketMode.GALLERY) {
                         shareOnProfile();
                     } else {
                         checkShareLimit(1, ShareType.PROFILE);
@@ -613,17 +611,17 @@ public class ShareCreativeActivity extends BaseActivity implements FacebookPages
     private void facebookPostNow() {
 
         if (file == null) {
-            showMessage("Loading Image...");
+            Toast.makeText(this, "Loading Image...", Toast.LENGTH_SHORT).show();
             return;
         }
 
-        String id = AppPreferenceHelper.getInstance().getFacebookPageId();
-        String accessToken1 = AppPreferenceHelper.getInstance().getFacebookPageAccessToken();
+//        String id = AppPreferenceHelper.getInstance().getFacebookPageId();
+//        String accessToken1 = AppPreferenceHelper.getInstance().getFacebookPageAccessToken();
         RequestBody requestFile = RequestBody.create(MediaType.parse("image/*"), file);
         MultipartBody.Part body = MultipartBody.Part.createFormData("source", file.getName(), requestFile);
 
-        showLoading();
-        AppApiHelper.getApiHelper()
+//        showLoading();
+/*        AppApiHelper.getApiHelper()
                 .postFacebook(id, editTextAbout.getText().toString().trim(), accessToken1, body)
                 .enqueue(new DigiCallback<FacebookPostResponse>(this) {
                     @Override
@@ -646,12 +644,12 @@ public class ShareCreativeActivity extends BaseActivity implements FacebookPages
                     public void onFailure() {
                         hideLoading();
                     }
-                });
+                });*/
     }
 
     private void updateCounter() {
-        if (marketMode == AppConstants.MarketMode.CREATIVE) {
-            AppApiHelper.getApiHelper().updateShareCount(new UpdateShareData.CreativeCount(AppPreferenceHelper.getInstance().getStoreId(),
+        if (marketMode == Constant.MarketMode.CREATIVE) {
+            /*AppApiHelper.getApiHelper().updateShareCount(new UpdateShareData.CreativeCount(AppPreferenceHelper.getInstance().getStoreId(),
                     1)).enqueue(new DigiCallback<SharePermissionResponse>(this) {
                 @Override
                 public void onSuccess(SharePermissionResponse response) {
@@ -662,9 +660,9 @@ public class ShareCreativeActivity extends BaseActivity implements FacebookPages
                 public void onFailure() {
 
                 }
-            });
+            });*/
         } else {
-            AppApiHelper.getApiHelper().updateShareCount(new UpdateShareData.CustomFrameCount(AppPreferenceHelper.getInstance().getStoreId(),
+            /*AppApiHelper.getApiHelper().updateShareCount(new UpdateShareData.CustomFrameCount(AppPreferenceHelper.getInstance().getStoreId(),
                     1)).enqueue(new DigiCallback<SharePermissionResponse>(this) {
                 @Override
                 public void onSuccess(SharePermissionResponse response) {
@@ -675,7 +673,7 @@ public class ShareCreativeActivity extends BaseActivity implements FacebookPages
                 public void onFailure() {
 
                 }
-            });
+            });*/
         }
     }
 
@@ -684,7 +682,7 @@ public class ShareCreativeActivity extends BaseActivity implements FacebookPages
         new Thread(new Runnable() {
             @Override
             public void run() {
-                OneSignal.getTags(new OneSignal.GetTagsHandler() {
+                /*OneSignal.getTags(new OneSignal.GetTagsHandler() {
                     @Override
                     public void tagsAvailable(JSONObject tags) {
                         try {
@@ -708,7 +706,7 @@ public class ShareCreativeActivity extends BaseActivity implements FacebookPages
                         }
                     }
 
-                });
+                });*/
             }
         }).start();
 
@@ -717,18 +715,18 @@ public class ShareCreativeActivity extends BaseActivity implements FacebookPages
     public void schedulePost(int time) {
 
         if (file == null) {
-            showMessage("Loading Image...");
+            Toast.makeText(this, "Loading Image...", Toast.LENGTH_SHORT).show();
             return;
         }
 
         Log.d(TAG, "schedulePost: " + time);
-        String id = AppPreferenceHelper.getInstance().getFacebookPageId();
-        String accessToken1 = AppPreferenceHelper.getInstance().getFacebookPageAccessToken();
+//        String id = AppPreferenceHelper.getInstance().getFacebookPageId();
+//        String accessToken1 = AppPreferenceHelper.getInstance().getFacebookPageAccessToken();
         RequestBody requestFile = RequestBody.create(MediaType.parse("image/*"), file);
         MultipartBody.Part body = MultipartBody.Part.createFormData("source", file.getName(), requestFile);
 
-        showLoading();
-        AppApiHelper.getApiHelper()
+//        showLoading();
+        /*AppApiHelper.getApiHelper()
                 .postScheduleFacebook(id, false, editTextAbout.getText().toString().trim(), accessToken1, time, body)
                 .enqueue(new DigiCallback<FacebookPostResponse>(this) {
                     @Override
@@ -750,20 +748,20 @@ public class ShareCreativeActivity extends BaseActivity implements FacebookPages
                     public void onFailure() {
                         hideLoading();
                     }
-                });
+                });*/
     }
 
     private void saveShared(String medium, boolean isFinish, String postId) {
         SharedFacebookRequest request = new SharedFacebookRequest();
-        request.setBrand(String.valueOf(AppPreferenceHelper.getInstance().getBrandId()));
-        request.setStoreId(AppPreferenceHelper.getInstance().getStoreId());
+//        request.setBrand(String.valueOf(AppPreferenceHelper.getInstance().getBrandId()));
+//        request.setStoreId(AppPreferenceHelper.getInstance().getStoreId());
         request.setCreative(creativeId);
         request.setCreativeType(marketMode.name().toLowerCase());
         request.setShareMediumType(medium);
         request.setPostId(postId);
         request.setTagId(tagId);
 
-        AppApiHelper.getApiHelper().setFacebookShared(request)
+        /*AppApiHelper.getApiHelper().setFacebookShared(request)
                 .enqueue(new DigiCallback<ResponseBody>(this) {
                     @Override
                     public void onSuccess(ResponseBody response) {
@@ -792,7 +790,7 @@ public class ShareCreativeActivity extends BaseActivity implements FacebookPages
                     public void onFailure() {
 
                     }
-                });
+                });*/
     }
 
     private void processedBitMap(Bitmap bitmap, String title, String subTitle, String mobile) {
@@ -858,7 +856,7 @@ public class ShareCreativeActivity extends BaseActivity implements FacebookPages
             imageViewFb.setImageBitmap(Bitmap.createScaledBitmap(combineImages, 800, 600, true));
             imageViewFb.setScaleType(ImageView.ScaleType.FIT_CENTER);
 
-            file = CommonUtils.saveImageFile(combineImages, "digisalon_share", getExternalFilesDir("Digi"));
+//            file = CommonUtils.saveImageFile(combineImages, "digisalon_share", getExternalFilesDir("Digi"));
         }
 
     }
@@ -880,27 +878,27 @@ public class ShareCreativeActivity extends BaseActivity implements FacebookPages
 
     @Override
     public void onSchedulePost(int time) {
-        if (marketMode == AppConstants.MarketMode.GALLERY) {
+        if (marketMode == Constant.MarketMode.GALLERY) {
             schedulePost(time);
         } else {
-            if (AppPreferenceHelper.getInstance().getPackageType().equalsIgnoreCase("basic")) {
+            /*if (AppPreferenceHelper.getInstance().getPackageType().equalsIgnoreCase("basic")) {
                 openSubscribeDialog(" ", "Kindly upgrade your pack to\naccess Schedule Post");
                 return;
-            }
+            }*/
             checkShareLimit(time, ShareType.SCHEDULE);
         }
     }
 
     private void checkShareLimit(int time, ShareType shareType) {
         String type;
-        if (marketMode == AppConstants.MarketMode.CREATIVE) {
+        if (marketMode == Constant.MarketMode.CREATIVE) {
             type = "daily_creative_count";
         } else {
             type = "daily_custom_creative_count";
         }
 
-        showLoading();
-        AppApiHelper.getApiHelper()
+//        showLoading();
+        /*AppApiHelper.getApiHelper()
                 .getSharePermission(AppPreferenceHelper.getInstance().getStoreId(), type)
                 .enqueue(new DigiCallback<SharePermissionResponse>(this) {
                     @Override
@@ -933,26 +931,7 @@ public class ShareCreativeActivity extends BaseActivity implements FacebookPages
                     public void onFailure() {
                         hideLoading();
                     }
-                });
-    }
-
-    private void openSubscribeDialog(String message, String upgradeMessage) {
-        if (getSupportFragmentManager().findFragmentByTag(SubscribeDialog.TAG) == null) {
-            Bundle bundle = new Bundle();
-            bundle.putString("message", TextUtils.isEmpty(message) ? "You have exceeded your monthly limit of Facebook creatives sharing." : message);
-            bundle.putString("upgradeMessage", TextUtils.isEmpty(upgradeMessage) ? "Kindly upgrade your pack now." : upgradeMessage);
-            bundle.putString("title", "Upgrade Pack");
-            bundle.putString("btnTitle", "Buy Now");
-            SubscribeDialog subscribeDialog = SubscribeDialog.getInstance(bundle);
-            subscribeDialog.setListener(new SubscribeDialog.DialogListener() {
-                @Override
-                public void onSubscribe() {
-                    subscribeDialog.dismiss();
-                    startActivity(SubscriptionActivity.getStartIntent(ShareCreativeActivity.this));
-                }
-            });
-            subscribeDialog.show(getSupportFragmentManager(), SubscribeDialog.TAG);
-        }
+                });*/
     }
 
     @Override
@@ -962,7 +941,7 @@ public class ShareCreativeActivity extends BaseActivity implements FacebookPages
 
     @Override
     public void onClickPost() {
-        if (marketMode == AppConstants.MarketMode.GALLERY) {
+        if (marketMode == Constant.MarketMode.GALLERY) {
             facebookPostNow();
         } else {
             checkShareLimit(1, ShareType.POST_NOW);
@@ -970,18 +949,19 @@ public class ShareCreativeActivity extends BaseActivity implements FacebookPages
     }
 
     private boolean canPostToday() {
-        if (marketMode == AppConstants.MarketMode.FRAME) {
-            return AppPreferenceHelper.getInstance().getFramePostCountPerDay() < AppPreferenceHelper.getInstance().getDailyFrameLimit();
+        if (marketMode == Constant.MarketMode.FRAME) {
+//            return AppPreferenceHelper.getInstance().getFramePostCountPerDay() < AppPreferenceHelper.getInstance().getDailyFrameLimit();
         }
 
-        if (marketMode == AppConstants.MarketMode.GALLERY) {
+        if (marketMode == Constant.MarketMode.GALLERY) {
             return true;
         }
 
-        return AppPreferenceHelper.getInstance().getPostCountPerDay() < AppPreferenceHelper.getInstance().getDailyCreativeLimit();
+        return true;
+//        return AppPreferenceHelper.getInstance().getPostCountPerDay() < AppPreferenceHelper.getInstance().getDailyCreativeLimit();
     }
 
-    private boolean checkPostLimit() {
+/*    private boolean checkPostLimit() {
 
         if (marketMode == AppConstants.MarketMode.FRAME) {
             return AppPreferenceHelper.getInstance().getPackageType().equalsIgnoreCase("basic") &&
@@ -990,24 +970,24 @@ public class ShareCreativeActivity extends BaseActivity implements FacebookPages
 
         return AppPreferenceHelper.getInstance().getPackageType().equalsIgnoreCase("basic") &&
                 AppPreferenceHelper.getInstance().getPostCountPerMonth() >= AppPreferenceHelper.getInstance().getMonthlyCreativeLimit();
-    }
+    }*/
 
     @Override
     protected void onResume() {
         super.onResume();
 
-        final String medium = AppPreferenceHelper.getInstance().getShareIntentMedium();
+/*        final String medium = AppPreferenceHelper.getInstance().getShareIntentMedium();
 
         if (!TextUtils.isEmpty(medium)) {
             AppPreferenceHelper.getInstance().setShareIntentMedium("");
             saveShared(medium, false, null);
-        }
+        }*/
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        AppPreferenceHelper.getInstance().setShareIntentMedium("");
+//        AppPreferenceHelper.getInstance().setShareIntentMedium("");
     }
 
     enum ShareType {

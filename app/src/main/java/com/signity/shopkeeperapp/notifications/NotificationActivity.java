@@ -164,4 +164,10 @@ public class NotificationActivity extends BaseActivity implements NotificationAd
             }
         });
     }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        AnimUtil.slideFromLeftAnim(this);
+    }
 }
