@@ -4,6 +4,7 @@ import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.graphics.Bitmap;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Build;
@@ -15,6 +16,9 @@ import android.view.Display;
 import com.signity.shopkeeperapp.R;
 
 import java.io.BufferedReader;
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileOutputStream;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.text.DecimalFormat;
@@ -365,5 +369,22 @@ public class Util {
         }
 
         return output;
+    }
+
+    public static File saveImageFilePng(Bitmap bitmap, String filename, File storage) {
+        bitmap.setHasAlpha(true);
+        ByteArrayOutputStream bytes = new ByteArrayOutputStream();
+        bitmap.compress(Bitmap.CompressFormat.PNG, 100, bytes);
+        File file = new File(storage, filename.concat(".png"));
+
+        FileOutputStream outputStream;
+        try {
+            outputStream = new FileOutputStream(file);
+            outputStream.write(bytes.toByteArray());
+            outputStream.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return file;
     }
 }

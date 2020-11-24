@@ -23,6 +23,7 @@ import com.signity.shopkeeperapp.model.SetOrdersModel;
 import com.signity.shopkeeperapp.model.StoresModel;
 import com.signity.shopkeeperapp.model.category.AddCategoryResponse;
 import com.signity.shopkeeperapp.model.category.CategoryDetailResponse;
+import com.signity.shopkeeperapp.model.creatives.CreativeModel;
 import com.signity.shopkeeperapp.model.customers.AreaCodesResp;
 import com.signity.shopkeeperapp.model.customers.CustomerDataResponse;
 import com.signity.shopkeeperapp.model.customers.addCustomer.AddCustomerResponse;
@@ -45,6 +46,7 @@ import com.signity.shopkeeperapp.model.verify.EmailVerifyResponse;
 import com.signity.shopkeeperapp.model.verify.MobileOtpReponse;
 import com.signity.shopkeeperapp.model.verify.OtpVerifyResponse;
 
+import java.util.List;
 import java.util.Map;
 
 import retrofit.Callback;
@@ -54,6 +56,7 @@ import retrofit.http.GET;
 import retrofit.http.Multipart;
 import retrofit.http.POST;
 import retrofit.http.Part;
+import retrofit.http.Path;
 import retrofit.mime.TypedFile;
 
 /**
@@ -294,4 +297,16 @@ public interface ApiService {
 
     @GET("/deliveryTimeSlot")
     void getDeliverySlots(Callback<DeliverySlotDTO> response);
+
+    @GET("/tags")
+    void getCreatives(Callback<List<CreativeModel>> response);
+
+    @GET("/frames")
+    void getFrames(Callback<List<CreativeModel>> response);
+
+    @GET("/tags/{id}")
+    void getCreativesById(@Path("id") long id, Callback<CreativeModel> response);
+
+    @GET("/frames/{id}")
+    void getFramesById(@Path("id") long id, Callback<CreativeModel> creativeModelCallback);
 }

@@ -65,6 +65,10 @@ public class Constant {
     public static final String WRITE_SDCARD = Manifest.permission.WRITE_EXTERNAL_STORAGE;
     public static final String CALL = Manifest.permission.CALL_PHONE;
 
+    public static void showToast(Context context, String message) {
+        Toast.makeText(context, message, Toast.LENGTH_SHORT).show();
+    }
+
     public enum Mode {
 
         LOGGED_IN(0), NOT_LOGGED_IN(1);
@@ -100,9 +104,12 @@ public class Constant {
         }
     }
 
-    public static void showToast(Context context,String message)
-    {
-        Toast.makeText(context, message, Toast.LENGTH_SHORT).show();
+    public enum MarketMode {
+        CREATIVE, FRAME, GALLERY
+    }
+
+    public enum CreativeView {
+        VIEW_ALL, VIEW_SHARED
     }
 
 }

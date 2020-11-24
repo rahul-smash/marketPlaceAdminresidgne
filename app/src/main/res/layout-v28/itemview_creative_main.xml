@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <TextView
+        android:id="@+id/tv_view_all"
+        style="@style/AppTheme.TextView.Small"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="16dp"
+        android:drawableEnd="@drawable/nextarrow"
+        android:drawablePadding="4dp"
+        android:text="View All"
+        android:textColor="@color/colorTextDark"
+        app:layout_constraintBottom_toBottomOf="@+id/tv_creative_tag"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/tv_creative_tag" />
+
+    <TextView
+        android:id="@+id/tv_shared"
+        style="@style/AppTheme.TextView.Small"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="16dp"
+        android:drawableEnd="@drawable/nextarrow"
+        android:drawablePadding="4dp"
+        android:text="Shared"
+        android:textColor="@color/colorTextDark"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="@+id/tv_creative_tag"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/tv_creative_tag" />
+
+    <TextView
+        android:id="@+id/tv_creative_tag"
+        style="@style/AppTheme.TextView.Medium"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="16dp"
+        android:text="Suggested for You"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rv_creative_main"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tv_creative_tag" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

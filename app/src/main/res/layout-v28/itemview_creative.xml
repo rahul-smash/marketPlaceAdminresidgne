@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content">
+
+    <com.google.android.material.card.MaterialCardView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:cardElevation="10dp"
+        android:id="@+id/rl_content1"
+        app:cardUseCompatPadding="false"
+        app:cardCornerRadius="16dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginTop="8dp"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <RelativeLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+
+            <ImageView
+                android:layout_centerInParent="true"
+                android:id="@+id/iv_creative_image"
+                android:layout_width="160dp"
+                android:layout_height="120dp"
+                android:adjustViewBounds="true"
+                android:src="@drawable/defaulticonimg"
+                android:scaleType="centerInside" />
+
+            <ImageView
+                android:layout_centerInParent="true"
+                android:id="@+id/iv_creative_image_top"
+                android:layout_width="160dp"
+                android:layout_height="120dp"
+                android:adjustViewBounds="true"
+                android:visibility="gone"
+                android:src="@drawable/frame_upperbg"
+                android:scaleType="centerInside" />
+
+            <ImageView
+                android:layout_centerInParent="true"
+                android:id="@+id/iv_creative_border"
+                android:layout_width="160dp"
+                android:layout_height="120dp"
+                android:adjustViewBounds="true"
+                android:visibility="gone"
+                android:src="@drawable/creative_border" />
+
+            <ProgressBar
+                android:id="@+id/progress_image"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:layout_marginStart="10dp"
+                android:layout_alignParentTop="true"
+                android:layout_alignParentStart="true"
+                android:layout_marginTop="10dp"
+                android:visibility="gone"
+                android:indeterminate="true" />
+
+            <TextView
+                android:id="@+id/tv_shared_option"
+                style="@style/AppTheme.TextView.Small"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignEnd="@+id/iv_creative_border"
+                android:background="@drawable/background_creative_gradient"
+                android:layout_alignParentTop="true"
+                android:paddingLeft="8dp"
+                android:paddingTop="3dp"
+                android:paddingRight="8dp"
+                android:paddingBottom="3dp"
+                android:text="Shared"
+                android:textSize="10sp"
+                android:textColor="@color/colorWhite"
+                android:visibility="gone" />
+
+        </RelativeLayout>
+
+    </com.google.android.material.card.MaterialCardView>
+
+    <TextView
+        android:id="@+id/tv_creative_title"
+        style="@style/AppTheme.TextView.Small"
+        android:layout_width="140dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginTop="4dp"
+        android:singleLine="true"
+        android:text="Loreum Ipsum Ipsum Ipsum Ipsum"
+        android:textAlignment="center"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="@+id/rl_content1"
+        app:layout_constraintStart_toStartOf="@+id/rl_content1"
+        app:layout_constraintTop_toBottomOf="@+id/rl_content1" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>
