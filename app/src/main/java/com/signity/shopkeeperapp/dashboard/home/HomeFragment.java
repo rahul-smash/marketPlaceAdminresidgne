@@ -357,9 +357,10 @@ public class HomeFragment extends Fragment implements HomeContentAdapter.HomeCon
             Toast.makeText(getContext(), "Url not available", Toast.LENGTH_SHORT).show();
             return;
         }
-        String text = String.format("Hello! You can enjoy your favorite food from %s using %s. Contact us on %s if you need help with your online order. Order now!",
+        String text = String.format("Hello! You can enjoy your purchase of groceries and house hold products from %s using %s. Contact us on %s or whatsapp %s if you need help with your online order. Order now!",
                 AppPreference.getInstance().getStoreName(),
                 website,
+                AppPreference.getInstance().getUserMobile(),
                 AppPreference.getInstance().getUserMobile());
         shareIntent(text, "Share website");
     }

@@ -7,4 +7,11 @@
         android:title="Add Customer"
         android:visible="true"
         app:showAsAction="always" />
+
+    <item
+        android:id="@+id/action_sort"
+        android:icon="@drawable/filtericon"
+        android:title="Sort"
+        android:visible="true"
+        app:showAsAction="always" />
 </menu>

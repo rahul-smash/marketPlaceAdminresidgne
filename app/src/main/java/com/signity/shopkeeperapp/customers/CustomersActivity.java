@@ -2,10 +2,19 @@ package com.signity.shopkeeperapp.customers;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
+import android.os.Handler;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.MotionEvent;
+import android.view.View;
+import android.widget.LinearLayout;
+import android.widget.PopupWindow;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -21,6 +30,7 @@ import com.signity.shopkeeperapp.model.customers.CustomerDataResponse;
 import com.signity.shopkeeperapp.model.customers.CustomersResponse;
 import com.signity.shopkeeperapp.network.NetworkAdaper;
 import com.signity.shopkeeperapp.util.AnimUtil;
+import com.signity.shopkeeperapp.util.Constant;
 import com.signity.shopkeeperapp.util.Util;
 
 import java.util.HashMap;
@@ -39,6 +49,10 @@ public class CustomersActivity extends BaseActivity implements CustomersAdapter.
     private int pageSize = 10, currentPageNumber = 1, start, totalCustomers;
     private LinearLayoutManager layoutManager;
     private boolean isLoading;
+    private View hiddenView;
+    private PopupWindow rightMenuPopUpWindow;
+    private int checkedId;
+    private Constant.CustomerSort customerSort = Constant.CustomerSort.NEWEST;
     private RecyclerView.OnScrollListener recyclerViewOnScrollListener = new RecyclerView.OnScrollListener() {
         @Override
         public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
@@ -81,6 +95,7 @@ public class CustomersActivity extends BaseActivity implements CustomersAdapter.
         Map<String, Object> param = new HashMap<>();
         param.put("page", currentPageNumber);
         param.put("pagelength", pageSize);
+//        param.put("sort", customerSort);
 
         isLoading = true;
         NetworkAdaper.getNetworkServices().getCustomersNew(param, new Callback<CustomerDataResponse>() {
@@ -132,6 +147,7 @@ public class CustomersActivity extends BaseActivity implements CustomersAdapter.
     private void initViews() {
         toolbar = findViewById(R.id.toolbar);
         recyclerView = findViewById(R.id.rv_customers);
+        hiddenView = findViewById(R.id.view);
     }
 
     private void setUpToolbar() {
@@ -140,6 +156,95 @@ public class CustomersActivity extends BaseActivity implements CustomersAdapter.
         getSupportActionBar().setDisplayShowHomeEnabled(true);
         getSupportActionBar().setDisplayShowTitleEnabled(false);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+    }
+
+    private void showPopUpMenu() {
+
+        LayoutInflater inflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        View layout = inflater.inflate(R.layout.popwindow_customer_sort, null, false);
+
+        rightMenuPopUpWindow = new PopupWindow(layout, LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT, true);
+
+        rightMenuPopUpWindow.setOutsideTouchable(true);
+        rightMenuPopUpWindow.setBackgroundDrawable(new ColorDrawable());
+        rightMenuPopUpWindow.setTouchInterceptor(new View.OnTouchListener() { // or whatever you want
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                if (event.getAction() == MotionEvent.ACTION_OUTSIDE) // here I want to close the pw when clicking outside it but at all this is just an example of how it works and you can implement the onTouch() or the onKey() you want
+                {
+                    rightMenuPopUpWindow.dismiss();
+                    return true;
+                }
+                return false;
+            }
+
+        });
+
+        float den = getResources().getDisplayMetrics().density;
+        int offsetY = (int) (den * 2);
+        rightMenuPopUpWindow.showAsDropDown(hiddenView, 0, 0);
+
+        final RadioGroup rdGroup = (RadioGroup) layout.findViewById(R.id.rdGroup);
+        RadioButton radioNewest = (RadioButton) layout.findViewById(R.id.radioNewest);
+
+        RadioButton radioOldest = (RadioButton) layout.findViewById(R.id.radioOldest);
+        RadioButton radioAZ = (RadioButton) layout.findViewById(R.id.radioAZ);
+
+        RadioButton radioZA = (RadioButton) layout.findViewById(R.id.radioZA);
+
+        switch (checkedId) {
+            case R.id.radioOldest:
+                radioOldest.setChecked(true);
+                break;
+            case R.id.radioAZ:
+                radioAZ.setChecked(true);
+                break;
+            case R.id.radioZA:
+                radioZA.setChecked(true);
+                break;
+            case R.id.radioNewest:
+            default:
+                radioNewest.setChecked(true);
+        }
+
+        rdGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+
+            @Override
+            public void onCheckedChanged(RadioGroup group, int checkedId) {
+
+                View radioButton = rdGroup.findViewById(checkedId);
+                int index = rdGroup.indexOfChild(radioButton);
+
+                CustomersActivity.this.checkedId = checkedId;
+                currentPageNumber = 1;
+                start = 0;
+                // Add logic here
+
+                switch (index) {
+                    case 0: // first button
+                        customerSort = Constant.CustomerSort.NEWEST;
+                        break;
+                    case 1:
+                        customerSort = Constant.CustomerSort.OLDEST;
+                        break;
+                    case 2:
+                        customerSort = Constant.CustomerSort.A_Z;
+                        break;
+                    case 3:
+                        customerSort = Constant.CustomerSort.Z_A;
+                        break;
+                }
+                customersAdapter.clearData();
+                getCustomers();
+
+                new Handler().postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        rightMenuPopUpWindow.dismiss();
+                    }
+                }, 500);
+            }
+        });
     }
 
     private void runAnimation() {
@@ -163,6 +268,10 @@ public class CustomersActivity extends BaseActivity implements CustomersAdapter.
         if (item.getItemId() == R.id.action_add_customer) {
             startActivity(AddCustomerActivity.getStartIntent(this));
             AnimUtil.slideFromRightAnim(this);
+        }
+
+        if (item.getItemId() == R.id.action_sort) {
+            showPopUpMenu();
         }
         return super.onOptionsItemSelected(item);
     }

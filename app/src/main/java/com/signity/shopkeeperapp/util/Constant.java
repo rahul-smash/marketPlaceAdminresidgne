@@ -116,4 +116,19 @@ public class Constant {
         SCHEDULE, RESCHEDULE
     }
 
+
+    public enum CustomerSort {
+        NEWEST("newest"), OLDEST("oldest"), A_Z("az"), Z_A("za");
+
+        private String slug;
+
+        CustomerSort(String slug) {
+            this.slug = slug;
+        }
+
+        public String getSlug() {
+            return slug;
+        }
+    }
+
 }
