@@ -6,6 +6,8 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -45,6 +47,7 @@ public class FilterActivity extends BaseActivity {
     private List<String> tagsList = new ArrayList<>();
     private ArrayList<String> choosenList = new ArrayList<>();
     private Constant.MarketMode marketMode;
+    private TextView textviewApply, textviewClear;
 
     public static Intent getStartIntent(Context context, Bundle bundle) {
         Intent intent = new Intent(context, FilterActivity.class);
@@ -56,10 +59,32 @@ public class FilterActivity extends BaseActivity {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_filter);
+        initViews();
         setUpToolbar();
         getExtra();
         setUpAdapter();
         fetchApiData();
+    }
+
+    private void initViews() {
+        recyclerView = findViewById(R.id.rv_filter);
+        toolbar = findViewById(R.id.toolbar);
+        textviewApply = findViewById(R.id.tv_apply);
+        textviewClear = findViewById(R.id.tv_clear_all);
+
+        textviewApply.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                onClickApply();
+            }
+        });
+
+        textviewClear.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                onClickClear();
+            }
+        });
     }
 
     private void getExtra() {
@@ -99,7 +124,7 @@ public class FilterActivity extends BaseActivity {
     }
 
     private void getCreatives() {
-        NetworkAdaper.marketStore().getCreatives(1,1,new Callback<List<CreativeModel>>() {
+        NetworkAdaper.marketStore().getCreatives(1, 1, new Callback<List<CreativeModel>>() {
             @Override
             public void success(List<CreativeModel> creativeModels, Response response) {
 
@@ -129,7 +154,7 @@ public class FilterActivity extends BaseActivity {
 
     private void getFrames() {
 
-        NetworkAdaper.marketStore().getFrames(1,1,new Callback<List<CreativeModel>>() {
+        NetworkAdaper.marketStore().getFrames(1, 1, new Callback<List<CreativeModel>>() {
             @Override
             public void success(List<CreativeModel> creativeModels, Response response) {
                 ProgressDialogUtil.hideProgressDialog();

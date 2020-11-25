@@ -31,6 +31,7 @@ import com.signity.shopkeeperapp.model.customers.detail.CustomerDetailResponse;
 import com.signity.shopkeeperapp.model.dashboard.StoreDashboardResponse;
 import com.signity.shopkeeperapp.model.dashboard.StoreVersionDTO;
 import com.signity.shopkeeperapp.model.image.ImageUploadResponse;
+import com.signity.shopkeeperapp.model.market.facebookPost.FacebookPostResponse;
 import com.signity.shopkeeperapp.model.notification.NotificationModel;
 import com.signity.shopkeeperapp.model.orders.CustomerData;
 import com.signity.shopkeeperapp.model.orders.StoreOrdersReponse;
@@ -49,6 +50,7 @@ import com.signity.shopkeeperapp.model.verify.OtpVerifyResponse;
 import java.util.List;
 import java.util.Map;
 
+import okhttp3.MultipartBody;
 import retrofit.Callback;
 import retrofit.http.FieldMap;
 import retrofit.http.FormUrlEncoded;
@@ -310,4 +312,10 @@ public interface ApiService {
 
     @GET("/frames/{id}")
     void getFramesById(@Path("id") long id, Callback<CreativeModel> creativeModelCallback);
+
+    @POST("https://graph.facebook.com/{id}/photos")
+    void postFacebook(String id, String trim, String accessToken1, MultipartBody.Part body, Callback<FacebookPostResponse> responseCallback);
+
+    @POST("https://graph.facebook.com/{id}/photos")
+    void postScheduleFacebook(String id, boolean b, String trim, String accessToken1, int time, MultipartBody.Part body, Callback<FacebookPostResponse> responseCallback);
 }

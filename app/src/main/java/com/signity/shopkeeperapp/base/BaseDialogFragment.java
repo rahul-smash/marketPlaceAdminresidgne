@@ -53,7 +53,7 @@ public abstract class BaseDialogFragment extends DialogFragment {
     @LayoutRes
     protected abstract int setLayout();
 
-    protected abstract void setUp();
+    protected abstract void setUp(View view);
 
     @NonNull
     @Override
@@ -89,7 +89,7 @@ public abstract class BaseDialogFragment extends DialogFragment {
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        setUp();
+        setUp(view);
     }
 
     public void show(FragmentManager fragmentManager, String tag) {

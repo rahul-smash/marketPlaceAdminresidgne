@@ -1,6 +1,7 @@
 package com.signity.shopkeeperapp.market;
 
 import android.os.Bundle;
+import android.view.View;
 
 import com.signity.shopkeeperapp.R;
 import com.signity.shopkeeperapp.base.BaseDialogFragment;
@@ -26,7 +27,20 @@ public class FacebookPostDialog extends BaseDialogFragment {
     }
 
     @Override
-    protected void setUp() {
+    protected void setUp(View view) {
+        view.findViewById(R.id.iv_close_dialog).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                onClickClose();
+            }
+        });
+
+        view.findViewById(R.id.btn_update_dialog).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                doUpdateClick();
+            }
+        });
     }
 
     void onClickClose() {

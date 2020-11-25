@@ -2,6 +2,8 @@ package com.signity.shopkeeperapp.market;
 
 import android.os.Bundle;
 import android.view.View;
+import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
@@ -15,8 +17,8 @@ import com.signity.shopkeeperapp.R;
 import com.signity.shopkeeperapp.base.BaseDialogFragment;
 import com.signity.shopkeeperapp.classes.FacebookManager;
 import com.signity.shopkeeperapp.model.market.facebook.FacebookPageRequest;
-import com.signity.shopkeeperapp.model.market.facebook.FacebookPageResponse;
 import com.signity.shopkeeperapp.model.market.facebook.PageList;
+import com.signity.shopkeeperapp.util.prefs.AppPreference;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -37,6 +39,8 @@ public class FacebookPagesDialog extends BaseDialogFragment {
     private List<PageList.DataBean> data = new ArrayList<>();
     private PageCallback listener;
     private FacebookManager facebookManager;
+    private ImageView imageViewClose;
+    private Button buttonUpdate;
 
     public static FacebookPagesDialog getInstance(Bundle bundle) {
         FacebookPagesDialog dialog = new FacebookPagesDialog();
@@ -50,12 +54,33 @@ public class FacebookPagesDialog extends BaseDialogFragment {
     }
 
     @Override
-    protected void setUp() {
-
+    protected void setUp(View view) {
+        initViews(view);
         facebookManager = new FacebookManager(getActivity());
         setUpAdapter();
 
         getFacebookPages();
+    }
+
+    private void initViews(View view) {
+        recyclerView = view.findViewById(R.id.rv_facebook_pages);
+        pbLoading = view.findViewById(R.id.pb_loading);
+        imageViewClose = view.findViewById(R.id.iv_close_dialog);
+        buttonUpdate = view.findViewById(R.id.btn_update_dialog);
+
+        imageViewClose.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                onClickClose();
+            }
+        });
+
+        buttonUpdate.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                doUpdateClick();
+            }
+        });
     }
 
     private void getFacebookPages() {
@@ -113,12 +138,13 @@ public class FacebookPagesDialog extends BaseDialogFragment {
 
         PageList.DataBean dataBean = data.get(selected);
         FacebookPageRequest request = new FacebookPageRequest();
-//        request.setBrand(String.valueOf(AppPreferenceHelper.getInstance().getBrandId()));
+        request.setBrand("1");
         request.setPageId(dataBean.getId());
         request.setPageName(dataBean.getName());
         request.setPageAccessToken(dataBean.getAccess_token());
 
 
+        //TODO - Update Facebook Ids in Backend
 /*        AppApiHelper.getApiHelper()
                 .updateFacebookPage(request)
                 .enqueue(new DigiCallback<FacebookPageResponse>(getContext()) {
@@ -137,8 +163,8 @@ public class FacebookPagesDialog extends BaseDialogFragment {
                     }
                 });*/
 
-//        AppPreferenceHelper.getInstance().setFacebookPageId(dataBean.getId());
-//        AppPreferenceHelper.getInstance().setFacebookPageAccessToken(dataBean.getAccess_token());
+        AppPreference.getInstance().setFacebookPageAccessToken(dataBean.getAccess_token());
+        AppPreference.getInstance().setFacebookPageId(dataBean.getId());
         onClickClose();
         if (listener != null) {
             listener.onPageSelected();

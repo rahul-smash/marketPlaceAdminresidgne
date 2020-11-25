@@ -35,13 +35,31 @@ public class ShareCreativeChooserDialog extends BaseDialogFragment {
     }
 
     @Override
-    protected void setUp() {
+    protected void setUp(View view) {
+        initViews(view);
         Bundle bundle = getArguments();
         if (bundle != null) {
             type = (Constant.ShareMode) bundle.getSerializable("Type");
         }
 
         textViewSchedule.setText(type == Constant.ShareMode.SCHEDULE ? "Schedule Later" : "Re-Schedule");
+    }
+
+    private void initViews(View view) {
+        textViewSchedule = view.findViewById(R.id.btn_post_schedule);
+        textViewSchedule.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                onClickSchedule();
+            }
+        });
+
+        view.findViewById(R.id.btn_post_now).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                onClickPost();
+            }
+        });
     }
 
     @NonNull

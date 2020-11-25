@@ -387,4 +387,37 @@ public class Util {
         }
         return file;
     }
+
+    public static File saveImageFile(Bitmap bitmap, String filename, File storage) {
+
+        ByteArrayOutputStream bytes = new ByteArrayOutputStream();
+        bitmap.compress(Bitmap.CompressFormat.JPEG, 100, bytes);
+        File file = new File(storage, filename.concat(".jpg"));
+        FileOutputStream outputStream;
+        try {
+            outputStream = new FileOutputStream(file);
+            outputStream.write(bytes.toByteArray());
+            outputStream.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return file;
+    }
+
+    public static String getDateFrom(String format) {
+        String output = "";
+
+        SimpleDateFormat inputFormat = new SimpleDateFormat("dd MM yyyy", Locale.getDefault());
+        SimpleDateFormat outputFormat = new SimpleDateFormat("dd MMM yyyy", Locale.getDefault());
+        try {
+            Date date = inputFormat.parse(format);
+            if (date != null) {
+                output = outputFormat.format(date);
+            }
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+
+        return output;
+    }
 }

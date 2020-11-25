@@ -31,4 +31,6 @@ public final class PrefConstants {
     public static final String PREF_KEY_NOTIFICATION_COUNT = "PREF_KEY_NOTIFICATION_COUNT";
     public static final String PREF_KEY_STORE_PHONE_CODE = "PREF_KEY_STORE_PHONE_CODE";
     public static final String PREF_KEY_LOGIN_TYPE = "PREF_KEY_LOGIN_TYPE";
+    public static final String PREF_KEY_FACEBOOK_ACCESS_TOKEN = "PREF_KEY_FACEBOOK_ACCESS_TOKEN";
+    public static final String PREF_KEY_FACEBOOK_PAGE_ID = "PREF_KEY_FACEBOOK_PAGE_ID";
 }

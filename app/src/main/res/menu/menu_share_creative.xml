@@ -6,5 +6,6 @@
         android:icon="@drawable/editicon"
         app:iconTint="@color/colorWhite"
         android:title="Edit"
+        android:visible="false"
         app:showAsAction="always" />
 </menu>

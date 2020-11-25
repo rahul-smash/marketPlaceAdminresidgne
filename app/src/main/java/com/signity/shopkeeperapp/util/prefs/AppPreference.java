@@ -214,4 +214,20 @@ public class AppPreference {
     public void setLoginType(String type) {
         mPrefs.edit().putString(PrefConstants.PREF_KEY_LOGIN_TYPE, type).apply();
     }
+
+    public String getFacebookPageAccessToken() {
+        return mPrefs.getString(PrefConstants.PREF_KEY_FACEBOOK_ACCESS_TOKEN, null);
+    }
+
+    public void setFacebookPageAccessToken(String access_token) {
+        mPrefs.edit().putString(PrefConstants.PREF_KEY_FACEBOOK_ACCESS_TOKEN, access_token).apply();
+    }
+
+    public String getFacebookPageId() {
+        return mPrefs.getString(PrefConstants.PREF_KEY_FACEBOOK_PAGE_ID, null);
+    }
+
+    public void setFacebookPageId(String id) {
+        mPrefs.edit().putString(PrefConstants.PREF_KEY_FACEBOOK_PAGE_ID, id).apply();
+    }
 }

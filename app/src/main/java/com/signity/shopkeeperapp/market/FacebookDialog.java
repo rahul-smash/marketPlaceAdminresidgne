@@ -4,6 +4,7 @@ import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
 import android.widget.DatePicker;
 import android.widget.TextView;
 import android.widget.TimePicker;
@@ -11,6 +12,7 @@ import android.widget.Toast;
 
 import com.signity.shopkeeperapp.R;
 import com.signity.shopkeeperapp.base.BaseDialogFragment;
+import com.signity.shopkeeperapp.util.Util;
 
 import java.util.Calendar;
 import java.util.Date;
@@ -49,8 +51,9 @@ public class FacebookDialog extends BaseDialogFragment {
     }
 
     @Override
-    protected void setUp() {
+    protected void setUp(View view) {
 
+        initViews(view);
         getExtra();
 
         calendar = Calendar.getInstance();
@@ -67,6 +70,48 @@ public class FacebookDialog extends BaseDialogFragment {
 //        textViewDate.setText(timeStamp == 0 ? CommonUtils.getCurrentDate() : CommonUtils.getFacebookDate(timeStamp));
 //        textViewHours.setText(timeStamp == 0 ? CommonUtils.getCurrentTime() : CommonUtils.getFacebookTime(timeStamp));
         scheduleBtn.setText(timeStamp == 0 ? "Schedule Later" : "Re-Schedule");
+    }
+
+    private void initViews(View view) {
+        textViewDate = view.findViewById(R.id.tv_fb_date);
+        textViewHours = view.findViewById(R.id.tv_fb_time);
+        scheduleBtn = view.findViewById(R.id.btn_schedule);
+
+
+        view.findViewById(R.id.iv_close_dialog).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                onClickClose();
+            }
+        });
+
+        scheduleBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                onClickSchedule();
+            }
+        });
+
+        view.findViewById(R.id.btn_post).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                onClickPostNow();
+            }
+        });
+        view.findViewById(R.id.const_date).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                onClickDate();
+            }
+        });
+
+        view.findViewById(R.id.const_time).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                onClickTime();
+            }
+        });
+
     }
 
     private void getExtra() {
@@ -86,7 +131,7 @@ public class FacebookDialog extends BaseDialogFragment {
 
                 String date = String.format(Locale.getDefault(), "%d %d %d", dayOfMonth, month + 1, year);
                 Log.d(TAG, "onDateSet: " + date);
-//                textViewDate.setText(CommonUtils.getDateFrom(date));
+                textViewDate.setText(Util.getDateFrom(date));
             }
         }, calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DATE));
 
@@ -107,7 +152,7 @@ public class FacebookDialog extends BaseDialogFragment {
                 hourOfDayInt = hourOfDay;
                 minuteInt = minute;
 
-//                textViewHours.setText(CommonUtils.getTimeFrom(String.format(Locale.getDefault(), "%02d:%02d", hourOfDay, minute)));
+                textViewHours.setText(Util.getTimeFrom(String.format(Locale.getDefault(), "%02d:%02d", hourOfDay, minute)));
 
                 getTime();
             }
