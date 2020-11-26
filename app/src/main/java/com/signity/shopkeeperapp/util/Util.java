@@ -5,9 +5,11 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Build;
+import android.os.Environment;
 import android.text.TextUtils;
 import android.util.DisplayMetrics;
 import android.util.Log;
@@ -36,6 +38,7 @@ import java.util.regex.Pattern;
  */
 public class Util {
 
+    private static final String TAG = "Util";
     static Context currentContext;
 
     public static String ReadFromfile(String fileName, Context context) {
@@ -404,6 +407,22 @@ public class Util {
         return file;
     }
 
+    public static File saveImageFile(Bitmap bitmap, String filename, File storage, int quality) {
+
+        ByteArrayOutputStream bytes = new ByteArrayOutputStream();
+        bitmap.compress(Bitmap.CompressFormat.JPEG, quality, bytes);
+        File file = new File(storage, filename.concat(".jpg"));
+        FileOutputStream outputStream;
+        try {
+            outputStream = new FileOutputStream(file);
+            outputStream.write(bytes.toByteArray());
+            outputStream.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return file;
+    }
+
     public static String getDateFrom(String format) {
         String output = "";
 
@@ -419,5 +438,45 @@ public class Util {
         }
 
         return output;
+    }
+
+    public static File getUserImage(String folder, String imageType) {
+        return new File(getUserFileDirectory(folder), imageType.concat(".jpg"));
+    }
+
+    public static File getUserFileDirectory(String folder) {
+        File file = new File(createDefaultStorage(), folder);
+        if (!file.exists() && file.mkdir()) {
+            Log.d(TAG, "getUserFileDirectory: " + folder + " Created");
+        }
+        return file;
+    }
+
+    public static File createDefaultStorage() {
+        File dir = new File(Environment.getExternalStorageDirectory() + File.separator + Constant.APP_TITLE);
+        if (!dir.exists() && dir.mkdirs()) {
+            Log.d(TAG, "createDefaultStorage: " + "Directory Created");
+        }
+        return dir;
+    }
+
+    public static Bitmap decodeBitmap(File imageFile, int targetW, int targetH) {
+
+        // Get the dimensions of the bitmap
+        BitmapFactory.Options bmOptions = new BitmapFactory.Options();
+        bmOptions.inJustDecodeBounds = true;
+        BitmapFactory.decodeFile(imageFile.getAbsolutePath(), bmOptions);
+        int photoW = bmOptions.outWidth;
+        int photoH = bmOptions.outHeight;
+
+        // Determine how much to scale down the image
+        int scaleFactor = Math.min(photoW / targetW, photoH / targetH);
+
+        // Decode the image file into a Bitmap sized to fill the View
+        bmOptions.inJustDecodeBounds = false;
+        bmOptions.inSampleSize = scaleFactor;
+        bmOptions.inPurgeable = true;
+
+        return BitmapFactory.decodeFile(imageFile.getAbsolutePath(), bmOptions);
     }
 }

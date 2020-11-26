@@ -46,6 +46,8 @@ import com.signity.shopkeeperapp.model.ResponseForceUpdate;
 import com.signity.shopkeeperapp.model.dashboard.StoreVersionDTO;
 import com.signity.shopkeeperapp.network.NetworkAdaper;
 import com.signity.shopkeeperapp.stores.StoresActivity;
+import com.signity.shopkeeperapp.twilio.chat.CustomerSupportActivity;
+import com.signity.shopkeeperapp.twilio.chat.TwilioLogin;
 import com.signity.shopkeeperapp.util.AnimUtil;
 import com.signity.shopkeeperapp.util.DialogHandler;
 import com.signity.shopkeeperapp.util.ProgressDialogUtil;
@@ -89,6 +91,11 @@ public class DashboardActivity extends BaseActivity implements BottomNavigationV
         setUpDrawerToggle();
         setUpBottomNavigation();
         storeAppVersion();
+
+        if (!AppPreference.getInstance().isPrivateChannelCreated() && BuildConfig.DEBUG) {
+            TwilioLogin twilioLogin = new TwilioLogin(this);
+            twilioLogin.performLoginCreatePrivateChannel();
+        }
     }
 
     private void setUpStoreData() {
@@ -304,6 +311,10 @@ public class DashboardActivity extends BaseActivity implements BottomNavigationV
                 break;
             case SWITCH_STORE:
                 startActivity(StoresActivity.getStartIntent(DashboardActivity.this));
+                AnimUtil.slideFromRightAnim(DashboardActivity.this);
+                break;
+            case CUSTOMER_SUPPORT:
+                startActivity(CustomerSupportActivity.getStartIntent(DashboardActivity.this));
                 AnimUtil.slideFromRightAnim(DashboardActivity.this);
                 break;
         }

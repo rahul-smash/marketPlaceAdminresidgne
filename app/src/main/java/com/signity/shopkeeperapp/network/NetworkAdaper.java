@@ -78,6 +78,36 @@ public class NetworkAdaper {
         return restAdapter.create(ApiService.class);
     }
 
+    public static ApiService twilioServer() {
+        String url = "http://112.196.1.221:8024";
+
+        OkHttpClient client = new OkHttpClient();
+        client.setConnectTimeout(1, TimeUnit.MINUTES);
+        client.setReadTimeout(1, TimeUnit.MINUTES);
+
+        RestAdapter restAdapter = new RestAdapter.Builder()
+                .setClient(new OkClient(client))
+                .setEndpoint(url)
+                .setLogLevel(RestAdapter.LogLevel.FULL)
+                .build();
+        return restAdapter.create(ApiService.class);
+    }
+
+    public static ApiService facebookGraph() {
+        String url = "https://graph.facebook.com";
+
+        OkHttpClient client = new OkHttpClient();
+        client.setConnectTimeout(1, TimeUnit.MINUTES);
+        client.setReadTimeout(1, TimeUnit.MINUTES);
+
+        RestAdapter restAdapter = new RestAdapter.Builder()
+                .setClient(new OkClient(client))
+                .setEndpoint(url)
+                .setLogLevel(RestAdapter.LogLevel.FULL)
+                .build();
+        return restAdapter.create(ApiService.class);
+    }
+
     public static String setBaseUrl(String store_id) {
         String url = "";
         if (store_id.equalsIgnoreCase("")) {

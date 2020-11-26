@@ -695,7 +695,7 @@ public class ShareCreativeActivity extends BaseActivity implements FacebookPages
         MultipartBody.Part body = MultipartBody.Part.createFormData("source", file.getName(), requestFile);
 
         ProgressDialogUtil.showProgressDialog(this);
-        NetworkAdaper.marketStore().postFacebook(id, editTextAbout.getText().toString().trim(), accessToken1, body, new Callback<FacebookPostResponse>() {
+        NetworkAdaper.facebookGraph().postFacebook(id, editTextAbout.getText().toString().trim(), accessToken1, body, new Callback<FacebookPostResponse>() {
             @Override
             public void success(FacebookPostResponse facebookPostResponse, Response response) {
                 if (isDestroyed()) {
@@ -802,7 +802,7 @@ public class ShareCreativeActivity extends BaseActivity implements FacebookPages
         MultipartBody.Part body = MultipartBody.Part.createFormData("source", file.getName(), requestFile);
 
         ProgressDialogUtil.showProgressDialog(this);
-        NetworkAdaper.marketStore().postScheduleFacebook(id, false, editTextAbout.getText().toString().trim(), accessToken1, time, body, new Callback<FacebookPostResponse>() {
+        NetworkAdaper.facebookGraph().postScheduleFacebook(id, false, editTextAbout.getText().toString().trim(), accessToken1, time, body, new Callback<FacebookPostResponse>() {
             @Override
             public void success(FacebookPostResponse facebookPostResponse, Response response) {
 

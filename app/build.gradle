@@ -8,7 +8,7 @@ android {
         // applicationId 'com.signity.valueappz'
         // applicationId 'com.signity.valueadminrestro'//Changes as per sachin mittal
         applicationId 'com.signity.valueapps'
-        minSdkVersion 16
+        minSdkVersion 19
         targetSdkVersion 29
         versionCode 12
         versionName "3.0"
@@ -81,5 +81,7 @@ dependencies {
 
     implementation "com.github.bumptech.glide:glide:4.10.0"
     implementation 'com.facebook.android:facebook-android-sdk:5.12.1'
+
+    implementation 'com.twilio:chat-android:5.1.1'
 }
 apply plugin: 'com.google.firebase.crashlytics'

@@ -33,4 +33,7 @@ public final class PrefConstants {
     public static final String PREF_KEY_LOGIN_TYPE = "PREF_KEY_LOGIN_TYPE";
     public static final String PREF_KEY_FACEBOOK_ACCESS_TOKEN = "PREF_KEY_FACEBOOK_ACCESS_TOKEN";
     public static final String PREF_KEY_FACEBOOK_PAGE_ID = "PREF_KEY_FACEBOOK_PAGE_ID";
+    public static final String PREF_KEY_IS_TWILIO_FCM_TOKEN_SET = "PREF_KEY_IS_TWILIO_FCM_TOKEN_SET";
+    public static final String PREF_KEY_IS_PRIVATE_CHANNEL_CREATED = "PREF_KEY_IS_PRIVATE_CHANNEL_CREATED";
+    public static final String PREF_KEY_IS_PRIVATE_CHANNEL_JOINED = "PREF_KEY_IS_PRIVATE_CHANNEL_JOINED";
 }

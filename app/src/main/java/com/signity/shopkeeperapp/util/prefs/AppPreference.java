@@ -230,4 +230,28 @@ public class AppPreference {
     public void setFacebookPageId(String id) {
         mPrefs.edit().putString(PrefConstants.PREF_KEY_FACEBOOK_PAGE_ID, id).apply();
     }
+
+    public void setTwilioFcmToken(boolean value) {
+        mPrefs.edit().putBoolean(PrefConstants.PREF_KEY_IS_TWILIO_FCM_TOKEN_SET, value).apply();
+    }
+
+    public boolean isSetTwilioFcmToken() {
+        return mPrefs.getBoolean(PrefConstants.PREF_KEY_IS_TWILIO_FCM_TOKEN_SET, false);
+    }
+
+    public boolean isPrivateChannelCreated() {
+        return mPrefs.getBoolean(PrefConstants.PREF_KEY_IS_PRIVATE_CHANNEL_CREATED, false);
+    }
+
+    public void setPrivateChannelCreated(boolean value) {
+        mPrefs.edit().putBoolean(PrefConstants.PREF_KEY_IS_PRIVATE_CHANNEL_CREATED, value).apply();
+    }
+
+    public boolean isPrivateChannelJoined() {
+        return mPrefs.getBoolean(PrefConstants.PREF_KEY_IS_PRIVATE_CHANNEL_JOINED, false);
+    }
+
+    public void setPrivateChannelJoined(boolean value) {
+        mPrefs.edit().putBoolean(PrefConstants.PREF_KEY_IS_PRIVATE_CHANNEL_JOINED, value).apply();
+    }
 }

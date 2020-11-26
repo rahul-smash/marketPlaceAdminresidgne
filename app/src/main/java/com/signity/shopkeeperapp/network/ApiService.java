@@ -52,6 +52,7 @@ import java.util.Map;
 
 import okhttp3.MultipartBody;
 import retrofit.Callback;
+import retrofit.client.Response;
 import retrofit.http.FieldMap;
 import retrofit.http.FormUrlEncoded;
 import retrofit.http.GET;
@@ -313,9 +314,12 @@ public interface ApiService {
     @GET("/frames/{id}")
     void getFramesById(@Path("id") long id, Callback<CreativeModel> creativeModelCallback);
 
-    @POST("https://graph.facebook.com/{id}/photos")
+    @POST("/{id}/photos")
     void postFacebook(String id, String trim, String accessToken1, MultipartBody.Part body, Callback<FacebookPostResponse> responseCallback);
 
-    @POST("https://graph.facebook.com/{id}/photos")
+    @POST("/{id}/photos")
     void postScheduleFacebook(String id, boolean b, String trim, String accessToken1, int time, MultipartBody.Part body, Callback<FacebookPostResponse> responseCallback);
+
+    @GET("/token")
+    void getTwilioToken(@Query("identity") String identity, Callback<Response> responseCallback);
 }

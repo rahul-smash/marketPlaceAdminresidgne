@@ -12,6 +12,7 @@ import com.google.firebase.FirebaseApp;
 import com.google.firebase.iid.FirebaseInstanceId;
 import com.google.firebase.iid.InstanceIdResult;
 import com.signity.shopkeeperapp.network.NetworkAdaper;
+import com.signity.shopkeeperapp.twilio.BasicChatClient;
 import com.signity.shopkeeperapp.util.PrefManager;
 import com.signity.shopkeeperapp.util.prefs.AppPreference;
 
@@ -20,13 +21,23 @@ import com.signity.shopkeeperapp.util.prefs.AppPreference;
  * Created by Rajinder on 5/10/15.
  */
 public class MyApplication extends Application implements Application.ActivityLifecycleCallbacks {
-
-
+    private static MyApplication instance;
     PrefManager prefManager;
+    private BasicChatClient basicChatClient;
+
+    public static MyApplication getInstance() {
+        return instance;
+    }
+
+    public BasicChatClient getBasicChatClient() {
+        return basicChatClient;
+    }
 
     @Override
     public void onCreate() {
         super.onCreate();
+        instance = this;
+        basicChatClient = new BasicChatClient(this);
         FirebaseApp.initializeApp(this);
         FacebookSdk.sdkInitialize(getApplicationContext());
         AppEventsLogger.activateApp(this);
