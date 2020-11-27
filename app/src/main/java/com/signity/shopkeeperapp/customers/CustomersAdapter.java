@@ -118,7 +118,7 @@ public class CustomersAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
     class CustomerViewHolder extends RecyclerView.ViewHolder {
 
         TextView textViewActiveCount, textViewTotalCount, textViewAmountPaid;
-        TextView textViewCustomerName, textViewCustomerNumber, textViewCustomerCity;
+        TextView textViewCustomerName, textViewCustomerNumber, textViewCustomerCity, textViewCustomerCreated;
         LinearLayout linearLayoutArea, linearLayoutBookOrder;
 
         public CustomerViewHolder(@NonNull View itemView) {
@@ -126,6 +126,7 @@ public class CustomersAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
             textViewCustomerName = itemView.findViewById(R.id.tv_customer_address);
             textViewCustomerNumber = itemView.findViewById(R.id.tv_customer_state_area);
             textViewCustomerCity = itemView.findViewById(R.id.tv_customer_city);
+            textViewCustomerCreated = itemView.findViewById(R.id.tv_customer_created);
             textViewActiveCount = itemView.findViewById(R.id.tv_active_count);
             textViewTotalCount = itemView.findViewById(R.id.tv_total_count);
             textViewAmountPaid = itemView.findViewById(R.id.tv_amount_paid);
@@ -139,12 +140,12 @@ public class CustomersAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
 
             textViewCustomerName.setText(customersResponse.getFullName());
             textViewCustomerNumber.setText(customersResponse.getPhone());
-            textViewCustomerCity.setText(customersResponse.getArea());
+            textViewCustomerCity.setText(customersResponse.getCustomerAddress());
             textViewActiveCount.setText(String.valueOf(customersResponse.getActiveOrders()));
             textViewTotalCount.setText(String.valueOf(customersResponse.getTotalOrders()));
             textViewAmountPaid.setText(Util.getPriceWithCurrency(Double.parseDouble(customersResponse.getPaidAmount()), AppPreference.getInstance().getCurrency()));
-
-            linearLayoutArea.setVisibility(TextUtils.isEmpty(customersResponse.getArea()) ? View.GONE : View.VISIBLE);
+            textViewCustomerCreated.setText(customersResponse.getCreatedDate());
+            linearLayoutArea.setVisibility(TextUtils.isEmpty(customersResponse.getCustomerAddress()) ? View.GONE : View.VISIBLE);
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {

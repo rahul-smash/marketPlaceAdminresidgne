@@ -118,16 +118,22 @@ public class Constant {
 
 
     public enum CustomerSort {
-        NEWEST("newest"), OLDEST("oldest"), A_Z("az"), Z_A("za");
+        NEWEST("created", "desc"), OLDEST("created", "asc"), A_Z("full_name", "asc"), Z_A("full_name", "desc");
 
-        private String slug;
+        private String sortType;
+        private String sortOrder;
 
-        CustomerSort(String slug) {
-            this.slug = slug;
+        CustomerSort(String sortType, String sortOrder) {
+            this.sortType = sortType;
+            this.sortOrder = sortOrder;
         }
 
-        public String getSlug() {
-            return slug;
+        public String getSortOrder() {
+            return sortOrder;
+        }
+
+        public String getSortType() {
+            return sortType;
         }
     }
 

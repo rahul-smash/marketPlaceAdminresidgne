@@ -1,86 +1,98 @@
 package com.signity.shopkeeperapp.model.customers.detail;
 
 import com.google.gson.annotations.SerializedName;
+
 import java.io.Serializable;
 
 public class CustomersResponse implements Serializable {
 
-	@SerializedName("id")
-	private String id;
+    @SerializedName("id")
+    private String id;
 
-	@SerializedName("full_name")
-	private String fullName;
+    @SerializedName("full_name")
+    private String fullName;
 
-	@SerializedName("phone")
-	private String phone;
+    @SerializedName("phone")
+    private String phone;
 
-	@SerializedName("email")
-	private String email;
+    @SerializedName("email")
+    private String email;
 
-	@SerializedName("status")
-	private String status;
+    @SerializedName("status")
+    private String status;
 
-	@SerializedName("profile_image")
-	private String profileImage;
+    @SerializedName("profile_image")
+    private String profileImage;
 
-	public void setId(String id){
-		this.id = id;
-	}
+    @SerializedName("customer_address")
+    private String customerAddress;
 
-	public String getId(){
-		return id;
-	}
+    public String getCustomerAddress() {
+        return customerAddress;
+    }
 
-	public void setFullName(String fullName){
-		this.fullName = fullName;
-	}
+    public void setCustomerAddress(String customerAddress) {
+        this.customerAddress = customerAddress;
+    }
 
-	public String getFullName(){
-		return fullName;
-	}
+    public String getId() {
+        return id;
+    }
 
-	public void setPhone(String phone){
-		this.phone = phone;
-	}
+    public void setId(String id) {
+        this.id = id;
+    }
 
-	public String getPhone(){
-		return phone;
-	}
+    public String getFullName() {
+        return fullName;
+    }
 
-	public void setEmail(String email){
-		this.email = email;
-	}
+    public void setFullName(String fullName) {
+        this.fullName = fullName;
+    }
 
-	public String getEmail(){
-		return email;
-	}
+    public String getPhone() {
+        return phone;
+    }
 
-	public void setStatus(String status){
-		this.status = status;
-	}
+    public void setPhone(String phone) {
+        this.phone = phone;
+    }
 
-	public String getStatus(){
-		return status;
-	}
+    public String getEmail() {
+        return email;
+    }
 
-	public void setProfileImage(String profileImage){
-		this.profileImage = profileImage;
-	}
+    public void setEmail(String email) {
+        this.email = email;
+    }
 
-	public String getProfileImage(){
-		return profileImage;
-	}
+    public String getStatus() {
+        return status;
+    }
 
-	@Override
- 	public String toString(){
-		return 
-			"CustomersResponse{" + 
-			"id = '" + id + '\'' + 
-			",full_name = '" + fullName + '\'' + 
-			",phone = '" + phone + '\'' + 
-			",email = '" + email + '\'' + 
-			",status = '" + status + '\'' + 
-			",profile_image = '" + profileImage + '\'' + 
-			"}";
-		}
+    public void setStatus(String status) {
+        this.status = status;
+    }
+
+    public String getProfileImage() {
+        return profileImage;
+    }
+
+    public void setProfileImage(String profileImage) {
+        this.profileImage = profileImage;
+    }
+
+    @Override
+    public String toString() {
+        return
+                "CustomersResponse{" +
+                        "id = '" + id + '\'' +
+                        ",full_name = '" + fullName + '\'' +
+                        ",phone = '" + phone + '\'' +
+                        ",email = '" + email + '\'' +
+                        ",status = '" + status + '\'' +
+                        ",profile_image = '" + profileImage + '\'' +
+                        "}";
+    }
 }

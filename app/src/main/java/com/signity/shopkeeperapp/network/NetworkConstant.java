@@ -12,13 +12,13 @@ public class NetworkConstant {
     public static final String APISTORE_ORDER = "/api_v1";
 
 
-   public static final String BASE = "https://app.restroapp.com";     // staging Url
+//   public static final String BASE = "https://app.restroapp.com";     // staging Url
 
 
 
 
 
-//     public static final String BASE = "https://stage.grocersapp.com";     // TestingPupose Url
+     public static final String BASE = "https://stage.grocersapp.com";     // TestingPupose Url
 
 
 

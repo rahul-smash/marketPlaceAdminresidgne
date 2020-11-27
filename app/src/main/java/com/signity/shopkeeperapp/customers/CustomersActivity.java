@@ -95,7 +95,8 @@ public class CustomersActivity extends BaseActivity implements CustomersAdapter.
         Map<String, Object> param = new HashMap<>();
         param.put("page", currentPageNumber);
         param.put("pagelength", pageSize);
-//        param.put("sort", customerSort);
+        param.put("sort_by", customerSort.getSortType());
+        param.put("sort_type", customerSort.getSortOrder());
 
         isLoading = true;
         NetworkAdaper.getNetworkServices().getCustomersNew(param, new Callback<CustomerDataResponse>() {
@@ -120,6 +121,7 @@ public class CustomersActivity extends BaseActivity implements CustomersAdapter.
 
                 } else {
                     Toast.makeText(CustomersActivity.this, "Data not Found!", Toast.LENGTH_SHORT).show();
+                    customersAdapter.setShowLoading(false);
                 }
             }
 

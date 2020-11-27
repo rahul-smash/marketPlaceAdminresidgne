@@ -36,6 +36,28 @@ public class CustomersResponse implements Serializable {
     @SerializedName("paid_amount")
     private String paidAmount;
 
+    @SerializedName("customer_address")
+    private String customerAddress;
+
+    @SerializedName("created")
+    private String createdDate;
+
+    public String getCreatedDate() {
+        return createdDate;
+    }
+
+    public void setCreatedDate(String createdDate) {
+        this.createdDate = createdDate;
+    }
+
+    public String getCustomerAddress() {
+        return customerAddress;
+    }
+
+    public void setCustomerAddress(String customerAddress) {
+        this.customerAddress = customerAddress;
+    }
+
     public String getId() {
         return id;
     }

@@ -141,13 +141,12 @@ public class CustomerDetailActivity extends BaseActivity implements HomeOrdersAd
 
         if (customerData.getCustomerAddress() != null) {
             textViewCustomerCity.setText(customerData.getCustomerAddress().getAreaName());
-
-            textViewDeliveryAddress.setText(String.format("%s, %s, %s", customerData.getCustomerAddress().getAddress(), customerData.getCustomerAddress().getCity(), customerData.getCustomerAddress().getState()));
             linearLayoutArea.setVisibility(TextUtils.isEmpty(customerData.getCustomerAddress().getAreaName()) ? View.GONE : View.VISIBLE);
         } else {
-            constraintLayoutDelivery.setVisibility(View.GONE);
             linearLayoutArea.setVisibility(View.GONE);
         }
+
+        textViewDeliveryAddress.setText(customerData.getCustomers().getCustomerAddress());
 
         textViewLoyaltyPoints.setText(String.valueOf(customerData.getLoyalityPoints()));
         textViewActiveCount.setText(String.valueOf(customerData.getActiveOrders()));
