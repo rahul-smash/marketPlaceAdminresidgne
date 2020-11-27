@@ -62,11 +62,11 @@ public class BasicChatClient extends CallbackListener<ChatClient> {
         String email = AppPreference.getInstance().getUserEmail();
         final String identity = !TextUtils.isEmpty(email) ? email : AppPreference.getInstance().getUserMobile();
 
-        NetworkAdaper.twilioServer().getTwilioToken(identity, new Callback<Response>() {
+        NetworkAdaper.twilioServer().getTwilioToken(identity, new Callback<String>() {
             @Override
-            public void success(Response response, Response response2) {
+            public void success(String response, Response response2) {
                 try {
-                    accessToken = response.getBody().toString();
+                    accessToken = response;
                     createClient();
                 } catch (Exception e) {
                     e.printStackTrace();

@@ -46,13 +46,14 @@ import com.signity.shopkeeperapp.model.stores.StoresResponse;
 import com.signity.shopkeeperapp.model.verify.EmailVerifyResponse;
 import com.signity.shopkeeperapp.model.verify.MobileOtpReponse;
 import com.signity.shopkeeperapp.model.verify.OtpVerifyResponse;
+import com.squareup.okhttp.ResponseBody;
 
 import java.util.List;
 import java.util.Map;
 
 import okhttp3.MultipartBody;
+import okhttp3.Response;
 import retrofit.Callback;
-import retrofit.client.Response;
 import retrofit.http.FieldMap;
 import retrofit.http.FormUrlEncoded;
 import retrofit.http.GET;
@@ -321,5 +322,5 @@ public interface ApiService {
     void postScheduleFacebook(String id, boolean b, String trim, String accessToken1, int time, MultipartBody.Part body, Callback<FacebookPostResponse> responseCallback);
 
     @GET("/token")
-    void getTwilioToken(@Query("identity") String identity, Callback<Response> responseCallback);
+    void getTwilioToken(@Query("identity") String identity, Callback<String> responseCallback);
 }
