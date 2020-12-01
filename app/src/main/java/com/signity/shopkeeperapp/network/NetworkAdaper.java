@@ -79,7 +79,8 @@ public class NetworkAdaper {
     }
 
     public static ApiService twilioServer() {
-        String url = "http://112.196.1.221:8024";
+        // TODO - Change Domain for ValueAppz
+        String url = "https://twiliochat.mydigisalon.com";
 
         OkHttpClient client = new OkHttpClient();
         client.setConnectTimeout(1, TimeUnit.MINUTES);

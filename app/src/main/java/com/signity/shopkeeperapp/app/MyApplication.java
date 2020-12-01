@@ -11,7 +11,11 @@ import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.FirebaseApp;
 import com.google.firebase.iid.FirebaseInstanceId;
 import com.google.firebase.iid.InstanceIdResult;
+import com.onesignal.OneSignal;
 import com.signity.shopkeeperapp.network.NetworkAdaper;
+import com.signity.shopkeeperapp.onesignal.MyNotificationOpenedHandler;
+import com.signity.shopkeeperapp.onesignal.MyNotificationReceivedHandler;
+import com.signity.shopkeeperapp.onesignal.OneSignalInAppMessaging;
 import com.signity.shopkeeperapp.twilio.BasicChatClient;
 import com.signity.shopkeeperapp.util.PrefManager;
 import com.signity.shopkeeperapp.util.prefs.AppPreference;
@@ -45,6 +49,14 @@ public class MyApplication extends Application implements Application.ActivityLi
         initSingletons();
         saveDeviceToken();
         registerActivityLifecycleCallbacks(this);
+        OneSignal.setLogLevel(OneSignal.LOG_LEVEL.VERBOSE, OneSignal.LOG_LEVEL.NONE);
+        OneSignal.startInit(this)
+                .inFocusDisplaying(OneSignal.OSInFocusDisplayOption.Notification)
+                .setNotificationOpenedHandler(new MyNotificationOpenedHandler())
+                .setNotificationReceivedHandler(new MyNotificationReceivedHandler())
+                .setInAppMessageClickHandler(new OneSignalInAppMessaging())
+                .init();
+
     }
 
     protected void initSingletons() {

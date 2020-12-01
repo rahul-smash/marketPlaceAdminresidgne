@@ -1,3 +1,16 @@
+buildscript {
+    repositories {
+        maven { url 'https://plugins.gradle.org/m2/'}
+    }
+    dependencies {
+        classpath 'gradle.plugin.com.onesignal:onesignal-gradle-plugin:0.12.9'
+    }
+}
+apply plugin: 'com.onesignal.androidsdk.onesignal-gradle-plugin'
+
+repositories {
+    maven { url 'https://maven.google.com' }
+}
 apply plugin: 'com.android.application'
 apply plugin: 'com.google.gms.google-services'
 
@@ -14,6 +27,8 @@ android {
         versionName "3.0"
         multiDexEnabled true
         testInstrumentationRunner 'androidx.test.runner.AndroidJUnitRunner'
+        manifestPlaceholders = [onesignal_app_id               : "67ae01ee-5b3a-4dc6-b66a-0e4445687283",
+                                onesignal_google_project_number: "REMOTE"]
     }
     buildTypes {
         debug {
@@ -83,5 +98,7 @@ dependencies {
     implementation 'com.facebook.android:facebook-android-sdk:5.12.1'
 
     implementation 'com.twilio:chat-android:5.1.1'
+
+    implementation 'com.onesignal:OneSignal:[3.15.4, 3.99.99]'
 }
 apply plugin: 'com.google.firebase.crashlytics'

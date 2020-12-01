@@ -31,6 +31,7 @@ import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.signity.shopkeeperapp.BuildConfig;
 import com.signity.shopkeeperapp.R;
 import com.signity.shopkeeperapp.SplashActivity;
+import com.signity.shopkeeperapp.app.MyApplication;
 import com.signity.shopkeeperapp.base.BaseActivity;
 import com.signity.shopkeeperapp.book.BookOrderActivity;
 import com.signity.shopkeeperapp.customers.CustomersActivity;
@@ -476,6 +477,7 @@ public class DashboardActivity extends BaseActivity implements BottomNavigationV
                 ProgressDialogUtil.hideProgressDialog();
                 AppPreference.getInstance().clearAll();
                 NetworkAdaper.setupRetrofitClient(NetworkAdaper.setBaseUrl(""));
+                MyApplication.getInstance().getBasicChatClient().shutdown();
                 startActivity(SplashActivity.getIntent(DashboardActivity.this));
                 AnimUtil.slideFromLeftAnim(DashboardActivity.this);
                 finish();

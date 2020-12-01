@@ -30,6 +30,7 @@ import java.text.SimpleDateFormat;
 import java.util.Currency;
 import java.util.Date;
 import java.util.Locale;
+import java.util.TimeZone;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -478,5 +479,14 @@ public class Util {
         bmOptions.inPurgeable = true;
 
         return BitmapFactory.decodeFile(imageFile.getAbsolutePath(), bmOptions);
+    }
+
+    public static String getCurrentDateTime() {
+        String output = "";
+        SimpleDateFormat outputFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'");
+        outputFormat.setTimeZone(TimeZone.getTimeZone("UTC"));
+        Date date = new Date();
+        output = outputFormat.format(date);
+        return output;
     }
 }
