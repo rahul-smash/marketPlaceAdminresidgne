@@ -6,6 +6,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -193,10 +194,15 @@ public class HomeOrdersAdapter extends RecyclerView.Adapter<HomeOrdersAdapter.Vi
         void onWhatsappMessage(int position);
 
         void onCallCustomer(int position);
+
+        void onAssignRunner(String runnerId, int pageNumber);
+
+        void onChangeRunner(String runnerId, int pageNumber);
     }
 
     class ViewHolder extends RecyclerView.ViewHolder {
         ImageView imageViewWhatsapp, imageViewPhoneCall;
+        LinearLayout linearLayoutAssignRunner, linearLayoutAssigned;
         TextView textViewName, textViewOrderPlatform, textViewPrice, textViewOrderIdItemsTime, textViewDateTime, textViewDeliveryType, textViewPaymentType;
 
         public ViewHolder(final View convertView) {
@@ -209,11 +215,13 @@ public class HomeOrdersAdapter extends RecyclerView.Adapter<HomeOrdersAdapter.Vi
             textViewDeliveryType = convertView.findViewById(R.id.tv_delivery_time_slot);
             imageViewWhatsapp = convertView.findViewById(R.id.iv_whatsapp);
             imageViewPhoneCall = convertView.findViewById(R.id.iv_phone_call);
+            linearLayoutAssignRunner = convertView.findViewById(R.id.ll_assign_runner);
+            linearLayoutAssigned = convertView.findViewById(R.id.ll_assigned);
         }
 
         public void bind(int position) {
 
-            OrdersListModel ordersModel = ordersListModels.get(position);
+            final OrdersListModel ordersModel = ordersListModels.get(position);
 
             String orderId = String.format("#%s", ordersModel.getDisplay_order_id());
             String itemText = ordersModel.getItems().size() > 1 ? "items" : "item";
@@ -223,6 +231,13 @@ public class HomeOrdersAdapter extends RecyclerView.Adapter<HomeOrdersAdapter.Vi
             imageViewWhatsapp.setVisibility(hideNameIcon ? View.GONE : View.VISIBLE);
             imageViewPhoneCall.setVisibility(hideNameIcon ? View.GONE : View.VISIBLE);
 
+            linearLayoutAssignRunner.setVisibility(ordersModel.getRunnerId().equals("0") ? View.VISIBLE : View.GONE);
+            linearLayoutAssigned.setVisibility(ordersModel.getRunnerId().equals("0") ? View.GONE : View.VISIBLE);
+
+            if (!ordersModel.getOrderFacility().equalsIgnoreCase("delivery")) {
+                linearLayoutAssigned.setVisibility(View.GONE);
+                linearLayoutAssignRunner.setVisibility(View.GONE);
+            }
 
             String platform = ordersModel.getPlatform();
             if (!TextUtils.isEmpty(platform)) {
@@ -259,6 +274,24 @@ public class HomeOrdersAdapter extends RecyclerView.Adapter<HomeOrdersAdapter.Vi
                 public void onClick(View v) {
                     if (listener != null) {
                         listener.onWhatsappMessage(getAdapterPosition());
+                    }
+                }
+            });
+
+            linearLayoutAssignRunner.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    if (listener != null) {
+                        listener.onAssignRunner(ordersModel.getRunnerId(),ordersModel.getPageNumber());
+                    }
+                }
+            });
+
+            linearLayoutAssigned.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    if (listener != null) {
+                        listener.onChangeRunner(ordersModel.getRunnerId(),ordersModel.getPageNumber());
                     }
                 }
             });

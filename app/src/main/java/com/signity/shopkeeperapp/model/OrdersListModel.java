@@ -28,6 +28,9 @@ public class OrdersListModel implements Serializable {
     @SerializedName("user_id")
     @Expose
     private String userId;
+    @SerializedName("runner_id")
+    @Expose
+    private String runnerId;
     @SerializedName("status")
     @Expose
     private String status;
@@ -112,6 +115,14 @@ public class OrdersListModel implements Serializable {
 
     public void setDeliveryTimeSlot(String deliveryTimeSlot) {
         this.deliveryTimeSlot = deliveryTimeSlot;
+    }
+
+    public String getRunnerId() {
+        return runnerId;
+    }
+
+    public void setRunnerId(String runnerId) {
+        this.runnerId = runnerId;
     }
 
     public String getOrderFacility() {

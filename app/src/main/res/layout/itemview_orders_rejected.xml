@@ -146,6 +146,7 @@
     </androidx.constraintlayout.widget.ConstraintLayout>
 
     <LinearLayout
+        android:id="@+id/linearLayout16"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:background="@drawable/shape_grey_dark_rounded_corner"
@@ -162,6 +163,60 @@
             android:textAllCaps="true"
             android:textColor="@color/colorPrimary"
             android:textStyle="bold" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:padding="6dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/linearLayout16">
+
+        <LinearLayout
+            android:id="@+id/ll_assign_runner"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <TextView
+                style="@style/AppTheme.TextView.Mini"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Assign Runner"
+                android:textColor="@color/colorPrimary" />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="@color/colorPrimary" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/ll_assigned"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:visibility="gone">
+
+            <TextView
+                style="@style/AppTheme.TextView.Mini"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Assigned to - " />
+
+            <TextView
+                android:id="@+id/tv_runner_name"
+                style="@style/AppTheme.TextView.Mini"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Vicky Sharma"
+                android:textColor="@color/colorTextDark"
+                android:textStyle="bold" />
+
+        </LinearLayout>
 
     </LinearLayout>
 

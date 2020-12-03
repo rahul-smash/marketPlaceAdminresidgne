@@ -660,6 +660,16 @@ public class HomeFragment extends Fragment implements HomeContentAdapter.HomeCon
         }
     }
 
+    @Override
+    public void onAssignRunner(String runnerId, int pageNumber) {
+
+    }
+
+    @Override
+    public void onChangeRunner(String runnerId, int pageNumber) {
+
+    }
+
     private void callAlert(final String phone) {
         androidx.appcompat.app.AlertDialog.Builder adb = new androidx.appcompat.app.AlertDialog.Builder(getContext());
         adb.setTitle("Call " + phone + " ?");

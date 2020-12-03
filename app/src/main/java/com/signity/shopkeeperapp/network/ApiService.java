@@ -42,17 +42,19 @@ import com.signity.shopkeeperapp.model.orders.offers.ApplyCouponDTO;
 import com.signity.shopkeeperapp.model.orders.offers.StoreOffersResponse;
 import com.signity.shopkeeperapp.model.orders.storeAddress.StoreAddressDTO;
 import com.signity.shopkeeperapp.model.productStatus.ProductStatus;
+import com.signity.shopkeeperapp.model.runner.AddRunnerApiResponse;
+import com.signity.shopkeeperapp.model.runner.CommonResponse;
+import com.signity.shopkeeperapp.model.runner.RunnerDetailResponse;
+import com.signity.shopkeeperapp.model.runner.RunnersResponseDTO;
 import com.signity.shopkeeperapp.model.stores.StoresResponse;
 import com.signity.shopkeeperapp.model.verify.EmailVerifyResponse;
 import com.signity.shopkeeperapp.model.verify.MobileOtpReponse;
 import com.signity.shopkeeperapp.model.verify.OtpVerifyResponse;
-import com.squareup.okhttp.ResponseBody;
 
 import java.util.List;
 import java.util.Map;
 
 import okhttp3.MultipartBody;
-import okhttp3.Response;
 import retrofit.Callback;
 import retrofit.http.FieldMap;
 import retrofit.http.FormUrlEncoded;
@@ -323,4 +325,19 @@ public interface ApiService {
 
     @GET("/token")
     void getTwilioToken(@Query("identity") String identity, Callback<String> responseCallback);
+
+    @GET("/getRunnerList")
+    void getRunners(Callback<RunnersResponseDTO> responseDTOCallback);
+
+    @FormUrlEncoded
+    @POST("/getRunnerList")
+    void getRunnerById(@FieldMap Map<String, Object> param, Callback<RunnerDetailResponse> callback);
+
+    @FormUrlEncoded
+    @POST("/addRunner")
+    void addRunner(@FieldMap Map<String, Object> param, Callback<AddRunnerApiResponse> callback);
+
+    @FormUrlEncoded
+    @POST("/deleteRunner")
+    void deleteRunner(@FieldMap Map<String, String> params,Callback<CommonResponse> callback);
 }

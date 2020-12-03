@@ -37,6 +37,7 @@ import com.signity.shopkeeperapp.model.SetOrdersModel;
 import com.signity.shopkeeperapp.model.orders.StoreOrdersReponse;
 import com.signity.shopkeeperapp.network.NetworkAdaper;
 import com.signity.shopkeeperapp.notifications.NotificationDialog;
+import com.signity.shopkeeperapp.runner.ChooseRunnerDialog;
 import com.signity.shopkeeperapp.util.AnimUtil;
 import com.signity.shopkeeperapp.util.Constant;
 import com.signity.shopkeeperapp.util.DialogUtils;
@@ -512,6 +513,34 @@ public class OrdersFragment extends Fragment implements HomeOrdersAdapter.Orders
         } else {
             callAlert(phone);
         }
+    }
+
+    @Override
+    public void onAssignRunner(String runnerId, int pageNumber) {
+        Bundle bundle = new Bundle();
+        bundle.putString(ChooseRunnerDialog.RUNNER_ID, runnerId);
+        ChooseRunnerDialog dialog = ChooseRunnerDialog.getInstance(bundle);
+        dialog.setListener(new ChooseRunnerDialog.ChooseRunnerDialogListener() {
+            @Override
+            public void onSelectRunner(String id) {
+                // TODO - Api to update runner
+            }
+        });
+        dialog.show(getChildFragmentManager(), ChooseRunnerDialog.TAG);
+    }
+
+    @Override
+    public void onChangeRunner(String runnerId, int pageNumber) {
+        Bundle bundle = new Bundle();
+        bundle.putString(ChooseRunnerDialog.RUNNER_ID, runnerId);
+        ChooseRunnerDialog dialog = ChooseRunnerDialog.getInstance(bundle);
+        dialog.setListener(new ChooseRunnerDialog.ChooseRunnerDialogListener() {
+            @Override
+            public void onSelectRunner(String id) {
+                // TODO - Api to update runner
+            }
+        });
+        dialog.show(getChildFragmentManager(), ChooseRunnerDialog.TAG);
     }
 
     private void callAlert(final String phone) {

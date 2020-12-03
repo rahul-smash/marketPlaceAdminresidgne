@@ -46,6 +46,7 @@ import com.signity.shopkeeperapp.model.ModelForceUpdate;
 import com.signity.shopkeeperapp.model.ResponseForceUpdate;
 import com.signity.shopkeeperapp.model.dashboard.StoreVersionDTO;
 import com.signity.shopkeeperapp.network.NetworkAdaper;
+import com.signity.shopkeeperapp.runner.RunnerActivity;
 import com.signity.shopkeeperapp.stores.StoresActivity;
 import com.signity.shopkeeperapp.twilio.chat.CustomerSupportActivity;
 import com.signity.shopkeeperapp.twilio.chat.TwilioLogin;
@@ -308,6 +309,10 @@ public class DashboardActivity extends BaseActivity implements BottomNavigationV
                 break;
             case BOOK:
                 startActivity(BookOrderActivity.getIntent(DashboardActivity.this));
+                AnimUtil.slideFromRightAnim(DashboardActivity.this);
+                break;
+            case RUNNER:
+                startActivity(RunnerActivity.getStartIntent(DashboardActivity.this));
                 AnimUtil.slideFromRightAnim(DashboardActivity.this);
                 break;
             case SWITCH_STORE:

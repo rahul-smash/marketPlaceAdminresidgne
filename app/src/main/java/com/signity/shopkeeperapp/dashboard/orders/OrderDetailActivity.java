@@ -476,6 +476,16 @@ public class OrderDetailActivity extends BaseActivity implements OrderDetailsAdp
         }
     }
 
+    @Override
+    public void onAssignRunner(String runnerId, int pageNumber) {
+
+    }
+
+    @Override
+    public void onChangeRunner(String runnerId, int pageNumber) {
+
+    }
+
     private void updateOrderStatus(HomeOrdersAdapter.OrderType orderStatus, String orderId, final int position, String message) {
         ProgressDialogUtil.showProgressDialog(this);
         Map<String, String> param = new HashMap<String, String>();

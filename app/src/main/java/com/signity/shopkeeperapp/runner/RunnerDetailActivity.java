@@ -1,4 +1,4 @@
-package com.signity.shopkeeperapp.customers;
+package com.signity.shopkeeperapp.runner;
 
 import android.content.ComponentName;
 import android.content.Context;
@@ -18,7 +18,6 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.widget.Toolbar;
-import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -30,8 +29,8 @@ import com.signity.shopkeeperapp.dashboard.orders.OrderDetailActivity;
 import com.signity.shopkeeperapp.dashboard.orders.RejectOrderDialog;
 import com.signity.shopkeeperapp.model.OrdersListModel;
 import com.signity.shopkeeperapp.model.SetOrdersModel;
-import com.signity.shopkeeperapp.model.customers.detail.CustomerDetailResponse;
-import com.signity.shopkeeperapp.model.customers.detail.DataResponse;
+import com.signity.shopkeeperapp.model.runner.DataResponse;
+import com.signity.shopkeeperapp.model.runner.RunnerDetailResponse;
 import com.signity.shopkeeperapp.network.NetworkAdaper;
 import com.signity.shopkeeperapp.notifications.NotificationDialog;
 import com.signity.shopkeeperapp.util.AnimUtil;
@@ -43,6 +42,7 @@ import com.signity.shopkeeperapp.util.prefs.AppPreference;
 
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 
 import retrofit.Callback;
@@ -51,27 +51,26 @@ import retrofit.client.Response;
 
 import static android.content.Intent.ACTION_DIAL;
 
-public class CustomerDetailActivity extends BaseActivity implements HomeOrdersAdapter.OrdersListener {
+public class RunnerDetailActivity extends BaseActivity implements HomeOrdersAdapter.OrdersListener {
 
-    public static final String CUSTOMER_ID = "CUSTOMER_ID";
-    private static final String TAG = "CustomerDetailActivity";
+    public static final String RUNNER_ID = "RUNNER_ID";
+    private static final String TAG = "RunnerDetailActivity";
     private Toolbar toolbar;
     private RecyclerView recyclerView;
     private HomeOrdersAdapter ordersAdapter;
-    private String customerId;
+    private String runnerId;
     private LinearLayout linearLayoutMain;
-    private TextView textViewCustomerName, textViewCustomerNumber, textViewCustomerEmail, textViewLoyaltyPoints, textViewActiveCount, textViewTotalCount, textViewAmountPaid, textViewDeliveryAddress, textViewCustomerCity;
-    private DataResponse customerData;
-    private ConstraintLayout constraintLayoutDelivery;
-    private LinearLayout linearLayoutDelivery, linearLayoutGuide, linearLayoutArea, linearLayoutEmail;
+    private TextView textViewRunnerName, textViewTotalOrders, textViewRunnerNumber, textViewRunnerEmail, textViewActiveCount, textViewRunnerCity;
+    private DataResponse runnerData;
+    private LinearLayout linearLayoutArea, linearLayoutEmail;
     private ImageView imageViewWhatsapp, imageViewPhoneCall, imageViewMessage;
 
     public static Intent getStartIntent(Context context) {
-        return new Intent(context, CustomerDetailActivity.class);
+        return new Intent(context, RunnerDetailActivity.class);
     }
 
     public static Intent getStartIntent(Context context, Bundle bundle) {
-        Intent intent = new Intent(context, CustomerDetailActivity.class);
+        Intent intent = new Intent(context, RunnerDetailActivity.class);
         intent.putExtras(bundle);
         return intent;
     }
@@ -79,21 +78,22 @@ public class CustomerDetailActivity extends BaseActivity implements HomeOrdersAd
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_customer_detail);
+        setContentView(R.layout.activity_runner_detail);
         getExtra();
         initViews();
         setUpToolbar();
         setUpAdapter();
+        getRunnerDetail();
     }
 
-    public void getCustomerDetail() {
+    public void getRunnerDetail() {
         Map<String, Object> param = new HashMap<>();
-        param.put("user_id", customerId);
+        param.put("runner_id", runnerId);
 
         ProgressDialogUtil.showProgressDialog(this);
-        NetworkAdaper.getNetworkServices().getCustomerDetailNew(param, new Callback<CustomerDetailResponse>() {
+        NetworkAdaper.getNetworkServices().getRunnerById(param, new Callback<RunnerDetailResponse>() {
             @Override
-            public void success(CustomerDetailResponse customerDataResponse, Response response) {
+            public void success(RunnerDetailResponse customerDataResponse, Response response) {
 
                 ProgressDialogUtil.hideProgressDialog();
                 if (isDestroyed()) {
@@ -101,18 +101,12 @@ public class CustomerDetailActivity extends BaseActivity implements HomeOrdersAd
                 }
 
                 if (customerDataResponse.isSuccess()) {
-                    customerData = customerDataResponse.getData();
-
-                    if (customerData == null) {
-                        return;
+                    if (customerDataResponse.getData() != null && !customerDataResponse.getData().isEmpty()) {
+                        runnerData = customerDataResponse.getData().get(0);
+                        populateData();
                     }
-
-                    populateData();
-                    Map<Integer, List<OrdersListModel>> model = new HashMap<>();
-                    model.put(1, customerDataResponse.getData().getCustomerOrder());
-                    ordersAdapter.setPageOrdersMap(model);
                 } else {
-                    Toast.makeText(CustomerDetailActivity.this, "Data not Found!", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(RunnerDetailActivity.this, "Data not Found!", Toast.LENGTH_SHORT).show();
                 }
             }
 
@@ -121,7 +115,7 @@ public class CustomerDetailActivity extends BaseActivity implements HomeOrdersAd
                 error.printStackTrace();
                 ProgressDialogUtil.hideProgressDialog();
                 if (!isDestroyed()) {
-                    Toast.makeText(CustomerDetailActivity.this, "Network is unreachable", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(RunnerDetailActivity.this, "Network is unreachable", Toast.LENGTH_SHORT).show();
                 }
             }
         });
@@ -131,38 +125,39 @@ public class CustomerDetailActivity extends BaseActivity implements HomeOrdersAd
 
         linearLayoutMain.setVisibility(View.VISIBLE);
 
-        if (customerData.getCustomers() != null) {
-            textViewCustomerName.setText(customerData.getCustomers().getFullName());
-            textViewCustomerNumber.setText(customerData.getCustomers().getPhone());
-            textViewCustomerEmail.setText(customerData.getCustomers().getEmail());
+        textViewRunnerName.setText(runnerData.getFullName());
+        textViewRunnerNumber.setText(runnerData.getPhone());
+        textViewRunnerEmail.setText(runnerData.getEmail());
 
-            linearLayoutEmail.setVisibility(TextUtils.isEmpty(customerData.getCustomers().getEmail()) ? View.GONE : View.VISIBLE);
-        }
-
-        if (customerData.getCustomerAddress() != null) {
-            textViewCustomerCity.setText(customerData.getCustomerAddress().getAreaName());
-            linearLayoutArea.setVisibility(TextUtils.isEmpty(customerData.getCustomerAddress().getAreaName()) ? View.GONE : View.VISIBLE);
+        if (runnerData.getArea() != null && !runnerData.getArea().isEmpty()) {
+            textViewRunnerCity.setText(runnerData.getArea().get(0).getName());
         } else {
             linearLayoutArea.setVisibility(View.GONE);
         }
 
-        textViewDeliveryAddress.setText(customerData.getCustomers().getCustomerAddress());
+        linearLayoutEmail.setVisibility(TextUtils.isEmpty(runnerData.getEmail()) ? View.GONE : View.VISIBLE);
+        textViewActiveCount.setText(String.valueOf(runnerData.getActieOrder()));
 
-        textViewLoyaltyPoints.setText(String.valueOf(customerData.getLoyalityPoints()));
-        textViewActiveCount.setText(String.valueOf(customerData.getActiveOrders()));
-        textViewTotalCount.setText(String.valueOf(customerData.getTotalOrders()));
-        textViewAmountPaid.setText(Util.getPriceWithCurrency(Double.parseDouble(customerData.getPaidAmount()), AppPreference.getInstance().getCurrency()));
+        if (runnerData.getOrders() != null && !runnerData.getOrders().isEmpty()) {
+            Map<Integer, List<OrdersListModel>> model = new HashMap<>();
+            model.put(1, runnerData.getOrders());
+            ordersAdapter.setPageOrdersMap(model);
+            textViewTotalOrders.setText(String.format(Locale.getDefault(), "Total Orders: %d", runnerData.getOrders().size()));
+        } else {
+            ordersAdapter.setShowLoading(false);
+            textViewTotalOrders.setVisibility(View.GONE);
+        }
     }
 
     private void getExtra() {
         Bundle bundle = getIntent().getExtras();
         if (bundle != null) {
-            customerId = bundle.getString(CUSTOMER_ID);
+            runnerId = bundle.getString(RUNNER_ID);
         }
     }
 
     private void setUpAdapter() {
-        ordersAdapter = new HomeOrdersAdapter(this, true);
+        ordersAdapter = new HomeOrdersAdapter(this, false);
         ordersAdapter.setListener(this);
         recyclerView.setAdapter(ordersAdapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
@@ -173,68 +168,51 @@ public class CustomerDetailActivity extends BaseActivity implements HomeOrdersAd
         toolbar = findViewById(R.id.toolbar);
         recyclerView = findViewById(R.id.rv_orders);
         linearLayoutMain = findViewById(R.id.ll_main);
-        textViewCustomerName = findViewById(R.id.tv_customer_address);
-        textViewCustomerNumber = findViewById(R.id.tv_customer_state_area);
-        textViewCustomerEmail = findViewById(R.id.tv_customer_email);
-        textViewCustomerCity = findViewById(R.id.tv_customer_city);
+        textViewRunnerName = findViewById(R.id.tv_runner_name);
+        textViewRunnerNumber = findViewById(R.id.tv_runner_number);
+        textViewRunnerEmail = findViewById(R.id.tv_runner_email);
+        textViewRunnerCity = findViewById(R.id.tv_runner_city);
         textViewActiveCount = findViewById(R.id.tv_active_count);
-        textViewTotalCount = findViewById(R.id.tv_total_count);
-        textViewAmountPaid = findViewById(R.id.tv_amount_paid);
-        textViewDeliveryAddress = findViewById(R.id.tv_deliver_address);
-        textViewLoyaltyPoints = findViewById(R.id.tv_loyalty_points);
-        linearLayoutDelivery = findViewById(R.id.ll_deliver);
-        linearLayoutGuide = findViewById(R.id.ll_guide_me);
-        constraintLayoutDelivery = findViewById(R.id.const_delivery);
         imageViewWhatsapp = findViewById(R.id.iv_whatsapp);
         imageViewPhoneCall = findViewById(R.id.iv_phone_call);
         imageViewMessage = findViewById(R.id.iv_message);
         linearLayoutArea = findViewById(R.id.ll_city);
         linearLayoutEmail = findViewById(R.id.ll_email);
+        textViewTotalOrders = findViewById(R.id.tv_total_orders);
 
-        constraintLayoutDelivery.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                linearLayoutDelivery.setVisibility(linearLayoutDelivery.getVisibility() == View.VISIBLE ? View.GONE : View.VISIBLE);
-            }
-        });
-
-        linearLayoutGuide.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                openMap();
-            }
-        });
+        findViewById(R.id.iv_more).setVisibility(View.GONE);
+        findViewById(R.id.ll_switch).setVisibility(View.GONE);
 
         imageViewWhatsapp.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
-                if (customerData == null || customerData.getCustomers() == null) {
+                if (runnerData == null) {
                     return;
                 }
 
-                if (TextUtils.isEmpty(customerData.getCustomers().getPhone())) {
-                    Toast.makeText(CustomerDetailActivity.this, "Sorry! phone number is not available.", Toast.LENGTH_SHORT).show();
+                if (TextUtils.isEmpty(runnerData.getPhone())) {
+                    Toast.makeText(RunnerDetailActivity.this, "Sorry! phone number is not available.", Toast.LENGTH_SHORT).show();
                     return;
                 }
 
-                openWhatsapp(customerData.getCustomers().getPhone());
+                openWhatsapp(runnerData.getPhone());
             }
         });
 
         imageViewPhoneCall.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (customerData == null || customerData.getCustomers() == null) {
+                if (runnerData == null) {
                     return;
                 }
 
-                if (TextUtils.isEmpty(customerData.getCustomers().getPhone())) {
-                    DialogUtils.showAlertDialog(CustomerDetailActivity.this, Constant.APP_TITLE, "Sorry! phone number is not available.");
+                if (TextUtils.isEmpty(runnerData.getPhone())) {
+                    DialogUtils.showAlertDialog(RunnerDetailActivity.this, Constant.APP_TITLE, "Sorry! phone number is not available.");
                     return;
                 }
 
-                callAlert(customerData.getCustomers().getPhone());
+                callAlert(runnerData.getPhone());
             }
         });
 
@@ -242,45 +220,20 @@ public class CustomerDetailActivity extends BaseActivity implements HomeOrdersAd
             @Override
             public void onClick(View v) {
 
-                if (customerData == null || customerData.getCustomers() == null) {
+                if (runnerData == null) {
                     return;
                 }
 
-                if (TextUtils.isEmpty(customerData.getCustomers().getPhone())) {
-                    Toast.makeText(CustomerDetailActivity.this, "Sorry! phone number is not available.", Toast.LENGTH_SHORT).show();
+                if (TextUtils.isEmpty(runnerData.getPhone())) {
+                    Toast.makeText(RunnerDetailActivity.this, "Sorry! phone number is not available.", Toast.LENGTH_SHORT).show();
                     return;
                 }
 
-                Uri uri = Uri.parse(String.format("smsto:%s", customerData.getCustomers().getPhone()));
+                Uri uri = Uri.parse(String.format("smsto:%s", runnerData.getPhone()));
                 Intent intent = new Intent(Intent.ACTION_SENDTO, uri);
                 startActivity(intent);
             }
         });
-    }
-
-    private void openMap() {
-
-        if (customerData == null || customerData.getCustomerAddress() == null) {
-            return;
-        }
-
-        String lat = customerData.getCustomerAddress().getLat();
-        String lon = customerData.getCustomerAddress().getLng();
-
-        if (TextUtils.isEmpty(lat) || TextUtils.isEmpty(lon)) {
-            String map = "http://maps.google.co.in/maps?q=" + customerData.getCustomerAddress().getAddress();
-            Intent mapIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(map));
-            mapIntent.setPackage("com.google.android.apps.maps");
-            startActivity(mapIntent);
-        } else {
-            try {
-                Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse("http://maps.google.com/maps?q=loc:" + lat + "," + lon));
-                intent.setClassName("com.google.android.apps.maps", "com.google.android.maps.MapsActivity");
-                startActivity(intent);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }
     }
 
     private void setUpToolbar() {
@@ -313,7 +266,7 @@ public class CustomerDetailActivity extends BaseActivity implements HomeOrdersAd
     @Override
     protected void onResume() {
         super.onResume();
-        getCustomerDetail();
+        getRunnerDetail();
     }
 
     @Override
@@ -476,9 +429,9 @@ public class CustomerDetailActivity extends BaseActivity implements HomeOrdersAd
                 }
                 ProgressDialogUtil.hideProgressDialog();
                 if (getValues.getSuccess()) {
-                    getCustomerDetail();
+                    getRunnerDetail();
                 } else {
-                    Toast.makeText(CustomerDetailActivity.this, getValues.getMessage(), Toast.LENGTH_SHORT).show();
+                    Toast.makeText(RunnerDetailActivity.this, getValues.getMessage(), Toast.LENGTH_SHORT).show();
                 }
 
             }
@@ -489,7 +442,7 @@ public class CustomerDetailActivity extends BaseActivity implements HomeOrdersAd
                     return;
                 }
                 ProgressDialogUtil.hideProgressDialog();
-                Toast.makeText(CustomerDetailActivity.this, "Network is unreachable", Toast.LENGTH_SHORT).show();
+                Toast.makeText(RunnerDetailActivity.this, "Network is unreachable", Toast.LENGTH_SHORT).show();
             }
         });
     }
