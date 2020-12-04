@@ -5,7 +5,7 @@ import com.google.gson.annotations.SerializedName;
 import java.io.Serializable;
 import java.util.List;
 
-public class DataDTO implements Serializable {
+public class RunnerDetail implements Serializable {
 
     @SerializedName("id")
     private String id;

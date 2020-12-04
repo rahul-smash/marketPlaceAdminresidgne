@@ -29,6 +29,7 @@ import com.signity.shopkeeperapp.dashboard.orders.OrderDetailActivity;
 import com.signity.shopkeeperapp.dashboard.orders.RejectOrderDialog;
 import com.signity.shopkeeperapp.model.OrdersListModel;
 import com.signity.shopkeeperapp.model.SetOrdersModel;
+import com.signity.shopkeeperapp.model.runner.CommonResponse;
 import com.signity.shopkeeperapp.model.runner.DataResponse;
 import com.signity.shopkeeperapp.model.runner.RunnerDetailResponse;
 import com.signity.shopkeeperapp.network.NetworkAdaper;
@@ -335,13 +336,47 @@ public class RunnerDetailActivity extends BaseActivity implements HomeOrdersAdap
     }
 
     @Override
-    public void onAssignRunner(String runnerId, int pageNumber) {
-
+    public void onAssignRunner(String runnerId, final int pageNumber, final String orderId) {
+        Bundle bundle = new Bundle();
+        bundle.putString(ChooseRunnerDialog.RUNNER_ID, runnerId);
+        ChooseRunnerDialog dialog = ChooseRunnerDialog.getInstance(bundle);
+        dialog.setListener(new ChooseRunnerDialog.ChooseRunnerDialogListener() {
+            @Override
+            public void onSelectRunner(String id) {
+                addRunner(id, orderId, pageNumber);
+            }
+        });
+        dialog.show(getSupportFragmentManager(), ChooseRunnerDialog.TAG);
     }
 
-    @Override
-    public void onChangeRunner(String runnerId, int pageNumber) {
+    private void addRunner(String id, String orderId, final int pageNumber) {
 
+        Map<String, String> param = new HashMap<>();
+        param.put("order_id", orderId);
+        param.put("runner_id", id);
+
+        ProgressDialogUtil.showProgressDialog(this);
+        NetworkAdaper.getNetworkServices().assignRunner(param, new Callback<CommonResponse>() {
+            @Override
+            public void success(CommonResponse response, Response response2) {
+
+                if (isDestroyed()) {
+                    return;
+                }
+                ProgressDialogUtil.hideProgressDialog();
+                if (response.isSuccess()) {
+                    getRunnerDetail();
+                }
+                Toast.makeText(RunnerDetailActivity.this, response.getMessage(), Toast.LENGTH_SHORT).show();
+            }
+
+            @Override
+            public void failure(RetrofitError error) {
+                if (!isDestroyed()) {
+                    ProgressDialogUtil.hideProgressDialog();
+                }
+            }
+        });
     }
 
     private void callAlert(final String phone) {

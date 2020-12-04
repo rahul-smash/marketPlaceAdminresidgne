@@ -14,7 +14,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.signity.shopkeeperapp.R;
-import com.signity.shopkeeperapp.model.runner.DataDTO;
+import com.signity.shopkeeperapp.model.runner.RunnerDetail;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -24,18 +24,18 @@ public class ChooseRunnerAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
     private Context context;
     private ChooseRunnerAdapterListener listener;
     private boolean showLoading = true;
-    private List<DataDTO> customersList = new ArrayList<>();
+    private List<RunnerDetail> customersList = new ArrayList<>();
     private String selectedRunnerId;
 
     public ChooseRunnerAdapter(Context context) {
         this.context = context;
     }
 
-    public List<DataDTO> getCustomersList() {
+    public List<RunnerDetail> getCustomersList() {
         return customersList;
     }
 
-    public void setCustomersList(List<DataDTO> customersResponseList) {
+    public void setCustomersList(List<RunnerDetail> customersResponseList) {
         this.customersList = customersResponseList;
         notifyDataSetChanged();
     }
@@ -128,11 +128,17 @@ public class ChooseRunnerAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
 
         public void bind(int positon) {
 
-            final DataDTO customersResponse = customersList.get(positon);
+            final RunnerDetail customersResponse = customersList.get(positon);
 
             textViewCustomerName.setText(customersResponse.getFullName());
             textViewCustomerNumber.setText(customersResponse.getPhone());
             textViewActiveCount.setText(String.valueOf(customersResponse.getActieOrder()));
+
+            if (customersResponse.getArea() != null && !customersResponse.getArea().isEmpty()) {
+                textViewCustomerCity.setText(customersResponse.getArea().get(0).getName());
+            } else {
+                linearLayoutArea.setVisibility(View.GONE);
+            }
 
             if (!TextUtils.isEmpty(selectedRunnerId))
                 radioButton.setChecked(customersResponse.getId().equals(selectedRunnerId));

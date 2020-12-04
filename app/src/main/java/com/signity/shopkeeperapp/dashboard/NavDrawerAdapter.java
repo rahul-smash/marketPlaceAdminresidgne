@@ -89,12 +89,13 @@ public class NavDrawerAdapter extends BaseAdapter {
         DASHBOARD("Dashboard", R.drawable.dashboardicon),
         ORDERS("Orders", R.drawable.ordersicon),
         PRODUCTS("Products", R.drawable.producticon),
-        CUSTOMERS("Customers", R.drawable.ordersicon),
-        BOOK("Book Order", R.drawable.transactionicon),
-        MARKET("Market Store", R.drawable.dashboardicon),
-        RUNNER("Runner Management", R.drawable.dashboardicon),
+        CUSTOMERS("Customers", R.drawable.customersicon),
+//        BOOK("Book Order", R.drawable.transactionicon),
+//        MARKET("Market Store", R.drawable.dashboardicon),
+        RUNNER("Runner Management", R.drawable.runnermanagementicon),
         SWITCH_STORE("Switch Store", R.drawable.switchstoreicon),
-        CUSTOMER_SUPPORT("Customer Support", R.drawable.ordersicon);
+        CUSTOMER_SUPPORT("Customer Support", R.drawable.customersicon),
+        LOGOUT("Logout", R.drawable.logouticon);
 
         private String title;
         @DrawableRes

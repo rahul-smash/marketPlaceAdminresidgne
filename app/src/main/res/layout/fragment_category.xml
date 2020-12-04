@@ -28,7 +28,7 @@
             android:id="@+id/ll_add_category"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="16dp"
+            android:layout_marginBottom="36dp"
             android:background="@drawable/shape_primary_dark_rounded"
             android:gravity="center"
             android:paddingStart="24dp"

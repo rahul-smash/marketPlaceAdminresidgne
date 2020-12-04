@@ -155,8 +155,35 @@ public class RunnerActivity extends BaseActivity implements RunnerAdapter.Runner
 
     @Override
     public void onClickSwitch(String id, String status) {
-        // TODO - Enable Disable Runner
-        Toast.makeText(this, "Change Status", Toast.LENGTH_SHORT).show();
+        ProgressDialogUtil.showProgressDialog(this);
+
+        Map<String, String> params = new HashMap<>();
+        params.put("id", id);
+        params.put("status", status);
+        NetworkAdaper.getNetworkServices().changeRunnerStatus(params, new Callback<CommonResponse>() {
+            @Override
+            public void success(CommonResponse res, Response response) {
+
+                if (isDestroyed()) {
+                    return;
+                }
+
+                ProgressDialogUtil.hideProgressDialog();
+                if (res.isSuccess()) {
+                    getRunners();
+                }
+                Toast.makeText(RunnerActivity.this, res.getMessage(), Toast.LENGTH_SHORT).show();
+
+            }
+
+            @Override
+            public void failure(RetrofitError error) {
+                if (!isDestroyed()) {
+                    ProgressDialogUtil.hideProgressDialog();
+                }
+            }
+        });
+
     }
 
     @Override

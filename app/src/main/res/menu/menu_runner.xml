@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <item
         android:id="@+id/action_add_runner"
-        android:icon="@drawable/addcustomericon"
+        android:icon="@drawable/addrunnericon"
         android:title="Add Runner"
         android:visible="true"
         app:showAsAction="always" />

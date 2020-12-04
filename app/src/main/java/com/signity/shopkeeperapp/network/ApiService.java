@@ -340,4 +340,12 @@ public interface ApiService {
     @FormUrlEncoded
     @POST("/deleteRunner")
     void deleteRunner(@FieldMap Map<String, String> params,Callback<CommonResponse> callback);
+
+    @FormUrlEncoded
+    @POST("/assignRunnerToOrder")
+    void assignRunner(@FieldMap Map<String, String> param, Callback<CommonResponse> callback);
+
+    @FormUrlEncoded
+    @POST("/setRunnerStatus")
+    void changeRunnerStatus(@FieldMap Map<String, String> params, Callback<CommonResponse> callback);
 }

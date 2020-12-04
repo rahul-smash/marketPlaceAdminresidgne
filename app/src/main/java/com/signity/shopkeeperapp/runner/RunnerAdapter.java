@@ -17,7 +17,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.signity.shopkeeperapp.R;
-import com.signity.shopkeeperapp.model.runner.DataDTO;
+import com.signity.shopkeeperapp.model.runner.RunnerDetail;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -27,17 +27,17 @@ public class RunnerAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
     private Context context;
     private RunnerAdapterListener listener;
     private boolean showLoading = true;
-    private List<DataDTO> runnerList = new ArrayList<>();
+    private List<RunnerDetail> runnerList = new ArrayList<>();
 
     public RunnerAdapter(Context context) {
         this.context = context;
     }
 
-    public List<DataDTO> getRunnerList() {
+    public List<RunnerDetail> getRunnerList() {
         return runnerList;
     }
 
-    public void setRunnerList(List<DataDTO> dtoList) {
+    public void setRunnerList(List<RunnerDetail> dtoList) {
         this.runnerList = dtoList;
         notifyDataSetChanged();
     }
@@ -188,23 +188,22 @@ public class RunnerAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
 
         public void bind(int positon) {
 
-            final DataDTO dataDTO = runnerList.get(positon);
+            final RunnerDetail runnerDetail = runnerList.get(positon);
 
-            textViewCustomerName.setText(dataDTO.getFullName());
-            textViewCustomerNumber.setText(dataDTO.getPhone());
-            textViewCustomerCity.setText("TODO");
-            textViewActiveCount.setText(String.valueOf(dataDTO.getActieOrder()));
-            textViewRunnerStatus.setText(dataDTO.getStatus().equals("1") ? "Enabled" : "Disabled");
-            switchRunner.setChecked(dataDTO.getStatus().equals("1"));
+            textViewCustomerName.setText(runnerDetail.getFullName());
+            textViewCustomerNumber.setText(runnerDetail.getPhone());
+            textViewActiveCount.setText(String.valueOf(runnerDetail.getActieOrder()));
+            textViewRunnerStatus.setText(runnerDetail.getStatus().equals("1") ? "Enabled" : "Disabled");
+            switchRunner.setChecked(runnerDetail.getStatus().equals("1"));
 
-            if (!TextUtils.isEmpty(dataDTO.getEmail())) {
-                textViewRunnerEmail.setText(dataDTO.getEmail());
+            if (!TextUtils.isEmpty(runnerDetail.getEmail())) {
+                textViewRunnerEmail.setText(runnerDetail.getEmail());
             } else {
                 linearLayoutEmail.setVisibility(View.GONE);
             }
 
-            if (dataDTO.getArea() != null && !dataDTO.getArea().isEmpty()) {
-                textViewCustomerCity.setText(dataDTO.getArea().get(0).getName());
+            if (runnerDetail.getArea() != null && !runnerDetail.getArea().isEmpty()) {
+                textViewCustomerCity.setText(runnerDetail.getArea().get(0).getName());
             } else {
                 linearLayoutArea.setVisibility(View.GONE);
             }
@@ -213,7 +212,7 @@ public class RunnerAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
                 @Override
                 public void onClick(View view) {
                     if (listener != null) {
-                        listener.onClickSwitch(dataDTO.getId(), dataDTO.getStatus().equals("1") ? "0" : "1");
+                        listener.onClickSwitch(runnerDetail.getId(), runnerDetail.getStatus().equals("1") ? "0" : "1");
                     }
                 }
             });
@@ -222,7 +221,7 @@ public class RunnerAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
                 @Override
                 public void onClick(View v) {
                     if (listener != null) {
-                        listener.onViewRunnerDetail(dataDTO.getId());
+                        listener.onViewRunnerDetail(runnerDetail.getId());
                     }
                 }
             });
@@ -231,7 +230,7 @@ public class RunnerAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
                 @Override
                 public void onClick(View v) {
                     if (listener != null) {
-                        listener.onOpenWhatsapp(dataDTO.getPhone());
+                        listener.onOpenWhatsapp(runnerDetail.getPhone());
                     }
                 }
             });
@@ -240,7 +239,7 @@ public class RunnerAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
                 @Override
                 public void onClick(View v) {
                     if (listener != null) {
-                        listener.onOpenMessage(dataDTO.getPhone());
+                        listener.onOpenMessage(runnerDetail.getPhone());
                     }
                 }
             });
@@ -249,7 +248,7 @@ public class RunnerAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
                 @Override
                 public void onClick(View v) {
                     if (listener != null) {
-                        listener.onOpenCall(dataDTO.getPhone());
+                        listener.onOpenCall(runnerDetail.getPhone());
                     }
                 }
             });
@@ -257,7 +256,7 @@ public class RunnerAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
             imageViewMore.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    popmenu(imageViewMore, dataDTO.getId(), getAdapterPosition());
+                    popmenu(imageViewMore, runnerDetail.getId(), getAdapterPosition());
                 }
             });
 

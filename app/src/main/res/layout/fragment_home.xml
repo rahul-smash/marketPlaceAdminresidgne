@@ -27,7 +27,7 @@
                 <View
                     android:id="@+id/view"
                     android:layout_width="match_parent"
-                    android:layout_height="70dp"
+                    android:layout_height="60dp"
                     android:background="@color/colorPrimary"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintHorizontal_bias="0.5"
@@ -52,21 +52,22 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="16dp"
-                    android:layout_marginTop="8dp"
                     android:layout_marginEnd="16dp"
                     android:background="@color/colorWhite"
                     app:cardCornerRadius="6dp"
                     app:cardElevation="6dp"
+                    app:layout_constraintBottom_toBottomOf="@+id/view"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintHorizontal_bias="0.5"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/tv_store_name">
+                    app:layout_constraintTop_toBottomOf="@+id/view">
 
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:orientation="vertical"
-                        android:padding="16dp">
+                        android:padding="16dp"
+                        android:visibility="gone">
 
                         <TextView
                             android:id="@+id/textview"
@@ -93,10 +94,115 @@
 
                     </LinearLayout>
 
+                    <LinearLayout
+                        android:id="@+id/ll_share"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="center"
+                        android:orientation="horizontal">
+
+                        <ImageView
+                            android:layout_width="12dp"
+                            android:layout_height="12dp"
+                            android:baselineAligned="false"
+                            android:src="@drawable/shareicon"
+                            app:tint="@color/colorPrimary" />
+
+                        <TextView
+                            android:id="@+id/textview11"
+                            style="@style/AppTheme.TextView.Small"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_margin="12dp"
+                            android:text="@string/share_sell"
+                            android:textAllCaps="true"
+                            android:textColor="@color/colorPrimary"
+                            android:textStyle="bold" />
+
+                    </LinearLayout>
+
+                </com.google.android.material.card.MaterialCardView>
+
+                <com.google.android.material.card.MaterialCardView
+                    android:id="@+id/materialCardView_market"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="16dp"
+                    android:layout_marginTop="12dp"
+                    android:layout_marginEnd="16dp"
+                    app:cardBackgroundColor="@color/colorPrimary"
+                    app:cardCornerRadius="4dp"
+                    app:cardElevation="4dp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintHorizontal_bias="0.5"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/materialCardView">
+
+                    <androidx.constraintlayout.widget.ConstraintLayout
+                        android:id="@+id/ll_home_fragment_market_salon"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:background="@drawable/growyourbusinessbg"
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal"
+                        android:padding="16dp"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintHorizontal_bias="0.5"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/materialCardView">
+
+                        <ImageView
+                            android:id="@+id/iv_market"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="parent"
+                            app:srcCompat="@drawable/martketsalon" />
+
+                        <ImageView
+                            android:id="@+id/iv_arrow"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintTop_toTopOf="parent"
+                            app:srcCompat="@drawable/whitearrowicon" />
+
+                        <LinearLayout
+                            android:id="@+id/linearLayout6"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintHorizontal_bias="0.5"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="parent">
+
+                            <TextView
+                                android:id="@+id/tv_market_your"
+                                style="@style/AppTheme.TextView.MediumBold"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:fontFamily="@font/roboto"
+                                android:text="Grow Your Business"
+                                android:textAllCaps="true"
+                                android:textColor="@color/colorWhite"
+                                app:layout_constraintBottom_toBottomOf="parent"
+                                app:layout_constraintEnd_toStartOf="@+id/tv_salon"
+                                app:layout_constraintHorizontal_bias="0.5"
+                                app:layout_constraintStart_toEndOf="@+id/iv_market"
+                                app:layout_constraintTop_toTopOf="parent" />
+
+                        </LinearLayout>
+
+                    </androidx.constraintlayout.widget.ConstraintLayout>
+
                 </com.google.android.material.card.MaterialCardView>
 
                 <LinearLayout
-                    android:id="@+id/ll_share"
+                    android:id="@+id/ll_share_depri"
                     android:layout_width="40dp"
                     android:layout_height="40dp"
                     android:layout_marginEnd="16dp"
@@ -104,6 +210,7 @@
                     android:background="@drawable/background_primary_dark_rounded"
                     android:elevation="6dp"
                     android:gravity="center"
+                    android:visibility="gone"
                     app:layout_constraintBottom_toBottomOf="@+id/materialCardView"
                     app:layout_constraintEnd_toEndOf="@+id/materialCardView"
                     app:layout_constraintTop_toBottomOf="@+id/materialCardView">
@@ -118,7 +225,6 @@
                     android:id="@+id/constraintLayout"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="8dp"
                     android:paddingStart="16dp"
                     android:paddingTop="16dp"
                     android:paddingEnd="16dp"
@@ -126,7 +232,7 @@
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintHorizontal_bias="0.5"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/materialCardView">
+                    app:layout_constraintTop_toBottomOf="@+id/materialCardView_market">
 
                     <TextView
                         android:id="@+id/textView5"

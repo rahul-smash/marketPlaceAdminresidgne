@@ -8,6 +8,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
@@ -195,15 +196,14 @@ public class HomeOrdersAdapter extends RecyclerView.Adapter<HomeOrdersAdapter.Vi
 
         void onCallCustomer(int position);
 
-        void onAssignRunner(String runnerId, int pageNumber);
+        void onAssignRunner(String runnerId, int pageNumber, String orderId);
 
-        void onChangeRunner(String runnerId, int pageNumber);
     }
 
     class ViewHolder extends RecyclerView.ViewHolder {
         ImageView imageViewWhatsapp, imageViewPhoneCall;
         LinearLayout linearLayoutAssignRunner, linearLayoutAssigned;
-        TextView textViewName, textViewOrderPlatform, textViewPrice, textViewOrderIdItemsTime, textViewDateTime, textViewDeliveryType, textViewPaymentType;
+        TextView textViewName, textViewOrderPlatform, textViewPrice, textViewOrderIdItemsTime, textViewRunnerName, textViewDeliveryType, textViewPaymentType;
 
         public ViewHolder(final View convertView) {
             super(convertView);
@@ -217,6 +217,7 @@ public class HomeOrdersAdapter extends RecyclerView.Adapter<HomeOrdersAdapter.Vi
             imageViewPhoneCall = convertView.findViewById(R.id.iv_phone_call);
             linearLayoutAssignRunner = convertView.findViewById(R.id.ll_assign_runner);
             linearLayoutAssigned = convertView.findViewById(R.id.ll_assigned);
+            textViewRunnerName = convertView.findViewById(R.id.tv_runner_name);
         }
 
         public void bind(int position) {
@@ -230,6 +231,10 @@ public class HomeOrdersAdapter extends RecyclerView.Adapter<HomeOrdersAdapter.Vi
             textViewName.setVisibility(hideNameIcon ? View.GONE : View.VISIBLE);
             imageViewWhatsapp.setVisibility(hideNameIcon ? View.GONE : View.VISIBLE);
             imageViewPhoneCall.setVisibility(hideNameIcon ? View.GONE : View.VISIBLE);
+
+            if (ordersModel.getRunnerDetail() != null) {
+                textViewRunnerName.setText(ordersModel.getRunnerDetail().getFullName());
+            }
 
             linearLayoutAssignRunner.setVisibility(ordersModel.getRunnerId().equals("0") ? View.VISIBLE : View.GONE);
             linearLayoutAssigned.setVisibility(ordersModel.getRunnerId().equals("0") ? View.GONE : View.VISIBLE);
@@ -282,7 +287,7 @@ public class HomeOrdersAdapter extends RecyclerView.Adapter<HomeOrdersAdapter.Vi
                 @Override
                 public void onClick(View view) {
                     if (listener != null) {
-                        listener.onAssignRunner(ordersModel.getRunnerId(),ordersModel.getPageNumber());
+                        listener.onAssignRunner(ordersModel.getRunnerId(), ordersModel.getPageNumber(), ordersModel.getOrderId());
                     }
                 }
             });
@@ -291,7 +296,11 @@ public class HomeOrdersAdapter extends RecyclerView.Adapter<HomeOrdersAdapter.Vi
                 @Override
                 public void onClick(View view) {
                     if (listener != null) {
-                        listener.onChangeRunner(ordersModel.getRunnerId(),ordersModel.getPageNumber());
+                        if (ordersModel.getRunnerAccepted().equals("0")) {
+                            listener.onAssignRunner(ordersModel.getRunnerId(), ordersModel.getPageNumber(), ordersModel.getOrderId());
+                        } else {
+                            Toast.makeText(context, "Runner has accepted order delivery!", Toast.LENGTH_SHORT).show();
+                        }
                     }
                 }
             });
@@ -395,33 +404,43 @@ public class HomeOrdersAdapter extends RecyclerView.Adapter<HomeOrdersAdapter.Vi
     }
 
     class ViewHolderDelivered extends ViewHolder {
+        View convertView;
 
         public ViewHolderDelivered(final View convertView) {
             super(convertView);
+            this.convertView = convertView;
         }
 
         @Override
         public void bind(int position) {
             super.bind(position);
+            convertView.findViewById(R.id.ll_assign_runner).setVisibility(View.GONE);
+            convertView.findViewById(R.id.ll_assigned).setClickable(false);
         }
     }
 
     class ViewHolderRejected extends ViewHolder {
+        View convertView;
 
         public ViewHolderRejected(final View convertView) {
             super(convertView);
+            this.convertView = convertView;
         }
 
         @Override
         public void bind(int position) {
             super.bind(position);
+            convertView.findViewById(R.id.ll_assign_runner).setVisibility(View.GONE);
+            convertView.findViewById(R.id.ll_assigned).setClickable(false);
         }
     }
 
     class ViewHolderCanceled extends ViewHolder {
+        View convertView;
 
         public ViewHolderCanceled(final View convertView) {
             super(convertView);
+            this.convertView = convertView;
             TextView textViewStatus = convertView.findViewById(R.id.tv_order_status);
             textViewStatus.setText("Cancelled");
         }
@@ -429,6 +448,8 @@ public class HomeOrdersAdapter extends RecyclerView.Adapter<HomeOrdersAdapter.Vi
         @Override
         public void bind(int position) {
             super.bind(position);
+            convertView.findViewById(R.id.ll_assign_runner).setVisibility(View.GONE);
+            convertView.findViewById(R.id.ll_assigned).setClickable(false);
         }
     }
 

@@ -12,6 +12,7 @@ import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -40,7 +41,6 @@ import com.signity.shopkeeperapp.dashboard.account.AccountFragment;
 import com.signity.shopkeeperapp.dashboard.categories.CategoriesFragment;
 import com.signity.shopkeeperapp.dashboard.home.HomeFragment;
 import com.signity.shopkeeperapp.dashboard.orders.OrdersFragment;
-import com.signity.shopkeeperapp.market.MarketActivity;
 import com.signity.shopkeeperapp.model.LoginModel;
 import com.signity.shopkeeperapp.model.ModelForceUpdate;
 import com.signity.shopkeeperapp.model.ResponseForceUpdate;
@@ -78,6 +78,7 @@ public class DashboardActivity extends BaseActivity implements BottomNavigationV
     private ListView listViewNavigation;
     private int navSelectedId;
     private TextView textViewLogout;
+    private ImageView imageViewGenerateOrder;
 
     public static Intent getStartIntent(Context context) {
         return new Intent(context, DashboardActivity.class);
@@ -121,11 +122,20 @@ public class DashboardActivity extends BaseActivity implements BottomNavigationV
         textViewNavigationTitle = findViewById(R.id.tv_store_name_nav);
         textViewAppVersion = findViewById(R.id.tv_app_version);
         textViewLogout = findViewById(R.id.tv_logout_title);
+        imageViewGenerateOrder = findViewById(R.id.float_action);
+
+        imageViewGenerateOrder.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                startActivity(BookOrderActivity.getIntent(DashboardActivity.this));
+                AnimUtil.slideFromRightAnim(DashboardActivity.this);
+            }
+        });
 
         textViewLogout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                callLogOutApi();
+//                callLogOutApi();
             }
         });
     }
@@ -303,14 +313,14 @@ public class DashboardActivity extends BaseActivity implements BottomNavigationV
             case CUSTOMERS:
                 onClickViewCustomers();
                 break;
-            case MARKET:
+            /*case MARKET:
                 startActivity(new Intent(this, MarketActivity.class));
                 AnimUtil.slideFromRightAnim(DashboardActivity.this);
                 break;
             case BOOK:
                 startActivity(BookOrderActivity.getIntent(DashboardActivity.this));
                 AnimUtil.slideFromRightAnim(DashboardActivity.this);
-                break;
+                break;*/
             case RUNNER:
                 startActivity(RunnerActivity.getStartIntent(DashboardActivity.this));
                 AnimUtil.slideFromRightAnim(DashboardActivity.this);
@@ -322,6 +332,9 @@ public class DashboardActivity extends BaseActivity implements BottomNavigationV
             case CUSTOMER_SUPPORT:
                 startActivity(CustomerSupportActivity.getStartIntent(DashboardActivity.this));
                 AnimUtil.slideFromRightAnim(DashboardActivity.this);
+                break;
+            case LOGOUT:
+                callLogOutApi();
                 break;
         }
         toggleDrawer();

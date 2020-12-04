@@ -11,7 +11,7 @@ public class RunnersResponseDTO implements Serializable {
     private boolean success;
 
     @SerializedName("data")
-    private List<DataDTO> data;
+    private List<RunnerDetail> data;
 
     public boolean isSuccess() {
         return success;
@@ -21,11 +21,11 @@ public class RunnersResponseDTO implements Serializable {
         this.success = success;
     }
 
-    public List<DataDTO> getData() {
+    public List<RunnerDetail> getData() {
         return data;
     }
 
-    public void setData(List<DataDTO> data) {
+    public void setData(List<RunnerDetail> data) {
         this.data = data;
     }
 

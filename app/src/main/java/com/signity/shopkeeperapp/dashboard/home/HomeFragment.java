@@ -43,13 +43,16 @@ import com.signity.shopkeeperapp.dashboard.DashboardActivity;
 import com.signity.shopkeeperapp.dashboard.orders.HomeOrdersAdapter;
 import com.signity.shopkeeperapp.dashboard.orders.OrderDetailActivity;
 import com.signity.shopkeeperapp.dashboard.orders.RejectOrderDialog;
+import com.signity.shopkeeperapp.market.MarketActivity;
 import com.signity.shopkeeperapp.model.OrdersListModel;
 import com.signity.shopkeeperapp.model.SetOrdersModel;
 import com.signity.shopkeeperapp.model.dashboard.StoreDashboardResponse;
 import com.signity.shopkeeperapp.model.orders.StoreOrdersReponse;
+import com.signity.shopkeeperapp.model.runner.CommonResponse;
 import com.signity.shopkeeperapp.network.NetworkAdaper;
 import com.signity.shopkeeperapp.notifications.NotificationActivity;
 import com.signity.shopkeeperapp.notifications.NotificationDialog;
+import com.signity.shopkeeperapp.runner.ChooseRunnerDialog;
 import com.signity.shopkeeperapp.util.AnimUtil;
 import com.signity.shopkeeperapp.util.Constant;
 import com.signity.shopkeeperapp.util.DialogUtils;
@@ -269,6 +272,14 @@ public class HomeFragment extends Fragment implements HomeContentAdapter.HomeCon
         textViewOverView = view.findViewById(R.id.tv_overview);
         Chip allChip = view.findViewById(R.id.chip_all);
         allChip.setChecked(true);
+
+        view.findViewById(R.id.materialCardView_market).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                startActivity(new Intent(getContext(), MarketActivity.class));
+                AnimUtil.slideFromRightAnim(getActivity());
+            }
+        });
 
         linearLayoutOverview.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -661,13 +672,47 @@ public class HomeFragment extends Fragment implements HomeContentAdapter.HomeCon
     }
 
     @Override
-    public void onAssignRunner(String runnerId, int pageNumber) {
-
+    public void onAssignRunner(String runnerId, final int pageNumber, final String orderId) {
+        Bundle bundle = new Bundle();
+        bundle.putString(ChooseRunnerDialog.RUNNER_ID, runnerId);
+        ChooseRunnerDialog dialog = ChooseRunnerDialog.getInstance(bundle);
+        dialog.setListener(new ChooseRunnerDialog.ChooseRunnerDialogListener() {
+            @Override
+            public void onSelectRunner(String id) {
+                addRunner(id, orderId, pageNumber);
+            }
+        });
+        dialog.show(getChildFragmentManager(), ChooseRunnerDialog.TAG);
     }
 
-    @Override
-    public void onChangeRunner(String runnerId, int pageNumber) {
+    private void addRunner(String id, String orderId, final int pageNumber) {
 
+        Map<String, String> param = new HashMap<>();
+        param.put("order_id", orderId);
+        param.put("runner_id", id);
+
+        ProgressDialogUtil.showProgressDialog(getContext());
+        NetworkAdaper.getNetworkServices().assignRunner(param, new Callback<CommonResponse>() {
+            @Override
+            public void success(CommonResponse response, Response response2) {
+
+                if (!isAdded()) {
+                    return;
+                }
+                ProgressDialogUtil.hideProgressDialog();
+                if (response.isSuccess()) {
+                    getOrders();
+                }
+                Toast.makeText(getContext(), response.getMessage(), Toast.LENGTH_SHORT).show();
+            }
+
+            @Override
+            public void failure(RetrofitError error) {
+                if (isAdded()) {
+                    ProgressDialogUtil.hideProgressDialog();
+                }
+            }
+        });
     }
 
     private void callAlert(final String phone) {

@@ -242,7 +242,7 @@
                 style="@style/AppTheme.TextView.Mini"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Assigned to - " />
+                android:text="Assigned to-" />
 
             <TextView
                 android:id="@+id/tv_runner_name"

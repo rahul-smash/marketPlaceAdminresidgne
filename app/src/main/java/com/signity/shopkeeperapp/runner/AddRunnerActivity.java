@@ -101,6 +101,7 @@ public class AddRunnerActivity extends BaseActivity {
     public void getRunnerDetail() {
 
         if (TextUtils.isEmpty(runnerId)) {
+            ProgressDialogUtil.hideProgressDialog();
             return;
         }
 

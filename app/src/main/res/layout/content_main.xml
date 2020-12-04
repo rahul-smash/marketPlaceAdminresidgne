@@ -34,4 +34,32 @@
         app:layout_constraintStart_toStartOf="parent"
         app:menu="@menu/main" />
 
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="6dp"
+        android:elevation="8dp"
+        android:gravity="center"
+        android:orientation="vertical"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent">
+
+        <ImageView
+            android:id="@+id/float_action"
+            android:layout_width="70dp"
+            android:layout_height="70dp"
+            android:elevation="8dp"
+            android:src="@drawable/generateordericon" />
+
+        <TextView
+            style="@style/AppTheme.TextView.Tiny"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Generate Order"
+            android:textColor="@color/colorTextDark" />
+
+    </LinearLayout>
+
 </androidx.constraintlayout.widget.ConstraintLayout>

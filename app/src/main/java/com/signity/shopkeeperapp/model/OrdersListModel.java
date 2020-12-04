@@ -2,6 +2,7 @@ package com.signity.shopkeeperapp.model;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
+import com.signity.shopkeeperapp.model.runner.RunnerDetail;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -92,6 +93,30 @@ public class OrdersListModel implements Serializable {
     private String deliveryTimeSlot;
     @Expose(serialize = false)
     private int pageNumber;
+
+    @Expose
+    @SerializedName("runnerDetail")
+    private RunnerDetail runnerDetail;
+
+    @Expose
+    @SerializedName("runner_delivery_accepted")
+    private String runnerAccepted;
+
+    public String getRunnerAccepted() {
+        return runnerAccepted;
+    }
+
+    public void setRunnerAccepted(String runnerAccepted) {
+        this.runnerAccepted = runnerAccepted;
+    }
+
+    public RunnerDetail getRunnerDetail() {
+        return runnerDetail;
+    }
+
+    public void setRunnerDetail(RunnerDetail runnerDetail) {
+        this.runnerDetail = runnerDetail;
+    }
 
     public String getPlatform() {
         return platform;
