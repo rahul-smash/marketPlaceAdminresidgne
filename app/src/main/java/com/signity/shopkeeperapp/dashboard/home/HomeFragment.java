@@ -40,10 +40,13 @@ import com.google.android.material.chip.ChipGroup;
 import com.signity.shopkeeperapp.R;
 import com.signity.shopkeeperapp.adapter.SpacesItemDecoration;
 import com.signity.shopkeeperapp.dashboard.DashboardActivity;
+import com.signity.shopkeeperapp.dashboard.MarketBottomSheetDialog;
+import com.signity.shopkeeperapp.dashboard.ShareBottomSheetDialog;
 import com.signity.shopkeeperapp.dashboard.orders.HomeOrdersAdapter;
 import com.signity.shopkeeperapp.dashboard.orders.OrderDetailActivity;
 import com.signity.shopkeeperapp.dashboard.orders.RejectOrderDialog;
 import com.signity.shopkeeperapp.market.MarketActivity;
+import com.signity.shopkeeperapp.market.MarketVideosActivity;
 import com.signity.shopkeeperapp.model.OrdersListModel;
 import com.signity.shopkeeperapp.model.SetOrdersModel;
 import com.signity.shopkeeperapp.model.dashboard.StoreDashboardResponse;
@@ -93,6 +96,7 @@ public class HomeFragment extends Fragment implements HomeContentAdapter.HomeCon
     private int checkedId;
     private HomeOrdersAdapter.OrderType orderType = HomeOrdersAdapter.OrderType.ALL;
     private Constant.StoreDashboard typeofDay = Constant.StoreDashboard.TODAY;
+    private Uri cameraImageUri;
 
     public static HomeFragment getInstance(Bundle bundle) {
         HomeFragment fragment = new HomeFragment();
@@ -276,8 +280,7 @@ public class HomeFragment extends Fragment implements HomeContentAdapter.HomeCon
         view.findViewById(R.id.materialCardView_market).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                startActivity(new Intent(getContext(), MarketActivity.class));
-                AnimUtil.slideFromRightAnim(getActivity());
+                openMarketSheet();
             }
         });
 
@@ -338,7 +341,7 @@ public class HomeFragment extends Fragment implements HomeContentAdapter.HomeCon
         linearLayoutShare.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                openWebsiteShare();
+                openShareSheet();
             }
         });
 
@@ -350,6 +353,69 @@ public class HomeFragment extends Fragment implements HomeContentAdapter.HomeCon
                 storeDashboard();
             }
         });
+    }
+
+    private void openShareSheet() {
+        ShareBottomSheetDialog dialog = ShareBottomSheetDialog.getInstance(null);
+        dialog.setListener(new ShareBottomSheetDialog.ShareBottomSheetDialogListener() {
+            @Override
+            public void onShareWebsite() {
+                openWebsiteShare();
+            }
+
+            @Override
+            public void onShareProduct() {
+                // TODO - Open Products Page
+                Toast.makeText(getContext(), "On Share Product", Toast.LENGTH_SHORT).show();
+            }
+
+            @Override
+            public void onShareLocation() {
+                // TODO - Share Location Intent
+                Toast.makeText(getContext(), "On Share Location", Toast.LENGTH_SHORT).show();
+            }
+
+            @Override
+            public void onShareFacebookPage() {
+                // TODO - Share Facebook Page
+                Toast.makeText(getContext(), "On Share Facebook Page", Toast.LENGTH_SHORT).show();
+            }
+        });
+        dialog.show(getChildFragmentManager(), ShareBottomSheetDialog.TAG);
+    }
+
+    private void openMarketSheet() {
+        MarketBottomSheetDialog dialog = MarketBottomSheetDialog.getInstance(null);
+        dialog.setListener(new MarketBottomSheetDialog.ShareBottomSheetDialogListener() {
+            @Override
+            public void onShareGallery() {
+                if (listener != null)
+                    listener.onChooseImage();
+            }
+
+            @Override
+            public void onSharePremiumVideo() {
+                startActivity(MarketVideosActivity.getStartIntent(getContext()));
+                AnimUtil.slideFromRightAnim(getActivity());
+            }
+
+            @Override
+            public void onSharePremiumCreative() {
+                Bundle bundle = new Bundle();
+                bundle.putSerializable(MarketActivity.MARKET_MODE, Constant.MarketMode.CREATIVE);
+                startActivity(MarketActivity.getStartIntent(getActivity(), bundle));
+                AnimUtil.slideFromRightAnim(getActivity());
+            }
+
+            @Override
+            public void onShareYourCreative() {
+                Bundle bundle = new Bundle();
+                bundle.putSerializable(MarketActivity.MARKET_MODE, Constant.MarketMode.FRAME);
+                startActivity(MarketActivity.getStartIntent(getActivity(), bundle));
+                AnimUtil.slideFromRightAnim(getActivity());
+            }
+        });
+        dialog.show(getChildFragmentManager(), MarketBottomSheetDialog.TAG);
     }
 
     private void openWebsite() {
@@ -766,5 +832,7 @@ public class HomeFragment extends Fragment implements HomeContentAdapter.HomeCon
         void onClickViewCustomers();
 
         void onUpdateOrdersCount(int count);
+
+        void onChooseImage();
     }
 }

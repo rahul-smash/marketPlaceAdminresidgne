@@ -22,6 +22,9 @@
     <color name="colorYellow">#d2c231</color>
     <color name="colorPrimaryBlackAlpha">#99271f44</color>
     <color name="colorFacebook">#4267B2</color>
+    <color name="colorProduct">#e85c1e</color>
+    <color name="colorPremiumVideo">#3090f7</color>
+    <color name="colorPremiumCreative">#bc5199</color>
 
     <color name="divider">#919191</color>
     <color name="color_text_dashboar_lbl2">#373737</color>

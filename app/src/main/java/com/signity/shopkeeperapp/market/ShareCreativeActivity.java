@@ -438,9 +438,9 @@ public class ShareCreativeActivity extends BaseActivity implements FacebookPages
         } else {
             File file = null;
             if (marketMode == Constant.MarketMode.FRAME) {
-                file = new File(getExternalFilesDir("Digi"), "CustomFrame.png");
+                file = new File(getExternalFilesDir("ValueAppz"), "CustomFrame.png");
             } else if (marketMode == Constant.MarketMode.GALLERY) {
-                file = new File(getExternalFilesDir("Digi"), "style.jpg");
+                file = new File(getExternalFilesDir("ValueAppz"), "style.jpg");
             }
 
             if (file != null) {
@@ -521,7 +521,7 @@ public class ShareCreativeActivity extends BaseActivity implements FacebookPages
                 openPagesDialog();
             }
         } else {
-            LoginManager.getInstance().logInWithPublishPermissions(this, Arrays.asList("manage_pages", "publish_pages"));
+            LoginManager.getInstance().logInWithPublishPermissions(this, Arrays.asList("publish_actions"));
         }
     }
 

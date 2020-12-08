@@ -140,7 +140,47 @@ public class CustomFrameActivity extends BaseActivity implements ImageBottomDial
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_custom_frame);
+        initViews();
         setUp();
+    }
+
+    private void initViews() {
+        toolbar = findViewById(R.id.toolbar);
+        imageViewFrame = findViewById(R.id.iv_frame);
+        imageViewAddImage = findViewById(R.id.iv_add_image);
+        uCropView = findViewById(R.id.custom_crop_view);
+        blockingView = findViewById(R.id.v_blocking);
+        constraintLayout = findViewById(R.id.const_buttons);
+//        frameLayout = findViewById(R.id.toolbar);
+        linearLayout = findViewById(R.id.ll_adjust_);
+
+        imageViewAddImage.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                onClickAddImage();
+            }
+        });
+
+        findViewById(R.id.btn_save).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                onSave();
+            }
+        });
+
+        findViewById(R.id.ll_change_image).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                onChangeImage();
+            }
+        });
+
+        findViewById(R.id.ll_save_frame).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                onSaveFrame();
+            }
+        });
     }
 
     protected void setUp() {
@@ -151,7 +191,7 @@ public class CustomFrameActivity extends BaseActivity implements ImageBottomDial
         getImageApi();
 
         // This is image is no longer needed as we are now capturing bitmap from view
-        finalImageUri = Uri.fromFile(new File(getExternalFilesDir("Digi"), FINAL_IMAGE.concat(".jpg")));
+        finalImageUri = Uri.fromFile(new File(getExternalFilesDir("ValueAppz"), FINAL_IMAGE.concat(".jpg")));
     }
 
     @Override
@@ -284,7 +324,7 @@ public class CustomFrameActivity extends BaseActivity implements ImageBottomDial
 
         Bitmap customFrameBitmap = mergeBitmaps(scaledBitmap, frameBitmap);
 
-        Util.saveImageFilePng(customFrameBitmap, "CustomFrame", getExternalFilesDir("ValueAppz Admin"));
+        Util.saveImageFilePng(customFrameBitmap, "CustomFrame", getExternalFilesDir("ValueAppz"));
 
         // open share
         Intent intent = ShareCreativeActivity.getStartIntent(this);
@@ -317,7 +357,7 @@ public class CustomFrameActivity extends BaseActivity implements ImageBottomDial
 
     private void cameraIntent() {
         Intent cameraIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-        File fileCamera = new File(getExternalFilesDir("Digi"), FRAME_IMAGE.concat(".jpg"));
+        File fileCamera = new File(getExternalFilesDir("ValueAppz"), FRAME_IMAGE.concat(".jpg"));
         frameImageUri = FileProvider.getUriForFile(this, getPackageName() + ".provider", fileCamera);
         cameraIntent.putExtra(MediaStore.EXTRA_OUTPUT, frameImageUri);
         startActivityForResult(cameraIntent, CAMERA_REQUEST);

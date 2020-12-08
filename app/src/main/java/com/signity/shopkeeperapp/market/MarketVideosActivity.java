@@ -4,7 +4,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
-import android.widget.TextView;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.widget.Toolbar;
@@ -15,21 +14,17 @@ import androidx.fragment.app.FragmentTransaction;
 import com.signity.shopkeeperapp.R;
 import com.signity.shopkeeperapp.base.BaseActivity;
 import com.signity.shopkeeperapp.util.AnimUtil;
-import com.signity.shopkeeperapp.util.Constant;
 
-public class MarketActivity extends BaseActivity {
+public class MarketVideosActivity extends BaseActivity {
 
-    public static final String MARKET_MODE = "MARKET_MODE";
     private Toolbar toolbar;
-    private Constant.MarketMode marketMode = Constant.MarketMode.CREATIVE;
-    private TextView textViewToolbar;
 
     public static Intent getStartIntent(Context context) {
-        return new Intent(context, MarketActivity.class);
+        return new Intent(context, MarketVideosActivity.class);
     }
 
     public static Intent getStartIntent(Context context, Bundle bundle) {
-        Intent intent = new Intent(context, MarketActivity.class);
+        Intent intent = new Intent(context, MarketVideosActivity.class);
         intent.putExtras(bundle);
         return intent;
     }
@@ -37,31 +32,18 @@ public class MarketActivity extends BaseActivity {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_market);
-        getExtra();
+        setContentView(R.layout.activity_market_video);
         initView();
         setUpToolbar();
         openFragment();
     }
 
     private void openFragment() {
-        Bundle bundle = new Bundle();
-        bundle.putSerializable(CreativeFragment.MARKET_MODE, marketMode);
-        showMarketFragment(CreativeFragment.getInstance(bundle), CreativeFragment.TAG);
-    }
-
-    private void getExtra() {
-        Bundle bundle = getIntent().getExtras();
-        if (bundle != null) {
-            marketMode = (Constant.MarketMode) bundle.getSerializable(MARKET_MODE);
-        }
+        showMarketFragment(VideoCreativeFragment.getInstance(), VideoCreativeFragment.TAG);
     }
 
     private void initView() {
         toolbar = findViewById(R.id.toolbar);
-        textViewToolbar = findViewById(R.id.tv_toolbar);
-
-        textViewToolbar.setText(marketMode == Constant.MarketMode.CREATIVE ? "Premium Creatives" : "Custom Frames");
     }
 
     private void setUpToolbar() {
@@ -75,7 +57,7 @@ public class MarketActivity extends BaseActivity {
             @Override
             public void onClick(View v) {
                 finish();
-                AnimUtil.slideFromLeftAnim(MarketActivity.this);
+                AnimUtil.slideFromLeftAnim(MarketVideosActivity.this);
             }
         });
     }

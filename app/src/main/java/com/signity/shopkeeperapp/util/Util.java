@@ -4,8 +4,12 @@ import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Canvas;
+import android.graphics.Matrix;
+import android.graphics.Paint;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Build;
@@ -33,6 +37,8 @@ import java.util.Locale;
 import java.util.TimeZone;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
+import static com.yalantis.ucrop.util.BitmapLoadUtils.calculateInSampleSize;
 
 /**
  * Created by Rajinder on 30/9/15.
@@ -487,6 +493,34 @@ public class Util {
         outputFormat.setTimeZone(TimeZone.getTimeZone("UTC"));
         Date date = new Date();
         output = outputFormat.format(date);
+        return output;
+    }
+
+    public static Bitmap decodeSampledBitmapFromResource(Resources res, int resId, int reqWidth, int reqHeight, boolean isLow) {
+
+        // First decode with inJustDecodeBounds=true to check dimensions
+        final BitmapFactory.Options options = new BitmapFactory.Options();
+        options.inJustDecodeBounds = true;
+        if (isLow) {
+            options.inPreferredConfig = Bitmap.Config.RGB_565;
+        }
+        BitmapFactory.decodeResource(res, resId, options);
+
+        // Calculate inSampleSize
+        options.inSampleSize = calculateInSampleSize(options, reqWidth, reqHeight);
+
+        // Decode bitmap with inSampleSize set
+        options.inJustDecodeBounds = false;
+        return BitmapFactory.decodeResource(res, resId, options);
+    }
+
+    public static Bitmap scaleBitmap(Bitmap bitmap, int wantedWidth, int wantedHeight) {
+        Bitmap output = Bitmap.createBitmap(wantedWidth, wantedHeight, Bitmap.Config.ARGB_8888);
+        Canvas canvas = new Canvas(output);
+        Matrix m = new Matrix();
+        m.setScale((float) wantedWidth / bitmap.getWidth(), (float) wantedHeight / bitmap.getHeight());
+        canvas.drawBitmap(bitmap, m, new Paint());
+
         return output;
     }
 }

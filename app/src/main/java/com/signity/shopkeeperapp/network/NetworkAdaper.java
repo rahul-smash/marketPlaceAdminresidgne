@@ -64,6 +64,7 @@ public class NetworkAdaper {
     }
 
     public static ApiService marketStore() {
+        //https://marketyourstorestaging.mydigisalon.com/
         String url = "https://staginguniversal.mydigisalon.com/";
 
         OkHttpClient client = new OkHttpClient();

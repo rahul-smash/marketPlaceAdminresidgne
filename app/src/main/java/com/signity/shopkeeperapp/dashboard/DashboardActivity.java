@@ -1,11 +1,15 @@
 package com.signity.shopkeeperapp.dashboard;
 
+import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
+import android.provider.MediaStore;
 import android.provider.Settings;
 import android.text.TextUtils;
 import android.util.Log;
@@ -21,6 +25,9 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.widget.Toolbar;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
+import androidx.core.content.FileProvider;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.Fragment;
@@ -41,20 +48,28 @@ import com.signity.shopkeeperapp.dashboard.account.AccountFragment;
 import com.signity.shopkeeperapp.dashboard.categories.CategoriesFragment;
 import com.signity.shopkeeperapp.dashboard.home.HomeFragment;
 import com.signity.shopkeeperapp.dashboard.orders.OrdersFragment;
+import com.signity.shopkeeperapp.market.CreativeFragment;
+import com.signity.shopkeeperapp.market.ShareCreativeActivity;
 import com.signity.shopkeeperapp.model.LoginModel;
 import com.signity.shopkeeperapp.model.ModelForceUpdate;
 import com.signity.shopkeeperapp.model.ResponseForceUpdate;
 import com.signity.shopkeeperapp.model.dashboard.StoreVersionDTO;
 import com.signity.shopkeeperapp.network.NetworkAdaper;
+import com.signity.shopkeeperapp.products.ImageBottomDialog;
 import com.signity.shopkeeperapp.runner.RunnerActivity;
 import com.signity.shopkeeperapp.stores.StoresActivity;
 import com.signity.shopkeeperapp.twilio.chat.CustomerSupportActivity;
 import com.signity.shopkeeperapp.twilio.chat.TwilioLogin;
 import com.signity.shopkeeperapp.util.AnimUtil;
+import com.signity.shopkeeperapp.util.Constant;
 import com.signity.shopkeeperapp.util.DialogHandler;
 import com.signity.shopkeeperapp.util.ProgressDialogUtil;
+import com.signity.shopkeeperapp.util.Util;
 import com.signity.shopkeeperapp.util.prefs.AppPreference;
+import com.yalantis.ucrop.UCrop;
 
+import java.io.File;
+import java.io.IOException;
 import java.lang.reflect.Field;
 import java.util.HashMap;
 import java.util.Map;
@@ -66,6 +81,12 @@ import retrofit.client.Response;
 public class DashboardActivity extends BaseActivity implements BottomNavigationView.OnNavigationItemSelectedListener, HomeFragment.HomeFragmentListener, NavDrawerAdapter.NavigationListener {
 
     private static final String TAG = "DashboardActivity";
+    private static final int MY_REQUEST_CODE = 1001;
+    private static final int CAMERA_REQUEST = 100;
+    private static final int PICK_REQUEST = 200;
+    private static final String STYLE_IMAGE = "style_image";
+    private static final int CAMERA_PERMISSION = 1000;
+    private static final int GALLERY_PERMISSION = 2000;
     public BottomNavigationView bottomNavigationView;
     private DrawerLayout drawerLayout;
     private ActionBarDrawerToggle mDrawerToggle;
@@ -79,6 +100,7 @@ public class DashboardActivity extends BaseActivity implements BottomNavigationV
     private int navSelectedId;
     private TextView textViewLogout;
     private ImageView imageViewGenerateOrder;
+    private Uri cameraImageUri;
 
     public static Intent getStartIntent(Context context) {
         return new Intent(context, DashboardActivity.class);
@@ -299,6 +321,11 @@ public class DashboardActivity extends BaseActivity implements BottomNavigationV
     }
 
     @Override
+    public void onChooseImage() {
+        openImageChooser();
+    }
+
+    @Override
     public void onClickNavigation(NavDrawerAdapter.NavigationItems navigationItems) {
         switch (navigationItems) {
             case DASHBOARD:
@@ -507,4 +534,125 @@ public class DashboardActivity extends BaseActivity implements BottomNavigationV
             }
         });
     }
+
+
+    private void openImageChooser() {
+        if (getSupportFragmentManager().findFragmentByTag(ImageBottomDialog.TAG) == null) {
+            ImageBottomDialog imageBottomDialog = new ImageBottomDialog(new ImageBottomDialog.ImageListener() {
+                @Override
+                public void onClickGallery() {
+                    openGallery();
+                }
+
+                @Override
+                public void onClickCamera() {
+                    openCamera();
+                }
+            });
+            imageBottomDialog.show(getSupportFragmentManager(), ImageBottomDialog.TAG);
+        }
+    }
+
+
+    public void openCamera() {
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED) {
+            cameraIntent();
+        } else {
+            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, CAMERA_PERMISSION);
+        }
+    }
+
+    private void cameraIntent() {
+        Intent cameraIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+        File fileCamera = new File(getExternalFilesDir("ValueAppz"), STYLE_IMAGE.concat(".jpg"));
+        cameraImageUri = FileProvider.getUriForFile(this, getPackageName() + ".provider", fileCamera);
+        cameraIntent.putExtra(MediaStore.EXTRA_OUTPUT, cameraImageUri);
+        startActivityForResult(cameraIntent, CAMERA_REQUEST);
+    }
+
+    public void openGallery() {
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED) {
+            galleryIntent();
+        } else {
+            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, GALLERY_PERMISSION);
+        }
+    }
+
+    private void galleryIntent() {
+        Intent intent = new Intent();
+        intent.setType("image/*");
+        intent.setAction(Intent.ACTION_GET_CONTENT);
+        startActivityForResult(Intent.createChooser(intent, "Select Picture"), PICK_REQUEST);
+    }
+
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+            switch (requestCode) {
+                case CAMERA_PERMISSION:
+                    cameraIntent();
+                    break;
+                case GALLERY_PERMISSION:
+                    galleryIntent();
+                    break;
+            }
+        } else {
+            Toast.makeText(this, "Permission required", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (resultCode == RESULT_OK) {
+            switch (requestCode) {
+                case CAMERA_REQUEST:
+                    cropImage(cameraImageUri);
+                    break;
+                case PICK_REQUEST:
+                    Uri uri = data.getData();
+                    cropImage(uri);
+                    break;
+                case UCrop.REQUEST_CROP:
+                    final Uri resultUri = UCrop.getOutput(data);
+
+                    Bitmap bitmap = null;
+                    try {
+                        bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), resultUri);
+                        Bitmap scale = Util.scaleBitmap(bitmap, 1200, 900);
+                        Util.saveImageFile(scale, "style", getExternalFilesDir("ValueAppz"));
+
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+
+                    if (resultUri != null)
+                        openShareCreative();
+                    break;
+            }
+        }
+    }
+
+    private void openShareCreative() {
+        Intent intent = ShareCreativeActivity.getStartIntent(this);
+        intent.putExtra("url", "");
+        intent.putExtra("desc", "Style Gallery");
+        intent.putExtra("title", "Style Gallery");
+        intent.putExtra("creativeId", "0");
+        intent.putExtra("isShared", false);
+        intent.putExtra(CreativeFragment.MARKET_MODE, Constant.MarketMode.GALLERY);
+        startActivity(intent);
+    }
+
+    private void cropImage(Uri uri) {
+        File fileCamera = new File(getExternalFilesDir("ValueAppz"), "style.jpg");
+        Uri outCamera = Uri.fromFile(fileCamera);
+        UCrop.of(uri, outCamera)
+                .withAspectRatio(4, 3)
+                .withMaxResultSize(1200, 900)
+                .start(this);
+    }
+
 }

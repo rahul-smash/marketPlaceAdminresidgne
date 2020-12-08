@@ -32,6 +32,7 @@ import com.signity.shopkeeperapp.model.dashboard.StoreDashboardResponse;
 import com.signity.shopkeeperapp.model.dashboard.StoreVersionDTO;
 import com.signity.shopkeeperapp.model.image.ImageUploadResponse;
 import com.signity.shopkeeperapp.model.market.facebookPost.FacebookPostResponse;
+import com.signity.shopkeeperapp.model.market.videoCreative.VideoCreative;
 import com.signity.shopkeeperapp.model.notification.NotificationModel;
 import com.signity.shopkeeperapp.model.orders.CustomerData;
 import com.signity.shopkeeperapp.model.orders.StoreOrdersReponse;
@@ -317,11 +318,23 @@ public interface ApiService {
     @GET("/frames/{id}")
     void getFramesById(@Path("id") long id, Callback<CreativeModel> creativeModelCallback);
 
+    @Multipart
     @POST("/{id}/photos")
-    void postFacebook(String id, String trim, String accessToken1, MultipartBody.Part body, Callback<FacebookPostResponse> responseCallback);
+    void postFacebook(@Path("id") String pageId,
+                      @Query("message") String message,
+                      @Query("access_token") String accessToken,
+                      @Part("files") MultipartBody.Part files,
+                      Callback<FacebookPostResponse> responseCallback);
 
+    @Multipart
     @POST("/{id}/photos")
-    void postScheduleFacebook(String id, boolean b, String trim, String accessToken1, int time, MultipartBody.Part body, Callback<FacebookPostResponse> responseCallback);
+    void postScheduleFacebook(@Path("id") String pageId,
+                              @Query("published") boolean value,
+                              @Query("message") String message,
+                              @Query("access_token") String accessToken,
+                              @Query("scheduled_publish_time") int time,
+                              @Part("files") MultipartBody.Part files,
+                              Callback<FacebookPostResponse> responseCallback);
 
     @GET("/token")
     void getTwilioToken(@Query("identity") String identity, Callback<String> responseCallback);
@@ -339,7 +352,7 @@ public interface ApiService {
 
     @FormUrlEncoded
     @POST("/deleteRunner")
-    void deleteRunner(@FieldMap Map<String, String> params,Callback<CommonResponse> callback);
+    void deleteRunner(@FieldMap Map<String, String> params, Callback<CommonResponse> callback);
 
     @FormUrlEncoded
     @POST("/assignRunnerToOrder")
@@ -348,4 +361,26 @@ public interface ApiService {
     @FormUrlEncoded
     @POST("/setRunnerStatus")
     void changeRunnerStatus(@FieldMap Map<String, String> params, Callback<CommonResponse> callback);
+
+    @GET("/videos")
+    void getVideoCreatives(@Query("brand") long brandId, @Query("package") int packageId, Callback<List<VideoCreative>> listCallback);
+
+    @Multipart
+    @POST("/{id}/videos")
+    void postFacebookVideo(@Path("id") String pageId,
+                           @Query("title") String title,
+                           @Query("file_url") String videoUrl,
+                           @Query("access_token") String accessToken,
+                           @Part("files") MultipartBody.Part files,
+                           Callback<FacebookPostResponse> responseCallback);
+
+    @Multipart
+    @POST("/{id}/videos")
+    void postScheduleFacebookVideo(@Path("id") String pageId,
+                                   @Query("title") String title,
+                                   @Query("file_url") String videoUrl,
+                                   @Query("access_token") String accessToken,
+                                   @Part("files") MultipartBody.Part files,
+                                   @Query("published") boolean isPublished,
+                                   @Query("scheduled_publish_time") int time, Callback<FacebookPostResponse> video_scheduled);
 }
