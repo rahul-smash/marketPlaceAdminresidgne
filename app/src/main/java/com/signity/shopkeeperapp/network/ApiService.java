@@ -24,6 +24,7 @@ import com.signity.shopkeeperapp.model.StoresModel;
 import com.signity.shopkeeperapp.model.category.AddCategoryResponse;
 import com.signity.shopkeeperapp.model.category.CategoryDetailResponse;
 import com.signity.shopkeeperapp.model.creatives.CreativeModel;
+import com.signity.shopkeeperapp.model.creatives.SharedPostModel;
 import com.signity.shopkeeperapp.model.customers.AreaCodesResp;
 import com.signity.shopkeeperapp.model.customers.CustomerDataResponse;
 import com.signity.shopkeeperapp.model.customers.addCustomer.AddCustomerResponse;
@@ -32,6 +33,7 @@ import com.signity.shopkeeperapp.model.dashboard.StoreDashboardResponse;
 import com.signity.shopkeeperapp.model.dashboard.StoreVersionDTO;
 import com.signity.shopkeeperapp.model.image.ImageUploadResponse;
 import com.signity.shopkeeperapp.model.market.facebookPost.FacebookPostResponse;
+import com.signity.shopkeeperapp.model.market.industry.IndustryRegistration;
 import com.signity.shopkeeperapp.model.market.videoCreative.VideoCreative;
 import com.signity.shopkeeperapp.model.notification.NotificationModel;
 import com.signity.shopkeeperapp.model.orders.CustomerData;
@@ -307,23 +309,23 @@ public interface ApiService {
     void getDeliverySlots(Callback<DeliverySlotDTO> response);
 
     @GET("/tags")
-    void getCreatives(@Query("brand") long brandId, @Query("package") int packageId, Callback<List<CreativeModel>> response);
+    void getCreatives(@Query("brand") long brandId, @Query("package") int packageId, @Query("valueapp_store_id") String valueappStoreId, Callback<List<CreativeModel>> response);
 
     @GET("/frames")
-    void getFrames(@Query("brand") long brandId, @Query("package") int packageId, Callback<List<CreativeModel>> response);
+    void getFrames(@Query("valueapp_store_id") String valueappStoreId, @Query("brand") long brandId, @Query("package") int packageId, Callback<List<CreativeModel>> response);
 
     @GET("/tags/{id}")
-    void getCreativesById(@Path("id") long id, @Query("brand") long brandId, Callback<CreativeModel> response);
+    void getCreativesById(@Query("valueapp_store_id") String valueappStoreId, @Path("id") long id, @Query("brand") long brandId, Callback<CreativeModel> response);
 
     @GET("/frames/{id}")
-    void getFramesById(@Path("id") long id, Callback<CreativeModel> creativeModelCallback);
+    void getFramesById(@Query("valueapp_store_id") String valueappStoreId, @Path("id") long id, Callback<CreativeModel> creativeModelCallback);
 
     @Multipart
     @POST("/{id}/photos")
     void postFacebook(@Path("id") String pageId,
                       @Query("message") String message,
                       @Query("access_token") String accessToken,
-                      @Part("files") MultipartBody.Part files,
+                      @Part("") MultipartBody.Part files,
                       Callback<FacebookPostResponse> responseCallback);
 
     @Multipart
@@ -333,7 +335,7 @@ public interface ApiService {
                               @Query("message") String message,
                               @Query("access_token") String accessToken,
                               @Query("scheduled_publish_time") int time,
-                              @Part("files") MultipartBody.Part files,
+                              @Part("") MultipartBody.Part files,
                               Callback<FacebookPostResponse> responseCallback);
 
     @GET("/token")
@@ -363,7 +365,7 @@ public interface ApiService {
     void changeRunnerStatus(@FieldMap Map<String, String> params, Callback<CommonResponse> callback);
 
     @GET("/videos")
-    void getVideoCreatives(@Query("brand") long brandId, @Query("package") int packageId, Callback<List<VideoCreative>> listCallback);
+    void getVideoCreatives(@Query("valueapp_store_id") String valueappStoreId, @Query("brand") long brandId, @Query("package") int packageId, Callback<List<VideoCreative>> listCallback);
 
     @Multipart
     @POST("/{id}/videos")
@@ -371,7 +373,7 @@ public interface ApiService {
                            @Query("title") String title,
                            @Query("file_url") String videoUrl,
                            @Query("access_token") String accessToken,
-                           @Part("files") MultipartBody.Part files,
+                           @Part("") MultipartBody.Part files,
                            Callback<FacebookPostResponse> responseCallback);
 
     @Multipart
@@ -380,7 +382,19 @@ public interface ApiService {
                                    @Query("title") String title,
                                    @Query("file_url") String videoUrl,
                                    @Query("access_token") String accessToken,
-                                   @Part("files") MultipartBody.Part files,
+                                   @Part("") MultipartBody.Part files,
                                    @Query("published") boolean isPublished,
                                    @Query("scheduled_publish_time") int time, Callback<FacebookPostResponse> video_scheduled);
+
+
+    @FormUrlEncoded
+    @POST("/stores/register")
+    void registerStore(@FieldMap Map<String, String> param, Callback<IndustryRegistration> responseCallback);
+
+    @FormUrlEncoded
+    @POST("/sharedcreatives")
+    void saveSharedData(@FieldMap Map<String, Object> param, Callback<CommonResponse> responseCallback);
+
+    @GET("/sharedcreatives")
+    void getSharedPosts(@Query("valueapp_store_id") String storeId, @Query("_limit") int limit, @Query("_start") int start, Callback<SharedPostModel> sharedPostModelCallback);
 }

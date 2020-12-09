@@ -34,6 +34,7 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
+import com.facebook.login.LoginManager;
 import com.google.android.material.badge.BadgeDrawable;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.signity.shopkeeperapp.BuildConfig;
@@ -54,6 +55,7 @@ import com.signity.shopkeeperapp.model.LoginModel;
 import com.signity.shopkeeperapp.model.ModelForceUpdate;
 import com.signity.shopkeeperapp.model.ResponseForceUpdate;
 import com.signity.shopkeeperapp.model.dashboard.StoreVersionDTO;
+import com.signity.shopkeeperapp.model.market.industry.IndustryRegistration;
 import com.signity.shopkeeperapp.network.NetworkAdaper;
 import com.signity.shopkeeperapp.products.ImageBottomDialog;
 import com.signity.shopkeeperapp.runner.RunnerActivity;
@@ -121,6 +123,32 @@ public class DashboardActivity extends BaseActivity implements BottomNavigationV
             TwilioLogin twilioLogin = new TwilioLogin(this);
             twilioLogin.performLoginCreatePrivateChannel();
         }
+
+        registerStore();
+    }
+
+    private void registerStore() {
+
+        Map<String, String> param = new HashMap<>();
+        param.put("email", AppPreference.getInstance().getUserEmail());
+        param.put("number", AppPreference.getInstance().getUserMobile());
+        param.put("store_id", AppPreference.getInstance().getStoreId());
+        param.put("store_title", AppPreference.getInstance().getStoreName());
+        // TODO - Defaut country selected to India
+        param.put("country", "India");
+
+        NetworkAdaper.marketStore().registerStore(param, new Callback<IndustryRegistration>() {
+            @Override
+            public void success(IndustryRegistration response, Response response2) {
+
+            }
+
+            @Override
+            public void failure(RetrofitError error) {
+
+            }
+        });
+
     }
 
     private void setUpStoreData() {
@@ -521,6 +549,7 @@ public class DashboardActivity extends BaseActivity implements BottomNavigationV
 
                 ProgressDialogUtil.hideProgressDialog();
                 AppPreference.getInstance().clearAll();
+                LoginManager.getInstance().logOut();
                 NetworkAdaper.setupRetrofitClient(NetworkAdaper.setBaseUrl(""));
                 MyApplication.getInstance().getBasicChatClient().shutdown();
                 startActivity(SplashActivity.getIntent(DashboardActivity.this));

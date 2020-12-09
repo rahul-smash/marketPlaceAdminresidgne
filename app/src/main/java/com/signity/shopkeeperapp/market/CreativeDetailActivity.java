@@ -33,6 +33,7 @@ import com.signity.shopkeeperapp.network.NetworkAdaper;
 import com.signity.shopkeeperapp.util.AnimUtil;
 import com.signity.shopkeeperapp.util.Constant;
 import com.signity.shopkeeperapp.util.ProgressDialogUtil;
+import com.signity.shopkeeperapp.util.prefs.AppPreference;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -79,7 +80,7 @@ public class CreativeDetailActivity extends BaseActivity implements CreativeDeta
 
     private void initViews() {
         toolbar = findViewById(R.id.toolbar);
-        textViewCreative = findViewById(R.id.tv_creative_tag);
+        textViewCreative = findViewById(R.id.toolbar_title);
         recyclerViewCreativeDetail = findViewById(R.id.rv_creative_detail);
     }
 
@@ -124,7 +125,7 @@ public class CreativeDetailActivity extends BaseActivity implements CreativeDeta
 
     private void getCreativeByTagApi() {
 
-        NetworkAdaper.marketStore().getCreativesById(tagId, 1, new Callback<CreativeModel>() {
+        NetworkAdaper.marketStore().getCreativesById(AppPreference.getInstance().getStoreId(), tagId, 0, new Callback<CreativeModel>() {
             @Override
             public void success(CreativeModel creativeModel, Response response) {
 
@@ -150,7 +151,7 @@ public class CreativeDetailActivity extends BaseActivity implements CreativeDeta
     }
 
     private void getFramesByTagApi() {
-        NetworkAdaper.marketStore().getFramesById(12, new Callback<CreativeModel>() {
+        NetworkAdaper.marketStore().getFramesById(AppPreference.getInstance().getStoreId(), tagId, new Callback<CreativeModel>() {
             @Override
             public void success(CreativeModel creativeModel, Response response) {
 

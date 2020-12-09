@@ -67,9 +67,9 @@ import com.google.android.material.bottomsheet.BottomSheetBehavior;
 import com.signity.shopkeeperapp.R;
 import com.signity.shopkeeperapp.base.BaseActivity;
 import com.signity.shopkeeperapp.classes.ApplicationSelectorReceiver;
+import com.signity.shopkeeperapp.classes.FacebookManager;
 import com.signity.shopkeeperapp.model.market.SharePermissionResponse;
-import com.signity.shopkeeperapp.model.market.facebook.SharedFacebookRequest;
-import com.signity.shopkeeperapp.model.market.facebookPost.FacebookPostResponse;
+import com.signity.shopkeeperapp.model.runner.CommonResponse;
 import com.signity.shopkeeperapp.network.NetworkAdaper;
 import com.signity.shopkeeperapp.util.AnimUtil;
 import com.signity.shopkeeperapp.util.Constant;
@@ -81,11 +81,11 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Map;
 
-import okhttp3.MediaType;
-import okhttp3.MultipartBody;
-import okhttp3.RequestBody;
 import retrofit.Callback;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
@@ -516,12 +516,13 @@ public class ShareCreativeActivity extends BaseActivity implements FacebookPages
 
         if (isLogged) {
             if (hasPage) {
-                showShareChooser();
+//                showShareChooser();
+                facebookPostNow();
             } else {
                 openPagesDialog();
             }
         } else {
-            LoginManager.getInstance().logInWithPublishPermissions(this, Arrays.asList("publish_actions"));
+            LoginManager.getInstance().logInWithReadPermissions(this, Arrays.asList("pages_show_list,pages_manage_posts,pages_read_engagement,pages_read_user_content"));
         }
     }
 
@@ -621,7 +622,8 @@ public class ShareCreativeActivity extends BaseActivity implements FacebookPages
     @Override
     public void onPageSelected() {
         checkLogin();
-        showShareChooser();
+//        showShareChooser();
+        facebookPostNow();
     }
 
     @Override
@@ -688,39 +690,40 @@ public class ShareCreativeActivity extends BaseActivity implements FacebookPages
             Toast.makeText(this, "Loading Image...", Toast.LENGTH_SHORT).show();
             return;
         }
-
-        String id = AppPreference.getInstance().getFacebookPageId();
-        String accessToken1 = AppPreference.getInstance().getFacebookPageAccessToken();
-        RequestBody requestFile = RequestBody.create(MediaType.parse("image/*"), file);
-        MultipartBody.Part body = MultipartBody.Part.createFormData("source", file.getName(), requestFile);
-
         ProgressDialogUtil.showProgressDialog(this);
-        NetworkAdaper.facebookGraph().postFacebook(id, editTextAbout.getText().toString().trim(), accessToken1, body, new Callback<FacebookPostResponse>() {
-            @Override
-            public void success(FacebookPostResponse facebookPostResponse, Response response) {
-                if (isDestroyed()) {
-                    return;
-                }
-                ProgressDialogUtil.hideProgressDialog();
-                Toast.makeText(ShareCreativeActivity.this, "Content is being published on your page", Toast.LENGTH_SHORT).show();
-                if (marketMode == Constant.MarketMode.CREATIVE) {
-                    saveShared("facebook", true, facebookPostResponse.getPostId());
-                } else {
-                    saveShared("facebook", true, null);
-                }
-                if (marketMode != Constant.MarketMode.GALLERY) {
-                    updateCounter();
-                }
-                setTagCount();
-            }
-
-            @Override
-            public void failure(RetrofitError error) {
-                if (!isDestroyed()) {
+        try {
+            FacebookManager.uploadPhoto(editTextAbout.getText().toString().trim(), null, file, new GraphRequest.Callback() {
+                @Override
+                public void onCompleted(GraphResponse response) {
+                    if (isDestroyed()) {
+                        return;
+                    }
                     ProgressDialogUtil.hideProgressDialog();
+                    Toast.makeText(ShareCreativeActivity.this, "Content is being published on your page", Toast.LENGTH_SHORT).show();
+
+                    try {
+                        JSONObject jsonObject = new JSONObject(response.getRawResponse());
+                        String postId = jsonObject.getString("id");
+
+                        if (marketMode == Constant.MarketMode.CREATIVE) {
+                            saveShared("facebook", true, postId);
+                        } else {
+                            saveShared("facebook", true, null);
+                        }
+                        if (marketMode != Constant.MarketMode.GALLERY) {
+                            updateCounter();
+                        }
+                        setTagCount();
+
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+
                 }
-            }
-        });
+            });
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
     }
 
     private void updateCounter() {
@@ -795,82 +798,59 @@ public class ShareCreativeActivity extends BaseActivity implements FacebookPages
             return;
         }
 
-        Log.d(TAG, "schedulePost: " + time);
-        String id = AppPreference.getInstance().getFacebookPageId();
-        String accessToken1 = AppPreference.getInstance().getFacebookPageAccessToken();
-        RequestBody requestFile = RequestBody.create(MediaType.parse("image/*"), file);
-        MultipartBody.Part body = MultipartBody.Part.createFormData("source", file.getName(), requestFile);
-
+        Bundle bundle = new Bundle();
+        bundle.putLong("scheduled_publish_time", time);
+        bundle.putBoolean("published", false);
         ProgressDialogUtil.showProgressDialog(this);
-        NetworkAdaper.facebookGraph().postScheduleFacebook(id, false, editTextAbout.getText().toString().trim(), accessToken1, time, body, new Callback<FacebookPostResponse>() {
-            @Override
-            public void success(FacebookPostResponse facebookPostResponse, Response response) {
+        try {
+            FacebookManager.uploadPhoto(editTextAbout.getText().toString().trim(), bundle, file, new GraphRequest.Callback() {
+                @Override
+                public void onCompleted(GraphResponse response) {
+                    if (isDestroyed()) {
+                        return;
+                    }
 
-                if (isDestroyed()) {
-                    return;
+                    Log.d(TAG, "onCompleted: " + response.getRawResponse());
+
+                    ProgressDialogUtil.hideProgressDialog();
+                    Toast.makeText(ShareCreativeActivity.this, "Post scheduled", Toast.LENGTH_SHORT).show();
+                    if (marketMode == Constant.MarketMode.CREATIVE) {
+//                        saveShared("facebook", true, facebookPostResponse.getPostId());
+                    } else {
+                        saveShared("facebook", true, null);
+                    }
+                    if (marketMode != Constant.MarketMode.GALLERY) {
+                        updateCounter();
+                    }
+                    setTagCount();
                 }
-                ProgressDialogUtil.hideProgressDialog();
-                Toast.makeText(ShareCreativeActivity.this, "Post scheduled", Toast.LENGTH_SHORT).show();
-                if (marketMode == Constant.MarketMode.CREATIVE) {
-                    saveShared("facebook", true, facebookPostResponse.getPostId());
-                } else {
-                    saveShared("facebook", true, null);
-                }
-                if (marketMode != Constant.MarketMode.GALLERY) {
-                    updateCounter();
-                }
-                setTagCount();
+            });
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void saveShared(String medium, final boolean isFinish, String postId) {
+        Map<String, Object> param = new HashMap<>();
+        param.put("valueapp_store_id", AppPreference.getInstance().getStoreId());
+        param.put("creative", creativeId);
+        param.put("share_medium_type", medium);
+        param.put("post_id", postId);
+        param.put("tag_id", tagId);
+        param.put("creative_type", marketMode.name().toLowerCase());
+
+        NetworkAdaper.marketStore().saveSharedData(param, new Callback<CommonResponse>() {
+            @Override
+            public void success(CommonResponse response, Response response2) {
+                if (isFinish)
+                    finish();
             }
 
             @Override
             public void failure(RetrofitError error) {
-                if (!isDestroyed()) {
-                    ProgressDialogUtil.hideProgressDialog();
-                }
+
             }
         });
-    }
-
-    private void saveShared(String medium, boolean isFinish, String postId) {
-        SharedFacebookRequest request = new SharedFacebookRequest();
-        request.setBrand("1");
-        request.setStoreId(1);
-        request.setCreative(creativeId);
-        request.setCreativeType(marketMode.name().toLowerCase());
-        request.setShareMediumType(medium);
-        request.setPostId(postId);
-        request.setTagId(tagId);
-
-        /*AppApiHelper.getApiHelper().setFacebookShared(request)
-                .enqueue(new DigiCallback<ResponseBody>(this) {
-                    @Override
-                    public void onSuccess(ResponseBody response) {
-
-                        if (medium.equalsIgnoreCase("facebook") || medium.equals("facebook_profile")) {
-
-                            if (marketMode == AppConstants.MarketMode.FRAME) {
-                                int count = AppPreferenceHelper.getInstance().getFramePostCountPerDay();
-                                int countPerMonth = AppPreferenceHelper.getInstance().getPostCountPerMonthFrames();
-                                AppPreferenceHelper.getInstance().setFramePostCountPerDay(count + 1);
-                                AppPreferenceHelper.getInstance().setPostCountPerMonthFrames(countPerMonth + 1);
-                            } else if (marketMode == AppConstants.MarketMode.CREATIVE) {
-                                int count = AppPreferenceHelper.getInstance().getPostCountPerDay();
-                                int countPerMonth = AppPreferenceHelper.getInstance().getPostCountPerMonth();
-                                AppPreferenceHelper.getInstance().setPostCountPerDay(count + 1);
-                                AppPreferenceHelper.getInstance().setPostCountPerMonth(countPerMonth + 1);
-                            }
-
-                        }
-
-                        if (isFinish)
-                            finish();
-                    }
-
-                    @Override
-                    public void onFailure() {
-
-                    }
-                });*/
     }
 
     private void processedBitMap(Bitmap bitmap, String title, String subTitle, String mobile) {

@@ -72,6 +72,7 @@ import com.signity.shopkeeperapp.R;
 import com.signity.shopkeeperapp.base.BaseActivity;
 import com.signity.shopkeeperapp.model.market.SharePermissionResponse;
 import com.signity.shopkeeperapp.model.market.facebookPost.FacebookPostResponse;
+import com.signity.shopkeeperapp.model.runner.CommonResponse;
 import com.signity.shopkeeperapp.network.NetworkAdaper;
 import com.signity.shopkeeperapp.util.Constant;
 import com.signity.shopkeeperapp.util.ProgressDialogUtil;
@@ -82,6 +83,8 @@ import org.json.JSONObject;
 
 import java.io.File;
 import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Map;
 
 import okhttp3.MediaType;
 import okhttp3.MultipartBody;
@@ -474,7 +477,8 @@ public class VideoCreativeActivity extends BaseActivity implements FacebookPages
 
         if (isLogged) {
             if (hasPage) {
-                showShareChooser();
+//                showShareChooser();
+                facebookPostNow();
             } else {
                 openPagesDialog();
             }
@@ -541,7 +545,8 @@ public class VideoCreativeActivity extends BaseActivity implements FacebookPages
     @Override
     public void onPageSelected() {
         checkLogin();
-        showShareChooser();
+//        showShareChooser();
+        facebookPostNow();
     }
 
     @Override
@@ -571,6 +576,7 @@ public class VideoCreativeActivity extends BaseActivity implements FacebookPages
                 finish();
                 ProgressDialogUtil.hideProgressDialog();
                 Toast.makeText(VideoCreativeActivity.this, "Video is being published on your page", Toast.LENGTH_SHORT).show();
+                saveShared("facebook", true, facebookPostResponse.getPostId());
             }
 
             @Override
@@ -623,32 +629,26 @@ public class VideoCreativeActivity extends BaseActivity implements FacebookPages
                 && player.getPlayWhenReady();
     }
 
-    private void saveShared(String medium, String postId) {
-/*        SharedFacebookRequest request = new SharedFacebookRequest();
-        request.setBrand(String.valueOf(AppPreferenceHelper.getInstance().getBrandId()));
-        request.setStoreId(AppPreferenceHelper.getInstance().getStoreId());
-        request.setCreative(videoId);
-        request.setShareMediumType(medium);
-        request.setCreativeType("video");
-        request.setPostId(postId);
+    private void saveShared(String medium, final boolean isFinish, String postId) {
+        Map<String, Object> param = new HashMap<>();
+        param.put("valueapp_store_id", AppPreference.getInstance().getStoreId());
+        param.put("creative", videoId);
+        param.put("share_medium_type", medium);
+        param.put("post_id", postId);
+        param.put("creative_type", "video");
 
-        AppApiHelper.getApiHelper().setFacebookShared(request)
-                .enqueue(new DigiCallback<ResponseBody>(this) {
-                    @Override
-                    public void onSuccess(ResponseBody response) {
-                        int count = AppPreferenceHelper.getInstance().getVideoCountPerDay();
-                        int countPerMonth = AppPreferenceHelper.getInstance().getPostCountPerMonthVideo();
+        NetworkAdaper.marketStore().saveSharedData(param, new Callback<CommonResponse>() {
+            @Override
+            public void success(CommonResponse response, Response response2) {
+                if (isFinish)
+                    finish();
+            }
 
-                        AppPreferenceHelper.getInstance().setPostCountPerMonthVideo(countPerMonth + 1);
-                        AppPreferenceHelper.getInstance().setVideoCountPerDay(count + 1);
-                        finish();
-                    }
+            @Override
+            public void failure(RetrofitError error) {
 
-                    @Override
-                    public void onFailure() {
-
-                    }
-                });*/
+            }
+        });
     }
 
     @Override

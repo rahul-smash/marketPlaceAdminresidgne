@@ -21,6 +21,7 @@ import com.signity.shopkeeperapp.R;
 import com.signity.shopkeeperapp.model.market.videoCreative.VideoCreative;
 import com.signity.shopkeeperapp.network.NetworkAdaper;
 import com.signity.shopkeeperapp.util.ProgressDialogUtil;
+import com.signity.shopkeeperapp.util.prefs.AppPreference;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -90,7 +91,7 @@ public class VideoCreativeFragment extends Fragment implements SwipeRefreshLayou
 
     private void getVideoCreatives() {
 
-        NetworkAdaper.marketStore().getVideoCreatives(1, 1, new Callback<List<VideoCreative>>() {
+        NetworkAdaper.marketStore().getVideoCreatives(AppPreference.getInstance().getStoreId(),0, 1, new Callback<List<VideoCreative>>() {
             @Override
             public void success(List<VideoCreative> videoCreatives, Response response) {
                 if (!isAdded()) {

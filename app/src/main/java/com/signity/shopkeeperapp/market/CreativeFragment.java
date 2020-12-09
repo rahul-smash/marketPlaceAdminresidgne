@@ -30,6 +30,7 @@ import com.signity.shopkeeperapp.network.NetworkAdaper;
 import com.signity.shopkeeperapp.util.AnimUtil;
 import com.signity.shopkeeperapp.util.Constant;
 import com.signity.shopkeeperapp.util.ProgressDialogUtil;
+import com.signity.shopkeeperapp.util.prefs.AppPreference;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -134,7 +135,7 @@ public class CreativeFragment extends Fragment implements CreativeRecycleAdapter
 
     private void getCreatives() {
 
-        NetworkAdaper.marketStore().getCreatives(1, 1, new Callback<List<CreativeModel>>() {
+        NetworkAdaper.marketStore().getCreatives(0, 1, AppPreference.getInstance().getStoreId(), new Callback<List<CreativeModel>>() {
             @Override
             public void success(List<CreativeModel> creativeModels, Response response) {
                 if (!isAdded()) {
@@ -173,7 +174,7 @@ public class CreativeFragment extends Fragment implements CreativeRecycleAdapter
     }
 
     private void getFrames() {
-        NetworkAdaper.marketStore().getFrames(1, 1, new Callback<List<CreativeModel>>() {
+        NetworkAdaper.marketStore().getFrames(AppPreference.getInstance().getStoreId(), 0, 1, new Callback<List<CreativeModel>>() {
             @Override
             public void success(List<CreativeModel> creativeModels, Response response) {
                 if (!isAdded()) {
@@ -232,7 +233,7 @@ public class CreativeFragment extends Fragment implements CreativeRecycleAdapter
         }
 
         if (item.getItemId() == R.id.action_shared_creatives) {
-//            startActivity(SharedPostActivity.getStartIntent(getContext()));
+            startActivity(SharedPostActivity.getStartIntent(getContext()));
         }
         return super.onOptionsItemSelected(item);
     }

@@ -7,12 +7,14 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import com.facebook.AccessToken;
+import com.facebook.AccessTokenSource;
 import com.facebook.CallbackManager;
 import com.facebook.FacebookCallback;
 import com.facebook.GraphRequest;
 import com.facebook.HttpMethod;
 import com.facebook.login.LoginManager;
 import com.facebook.login.LoginResult;
+import com.signity.shopkeeperapp.util.prefs.AppPreference;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -29,6 +31,25 @@ public class FacebookManager {
 
     public FacebookManager(Activity activity) {
         this.activity = activity;
+    }
+
+    public static void uploadPhoto(String message, @Nullable Bundle bundle, File file, GraphRequest.Callback callback) throws FileNotFoundException {
+        String path = String.format("%s/photos", AppPreference.getInstance().getFacebookPageId());
+        GraphRequest.newUploadPhotoRequest(getPageAccessToken(), path, file, message, bundle, callback).executeAsync();
+    }
+
+    @NonNull
+    private static AccessToken getPageAccessToken() {
+        return new AccessToken(AppPreference.getInstance().getFacebookPageAccessToken(),
+                AccessToken.getCurrentAccessToken().getApplicationId(),
+                AccessToken.getCurrentAccessToken().getUserId(),
+                Arrays.asList("pages_show_list,pages_manage_posts,pages_read_engagement,pages_read_user_content"),
+                null,
+                null,
+                AccessTokenSource.NONE,
+                null,
+                null,
+                null);
     }
 
     public boolean isFacebookLoggedIn() {
@@ -57,24 +78,5 @@ public class FacebookManager {
         graphRequest.setCallback(callback);
         graphRequest.executeAsync();
     }
-
-    public void uploadPhoto(String message, @Nullable Bundle bundle, File file, GraphRequest.Callback callback) throws FileNotFoundException {
-//        String path = String.format("%s/photos", AppPreferenceHelper.getInstance().getFacebookPageId());
-//        GraphRequest.newUploadPhotoRequest(getPageAccessToken(), path, file, message, bundle, callback).executeAsync();
-    }
-
-/*    @NonNull
-    private AccessToken getPageAccessToken() {
-        return new AccessToken(AppPreferenceHelper.getInstance().getFacebookPageAccessToken(),
-                AccessToken.getCurrentAccessToken().getApplicationId(),
-                AccessToken.getCurrentAccessToken().getUserId(),
-                Arrays.asList("manage_pages", "publish_pages"),
-                null,
-                null,
-                AccessTokenSource.NONE,
-                null,
-                null,
-                null);
-    }*/
 
 }
