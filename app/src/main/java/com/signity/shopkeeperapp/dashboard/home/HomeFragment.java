@@ -47,6 +47,7 @@ import com.signity.shopkeeperapp.dashboard.orders.OrderDetailActivity;
 import com.signity.shopkeeperapp.dashboard.orders.RejectOrderDialog;
 import com.signity.shopkeeperapp.market.MarketActivity;
 import com.signity.shopkeeperapp.market.MarketVideosActivity;
+import com.signity.shopkeeperapp.market.ProductShareActivity;
 import com.signity.shopkeeperapp.model.OrdersListModel;
 import com.signity.shopkeeperapp.model.SetOrdersModel;
 import com.signity.shopkeeperapp.model.dashboard.StoreDashboardResponse;
@@ -371,8 +372,7 @@ public class HomeFragment extends Fragment implements HomeContentAdapter.HomeCon
 
             @Override
             public void onShareLocation() {
-                // TODO - Share Location Intent
-                Toast.makeText(getContext(), "On Share Location", Toast.LENGTH_SHORT).show();
+                openMapShare();
             }
 
             @Override
@@ -414,6 +414,12 @@ public class HomeFragment extends Fragment implements HomeContentAdapter.HomeCon
                 startActivity(MarketActivity.getStartIntent(getActivity(), bundle));
                 AnimUtil.slideFromRightAnim(getActivity());
             }
+
+            @Override
+            public void onShareProducts() {
+                startActivity(ProductShareActivity.getStartIntent(getActivity()));
+                AnimUtil.slideFromRightAnim(getActivity());
+            }
         });
         dialog.show(getChildFragmentManager(), MarketBottomSheetDialog.TAG);
     }
@@ -440,6 +446,24 @@ public class HomeFragment extends Fragment implements HomeContentAdapter.HomeCon
                 AppPreference.getInstance().getUserMobile(),
                 AppPreference.getInstance().getUserMobile());
         shareIntent(text, "Share website");
+    }
+
+    private void openMapShare() {
+        String lat = AppPreference.getInstance().getLatitude();
+        String lon = AppPreference.getInstance().getLongitude();
+
+        String map = null;
+        if (TextUtils.isEmpty(lat) || TextUtils.isEmpty(lon)) {
+            if (TextUtils.isEmpty(AppPreference.getInstance().getLocation())) {
+                Toast.makeText(getContext(), "Location not available", Toast.LENGTH_SHORT).show();
+                return;
+            }
+            map = "http://maps.google.co.in/maps?q=" + AppPreference.getInstance().getLocation();
+        } else {
+            map = "http://maps.google.com/maps?q=loc:" + lat + "," + lon;
+        }
+
+        shareIntent(map, "Share Location");
     }
 
     private void showOverViewPopMenu() {

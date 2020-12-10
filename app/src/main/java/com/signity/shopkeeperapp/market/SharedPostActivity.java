@@ -174,7 +174,7 @@ public class SharedPostActivity extends BaseActivity implements SharedPostAdapte
                 }
             });
             Bundle param = new Bundle();
-            param.putString("fields", "comments.summary(total_count),likes.summary(total_count),shares");
+            param.putString("fields", "comments.summary(total_count),likes.summary(total_count)");
             request1.setParameters(param);
 
             graphRequests.add(request1);

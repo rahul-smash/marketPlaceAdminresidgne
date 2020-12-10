@@ -63,7 +63,7 @@ public class FacebookManager {
     public void performFacebookLogin(FacebookCallback<LoginResult> callback) {
         callbackManager = CallbackManager.Factory.create();
         LoginManager.getInstance().registerCallback(callbackManager, callback);
-        LoginManager.getInstance().logInWithPublishPermissions(activity, Arrays.asList("manage_pages", "publish_pages"));
+        LoginManager.getInstance().logInWithReadPermissions(activity, Arrays.asList("pages_show_list,pages_manage_posts,pages_read_engagement,pages_read_user_content"));
     }
 
     public CallbackManager getCallbackManager() {
@@ -79,4 +79,14 @@ public class FacebookManager {
         graphRequest.executeAsync();
     }
 
+    public void postImageWithUrl(Bundle bundle, GraphRequest.Callback callback) {
+        String path = String.format("%s/photos", AppPreference.getInstance().getFacebookPageId());
+        GraphRequest graphRequest = new GraphRequest();
+        graphRequest.setGraphPath(path);
+        graphRequest.setHttpMethod(HttpMethod.POST);
+        graphRequest.setAccessToken(getFacebookAccessToken());
+        graphRequest.setCallback(callback);
+        graphRequest.setParameters(bundle);
+        graphRequest.executeAsync();
+    }
 }

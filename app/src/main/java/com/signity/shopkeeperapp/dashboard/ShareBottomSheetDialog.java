@@ -49,7 +49,7 @@ public class ShareBottomSheetDialog extends BaseDialogFragment {
                 dismiss();
             }
         });
-        view.findViewById(R.id.const_product).setOnClickListener(new View.OnClickListener() {
+/*        view.findViewById(R.id.const_product).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 if (listener != null) {
@@ -57,7 +57,7 @@ public class ShareBottomSheetDialog extends BaseDialogFragment {
                 }
                 dismiss();
             }
-        });
+        });*/
         view.findViewById(R.id.const_location).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

@@ -32,6 +32,7 @@ import com.signity.shopkeeperapp.util.Util;
 import com.signity.shopkeeperapp.util.prefs.AppPreference;
 
 import java.util.HashMap;
+import java.util.Locale;
 import java.util.Map;
 
 import retrofit.Callback;
@@ -187,10 +188,11 @@ public class RunnerActivity extends BaseActivity implements RunnerAdapter.Runner
     }
 
     @Override
-    public void onDeleteRunner(String id, boolean canDelete) {
+    public void onDeleteRunner(String fullName, int actieOrder, String id, boolean canDelete) {
 
         if (!canDelete) {
-            Toast.makeText(this, "Can't Delete", Toast.LENGTH_SHORT).show();
+            String message = String.format(Locale.getDefault(), "%s has %d pending deliveries.", fullName, actieOrder);
+            Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
             return;
         }
 

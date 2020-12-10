@@ -145,6 +145,7 @@ public class RunnerDetailActivity extends BaseActivity implements HomeOrdersAdap
             ordersAdapter.setPageOrdersMap(model);
             textViewTotalOrders.setText(String.format(Locale.getDefault(), "Total Orders: %d", runnerData.getOrders().size()));
         } else {
+            ordersAdapter.clearPageMap();
             ordersAdapter.setShowLoading(false);
             textViewTotalOrders.setVisibility(View.GONE);
         }
@@ -177,7 +178,7 @@ public class RunnerDetailActivity extends BaseActivity implements HomeOrdersAdap
         imageViewWhatsapp = findViewById(R.id.iv_whatsapp);
         imageViewPhoneCall = findViewById(R.id.iv_phone_call);
         imageViewMessage = findViewById(R.id.iv_message);
-        linearLayoutArea = findViewById(R.id.ll_city);
+        linearLayoutArea = findViewById(R.id.ll_area);
         linearLayoutEmail = findViewById(R.id.ll_email);
         textViewTotalOrders = findViewById(R.id.tv_total_orders);
 

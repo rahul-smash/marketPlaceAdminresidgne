@@ -430,7 +430,7 @@ public class VideoCreativeActivity extends BaseActivity implements FacebookPages
                     .submit();
         }
 
-        final String descFormat = String.format("%s https://%s/#appointment", desc, AppPreference.getInstance().getStoreUrl());
+        final String descFormat = String.format("%s %s", desc, AppPreference.getInstance().getStoreUrl());
         editTextAbout.setText(descFormat);
         textViewTitle.setText(title);
         textViewShared.setVisibility(isShared ? View.VISIBLE : View.GONE);

@@ -76,6 +76,15 @@ public class MarketBottomSheetDialog extends BaseDialogFragment {
                 dismiss();
             }
         });
+        view.findViewById(R.id.const_product).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (listener != null) {
+                    listener.onShareProducts();
+                }
+                dismiss();
+            }
+        });
     }
 
     @NonNull
@@ -92,5 +101,7 @@ public class MarketBottomSheetDialog extends BaseDialogFragment {
         void onSharePremiumCreative();
 
         void onShareYourCreative();
+
+        void onShareProducts();
     }
 }

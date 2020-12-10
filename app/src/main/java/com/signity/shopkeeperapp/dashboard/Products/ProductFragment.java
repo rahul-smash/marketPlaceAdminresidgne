@@ -636,6 +636,9 @@ public class ProductFragment extends Fragment implements View.OnClickListener, P
             if (productData.getVariants() != null && productData.getVariants().size() > 0) {
                 price = productData.getVariants().get(0).getPrice();
             }
+            if (!TextUtils.isEmpty(price)) {
+                price = Util.getPriceWithCurrency(Double.parseDouble(price), AppPreference.getInstance().getCurrency());
+            }
             String message = String.format("Item Name: %s\nPrice:%s\n", productData.getTitle(), price);
             String message1 = String.format("Place your order here %s/product/%s. ", storeUrl, productData.getId());
             String message2 = String.format("Feel free to call us on %s if you need any help with ordering online. Thank you.", mobile);
@@ -674,6 +677,9 @@ public class ProductFragment extends Fragment implements View.OnClickListener, P
                                 String price = "";
                                 if (productData.getVariants() != null && productData.getVariants().size() > 0) {
                                     price = productData.getVariants().get(0).getPrice();
+                                }
+                                if (!TextUtils.isEmpty(price)) {
+                                    price = Util.getPriceWithCurrency(Double.parseDouble(price), AppPreference.getInstance().getCurrency());
                                 }
                                 String message = String.format("Item Name: %s\nPrice:%s\n", productData.getTitle(), price);
                                 String message1 = String.format("Place your order here %s/product/%s. ", storeUrl, productData.getId());

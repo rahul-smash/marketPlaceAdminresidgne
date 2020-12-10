@@ -13,9 +13,13 @@ import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.signity.shopkeeperapp.R;
 import com.signity.shopkeeperapp.adapter.SpacesItemDecoration;
 import com.signity.shopkeeperapp.base.BaseDialogFragment;
+import com.signity.shopkeeperapp.model.runner.RunnerDetail;
 import com.signity.shopkeeperapp.model.runner.RunnersResponseDTO;
 import com.signity.shopkeeperapp.network.NetworkAdaper;
 import com.signity.shopkeeperapp.util.Util;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import retrofit.Callback;
 import retrofit.RetrofitError;
@@ -74,7 +78,13 @@ public class ChooseRunnerDialog extends BaseDialogFragment {
 
                 if (responseDTO.isSuccess()) {
                     if (responseDTO.getData() != null) {
-                        chooseRunnerAdapter.setCustomersList(responseDTO.getData());
+                        List<RunnerDetail> runnerDetailList = new ArrayList<>();
+                        for (RunnerDetail runnerDetail : responseDTO.getData()) {
+                            if (runnerDetail.getStatus().equals("1")) {
+                                runnerDetailList.add(runnerDetail);
+                            }
+                        }
+                        chooseRunnerAdapter.setCustomersList(runnerDetailList);
                     } else {
                         Toast.makeText(getContext(), "Data not Found!", Toast.LENGTH_SHORT).show();
                         chooseRunnerAdapter.setShowLoading(false);

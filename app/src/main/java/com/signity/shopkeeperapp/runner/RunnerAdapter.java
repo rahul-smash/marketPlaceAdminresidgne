@@ -131,7 +131,7 @@ public class RunnerAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
             @Override
             public void onClick(View view) {
                 if (listener != null) {
-                    listener.onDeleteRunner(id, runnerList.get(position).getActieOrder() == 0);
+                    listener.onDeleteRunner(runnerList.get(position).getFullName(),runnerList.get(position).getActieOrder(),id, runnerList.get(position).getActieOrder() == 0);
                 }
                 popupWindowOverView.dismiss();
             }
@@ -141,7 +141,7 @@ public class RunnerAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
     public interface RunnerAdapterListener {
         void onClickSwitch(String id, String status);
 
-        void onDeleteRunner(String id, boolean canDelete);
+        void onDeleteRunner(String fullName, int actieOrder, String id, boolean canDelete);
 
         void onEditRunner(String id);
 
