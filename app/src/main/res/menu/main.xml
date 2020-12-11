@@ -14,15 +14,15 @@
         app:showAsAction="ifRoom" />
 
     <item
-        android:id="@+id/action_bottom_products"
+        android:id="@+id/action_bottom_categories"
         android:icon="@drawable/bottom_nav_products_selector"
         android:title=""
         app:showAsAction="ifRoom" />
 
     <item
-        android:id="@+id/action_bottom_categories"
-        android:icon="@drawable/bottom_nav_categories_selector"
-        android:title="Categories"
+        android:id="@+id/action_bottom_catalog"
+        android:icon="@drawable/bottom_nav_products_selector"
+        android:title="Products"
         app:showAsAction="ifRoom" />
 
     <item

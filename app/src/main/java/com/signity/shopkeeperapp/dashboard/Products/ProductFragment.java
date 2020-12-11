@@ -37,6 +37,7 @@ import com.signity.shopkeeperapp.R;
 import com.signity.shopkeeperapp.model.Categories.GetCategoryData;
 import com.signity.shopkeeperapp.model.Categories.GetCategoryResponse;
 import com.signity.shopkeeperapp.model.Categories.SubCategory;
+import com.signity.shopkeeperapp.model.CategoryStatus.CategoryStatus;
 import com.signity.shopkeeperapp.model.DeleteCategory.DeleteCategories;
 import com.signity.shopkeeperapp.model.Product.GetProductData;
 import com.signity.shopkeeperapp.model.Product.GetProductResponse;
@@ -258,6 +259,20 @@ public class ProductFragment extends Fragment implements View.OnClickListener, P
             }
             needRefesh = false;
         }
+    }
+
+    private void publishOnline() {
+        NetworkAdaper.getNetworkServices().publish(new Callback<CategoryStatus>() {
+            @Override
+            public void success(CategoryStatus categoryStatus, Response response) {
+
+            }
+
+            @Override
+            public void failure(RetrofitError error) {
+            }
+        });
+
     }
 
     public void getProductApi() {
@@ -532,6 +547,7 @@ public class ProductFragment extends Fragment implements View.OnClickListener, P
                 } else {
                     Toast.makeText(getContext(), productStatus.getMessage(), Toast.LENGTH_SHORT).show();
                 }
+                publishOnline();
             }
 
             @Override

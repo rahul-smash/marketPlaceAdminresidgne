@@ -269,7 +269,7 @@ public class ShareCreativeActivity extends BaseActivity implements FacebookPages
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     private void setupStatusBar() {
         View decorView = getWindow().getDecorView();
-        int uiOptions = View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN;
+        int uiOptions = 1024;
         decorView.setSystemUiVisibility(uiOptions);
         getWindow().setStatusBarColor(getResources().getColor(android.R.color.transparent));
     }

@@ -350,6 +350,11 @@ public class ProductShareActivity extends BaseActivity implements ProductsShareA
             return;
         }
 
+        if (AppPreference.getInstance().getFacebookPageId() == null) {
+            openPagesDialog();
+            return;
+        }
+
         final GetProductData productData = productsAdapter.getmData().get(position);
 
         final String storeUrl = AppPreference.getInstance().getStoreUrl();
@@ -386,6 +391,8 @@ public class ProductShareActivity extends BaseActivity implements ProductsShareA
                     ProgressDialogUtil.hideProgressDialog();
                     if (response.getError() == null) {
                         Toast.makeText(ProductShareActivity.this, "Content published on facebook", Toast.LENGTH_SHORT).show();
+                    }else {
+                        Toast.makeText(ProductShareActivity.this, response.getError().getErrorUserMessage(), Toast.LENGTH_SHORT).show();
                     }
                 }
             });

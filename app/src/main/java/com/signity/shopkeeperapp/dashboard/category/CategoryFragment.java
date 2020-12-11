@@ -1,4 +1,4 @@
-package com.signity.shopkeeperapp.dashboard.categories;
+package com.signity.shopkeeperapp.dashboard.category;
 
 import android.app.AlertDialog;
 import android.content.Context;
@@ -41,9 +41,9 @@ import retrofit.Callback;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
 
-public class CategoriesFragment extends Fragment implements CategoriesAdapter.CategoriesListener {
-    public static final String TAG = "CategoriesFragment";
-    private CategoriesAdapter categoriesAdapter;
+public class CategoryFragment extends Fragment implements CategoryAdapter.CategoriesListener {
+    public static final String TAG = "CategoryFragment";
+    private CategoryAdapter categoryAdapter;
     private RecyclerView recyclerViewCategories;
     private LinearLayoutManager layoutManager;
     private LinearLayout linearLayoutAddCategory;
@@ -72,8 +72,8 @@ public class CategoriesFragment extends Fragment implements CategoriesAdapter.Ca
         }
     };
 
-    public static CategoriesFragment getInstance(Bundle bundle) {
-        CategoriesFragment fragment = new CategoriesFragment();
+    public static CategoryFragment getInstance(Bundle bundle) {
+        CategoryFragment fragment = new CategoryFragment();
         fragment.setArguments(bundle);
         return fragment;
     }
@@ -92,7 +92,7 @@ public class CategoriesFragment extends Fragment implements CategoriesAdapter.Ca
     @Override
     public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
         super.onCreateOptionsMenu(menu, inflater);
-        inflater.inflate(R.menu.menu_category, menu);
+//        inflater.inflate(R.menu.menu_category, menu);
     }
 
     @Override
@@ -104,22 +104,13 @@ public class CategoriesFragment extends Fragment implements CategoriesAdapter.Ca
     }
 
     private void publishOnline() {
-
-        ProgressDialogUtil.showProgressDialog(getContext());
         NetworkAdaper.getNetworkServices().publish(new Callback<CategoryStatus>() {
             @Override
             public void success(CategoryStatus categoryStatus, Response response) {
-                if (!isAdded()) {
-                    return;
-                }
-                ProgressDialogUtil.hideProgressDialog();
-
-                Toast.makeText(getContext(), categoryStatus.getMessage(), Toast.LENGTH_SHORT).show();
             }
 
             @Override
             public void failure(RetrofitError error) {
-                ProgressDialogUtil.hideProgressDialog();
             }
         });
 
@@ -134,9 +125,9 @@ public class CategoriesFragment extends Fragment implements CategoriesAdapter.Ca
     private void setUpAdapter() {
         layoutManager = new LinearLayoutManager(getActivity());
         recyclerViewCategories.setLayoutManager(layoutManager);
-        categoriesAdapter = new CategoriesAdapter(getContext());
-        categoriesAdapter.setListener(this);
-        recyclerViewCategories.setAdapter(categoriesAdapter);
+        categoryAdapter = new CategoryAdapter(getContext());
+        categoryAdapter.setListener(this);
+        recyclerViewCategories.setAdapter(categoryAdapter);
         recyclerViewCategories.addOnScrollListener(recyclerViewOnScrollListener);
     }
 
@@ -181,7 +172,7 @@ public class CategoriesFragment extends Fragment implements CategoriesAdapter.Ca
         super.onResume();
         currentPageNumber = 1;
         start = 0;
-        categoriesAdapter.clearData();
+        categoryAdapter.clearData();
         getAllOrdersMethod();
     }
 
@@ -213,7 +204,7 @@ public class CategoriesFragment extends Fragment implements CategoriesAdapter.Ca
                         }
                     }
 
-                    categoriesAdapter.setCategoryDataList(categoryList);
+                    categoryAdapter.setCategoryDataList(categoryList);
                 } else {
                     Toast.makeText(getContext(), "Data not found!", Toast.LENGTH_SHORT).show();
                 }
@@ -286,7 +277,7 @@ public class CategoriesFragment extends Fragment implements CategoriesAdapter.Ca
                 ProgressDialogUtil.hideProgressDialog();
 
                 if (deleteCategories.getSuccess()) {
-                    categoriesAdapter.removeItem(position);
+                    categoryAdapter.removeItem(position);
                     if (start < totalCategory) {
                         getAllOrdersMethod();
                     }
@@ -322,10 +313,11 @@ public class CategoriesFragment extends Fragment implements CategoriesAdapter.Ca
                 ProgressDialogUtil.hideProgressDialog();
 
                 if (categoryStatus.getSuccess()) {
-                    categoriesAdapter.updateCategoryStatus(subCategoryId);
+                    categoryAdapter.updateCategoryStatus(subCategoryId);
                 } else {
                     Toast.makeText(getContext(), categoryStatus.getMessage(), Toast.LENGTH_SHORT).show();
                 }
+                publishOnline();
             }
 
             @Override

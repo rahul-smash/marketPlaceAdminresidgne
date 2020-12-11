@@ -13,6 +13,7 @@ import com.signity.shopkeeperapp.dashboard.DashboardActivity;
 import com.signity.shopkeeperapp.login.MobileLoginActivity;
 import com.signity.shopkeeperapp.model.MobResponseLogin;
 import com.signity.shopkeeperapp.network.NetworkAdaper;
+import com.signity.shopkeeperapp.onboarding.OnBoardingActivity;
 import com.signity.shopkeeperapp.util.AnimUtil;
 import com.signity.shopkeeperapp.util.Constant;
 import com.signity.shopkeeperapp.util.DialogHandler;
@@ -48,7 +49,7 @@ public class SplashActivity extends AppCompatActivity {
 
     private void setUpStatusBar() {
         View decorView = getWindow().getDecorView();
-        int uiOptions = View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN;
+        int uiOptions = 1024;
         decorView.setSystemUiVisibility(uiOptions);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             getWindow().setStatusBarColor(getResources().getColor(android.R.color.transparent));
@@ -68,6 +69,11 @@ public class SplashActivity extends AppCompatActivity {
 
     private void init() {
 
+        if (!AppPreference.getInstance().isOnBoardingShown()) {
+            openOnBoarding();
+            return;
+        }
+
         if (!Util.checkIntenetConnection(this)) {
             internetDialog();
             return;
@@ -79,6 +85,12 @@ public class SplashActivity extends AppCompatActivity {
             openMobileLogin();
         }
 
+    }
+
+    private void openOnBoarding() {
+        AppPreference.getInstance().setOnBoardingShown(true);
+        startActivity(OnBoardingActivity.getStartIntent(this));
+        runAnimation();
     }
 
     private void checkForStaffValidationProcess() {

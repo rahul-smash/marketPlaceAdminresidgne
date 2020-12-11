@@ -44,9 +44,8 @@ import com.signity.shopkeeperapp.app.MyApplication;
 import com.signity.shopkeeperapp.base.BaseActivity;
 import com.signity.shopkeeperapp.book.BookOrderActivity;
 import com.signity.shopkeeperapp.customers.CustomersActivity;
-import com.signity.shopkeeperapp.dashboard.Products.ProductFragment;
 import com.signity.shopkeeperapp.dashboard.account.AccountFragment;
-import com.signity.shopkeeperapp.dashboard.categories.CategoriesFragment;
+import com.signity.shopkeeperapp.dashboard.catalog.CatalogFragment;
 import com.signity.shopkeeperapp.dashboard.home.HomeFragment;
 import com.signity.shopkeeperapp.dashboard.orders.OrdersFragment;
 import com.signity.shopkeeperapp.market.CreativeFragment;
@@ -54,7 +53,10 @@ import com.signity.shopkeeperapp.market.ShareCreativeActivity;
 import com.signity.shopkeeperapp.model.LoginModel;
 import com.signity.shopkeeperapp.model.ModelForceUpdate;
 import com.signity.shopkeeperapp.model.ResponseForceUpdate;
+import com.signity.shopkeeperapp.model.dashboard.Data;
+import com.signity.shopkeeperapp.model.dashboard.InfoDialog;
 import com.signity.shopkeeperapp.model.dashboard.StoreVersionDTO;
+import com.signity.shopkeeperapp.model.dashboard.WelcomeResponse;
 import com.signity.shopkeeperapp.model.market.industry.IndustryRegistration;
 import com.signity.shopkeeperapp.network.NetworkAdaper;
 import com.signity.shopkeeperapp.products.ImageBottomDialog;
@@ -118,6 +120,7 @@ public class DashboardActivity extends BaseActivity implements BottomNavigationV
         setUpDrawerToggle();
         setUpBottomNavigation();
         storeAppVersion();
+        showWelcome();
 
         if (!AppPreference.getInstance().isPrivateChannelCreated() && BuildConfig.DEBUG) {
             TwilioLogin twilioLogin = new TwilioLogin(this);
@@ -272,15 +275,15 @@ public class DashboardActivity extends BaseActivity implements BottomNavigationV
                 textViewToolbarTitle.setText("Orders");
                 showFragment(OrdersFragment.getInstance(null), OrdersFragment.TAG);
                 break;
-            case R.id.action_bottom_products:
+            case R.id.action_bottom_catalog:
                 navSelectedId = 2;
                 navDrawerAdapter.setSelectedId(navSelectedId);
-                textViewToolbarTitle.setText("Products");
-                showFragment(ProductFragment.getInstance(null), ProductFragment.TAG);
+                textViewToolbarTitle.setText("Catalog");
+                showFragment(CatalogFragment.getInstance(null), CatalogFragment.TAG);
                 break;
             case R.id.action_bottom_categories:
-                textViewToolbarTitle.setText("Categories");
-                showFragment(CategoriesFragment.getInstance(null), CategoriesFragment.TAG);
+//                textViewToolbarTitle.setText("Categories");
+//                showFragment(CategoriesFragment.getInstance(null), CategoriesFragment.TAG);
                 break;
             case R.id.action_bottom_account:
                 textViewToolbarTitle.setText("Account");
@@ -334,7 +337,7 @@ public class DashboardActivity extends BaseActivity implements BottomNavigationV
 
     @Override
     public void onClickViewProducts() {
-        bottomNavigationView.setSelectedItemId(R.id.action_bottom_products);
+        bottomNavigationView.setSelectedItemId(R.id.action_bottom_catalog);
     }
 
     @Override
@@ -363,7 +366,7 @@ public class DashboardActivity extends BaseActivity implements BottomNavigationV
                 bottomNavigationView.setSelectedItemId(R.id.action_bottom_orders);
                 break;
             case PRODUCTS:
-                bottomNavigationView.setSelectedItemId(R.id.action_bottom_products);
+                bottomNavigationView.setSelectedItemId(R.id.action_bottom_catalog);
                 break;
             case CUSTOMERS:
                 onClickViewCustomers();
@@ -682,6 +685,41 @@ public class DashboardActivity extends BaseActivity implements BottomNavigationV
                 .withAspectRatio(4, 3)
                 .withMaxResultSize(1200, 900)
                 .start(this);
+    }
+
+    private void showWelcome() {
+        NetworkAdaper.getNetworkServices().getWelcomeMessage(AppPreference.getInstance().getStoreId(), new Callback<WelcomeResponse>() {
+            @Override
+            public void success(WelcomeResponse welcomeResponse, Response response) {
+                if (isDestroyed()) {
+                    return;
+                }
+
+                if (welcomeResponse.isStatus()) {
+                    showWelcomeDialog(welcomeResponse.getData());
+                }
+            }
+
+            @Override
+            public void failure(RetrofitError error) {
+
+            }
+        });
+    }
+
+    private void showWelcomeDialog(Data data) {
+        try {
+            Bundle bundle = new Bundle();
+            bundle.putString("title", data.getTitle());
+            bundle.putString("message", data.getMessage());
+
+            if (getSupportFragmentManager().findFragmentByTag(InfoDialog.TAG) == null) {
+                InfoDialog infoDialog = InfoDialog.getInstance(bundle);
+                infoDialog.show(getSupportFragmentManager(), InfoDialog.TAG);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
 }

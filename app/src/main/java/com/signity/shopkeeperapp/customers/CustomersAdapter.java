@@ -5,6 +5,7 @@ import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -106,6 +107,12 @@ public class CustomersAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
         void onClickCustomer(CustomersResponse customersResponse);
 
         void onClickBookOrder(CustomersResponse customersResponse);
+
+        void onClickWhatsapp(String phone);
+
+        void onClickCall(String phone);
+
+        void onClickMessage(String phone);
     }
 
     static class ViewHolderLoading extends RecyclerView.ViewHolder {
@@ -120,6 +127,7 @@ public class CustomersAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
         TextView textViewActiveCount, textViewTotalCount, textViewAmountPaid;
         TextView textViewCustomerName, textViewCustomerNumber, textViewCustomerCity, textViewCustomerCreated;
         LinearLayout linearLayoutArea, linearLayoutBookOrder;
+        ImageView imageViewWhatsapp, imageViewPhoneCall, imageViewMessage;
 
         public CustomerViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -132,6 +140,9 @@ public class CustomersAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
             textViewAmountPaid = itemView.findViewById(R.id.tv_amount_paid);
             linearLayoutArea = itemView.findViewById(R.id.ll_area);
             linearLayoutBookOrder = itemView.findViewById(R.id.ll_book_order);
+            imageViewWhatsapp = itemView.findViewById(R.id.iv_whatsapp);
+            imageViewPhoneCall = itemView.findViewById(R.id.iv_phone_call);
+            imageViewMessage = itemView.findViewById(R.id.iv_message);
         }
 
         public void bind(int positon) {
@@ -145,7 +156,7 @@ public class CustomersAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
             textViewTotalCount.setText(String.valueOf(customersResponse.getTotalOrders()));
             textViewAmountPaid.setText(Util.getPriceWithCurrency(Double.parseDouble(customersResponse.getPaidAmount()), AppPreference.getInstance().getCurrency()));
             textViewCustomerCreated.setText(customersResponse.getCreatedDate());
-            linearLayoutArea.setVisibility(TextUtils.isEmpty(customersResponse.getCustomerAddress()) ? View.GONE : View.VISIBLE);
+            linearLayoutArea.setVisibility(TextUtils.isEmpty(customersResponse.getCustomerAddress()) ? View.INVISIBLE : View.VISIBLE);
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -160,6 +171,33 @@ public class CustomersAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
                 public void onClick(View v) {
                     if (listener != null) {
                         listener.onClickBookOrder(customersList.get(getAdapterPosition()));
+                    }
+                }
+            });
+
+            imageViewWhatsapp.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (listener != null) {
+                        listener.onClickWhatsapp(customersResponse.getPhone());
+                    }
+                }
+            });
+
+            imageViewPhoneCall.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (listener != null) {
+                        listener.onClickCall(customersResponse.getPhone());
+                    }
+                }
+            });
+
+            imageViewMessage.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (listener != null) {
+                        listener.onClickMessage(customersResponse.getPhone());
                     }
                 }
             });

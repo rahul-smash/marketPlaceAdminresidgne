@@ -6,12 +6,12 @@
     android:background="@drawable/item_background_rounded">
 
     <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/constraintLayout9"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
         android:layout_marginTop="16dp"
         android:layout_marginEnd="16dp"
-        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
@@ -43,9 +43,9 @@
             style="@style/AppTheme.TextView.Medium"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:text="Mohit Sharma"
-            android:maxLines="1"
             android:ellipsize="end"
+            android:maxLines="1"
+            android:text="Mohit Sharma"
             android:textColor="@color/colorBlack"
             app:layout_constraintEnd_toEndOf="@+id/tv_order_id_items_time"
             app:layout_constraintStart_toStartOf="parent"
@@ -76,18 +76,6 @@
                 android:textSize="8sp" />
 
         </LinearLayout>
-
-        <TextView
-            android:id="@+id/tv_order_platform"
-            android:layout_marginBottom="4dp"
-            style="@style/AppTheme.TextView.Tiny"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text=""
-            android:textStyle="italic"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/ll_status" />
 
         <LinearLayout
             android:id="@+id/linearLayout5"
@@ -146,13 +134,14 @@
     </androidx.constraintlayout.widget.ConstraintLayout>
 
     <LinearLayout
-        android:id="@+id/linearLayout16"
+        android:id="@+id/linearLayout14"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:background="@drawable/shape_grey_dark_rounded_corner"
         android:padding="6dp"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent">
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/constraintLayout9">
 
         <TextView
             android:id="@+id/tv_delivery_time_slot"
@@ -166,13 +155,27 @@
 
     </LinearLayout>
 
+    <TextView
+        android:id="@+id/tv_order_platform"
+        style="@style/AppTheme.TextView.Tiny"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="16dp"
+        android:text=""
+        android:textStyle="italic"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/constraintLayout9" />
+
     <LinearLayout
+        android:id="@+id/linearLayout12"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        android:padding="6dp"
+        android:padding="4dp"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/linearLayout16">
+        app:layout_constraintStart_toEndOf="@+id/linearLayout14"
+        app:layout_constraintTop_toBottomOf="@+id/constraintLayout9">
 
         <LinearLayout
             android:id="@+id/ll_assign_runner"

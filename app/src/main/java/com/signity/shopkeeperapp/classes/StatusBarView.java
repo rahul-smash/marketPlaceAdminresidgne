@@ -17,7 +17,7 @@ public class StatusBarView extends View {
     public StatusBarView(Context context, AttributeSet attrs) {
         super(context, attrs);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            setSystemUiVisibility(SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN);
+            setSystemUiVisibility(1024);
         }
     }
 

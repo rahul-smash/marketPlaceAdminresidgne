@@ -1,4 +1,4 @@
-package com.signity.shopkeeperapp.dashboard.categories;
+package com.signity.shopkeeperapp.dashboard.category;
 
 import android.content.Context;
 import android.graphics.drawable.ColorDrawable;
@@ -25,13 +25,13 @@ import com.squareup.picasso.Picasso;
 import java.util.ArrayList;
 import java.util.List;
 
-public class CategoriesAdapter extends RecyclerView.Adapter<CategoriesAdapter.MyViewHolder> {
+public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.MyViewHolder> {
 
     private CategoriesListener listener;
     private Context context;
     private List<SubCategory> categoryDataList = new ArrayList<>();
 
-    public CategoriesAdapter(Context context) {
+    public CategoryAdapter(Context context) {
         this.context = context;
     }
 
@@ -62,7 +62,7 @@ public class CategoriesAdapter extends RecyclerView.Adapter<CategoriesAdapter.My
     }
 
     @Override
-    public void onBindViewHolder(@NonNull final CategoriesAdapter.MyViewHolder holder, final int position) {
+    public void onBindViewHolder(@NonNull final CategoryAdapter.MyViewHolder holder, final int position) {
         holder.bind(position);
     }
 

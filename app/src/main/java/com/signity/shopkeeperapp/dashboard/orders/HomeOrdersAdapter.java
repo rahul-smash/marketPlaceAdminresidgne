@@ -296,6 +296,11 @@ public class HomeOrdersAdapter extends RecyclerView.Adapter<HomeOrdersAdapter.Vi
                 @Override
                 public void onClick(View view) {
                     if (listener != null) {
+
+                        if (TextUtils.isEmpty(ordersModel.getRunnerAccepted())) {
+                            return;
+                        }
+
                         if (ordersModel.getRunnerAccepted().equals("0")) {
                             listener.onAssignRunner(ordersModel.getRunnerId(), ordersModel.getPageNumber(), ordersModel.getOrderId());
                         } else {

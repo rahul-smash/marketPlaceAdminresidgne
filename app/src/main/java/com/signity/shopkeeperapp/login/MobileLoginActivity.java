@@ -45,7 +45,7 @@ public class MobileLoginActivity extends BaseActivity implements LoginMobileFrag
 
     private void setUpStatusBar() {
         View decorView = getWindow().getDecorView();
-        int uiOptions = View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN;
+        int uiOptions = 1024;
         decorView.setSystemUiVisibility(uiOptions);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             getWindow().setStatusBarColor(getResources().getColor(android.R.color.transparent));

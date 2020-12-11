@@ -36,4 +36,5 @@ public final class PrefConstants {
     public static final String PREF_KEY_IS_TWILIO_FCM_TOKEN_SET = "PREF_KEY_IS_TWILIO_FCM_TOKEN_SET";
     public static final String PREF_KEY_IS_PRIVATE_CHANNEL_CREATED = "PREF_KEY_IS_PRIVATE_CHANNEL_CREATED";
     public static final String PREF_KEY_IS_PRIVATE_CHANNEL_JOINED = "PREF_KEY_IS_PRIVATE_CHANNEL_JOINED";
+    public static final String PREF_KEY_IS_ONBOARDING_SHOWN = "PREF_KEY_IS_ONBOARDING_SHOWN";
 }

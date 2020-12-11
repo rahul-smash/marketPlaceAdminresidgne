@@ -1,4 +1,4 @@
-package com.signity.shopkeeperapp.dashboard.categories;
+package com.signity.shopkeeperapp.dashboard.category;
 
 import android.os.Bundle;
 import android.view.View;
@@ -13,7 +13,7 @@ import com.signity.shopkeeperapp.util.AnimUtil;
 import com.signity.shopkeeperapp.util.PrefManager;
 
 
-public class AddCategories extends AppCompatActivity implements View.OnClickListener {
+public class AddCategory extends AppCompatActivity implements View.OnClickListener {
 
 
     private PrefManager prefManager;
@@ -41,7 +41,7 @@ public class AddCategories extends AppCompatActivity implements View.OnClickList
             @Override
             public void onClick(View v) {
                 onBackPressed();
-                AnimUtil.slideFromLeftAnim(AddCategories.this);
+                AnimUtil.slideFromLeftAnim(AddCategory.this);
             }
         });
     }

@@ -31,6 +31,7 @@ import com.signity.shopkeeperapp.model.customers.addCustomer.AddCustomerResponse
 import com.signity.shopkeeperapp.model.customers.detail.CustomerDetailResponse;
 import com.signity.shopkeeperapp.model.dashboard.StoreDashboardResponse;
 import com.signity.shopkeeperapp.model.dashboard.StoreVersionDTO;
+import com.signity.shopkeeperapp.model.dashboard.WelcomeResponse;
 import com.signity.shopkeeperapp.model.image.ImageUploadResponse;
 import com.signity.shopkeeperapp.model.market.facebookPost.FacebookPostResponse;
 import com.signity.shopkeeperapp.model.market.industry.IndustryRegistration;
@@ -397,4 +398,7 @@ public interface ApiService {
 
     @GET("/sharedcreatives")
     void getSharedPosts(@Query("valueapp_store_id") String storeId, @Query("_limit") int limit, @Query("_start") int start, Callback<SharedPostModel> sharedPostModelCallback);
+
+    @GET("/getWelcomeMesssage")
+    void getWelcomeMessage(@Query("stores") String storeId, Callback<WelcomeResponse> responseCallback);
 }

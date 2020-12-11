@@ -1,10 +1,15 @@
 package com.signity.shopkeeperapp.customers;
 
+import android.content.ComponentName;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.drawable.ColorDrawable;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -32,6 +37,7 @@ import com.signity.shopkeeperapp.network.NetworkAdaper;
 import com.signity.shopkeeperapp.util.AnimUtil;
 import com.signity.shopkeeperapp.util.Constant;
 import com.signity.shopkeeperapp.util.Util;
+import com.signity.shopkeeperapp.util.prefs.AppPreference;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -39,6 +45,8 @@ import java.util.Map;
 import retrofit.Callback;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
+
+import static android.content.Intent.ACTION_DIAL;
 
 public class CustomersActivity extends BaseActivity implements CustomersAdapter.CustomerAdapterListener {
 
@@ -292,5 +300,103 @@ public class CustomersActivity extends BaseActivity implements CustomersAdapter.
         bundle.putString(BookOrderActivity.CUSTOMER_NUMBER, customersResponse.getPhone());
         startActivity(BookOrderActivity.getIntent(this, bundle));
         AnimUtil.slideFromRightAnim(this);
+    }
+
+    @Override
+    public void onClickWhatsapp(String phone) {
+        if (isValidPhone(phone)) {
+            openWhatsapp(phone);
+        }
+    }
+
+    private boolean isValidPhone(String phone) {
+        if (TextUtils.isEmpty(phone)) {
+            Toast.makeText(this, "Sorry! phone number is not available.", Toast.LENGTH_SHORT).show();
+            return false;
+        }
+        return true;
+    }
+
+    @Override
+    public void onClickCall(String phone) {
+        if (isValidPhone(phone)) {
+            callAlert(phone);
+        }
+    }
+
+    @Override
+    public void onClickMessage(String phone) {
+        if (isValidPhone(phone)) {
+            Uri uri = Uri.parse(String.format("smsto:%s", phone));
+            Intent intent = new Intent(Intent.ACTION_SENDTO, uri);
+            startActivity(intent);
+        }
+    }
+
+    private void callAlert(final String phone) {
+        androidx.appcompat.app.AlertDialog.Builder adb = new androidx.appcompat.app.AlertDialog.Builder(this);
+        adb.setTitle("Call " + phone + " ?");
+        adb.setIcon(R.mipmap.ic_launcher);
+        adb.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int which) {
+                actionCall(phone);
+            }
+        });
+        adb.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.dismiss();
+            }
+        });
+        adb.show();
+    }
+
+    private void actionCall(String phone) {
+        try {
+            PackageManager pm = getPackageManager();
+            if (pm.hasSystemFeature(PackageManager.FEATURE_TELEPHONY)) {
+                Intent intent = new Intent(ACTION_DIAL);
+                intent.setData(Uri.parse("tel:" + phone));
+                startActivity(intent);
+                AnimUtil.slideFromRightAnim(this);
+            } else {
+                Toast.makeText(this, "Your device is not supporting any calling feature", Toast.LENGTH_SHORT).show();
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+
+    private void openWhatsapp(String phone) {
+        try {
+            boolean isWhatsappInstalled = whatsappInstalledOrNot("com.whatsapp");
+            if (isWhatsappInstalled) {
+
+                Intent sendIntent = new Intent("android.intent.action.MAIN");
+                sendIntent.setComponent(new ComponentName("com.whatsapp", "com.whatsapp.Conversation"));
+                String data = String.format("%s%s@s.whatsapp.net", AppPreference.getInstance().getPhoneCode(), phone);
+                sendIntent.putExtra("jid", data);//phone number without "+" prefix
+                startActivity(sendIntent);
+            } else {
+                Uri uri = Uri.parse("market://details?id=com.whatsapp");
+                Intent goToMarket = new Intent(Intent.ACTION_VIEW, uri);
+                Toast.makeText(this, "WhatsApp not Installed", Toast.LENGTH_SHORT).show();
+                startActivity(goToMarket);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    private boolean whatsappInstalledOrNot(String uri) {
+        PackageManager pm = getPackageManager();
+        boolean appInstalled = false;
+        try {
+            pm.getPackageInfo(uri, PackageManager.GET_ACTIVITIES);
+            appInstalled = true;
+        } catch (PackageManager.NameNotFoundException e) {
+            appInstalled = false;
+        }
+        return appInstalled;
     }
 }

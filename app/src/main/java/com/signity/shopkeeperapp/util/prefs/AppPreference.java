@@ -254,4 +254,12 @@ public class AppPreference {
     public void setPrivateChannelJoined(boolean value) {
         mPrefs.edit().putBoolean(PrefConstants.PREF_KEY_IS_PRIVATE_CHANNEL_JOINED, value).apply();
     }
+
+    public boolean isOnBoardingShown() {
+        return mPrefs.getBoolean(PrefConstants.PREF_KEY_IS_ONBOARDING_SHOWN, false);
+    }
+
+    public void setOnBoardingShown(boolean value) {
+        mPrefs.edit().putBoolean(PrefConstants.PREF_KEY_IS_ONBOARDING_SHOWN, value).apply();
+    }
 }
