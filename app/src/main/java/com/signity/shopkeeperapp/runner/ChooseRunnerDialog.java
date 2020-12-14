@@ -19,7 +19,9 @@ import com.signity.shopkeeperapp.network.NetworkAdaper;
 import com.signity.shopkeeperapp.util.Util;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import retrofit.Callback;
 import retrofit.RetrofitError;
@@ -33,10 +35,12 @@ public class ChooseRunnerDialog extends BaseDialogFragment {
 
     public static final String TAG = "PreviewDialog";
     public static final String RUNNER_ID = "RUNNER_ID";
+    public static final String AREA_ID = "AREA_ID";
     private ChooseRunnerDialogListener listener;
     private RecyclerView recyclerView;
     private ChooseRunnerAdapter chooseRunnerAdapter;
     private String runnerId;
+    private String areaId;
 
     public static ChooseRunnerDialog getInstance(Bundle args) {
         ChooseRunnerDialog dialog = new ChooseRunnerDialog();
@@ -64,11 +68,17 @@ public class ChooseRunnerDialog extends BaseDialogFragment {
     private void getExtra() {
         if (getArguments() != null) {
             runnerId = getArguments().getString(RUNNER_ID);
+            areaId = getArguments().getString(AREA_ID);
         }
     }
 
     public void getRunners() {
-        NetworkAdaper.getNetworkServices().getRunners(new Callback<RunnersResponseDTO>() {
+
+        Map<String, String> param = new HashMap<>();
+        param.put("area_id", areaId);
+        param.put("runner_id", runnerId);
+
+        NetworkAdaper.getNetworkServices().chooseRunner(param, new Callback<RunnersResponseDTO>() {
             @Override
             public void success(RunnersResponseDTO responseDTO, Response response) {
 

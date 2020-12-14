@@ -30,6 +30,8 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.android.material.chip.Chip;
+import com.google.android.material.chip.ChipGroup;
 import com.signity.shopkeeperapp.R;
 import com.signity.shopkeeperapp.adapter.SpacesItemDecoration;
 import com.signity.shopkeeperapp.model.OrdersListModel;
@@ -93,6 +95,7 @@ public class OrdersFragment extends Fragment implements HomeOrdersAdapter.Orders
         }
     };
     private int pageNumberToRefresh;
+    private ChipGroup chipGroup;
 
     public static OrdersFragment getInstance(Bundle bundle) {
         OrdersFragment fragment = new OrdersFragment();
@@ -129,6 +132,41 @@ public class OrdersFragment extends Fragment implements HomeOrdersAdapter.Orders
     private void initView(View rootView) {
         recyclerViewOrders = rootView.findViewById(R.id.rv_orders);
         hiddenView = rootView.findViewById(R.id.view);
+        chipGroup = rootView.findViewById(R.id.chip_group);
+        Chip allChip = rootView.findViewById(R.id.chip_all);
+        allChip.setChecked(true);
+        chipGroup.setOnCheckedChangeListener(new ChipGroup.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(ChipGroup group, int checkedId) {
+                switch (checkedId) {
+                    case R.id.chip_all:
+                        orderTypeFilter = HomeOrdersAdapter.OrderType.ALL;
+                        break;
+                    case R.id.chip_pending:
+                        orderTypeFilter = HomeOrdersAdapter.OrderType.PENDING;
+                        break;
+                    case R.id.chip_accepted:
+                        orderTypeFilter = HomeOrdersAdapter.OrderType.ACCEPTED;
+                        break;
+                    case R.id.chip_shipped:
+                        orderTypeFilter = HomeOrdersAdapter.OrderType.SHIPPED;
+                        break;
+                    case R.id.chip_delivered:
+                        orderTypeFilter = HomeOrdersAdapter.OrderType.DELIVERED;
+                        break;
+                    case R.id.chip_rejected:
+                        orderTypeFilter = HomeOrdersAdapter.OrderType.REJECTED;
+                        break;
+                    case R.id.chip_canceled:
+                        orderTypeFilter = HomeOrdersAdapter.OrderType.CANCELED;
+                        break;
+                }
+                currentPageNumber = 1;
+                start = 0;
+                ordersAdapter.clearPageMap();
+                getAllOrdersMethod();
+            }
+        });
     }
 
     public boolean isLoading() {
@@ -147,7 +185,7 @@ public class OrdersFragment extends Fragment implements HomeOrdersAdapter.Orders
     @Override
     public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
         super.onCreateOptionsMenu(menu, inflater);
-        inflater.inflate(R.menu.menu_orders, menu);
+//        inflater.inflate(R.menu.menu_orders, menu);
     }
 
     @Override
@@ -204,7 +242,9 @@ public class OrdersFragment extends Fragment implements HomeOrdersAdapter.Orders
                     ordersAdapter.addUpdatePageWithOrders(currentPageNumber, orderListModel, totalOrders);
                     currentPageNumber++;
                     start += pageSize;
+                    ordersAdapter.setShowLoading(!orderListModel.isEmpty());
                 } else {
+                    ordersAdapter.setShowLoading(false);
                     Toast.makeText(getContext(), getValues.getMessage(), Toast.LENGTH_SHORT).show();
                 }
             }
@@ -517,9 +557,10 @@ public class OrdersFragment extends Fragment implements HomeOrdersAdapter.Orders
     }
 
     @Override
-    public void onAssignRunner(String runnerId, final int pageNumber, final String orderId) {
+    public void onAssignRunner(String runnerId, final int pageNumber, final String orderId, String areaId) {
         Bundle bundle = new Bundle();
         bundle.putString(ChooseRunnerDialog.RUNNER_ID, runnerId);
+        bundle.putString(ChooseRunnerDialog.AREA_ID, areaId);
         ChooseRunnerDialog dialog = ChooseRunnerDialog.getInstance(bundle);
         dialog.setListener(new ChooseRunnerDialog.ChooseRunnerDialogListener() {
             @Override

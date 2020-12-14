@@ -347,6 +347,10 @@ public interface ApiService {
 
     @FormUrlEncoded
     @POST("/getRunnerList")
+    void chooseRunner(@FieldMap Map<String,String> param, Callback<RunnersResponseDTO> responseDTOCallback);
+
+    @FormUrlEncoded
+    @POST("/getRunnerList")
     void getRunnerById(@FieldMap Map<String, Object> param, Callback<RunnerDetailResponse> callback);
 
     @FormUrlEncoded

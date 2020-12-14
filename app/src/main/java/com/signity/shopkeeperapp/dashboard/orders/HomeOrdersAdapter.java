@@ -196,7 +196,7 @@ public class HomeOrdersAdapter extends RecyclerView.Adapter<HomeOrdersAdapter.Vi
 
         void onCallCustomer(int position);
 
-        void onAssignRunner(String runnerId, int pageNumber, String orderId);
+        void onAssignRunner(String runnerId, int pageNumber, String orderId, String areaId);
 
     }
 
@@ -287,7 +287,7 @@ public class HomeOrdersAdapter extends RecyclerView.Adapter<HomeOrdersAdapter.Vi
                 @Override
                 public void onClick(View view) {
                     if (listener != null) {
-                        listener.onAssignRunner(ordersModel.getRunnerId(), ordersModel.getPageNumber(), ordersModel.getOrderId());
+                        listener.onAssignRunner(ordersModel.getRunnerId(), ordersModel.getPageNumber(), ordersModel.getOrderId(),ordersModel.getAreaId());
                     }
                 }
             });
@@ -302,7 +302,7 @@ public class HomeOrdersAdapter extends RecyclerView.Adapter<HomeOrdersAdapter.Vi
                         }
 
                         if (ordersModel.getRunnerAccepted().equals("0")) {
-                            listener.onAssignRunner(ordersModel.getRunnerId(), ordersModel.getPageNumber(), ordersModel.getOrderId());
+                            listener.onAssignRunner(ordersModel.getRunnerId(), ordersModel.getPageNumber(), ordersModel.getOrderId(),ordersModel.getAreaId());
                         } else {
                             Toast.makeText(context, "Runner has accepted order delivery!", Toast.LENGTH_SHORT).show();
                         }

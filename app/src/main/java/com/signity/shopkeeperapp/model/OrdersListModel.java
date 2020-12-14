@@ -102,6 +102,18 @@ public class OrdersListModel implements Serializable {
     @SerializedName("runner_delivery_accepted")
     private String runnerAccepted;
 
+    @Expose
+    @SerializedName("area_id")
+    private String areaId;
+
+    public String getAreaId() {
+        return areaId;
+    }
+
+    public void setAreaId(String areaId) {
+        this.areaId = areaId;
+    }
+
     public String getRunnerAccepted() {
         return runnerAccepted;
     }

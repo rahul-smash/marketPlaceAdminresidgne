@@ -479,9 +479,10 @@ public class OrderDetailActivity extends BaseActivity implements OrderDetailsAdp
     }
 
     @Override
-    public void onAssignRunner(String runnerId, final int pageNumber, final String orderId) {
+    public void onAssignRunner(String runnerId, final int pageNumber, final String orderId, String areaId) {
         Bundle bundle = new Bundle();
         bundle.putString(ChooseRunnerDialog.RUNNER_ID, runnerId);
+        bundle.putString(ChooseRunnerDialog.AREA_ID, areaId);
         ChooseRunnerDialog dialog = ChooseRunnerDialog.getInstance(bundle);
         dialog.setListener(new ChooseRunnerDialog.ChooseRunnerDialogListener() {
             @Override
