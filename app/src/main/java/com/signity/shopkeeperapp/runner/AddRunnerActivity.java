@@ -12,9 +12,6 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
-import android.widget.Spinner;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -23,6 +20,8 @@ import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.core.content.FileProvider;
 import androidx.core.content.res.ResourcesCompat;
+import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.textfield.TextInputEditText;
 import com.signity.shopkeeperapp.R;
@@ -31,6 +30,8 @@ import com.signity.shopkeeperapp.model.customers.AreaCodesResp;
 import com.signity.shopkeeperapp.model.customers.DataResp;
 import com.signity.shopkeeperapp.model.image.ImageUploadResponse;
 import com.signity.shopkeeperapp.model.runner.AddRunnerApiResponse;
+import com.signity.shopkeeperapp.model.runner.AreaResponse;
+import com.signity.shopkeeperapp.model.runner.AreaResponseData;
 import com.signity.shopkeeperapp.model.runner.DataResponse;
 import com.signity.shopkeeperapp.model.runner.RunnerDetailResponse;
 import com.signity.shopkeeperapp.network.NetworkAdaper;
@@ -65,17 +66,16 @@ public class AddRunnerActivity extends BaseActivity {
     private static final int REQUEST_PERMISSION = 104;
     private static final int CAMERA_REQUEST = 105;
     private Toolbar toolbar;
-    private Spinner spinner;
     private TextInputEditText textInputEditTextMobile, textInputEditTextName, textInputEditTextEmail;
     private String areaId;
-    private List<String> areaList = new ArrayList<>();
-    private ArrayAdapter<String> stringArrayAdapter;
+    private List<AreaResponseData> areaList = new ArrayList<>();
     private List<DataResp> dataResps = new ArrayList<>();
     private String profileImage = "";
     private Uri cameraImageUri;
     private CircleImageView imageViewRunner;
     private String runnerId;
-    private int selectedPosition;
+    private RecyclerView recyclerView;
+    private AreaAdapter adapter;
 
     public static Intent getStartIntent(Context context) {
         return new Intent(context, AddRunnerActivity.class);
@@ -94,8 +94,14 @@ public class AddRunnerActivity extends BaseActivity {
         getExtra();
         initViews();
         setUpToolbar();
-        setUpSpinner();
+        setUpAdapter();
         getAreaCodes();
+    }
+
+    private void setUpAdapter() {
+        adapter = new AreaAdapter(this);
+        recyclerView.setAdapter(adapter);
+        recyclerView.setLayoutManager(new GridLayoutManager(this, 2));
     }
 
     public void getRunnerDetail() {
@@ -154,13 +160,20 @@ public class AddRunnerActivity extends BaseActivity {
         setImage(dataResponse.getProfileImage10080());
 
         if (dataResponse.getArea() != null && !dataResponse.getArea().isEmpty()) {
-            for (int i = 0; i < dataResps.size(); i++) {
-                if (dataResps.get(i).getId().equalsIgnoreCase(dataResponse.getArea().get(0).getId())) {
-                    selectedPosition = i;
-                    spinner.setSelection(selectedPosition);
-                    break;
+            areaList.clear();
+            for (DataResp resp : dataResps) {
+                AreaResponseData data = new AreaResponseData();
+                data.setArea(resp.getName());
+                data.setAreaId(resp.getId());
+                for (AreaResponse areaResponse : dataResponse.getArea()) {
+                    if (resp.getId().equals(areaResponse.getId())) {
+                        data.setChecked(true);
+                        break;
+                    }
                 }
+                areaList.add(data);
             }
+            adapter.setAreaList(areaList);
         }
     }
 
@@ -172,7 +185,6 @@ public class AddRunnerActivity extends BaseActivity {
     }
 
     private void getAreaCodes() {
-
         ProgressDialogUtil.showProgressDialog(this);
         NetworkAdaper.getNetworkServices().getAreaCodes(new Callback<AreaCodesResp>() {
             @Override
@@ -185,9 +197,13 @@ public class AddRunnerActivity extends BaseActivity {
                 if (areaCodesResp.isSuccess()) {
                     dataResps = areaCodesResp.getData();
                     for (DataResp resp : dataResps) {
-                        areaList.add(resp.getName());
+                        AreaResponseData data = new AreaResponseData();
+                        data.setChecked(false);
+                        data.setAreaId(resp.getId());
+                        data.setArea(resp.getName());
+                        areaList.add(data);
                     }
-                    stringArrayAdapter.notifyDataSetChanged();
+                    adapter.setAreaList(areaList);
                 }
                 getRunnerDetail();
             }
@@ -200,25 +216,6 @@ public class AddRunnerActivity extends BaseActivity {
                 ProgressDialogUtil.hideProgressDialog();
             }
         });
-
-    }
-
-    private void setUpSpinner() {
-        stringArrayAdapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_dropdown_item, areaList);
-        spinner.setAdapter(stringArrayAdapter);
-        spinner.setSelection(selectedPosition);
-        spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                areaId = dataResps.get(position).getId();
-                selectedPosition = position;
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> parent) {
-
-            }
-        });
     }
 
     private void initViews() {
@@ -226,8 +223,8 @@ public class AddRunnerActivity extends BaseActivity {
         textInputEditTextName = findViewById(R.id.edt_runner_name);
         textInputEditTextMobile = findViewById(R.id.edt_runner_mobile);
         textInputEditTextEmail = findViewById(R.id.edt_runner_email);
-        spinner = findViewById(R.id.spinner_area);
         imageViewRunner = findViewById(R.id.iv_runner);
+        recyclerView = findViewById(R.id.rv_add_runner);
 
         imageViewRunner.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -242,16 +239,17 @@ public class AddRunnerActivity extends BaseActivity {
         String mobile = textInputEditTextMobile.getText().toString().trim();
         String name = textInputEditTextName.getText().toString().trim();
         String email = textInputEditTextEmail.getText().toString().trim();
-
-        if (TextUtils.isEmpty(mobile)) {
-            textInputEditTextMobile.setError("Enter mobile");
-            textInputEditTextMobile.requestFocus();
-            return;
-        }
+        List<String> areas = adapter.getSelectedArea();
 
         if (TextUtils.isEmpty(name)) {
             textInputEditTextName.setError("Enter name");
             textInputEditTextName.requestFocus();
+            return;
+        }
+
+        if (TextUtils.isEmpty(mobile)) {
+            textInputEditTextMobile.setError("Enter mobile");
+            textInputEditTextMobile.requestFocus();
             return;
         }
 
@@ -261,13 +259,18 @@ public class AddRunnerActivity extends BaseActivity {
             return;
         }
 
+        if (areas.isEmpty()) {
+            Toast.makeText(this, "Select Area", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
         Map<String, Object> param = new HashMap<>();
         param.put("id", runnerId);
         param.put("full_name", name);
         param.put("mobile", mobile);
         param.put("email", email);
         param.put("profile_image", profileImage);
-        param.put("area_id", areaId);
+        param.put("area_id", TextUtils.join(",", areas));
 
         ProgressDialogUtil.showProgressDialog(this);
         saveRunner(param);

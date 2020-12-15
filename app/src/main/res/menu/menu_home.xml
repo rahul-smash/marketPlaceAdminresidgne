@@ -2,11 +2,17 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <item
-
         android:id="@+id/action_notification"
-        app:actionLayout="@layout/action_layout_notification"
         android:icon="@drawable/notificationicon"
         android:title="Notification"
+        android:visible="true"
+        app:actionLayout="@layout/action_layout_notification"
+        app:showAsAction="always" />
+
+    <item
+        android:id="@+id/action_share"
+        android:icon="@drawable/shareicon"
+        android:title="Share"
         android:visible="true"
         app:showAsAction="always" />
 </menu>

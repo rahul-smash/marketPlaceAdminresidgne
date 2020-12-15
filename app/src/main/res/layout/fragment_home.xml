@@ -25,6 +25,7 @@
                 android:layout_height="match_parent">
 
                 <View
+                    android:visibility="gone"
                     android:id="@+id/view"
                     android:layout_width="match_parent"
                     android:layout_height="60dp"
@@ -35,6 +36,7 @@
                     app:layout_constraintTop_toTopOf="parent" />
 
                 <TextView
+                    android:visibility="gone"
                     android:id="@+id/tv_store_name"
                     style="@style/AppTheme.TextView.Medium"
                     android:layout_width="wrap_content"
@@ -56,6 +58,7 @@
                     android:background="@color/colorWhite"
                     app:cardCornerRadius="6dp"
                     app:cardElevation="6dp"
+                    android:visibility="gone"
                     app:layout_constraintBottom_toBottomOf="@+id/view"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintHorizontal_bias="0.5"
@@ -127,16 +130,14 @@
                     android:id="@+id/materialCardView_market"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="16dp"
-                    android:layout_marginTop="12dp"
-                    android:layout_marginEnd="16dp"
+                    android:layout_margin="16dp"
                     app:cardBackgroundColor="@color/colorPrimary"
                     app:cardCornerRadius="4dp"
                     app:cardElevation="4dp"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintHorizontal_bias="0.5"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/materialCardView">
+                    app:layout_constraintTop_toTopOf="parent">
 
                     <androidx.constraintlayout.widget.ConstraintLayout
                         android:id="@+id/ll_home_fragment_market_salon"
@@ -430,7 +431,7 @@
                         android:id="@+id/rv_orders"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:minHeight="120dp"
+                        android:minHeight="320dp"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintHorizontal_bias="0.5"

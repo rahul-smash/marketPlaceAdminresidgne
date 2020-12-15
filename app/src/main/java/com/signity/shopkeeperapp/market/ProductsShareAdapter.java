@@ -127,19 +127,19 @@ public class ProductsShareAdapter extends RecyclerView.Adapter<RecyclerView.View
     }
 
     public interface ProductAdapterListener {
-        void onClickDeleteProduct(String id, int position);
+        void shareOnInstagram(int position);
 
         void shareOnWhatsapp(int position);
 
         void shareOnFacebook(int position);
 
-        void onClickProduct(String productId);
+        void onClickProduct(GetProductData productId);
     }
 
     class MyViewHolder extends RecyclerView.ViewHolder {
 
         ConstraintLayout constraintLayoutParent;
-        ImageView imageViewProduct, imageViewWhatsapp, imageViewFacebook;
+        ImageView imageViewProduct, imageViewWhatsapp, imageViewFacebook, imageViewInstagram;
         TextView txtProductName, txtSubCategoryName, txtPrice, txtVarient, txtWeight, txtLblQuantity, txtDiscountPrice;
 
         public MyViewHolder(final View convertView) {
@@ -155,6 +155,7 @@ public class ProductsShareAdapter extends RecyclerView.Adapter<RecyclerView.View
             constraintLayoutParent = convertView.findViewById(R.id.const_parent);
             imageViewWhatsapp = convertView.findViewById(R.id.iv_whatsapp);
             imageViewFacebook = convertView.findViewById(R.id.iv_facebook);
+            imageViewInstagram = convertView.findViewById(R.id.iv_instagram);
         }
 
         public void bind(int position) {
@@ -190,7 +191,7 @@ public class ProductsShareAdapter extends RecyclerView.Adapter<RecyclerView.View
                 @Override
                 public void onClick(View v) {
                     if (listener != null) {
-                        listener.onClickProduct(productData.getId());
+                        listener.onClickProduct(productData);
                     }
                 }
             });
@@ -209,6 +210,15 @@ public class ProductsShareAdapter extends RecyclerView.Adapter<RecyclerView.View
                 public void onClick(View view) {
                     if (listener != null) {
                         listener.shareOnWhatsapp(getAdapterPosition());
+                    }
+                }
+            });
+
+            imageViewInstagram.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    if (listener != null) {
+                        listener.shareOnInstagram(getAdapterPosition());
                     }
                 }
             });

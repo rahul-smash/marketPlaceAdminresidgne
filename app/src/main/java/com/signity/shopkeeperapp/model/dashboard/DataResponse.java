@@ -19,6 +19,21 @@ public class DataResponse implements Serializable {
     @SerializedName("active_orders")
     private int activeOrders;
 
+    @SerializedName("shipped_orders")
+    private int shippedOrders;
+
+    @SerializedName("rejected_orders")
+    private int rejectedOrders;
+
+    @SerializedName("cancel_orders")
+    private int cancelledOrders;
+
+    @SerializedName("delivered_orders")
+    private int deliveredOrders;
+
+    @SerializedName("dashboard_orders")
+    private DashboardOrdersData dashboardOrdersData;
+
     @SerializedName("customers")
     private int customers;
 
@@ -27,6 +42,46 @@ public class DataResponse implements Serializable {
 
     @SerializedName("store")
     private StoreResponse store;
+
+    public DashboardOrdersData getDashboardOrdersData() {
+        return dashboardOrdersData;
+    }
+
+    public void setDashboardOrdersData(DashboardOrdersData dashboardOrdersData) {
+        this.dashboardOrdersData = dashboardOrdersData;
+    }
+
+    public int getShippedOrders() {
+        return shippedOrders;
+    }
+
+    public void setShippedOrders(int shippedOrders) {
+        this.shippedOrders = shippedOrders;
+    }
+
+    public int getRejectedOrders() {
+        return rejectedOrders;
+    }
+
+    public void setRejectedOrders(int rejectedOrders) {
+        this.rejectedOrders = rejectedOrders;
+    }
+
+    public int getCancelledOrders() {
+        return cancelledOrders;
+    }
+
+    public void setCancelledOrders(int cancelledOrders) {
+        this.cancelledOrders = cancelledOrders;
+    }
+
+    public int getDeliveredOrders() {
+        return deliveredOrders;
+    }
+
+    public void setDeliveredOrders(int deliveredOrders) {
+        this.deliveredOrders = deliveredOrders;
+    }
 
     public int getProducts() {
         return products;

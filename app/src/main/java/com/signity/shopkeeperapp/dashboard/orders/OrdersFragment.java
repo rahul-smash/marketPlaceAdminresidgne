@@ -36,6 +36,7 @@ import com.signity.shopkeeperapp.R;
 import com.signity.shopkeeperapp.adapter.SpacesItemDecoration;
 import com.signity.shopkeeperapp.model.OrdersListModel;
 import com.signity.shopkeeperapp.model.SetOrdersModel;
+import com.signity.shopkeeperapp.model.dashboard.StoreDashboardResponse;
 import com.signity.shopkeeperapp.model.orders.StoreOrdersReponse;
 import com.signity.shopkeeperapp.model.runner.CommonResponse;
 import com.signity.shopkeeperapp.network.NetworkAdaper;
@@ -71,6 +72,7 @@ public class OrdersFragment extends Fragment implements HomeOrdersAdapter.Orders
     private int checkedId;
     private int pageSize = 10, currentPageNumber = 1, start, totalOrders;
     private boolean isLoading;
+    private Chip chipAll, chipPending, chipAccepted, chipShipped, chipDelivered, chipRejected, chipCancelled;
     private RecyclerView.OnScrollListener recyclerViewOnScrollListener = new RecyclerView.OnScrollListener() {
         @Override
         public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
@@ -103,6 +105,44 @@ public class OrdersFragment extends Fragment implements HomeOrdersAdapter.Orders
         return fragment;
     }
 
+    public void storeDashboard() {
+        Map<String, Integer> param = new HashMap<>();
+        param.put("days_filder", 1);
+
+        NetworkAdaper.getNetworkServices().storeDashboard(param, new Callback<StoreDashboardResponse>() {
+            @Override
+            public void success(StoreDashboardResponse storeDashboardResponse, Response response) {
+
+                if (!isAdded()) {
+                    return;
+                }
+
+                if (storeDashboardResponse.isSuccess()) {
+
+                    if (storeDashboardResponse.getData() == null) {
+                        return;
+                    }
+
+                    if (storeDashboardResponse.getData().getDashboardOrdersData() != null) {
+                        chipAll.setText(String.format("%d | All", storeDashboardResponse.getData().getDashboardOrdersData().getTotalOrders()));
+                        chipPending.setText(String.format("%d | Pending", storeDashboardResponse.getData().getDashboardOrdersData().getDueOrders()));
+                        chipAccepted.setText(String.format("%d | Accepted", storeDashboardResponse.getData().getDashboardOrdersData().getActiveOrders()));
+                        chipShipped.setText(String.format("%d | Shipped", storeDashboardResponse.getData().getDashboardOrdersData().getShippedOrders()));
+                        chipDelivered.setText(String.format("%d | Delivered", storeDashboardResponse.getData().getDashboardOrdersData().getDeliveredOrders()));
+                        chipRejected.setText(String.format("%d | Rejected", storeDashboardResponse.getData().getDashboardOrdersData().getRejectedOrders()));
+                        chipCancelled.setText(String.format("%d | Cancelled", storeDashboardResponse.getData().getDashboardOrdersData().getCancelOrders()));
+                    }
+                } else {
+                    Toast.makeText(getContext(), storeDashboardResponse.getMessage(), Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void failure(RetrofitError error) {
+            }
+        });
+    }
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -133,8 +173,16 @@ public class OrdersFragment extends Fragment implements HomeOrdersAdapter.Orders
         recyclerViewOrders = rootView.findViewById(R.id.rv_orders);
         hiddenView = rootView.findViewById(R.id.view);
         chipGroup = rootView.findViewById(R.id.chip_group);
-        Chip allChip = rootView.findViewById(R.id.chip_all);
-        allChip.setChecked(true);
+
+        chipAll = rootView.findViewById(R.id.chip_all);
+        chipAll.setChecked(true);
+
+        chipPending = rootView.findViewById(R.id.chip_pending);
+        chipAccepted = rootView.findViewById(R.id.chip_accepted);
+        chipShipped = rootView.findViewById(R.id.chip_shipped);
+        chipDelivered = rootView.findViewById(R.id.chip_delivered);
+        chipRejected = rootView.findViewById(R.id.chip_rejected);
+        chipCancelled = rootView.findViewById(R.id.chip_canceled);
         chipGroup.setOnCheckedChangeListener(new ChipGroup.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(ChipGroup group, int checkedId) {
@@ -204,6 +252,7 @@ public class OrdersFragment extends Fragment implements HomeOrdersAdapter.Orders
             return;
         }
 
+        storeDashboard();
         getALLOrders();
     }
 
@@ -264,6 +313,9 @@ public class OrdersFragment extends Fragment implements HomeOrdersAdapter.Orders
     }
 
     public void getALLOrdersWithPage(final int pageNumber) {
+
+        storeDashboard();
+
         Map<String, Object> param = new HashMap<>();
         param.put("order_type", orderTypeFilter.getSlug());
         param.put("page", pageNumber);

@@ -7,11 +7,14 @@ import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
+import android.text.InputType;
 import android.text.TextUtils;
+import android.view.Menu;
 import android.view.View;
 import android.widget.Toast;
 
 import androidx.annotation.Nullable;
+import androidx.appcompat.widget.SearchView;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.content.FileProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -29,6 +32,7 @@ import com.signity.shopkeeperapp.model.Product.GetProductData;
 import com.signity.shopkeeperapp.model.Product.GetProductResponse;
 import com.signity.shopkeeperapp.network.NetworkAdaper;
 import com.signity.shopkeeperapp.util.AnimUtil;
+import com.signity.shopkeeperapp.util.Constant;
 import com.signity.shopkeeperapp.util.DialogUtils;
 import com.signity.shopkeeperapp.util.ProgressDialogUtil;
 import com.signity.shopkeeperapp.util.Util;
@@ -39,7 +43,9 @@ import com.squareup.picasso.Target;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import retrofit.Callback;
@@ -54,6 +60,9 @@ public class ProductShareActivity extends BaseActivity implements ProductsShareA
     private LinearLayoutManager layoutManager;
     private int pageSize = 10, currentPageNumber = 1, start, totalOrders;
     private boolean isLoading;
+    private String keyword = "";
+    private boolean isFiltering;
+    private List<GetProductData> productData = new ArrayList<>();
     private FacebookManager facebookManager;
 
     private RecyclerView.OnScrollListener recyclerViewOnScrollListener = new RecyclerView.OnScrollListener() {
@@ -72,7 +81,7 @@ public class ProductShareActivity extends BaseActivity implements ProductsShareA
             if (!isLoading) {
                 if ((visibleItemCount + firstVisibleItemPosition) >= totalItemCount
                         && firstVisibleItemPosition >= 0 && totalItemCount >= pageSize) {
-                    if (start < totalOrders) {
+                    if (start < totalOrders && !isFiltering) {
                         getAllOrdersMethod();
                     }
                 }
@@ -139,6 +148,7 @@ public class ProductShareActivity extends BaseActivity implements ProductsShareA
         Map<String, Object> param = new HashMap<>();
         param.put("page", currentPageNumber);
         param.put("pagelength", pageSize);
+        param.put("keyword", keyword);
 
         isLoading = true;
         NetworkAdaper.getNetworkServices().getAllProducts(param, new Callback<GetProductResponse>() {
@@ -237,7 +247,7 @@ public class ProductShareActivity extends BaseActivity implements ProductsShareA
     }
 
     @Override
-    public void onClickDeleteProduct(String id, int position) {
+    public void shareOnInstagram(int position) {
 
     }
 
@@ -391,7 +401,7 @@ public class ProductShareActivity extends BaseActivity implements ProductsShareA
                     ProgressDialogUtil.hideProgressDialog();
                     if (response.getError() == null) {
                         Toast.makeText(ProductShareActivity.this, "Content published on facebook", Toast.LENGTH_SHORT).show();
-                    }else {
+                    } else {
                         Toast.makeText(ProductShareActivity.this, response.getError().getErrorUserMessage(), Toast.LENGTH_SHORT).show();
                     }
                 }
@@ -422,8 +432,100 @@ public class ProductShareActivity extends BaseActivity implements ProductsShareA
     }
 
     @Override
-    public void onClickProduct(String productId) {
+    public void onClickProduct(GetProductData productData) {
 
+        final String storeUrl = AppPreference.getInstance().getStoreUrl();
+        final String mobile = AppPreference.getInstance().getUserMobile();
+
+        if (!TextUtils.isEmpty(productData.getImage())) {
+            String price = "";
+            if (productData.getVariants() != null && productData.getVariants().size() > 0) {
+                price = productData.getVariants().get(0).getPrice();
+            }
+
+            if (!TextUtils.isEmpty(price)) {
+                price = Util.getPriceWithCurrency(Double.parseDouble(price), AppPreference.getInstance().getCurrency());
+            }
+
+            String message = String.format("Item Name: %s\nPrice:%s\n", productData.getTitle(), price);
+            String message1 = String.format("Place your order here %s/product/%s. ", storeUrl, productData.getId());
+            String message2 = String.format("Feel free to call us on %s if you need any help with ordering online. Thank you.", mobile);
+
+            StringBuilder builder = new StringBuilder();
+            builder.append(message);
+            builder.append(message1);
+            builder.append(message2);
+
+            Intent intent = ShareProductActivity.getStartIntent(this);
+            intent.putExtra("url", productData.getImage());
+            intent.putExtra("desc", builder.toString());
+            intent.putExtra("title", productData.getTitle());
+            intent.putExtra("creativeId", "0");
+            intent.putExtra("isShared", false);
+            intent.putExtra(CreativeFragment.MARKET_MODE, Constant.MarketMode.GALLERY);
+            startActivity(intent);
+            AnimUtil.slideFromRightAnim(this);
+        }
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_share_products, menu);
+        final SearchView searchView = (SearchView) menu.findItem(R.id.action_search).getActionView();
+        searchView.setInputType(InputType.TYPE_CLASS_TEXT);
+        searchView.setQueryHint("Search Product");
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                if (!TextUtils.isEmpty(query))
+                    filterProducts(query.trim());
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                if (TextUtils.isEmpty(newText)) {
+                    start = 0;
+                    currentPageNumber = 1;
+                    keyword = "";
+                    searchView.clearFocus();
+                    productsAdapter.clearData();
+                    getAllOrdersMethod();
+                }
+                return false;
+            }
+        });
+
+        searchView.setOnSearchClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                productData = productsAdapter.getmData();
+            }
+        });
+
+        searchView.setOnQueryTextFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View v, boolean hasFocus) {
+                isFiltering = hasFocus;
+            }
+        });
+
+        searchView.setOnCloseListener(new SearchView.OnCloseListener() {
+            @Override
+            public boolean onClose() {
+                productsAdapter.setmData(productData, totalOrders, true);
+                return false;
+            }
+        });
+        return super.onCreateOptionsMenu(menu);
+    }
+
+    private void filterProducts(String trim) {
+        keyword = trim;
+        currentPageNumber = 1;
+        start = 0;
+        productsAdapter.clearData();
+        getAllOrdersMethod();
     }
 
     @Override

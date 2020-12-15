@@ -266,7 +266,7 @@ public class DashboardActivity extends BaseActivity implements BottomNavigationV
             case R.id.action_bottom_home:
                 navSelectedId = 0;
                 navDrawerAdapter.setSelectedId(navSelectedId);
-                textViewToolbarTitle.setText("");
+                textViewToolbarTitle.setText(AppPreference.getInstance().getStoreName());
                 showFragment(HomeFragment.getInstance(null), HomeFragment.TAG);
                 break;
             case R.id.action_bottom_orders:

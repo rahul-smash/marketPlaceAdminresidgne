@@ -155,8 +155,14 @@
                     style="@style/Widget.AppCompat.Spinner.DropDown"
                     android:layout_width="match_parent"
                     android:layout_height="42dp"
+                    android:visibility="gone"
                     android:dropDownWidth="match_parent"
                     android:spinnerMode="dialog" />
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/rv_add_runner"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" />
 
             </LinearLayout>
 

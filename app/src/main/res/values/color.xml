@@ -50,6 +50,7 @@
     <color name="color_processing">#59B3E5</color>
     <color name="color_shipping">#32A532</color>
     <color name="colorShipped">#e79d30</color>
+    <color name="colorWhatsapp">#4cb050</color>
 
 
 </resources>

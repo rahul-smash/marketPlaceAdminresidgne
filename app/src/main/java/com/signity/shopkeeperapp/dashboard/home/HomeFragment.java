@@ -98,6 +98,7 @@ public class HomeFragment extends Fragment implements HomeContentAdapter.HomeCon
     private HomeOrdersAdapter.OrderType orderType = HomeOrdersAdapter.OrderType.ALL;
     private Constant.StoreDashboard typeofDay = Constant.StoreDashboard.TODAY;
     private Uri cameraImageUri;
+    private Chip chipAll, chipPending, chipAccepted, chipShipped, chipDelivered, chipRejected, chipCancelled;
 
     public static HomeFragment getInstance(Bundle bundle) {
         HomeFragment fragment = new HomeFragment();
@@ -166,6 +167,8 @@ public class HomeFragment extends Fragment implements HomeContentAdapter.HomeCon
             DialogUtils.showAlertDialog(getActivity(), "Internet", "Please check your Internet Connection.");
             return;
         }
+
+        storeDashboard();
 
         Map<String, Object> param = new HashMap<>();
         param.put("order_type", orderType.getSlug());
@@ -236,6 +239,16 @@ public class HomeFragment extends Fragment implements HomeContentAdapter.HomeCon
                         return;
                     }
 
+                    if (storeDashboardResponse.getData().getDashboardOrdersData() != null) {
+                        chipAll.setText(String.format("%d | All", storeDashboardResponse.getData().getDashboardOrdersData().getTotalOrders()));
+                        chipPending.setText(String.format("%d | Pending", storeDashboardResponse.getData().getDashboardOrdersData().getDueOrders()));
+                        chipAccepted.setText(String.format("%d | Accepted", storeDashboardResponse.getData().getDashboardOrdersData().getActiveOrders()));
+                        chipShipped.setText(String.format("%d | Shipped", storeDashboardResponse.getData().getDashboardOrdersData().getShippedOrders()));
+                        chipDelivered.setText(String.format("%d | Delivered", storeDashboardResponse.getData().getDashboardOrdersData().getDeliveredOrders()));
+                        chipRejected.setText(String.format("%d | Rejected", storeDashboardResponse.getData().getDashboardOrdersData().getRejectedOrders()));
+                        chipCancelled.setText(String.format("%d | Cancelled", storeDashboardResponse.getData().getDashboardOrdersData().getCancelOrders()));
+                    }
+
                     homeContentAdapter.setUpData(storeDashboardResponse.getData());
                     if (listener != null) {
                         listener.onUpdateOrdersCount(storeDashboardResponse.getData().getActiveOrders());
@@ -275,8 +288,15 @@ public class HomeFragment extends Fragment implements HomeContentAdapter.HomeCon
         linearLayoutViewAllOrders = view.findViewById(R.id.ll_view_all_orders);
         chipGroup = view.findViewById(R.id.chip_group);
         textViewOverView = view.findViewById(R.id.tv_overview);
-        Chip allChip = view.findViewById(R.id.chip_all);
-        allChip.setChecked(true);
+        chipAll = view.findViewById(R.id.chip_all);
+        chipAll.setChecked(true);
+
+        chipPending = view.findViewById(R.id.chip_pending);
+        chipAccepted = view.findViewById(R.id.chip_accepted);
+        chipShipped = view.findViewById(R.id.chip_shipped);
+        chipDelivered = view.findViewById(R.id.chip_delivered);
+        chipRejected = view.findViewById(R.id.chip_rejected);
+        chipCancelled = view.findViewById(R.id.chip_canceled);
 
         view.findViewById(R.id.materialCardView_market).setOnClickListener(new View.OnClickListener() {
             @Override
@@ -580,6 +600,9 @@ public class HomeFragment extends Fragment implements HomeContentAdapter.HomeCon
         if (item.getItemId() == R.id.action_notification) {
             startActivity(NotificationActivity.getStartIntent(getContext()));
             AnimUtil.slideFromRightAnim(getActivity());
+        }
+        if (item.getItemId() == R.id.action_share) {
+            openShareSheet();
         }
         return super.onOptionsItemSelected(item);
     }
