@@ -136,33 +136,87 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="3"
+                    android:orientation="vertical"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent">
+
+                    <TextView
+                        android:id="@+id/textView"
+                        style="@style/AppTheme.TextView.Mini"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="4dp"
+                        android:layout_marginLeft="4dp"
+                        android:layout_marginTop="8dp"
+                        android:text="Select City" />
+
+                    <androidx.appcompat.widget.AppCompatSpinner
+                        android:id="@+id/spinner_area"
+                        style="@style/Widget.AppCompat.Spinner.DropDown"
+                        android:layout_width="match_parent"
+                        android:layout_height="42dp"
+                        android:dropDownWidth="match_parent"
+                        android:spinnerMode="dropdown" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/ll_add_area"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="bottom"
+                    android:layout_weight="1.5"
+                    android:background="@drawable/shape_primary_rounded"
+                    android:gravity="center"
+                    android:paddingLeft="16dp"
+                    android:paddingTop="8dp"
+                    android:paddingRight="16dp"
+                    android:paddingBottom="8dp">
+
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:src="@drawable/addicon"
+                        app:tint="@color/colorWhite" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="4dp"
+                        android:text="Add Area"
+                        android:textColor="@color/colorWhite" />
+
+                </LinearLayout>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/ll_selected_areas"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
                 android:orientation="vertical"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent">
+                android:visibility="gone">
 
                 <TextView
-                    android:id="@+id/textView"
+                    android:id="@+id/textView1"
                     style="@style/AppTheme.TextView.Mini"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="4dp"
                     android:layout_marginLeft="4dp"
-                    android:layout_marginTop="8dp"
                     android:text="Area" />
 
-                <androidx.appcompat.widget.AppCompatSpinner
-                    android:id="@+id/spinner_area"
-                    style="@style/Widget.AppCompat.Spinner.DropDown"
+                <com.google.android.material.chip.ChipGroup
+                    android:id="@+id/chip_group"
                     android:layout_width="match_parent"
-                    android:layout_height="42dp"
-                    android:visibility="gone"
-                    android:dropDownWidth="match_parent"
-                    android:spinnerMode="dialog" />
-
-                <androidx.recyclerview.widget.RecyclerView
-                    android:id="@+id/rv_add_runner"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content" />
+                    android:layout_height="wrap_content"
+                    app:chipSpacing="8dp" />
 
             </LinearLayout>
 

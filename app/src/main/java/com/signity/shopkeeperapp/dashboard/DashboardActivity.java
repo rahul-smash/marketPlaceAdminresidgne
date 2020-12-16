@@ -43,6 +43,7 @@ import com.signity.shopkeeperapp.SplashActivity;
 import com.signity.shopkeeperapp.app.MyApplication;
 import com.signity.shopkeeperapp.base.BaseActivity;
 import com.signity.shopkeeperapp.book.BookOrderActivity;
+import com.signity.shopkeeperapp.contactus.ContactUsActivity;
 import com.signity.shopkeeperapp.customers.CustomersActivity;
 import com.signity.shopkeeperapp.dashboard.account.AccountFragment;
 import com.signity.shopkeeperapp.dashboard.catalog.CatalogFragment;
@@ -389,6 +390,10 @@ public class DashboardActivity extends BaseActivity implements BottomNavigationV
                 break;
             case CUSTOMER_SUPPORT:
                 startActivity(CustomerSupportActivity.getStartIntent(DashboardActivity.this));
+                AnimUtil.slideFromRightAnim(DashboardActivity.this);
+                break;
+            case CONTACT_US:
+                startActivity(ContactUsActivity.getStartIntent(DashboardActivity.this));
                 AnimUtil.slideFromRightAnim(DashboardActivity.this);
                 break;
             case LOGOUT:

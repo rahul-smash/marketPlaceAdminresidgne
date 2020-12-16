@@ -95,6 +95,7 @@ public class NavDrawerAdapter extends BaseAdapter {
         RUNNER("Runner Management", R.drawable.runnermanagementicon),
         SWITCH_STORE("Switch Store", R.drawable.switchstoreicon),
         CUSTOMER_SUPPORT("Customer Support", R.drawable.customersicon),
+        CONTACT_US("Contact Us", R.drawable.customersicon),
         LOGOUT("Logout", R.drawable.logouticon);
 
         private String title;

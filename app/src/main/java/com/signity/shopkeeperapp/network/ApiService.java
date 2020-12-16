@@ -50,6 +50,7 @@ import com.signity.shopkeeperapp.model.runner.AddRunnerApiResponse;
 import com.signity.shopkeeperapp.model.runner.CommonResponse;
 import com.signity.shopkeeperapp.model.runner.RunnerDetailResponse;
 import com.signity.shopkeeperapp.model.runner.RunnersResponseDTO;
+import com.signity.shopkeeperapp.model.runner.areas.CityAreaDTO;
 import com.signity.shopkeeperapp.model.stores.StoresResponse;
 import com.signity.shopkeeperapp.model.verify.EmailVerifyResponse;
 import com.signity.shopkeeperapp.model.verify.MobileOtpReponse;
@@ -264,6 +265,9 @@ public interface ApiService {
     @GET("/getAreaList")
     void getAreaCodes(Callback<AreaCodesResp> responseCallback);
 
+    @GET("/store_city_area")
+    void getCityArea(Callback<CityAreaDTO> responseCallback);
+
     @FormUrlEncoded
     @POST("/getBestProducts")
     void getBestSelling(@FieldMap Map<String, Object> param, Callback<GetProductResponse> responseCallback);
@@ -347,7 +351,7 @@ public interface ApiService {
 
     @FormUrlEncoded
     @POST("/getRunnerList")
-    void chooseRunner(@FieldMap Map<String,String> param, Callback<RunnersResponseDTO> responseDTOCallback);
+    void chooseRunner(@FieldMap Map<String, String> param, Callback<RunnersResponseDTO> responseDTOCallback);
 
     @FormUrlEncoded
     @POST("/getRunnerList")
@@ -405,4 +409,9 @@ public interface ApiService {
 
     @GET("/getWelcomeMesssage")
     void getWelcomeMessage(@Query("stores") String storeId, Callback<WelcomeResponse> responseCallback);
+
+    @FormUrlEncoded
+    @POST("/addContactUs")
+    void contactUs(@FieldMap Map<String, Object> param, Callback<CommonResponse> responseCallback);
+
 }

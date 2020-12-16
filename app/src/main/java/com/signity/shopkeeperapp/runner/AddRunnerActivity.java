@@ -6,12 +6,17 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.provider.MediaStore;
 import android.text.TextUtils;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.LinearLayout;
+import android.widget.Spinner;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -20,21 +25,22 @@ import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.core.content.FileProvider;
 import androidx.core.content.res.ResourcesCompat;
-import androidx.recyclerview.widget.GridLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.android.material.chip.Chip;
+import com.google.android.material.chip.ChipGroup;
 import com.google.android.material.textfield.TextInputEditText;
 import com.signity.shopkeeperapp.R;
 import com.signity.shopkeeperapp.base.BaseActivity;
-import com.signity.shopkeeperapp.model.customers.AreaCodesResp;
-import com.signity.shopkeeperapp.model.customers.DataResp;
 import com.signity.shopkeeperapp.model.image.ImageUploadResponse;
 import com.signity.shopkeeperapp.model.runner.AddRunnerApiResponse;
-import com.signity.shopkeeperapp.model.runner.AreaResponse;
 import com.signity.shopkeeperapp.model.runner.AreaResponseData;
 import com.signity.shopkeeperapp.model.runner.DataResponse;
 import com.signity.shopkeeperapp.model.runner.RunnerDetailResponse;
+import com.signity.shopkeeperapp.model.runner.areas.AreaDTO;
+import com.signity.shopkeeperapp.model.runner.areas.CityAreaDTO;
+import com.signity.shopkeeperapp.model.runner.areas.DataDTO;
 import com.signity.shopkeeperapp.network.NetworkAdaper;
+import com.signity.shopkeeperapp.products.AreaSelectionDialog;
 import com.signity.shopkeeperapp.products.ImageBottomDialog;
 import com.signity.shopkeeperapp.util.AnimUtil;
 import com.signity.shopkeeperapp.util.ProgressDialogUtil;
@@ -67,15 +73,21 @@ public class AddRunnerActivity extends BaseActivity {
     private static final int CAMERA_REQUEST = 105;
     private Toolbar toolbar;
     private TextInputEditText textInputEditTextMobile, textInputEditTextName, textInputEditTextEmail;
-    private String areaId;
+    private String cityId;
     private List<AreaResponseData> areaList = new ArrayList<>();
-    private List<DataResp> dataResps = new ArrayList<>();
+    private List<String> cityList = new ArrayList<>();
+    private List<String> cityIdList = new ArrayList<>();
     private String profileImage = "";
     private Uri cameraImageUri;
     private CircleImageView imageViewRunner;
     private String runnerId;
-    private RecyclerView recyclerView;
-    private AreaAdapter adapter;
+    private Spinner spinner;
+    private ArrayAdapter<String> stringArrayAdapter;
+    private List<DataDTO> dataDTO = new ArrayList<>();
+    private ChipGroup chipGroup;
+    private List<AreaDTO> selectedAreas1 = new ArrayList<>();
+    private LinearLayout linearLayoutSelectedAreas;
+    private int selectedPosition;
 
     public static Intent getStartIntent(Context context) {
         return new Intent(context, AddRunnerActivity.class);
@@ -94,14 +106,29 @@ public class AddRunnerActivity extends BaseActivity {
         getExtra();
         initViews();
         setUpToolbar();
-        setUpAdapter();
+        setUpSpinner();
         getAreaCodes();
     }
 
-    private void setUpAdapter() {
-        adapter = new AreaAdapter(this);
-        recyclerView.setAdapter(adapter);
-        recyclerView.setLayoutManager(new GridLayoutManager(this, 2));
+    private void setUpSpinner() {
+        stringArrayAdapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_dropdown_item, cityList);
+        spinner.setAdapter(stringArrayAdapter);
+        spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                if (selectedPosition != position) {
+                    chipGroup.removeAllViews();
+                    selectedAreas1.clear();
+                }
+                selectedPosition = position;
+                cityId = cityIdList.get(position);
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
     }
 
     public void getRunnerDetail() {
@@ -159,7 +186,7 @@ public class AddRunnerActivity extends BaseActivity {
 
         setImage(dataResponse.getProfileImage10080());
 
-        if (dataResponse.getArea() != null && !dataResponse.getArea().isEmpty()) {
+/*        if (dataResponse.getArea() != null && !dataResponse.getArea().isEmpty()) {
             areaList.clear();
             for (DataResp resp : dataResps) {
                 AreaResponseData data = new AreaResponseData();
@@ -174,7 +201,7 @@ public class AddRunnerActivity extends BaseActivity {
                 areaList.add(data);
             }
             adapter.setAreaList(areaList);
-        }
+        }*/
     }
 
     private void getExtra() {
@@ -186,24 +213,23 @@ public class AddRunnerActivity extends BaseActivity {
 
     private void getAreaCodes() {
         ProgressDialogUtil.showProgressDialog(this);
-        NetworkAdaper.getNetworkServices().getAreaCodes(new Callback<AreaCodesResp>() {
+        NetworkAdaper.getNetworkServices().getCityArea(new Callback<CityAreaDTO>() {
             @Override
-            public void success(AreaCodesResp areaCodesResp, Response response) {
+            public void success(CityAreaDTO areaCodesResp, Response response) {
 
                 if (isDestroyed()) {
                     return;
                 }
                 areaList.clear();
                 if (areaCodesResp.isSuccess()) {
-                    dataResps = areaCodesResp.getData();
-                    for (DataResp resp : dataResps) {
-                        AreaResponseData data = new AreaResponseData();
-                        data.setChecked(false);
-                        data.setAreaId(resp.getId());
-                        data.setArea(resp.getName());
-                        areaList.add(data);
+
+                    dataDTO = areaCodesResp.getData();
+
+                    for (DataDTO dataDTO : dataDTO) {
+                        cityList.add(dataDTO.getCity().getCity());
+                        cityIdList.add(dataDTO.getCity().getId());
                     }
-                    adapter.setAreaList(areaList);
+                    stringArrayAdapter.notifyDataSetChanged();
                 }
                 getRunnerDetail();
             }
@@ -224,7 +250,16 @@ public class AddRunnerActivity extends BaseActivity {
         textInputEditTextMobile = findViewById(R.id.edt_runner_mobile);
         textInputEditTextEmail = findViewById(R.id.edt_runner_email);
         imageViewRunner = findViewById(R.id.iv_runner);
-        recyclerView = findViewById(R.id.rv_add_runner);
+        spinner = findViewById(R.id.spinner_area);
+        chipGroup = findViewById(R.id.chip_group);
+        linearLayoutSelectedAreas = findViewById(R.id.ll_selected_areas);
+
+        findViewById(R.id.ll_add_area).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                openAreaDialog();
+            }
+        });
 
         imageViewRunner.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -234,12 +269,51 @@ public class AddRunnerActivity extends BaseActivity {
         });
     }
 
+    private void openAreaDialog() {
+
+        List<AreaDTO> areaDTOS = new ArrayList<>();
+        String cityName = null;
+        for (DataDTO dto : dataDTO) {
+            if (cityId.equals(dto.getCity().getId())) {
+                areaDTOS = dto.getArea();
+                cityName = dto.getCity().getCity();
+                break;
+            }
+        }
+
+        Bundle bundle = new Bundle();
+        bundle.putParcelableArrayList(AreaSelectionDialog.AREA_DATA, (ArrayList<? extends Parcelable>) areaDTOS);
+        bundle.putString(AreaSelectionDialog.CITY_NAME, cityName);
+        final AreaSelectionDialog dialog = AreaSelectionDialog.getInstance(bundle);
+        dialog.setListenerCategory(new AreaSelectionDialog.AreaSelectionListener() {
+            @Override
+            public void onSubmit(List<AreaDTO> selectedAreas) {
+                chipGroup.removeAllViews();
+                selectedAreas1 = selectedAreas;
+                linearLayoutSelectedAreas.setVisibility(selectedAreas.isEmpty() ? View.GONE : View.VISIBLE);
+
+                for (AreaDTO areaDTO : selectedAreas1) {
+                    final Chip chip = new Chip(AddRunnerActivity.this);
+                    chip.setText(areaDTO.getAreaName());
+                    chip.setOnCloseIconClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                        }
+                    });
+                    chipGroup.addView(chip);
+                }
+                dialog.dismiss();
+            }
+        });
+        dialog.show(getSupportFragmentManager(), AreaSelectionDialog.TAG);
+
+    }
+
     private void saveRunner() {
 
         String mobile = textInputEditTextMobile.getText().toString().trim();
         String name = textInputEditTextName.getText().toString().trim();
         String email = textInputEditTextEmail.getText().toString().trim();
-        List<String> areas = adapter.getSelectedArea();
 
         if (TextUtils.isEmpty(name)) {
             textInputEditTextName.setError("Enter name");
@@ -259,9 +333,14 @@ public class AddRunnerActivity extends BaseActivity {
             return;
         }
 
-        if (areas.isEmpty()) {
-            Toast.makeText(this, "Select Area", Toast.LENGTH_SHORT).show();
+        if (selectedAreas1.isEmpty()) {
+            Toast.makeText(this, "Please add area", Toast.LENGTH_SHORT).show();
             return;
+        }
+
+        List<String> areas = new ArrayList<>();
+        for (AreaDTO areaDTO : selectedAreas1) {
+            areas.add(areaDTO.getAreaId());
         }
 
         Map<String, Object> param = new HashMap<>();

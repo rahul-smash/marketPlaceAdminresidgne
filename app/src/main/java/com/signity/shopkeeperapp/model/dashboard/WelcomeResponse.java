@@ -4,7 +4,7 @@ import com.google.gson.annotations.SerializedName;
 
 public class WelcomeResponse {
 
-	@SerializedName("data")
+	@SerializedName("messages")
 	private Data data;
 
 	@SerializedName("status")
