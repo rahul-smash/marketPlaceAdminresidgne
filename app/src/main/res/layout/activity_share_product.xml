@@ -87,7 +87,7 @@
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintHorizontal_bias="0.0"
                         app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toBottomOf="@+id/tv_product_price" />
+                        app:layout_constraintTop_toBottomOf="@+id/tv_product_price_final" />
 
                     <TextView
                         android:id="@+id/textView"
@@ -142,6 +142,7 @@
                         android:layout_height="wrap_content"
                         android:maxLines="1"
                         android:text="244"
+                        android:paddingEnd="16dp"
                         app:layout_constraintStart_toStartOf="@+id/tv_title"
                         app:layout_constraintTop_toBottomOf="@+id/tv_title" />
 
@@ -150,7 +151,6 @@
                         style="@style/AppTheme.TextView.Small"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginStart="16dp"
                         android:maxLines="1"
                         android:text="244"
                         android:textColor="@color/colorTextDark"
@@ -197,7 +197,7 @@
                                     android:id="@+id/iv_facebook"
                                     android:layout_width="40dp"
                                     android:layout_height="40dp"
-                                    android:src="@drawable/fbicon" />
+                                    android:src="@drawable/fbbigicon" />
 
                                 <ImageView
                                     android:id="@+id/iv_instagram"
@@ -205,13 +205,13 @@
                                     android:layout_height="40dp"
                                     android:layout_marginStart="16dp"
                                     android:layout_marginEnd="16dp"
-                                    android:src="@drawable/whatsappicon" />
+                                    android:src="@drawable/instabigicon" />
 
                                 <ImageView
                                     android:id="@+id/iv_whatsapp"
                                     android:layout_width="40dp"
                                     android:layout_height="40dp"
-                                    android:src="@drawable/whatsappicon" />
+                                    android:src="@drawable/whatsappbigicon" />
 
                             </LinearLayout>
 

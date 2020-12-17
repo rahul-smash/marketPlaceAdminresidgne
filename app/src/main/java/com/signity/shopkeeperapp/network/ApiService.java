@@ -32,6 +32,10 @@ import com.signity.shopkeeperapp.model.customers.detail.CustomerDetailResponse;
 import com.signity.shopkeeperapp.model.dashboard.StoreDashboardResponse;
 import com.signity.shopkeeperapp.model.dashboard.StoreVersionDTO;
 import com.signity.shopkeeperapp.model.dashboard.WelcomeResponse;
+import com.signity.shopkeeperapp.model.faq.FaqModel;
+import com.signity.shopkeeperapp.model.faq.FaqResponse;
+import com.signity.shopkeeperapp.model.helpMediaModel.HelpVideoResponse;
+import com.signity.shopkeeperapp.model.helpMediaModel.HelpVideos;
 import com.signity.shopkeeperapp.model.image.ImageUploadResponse;
 import com.signity.shopkeeperapp.model.market.facebookPost.FacebookPostResponse;
 import com.signity.shopkeeperapp.model.market.industry.IndustryRegistration;
@@ -414,4 +418,9 @@ public interface ApiService {
     @POST("/addContactUs")
     void contactUs(@FieldMap Map<String, Object> param, Callback<CommonResponse> responseCallback);
 
+    @GET("/get_faqs")
+    void getFAQs(Callback<FaqResponse> responseCallback);
+
+    @GET("/get_helpvideos")
+    void getHelpVideos(Callback<HelpVideoResponse> responseCallback);
 }

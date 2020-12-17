@@ -90,12 +90,14 @@ public class NavDrawerAdapter extends BaseAdapter {
         ORDERS("Orders", R.drawable.ordersicon),
         PRODUCTS("Products", R.drawable.producticon),
         CUSTOMERS("Customers", R.drawable.customersicon),
-//        BOOK("Book Order", R.drawable.transactionicon),
+        //        BOOK("Book Order", R.drawable.transactionicon),
 //        MARKET("Market Store", R.drawable.dashboardicon),
         RUNNER("Runner Management", R.drawable.runnermanagementicon),
         SWITCH_STORE("Switch Store", R.drawable.switchstoreicon),
         CUSTOMER_SUPPORT("Customer Support", R.drawable.customersicon),
         CONTACT_US("Contact Us", R.drawable.customersicon),
+        HELP_MEDIA("Help Media", R.drawable.ordersicon),
+        FAQS("FAQs", R.drawable.ordersicon),
         LOGOUT("Logout", R.drawable.logouticon);
 
         private String title;

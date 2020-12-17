@@ -13,6 +13,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
+import android.graphics.Paint;
 import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
@@ -126,7 +127,9 @@ public class ShareProductActivity extends BaseActivity implements FacebookPagesD
     private int tagId;
     private ConstraintLayout constraintLayoutOutside;
     private TextView textViewPreview;
-    private ConstraintLayout constraintLayoutInstagram, constraintLayoutWhatsapp;
+    private ImageView imageViewInstagram, imageViewWhatsapp,imageViewFacebook;
+    private String price = "0", finalPrice = "0";
+    private TextView textViewPrice, textViewFinalPrice;
 
     public static Intent getStartIntent(Context context) {
         return new Intent(context, ShareProductActivity.class);
@@ -142,6 +145,8 @@ public class ShareProductActivity extends BaseActivity implements FacebookPagesD
 
     private void initViews() {
         imageView = findViewById(R.id.iv_about);
+        textViewPrice = findViewById(R.id.tv_product_price);
+        textViewFinalPrice = findViewById(R.id.tv_product_price_final);
         imageViewFb = findViewById(R.id.iv_post_image);
         textViewShared = findViewById(R.id.tv_already_shared);
         textViewTitle = findViewById(R.id.tv_title);
@@ -155,8 +160,9 @@ public class ShareProductActivity extends BaseActivity implements FacebookPagesD
         arrow = findViewById(R.id.arrow);
         toolbar = findViewById(R.id.toolbar);
         textViewPreview = findViewById(R.id.tv_preview_fb);
-        constraintLayoutInstagram = findViewById(R.id.const_instagram);
-        constraintLayoutWhatsapp = findViewById(R.id.const_whatsapp);
+        imageViewInstagram = findViewById(R.id.iv_instagram);
+        imageViewWhatsapp = findViewById(R.id.iv_whatsapp);
+        imageViewFacebook = findViewById(R.id.iv_facebook);
     }
 
     protected void setUp() {
@@ -175,7 +181,14 @@ public class ShareProductActivity extends BaseActivity implements FacebookPagesD
             }
         });
 
-        constraintLayoutWhatsapp.setOnClickListener(new View.OnClickListener() {
+        imageViewFacebook.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                onClickFacebook();
+            }
+        });
+
+        imageViewWhatsapp.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
@@ -188,7 +201,7 @@ public class ShareProductActivity extends BaseActivity implements FacebookPagesD
             }
         });
 
-        constraintLayoutInstagram.setOnClickListener(new View.OnClickListener() {
+        imageViewInstagram.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (!appInstalledOrNot("com.instagram.android")) {
@@ -378,7 +391,7 @@ public class ShareProductActivity extends BaseActivity implements FacebookPagesD
         hasPermission = true;
 
         textViewFacebook.setText((isLogged || hasPage) ? "Share on Facebook" : "Login with Facebook");
-        constraintLayoutFacebook.setVisibility(hasPermission ? View.VISIBLE : View.GONE);
+        constraintLayoutFacebook.setVisibility(View.GONE);
         layoutBottomSheet.setVisibility(View.GONE);
     }
 
@@ -473,6 +486,12 @@ public class ShareProductActivity extends BaseActivity implements FacebookPagesD
         editTextAbout.setText(descFormat);
         textViewTitle.setText(title);
         textViewFb.setText(desc);
+        textViewPrice.setText(Util.getPriceWithCurrency(Double.parseDouble(price), AppPreference.getInstance().getCurrency()));
+        textViewFinalPrice.setText(Util.getPriceWithCurrency(Double.parseDouble(finalPrice), AppPreference.getInstance().getCurrency()));
+        textViewPrice.setPaintFlags(textViewPrice.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
+
+        textViewPrice.setVisibility(price.equals(finalPrice) ? View.GONE : View.VISIBLE);
+
         textViewShared.setVisibility(isShared ? View.VISIBLE : View.GONE);
         editTextAbout.setImeOptions(EditorInfo.IME_ACTION_DONE);
         editTextAbout.setRawInputType(InputType.TYPE_CLASS_TEXT);
@@ -500,13 +519,15 @@ public class ShareProductActivity extends BaseActivity implements FacebookPagesD
     private void getExtra() {
         Bundle bundle = getIntent().getExtras();
         if (bundle != null) {
-            url = getIntent().getExtras().getString("url");
-            desc = getIntent().getExtras().getString("desc");
-            title = getIntent().getExtras().getString("title");
-            creativeId = getIntent().getExtras().getString("creativeId");
-            isShared = getIntent().getExtras().getBoolean("isShared");
-            tagId = getIntent().getExtras().getInt("tagId", 0);
-            marketMode = (Constant.MarketMode) getIntent().getSerializableExtra(CreativeFragment.MARKET_MODE);
+            url = bundle.getString("url");
+            price = bundle.getString("price");
+            finalPrice = bundle.getString("finalPrice");
+            desc = bundle.getString("desc");
+            title = bundle.getString("title");
+            creativeId = bundle.getString("creativeId");
+            isShared = bundle.getBoolean("isShared");
+            tagId = bundle.getInt("tagId", 0);
+            marketMode = (Constant.MarketMode) bundle.getSerializable(CreativeFragment.MARKET_MODE);
         }
     }
 

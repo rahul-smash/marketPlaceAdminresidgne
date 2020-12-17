@@ -383,4 +383,10 @@ public class ContactUsActivity extends BaseActivity {
             }
         }
     }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        AnimUtil.slideFromLeftAnim(this);
+    }
 }

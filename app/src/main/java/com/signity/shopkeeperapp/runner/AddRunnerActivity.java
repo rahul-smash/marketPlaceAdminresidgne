@@ -33,6 +33,7 @@ import com.signity.shopkeeperapp.R;
 import com.signity.shopkeeperapp.base.BaseActivity;
 import com.signity.shopkeeperapp.model.image.ImageUploadResponse;
 import com.signity.shopkeeperapp.model.runner.AddRunnerApiResponse;
+import com.signity.shopkeeperapp.model.runner.AreaResponse;
 import com.signity.shopkeeperapp.model.runner.AreaResponseData;
 import com.signity.shopkeeperapp.model.runner.DataResponse;
 import com.signity.shopkeeperapp.model.runner.RunnerDetailResponse;
@@ -186,22 +187,41 @@ public class AddRunnerActivity extends BaseActivity {
 
         setImage(dataResponse.getProfileImage10080());
 
-/*        if (dataResponse.getArea() != null && !dataResponse.getArea().isEmpty()) {
-            areaList.clear();
-            for (DataResp resp : dataResps) {
-                AreaResponseData data = new AreaResponseData();
-                data.setArea(resp.getName());
-                data.setAreaId(resp.getId());
-                for (AreaResponse areaResponse : dataResponse.getArea()) {
-                    if (resp.getId().equals(areaResponse.getId())) {
-                        data.setChecked(true);
+        if (dataResponse.getArea() != null && !dataResponse.getArea().isEmpty()) {
+            cityId = dataResponse.getArea().get(0).getCityId();
+            for (int j = 0; j < cityIdList.size(); j++) {
+                if (cityId.equals(cityIdList.get(j))) {
+                    spinner.setSelection(j, true);
+                }
+            }
+
+            selectedAreas1.clear();
+            for (AreaResponse areaResponse : dataResponse.getArea()) {
+                for (DataDTO dto : dataDTO) {
+                    if (dto.getCity().getId().equals(cityId)) {
+                        for (AreaDTO areaDTO : dto.getArea()) {
+                            if (areaResponse.getId().equals(areaDTO.getAreaId())) {
+                                areaDTO.setChecked(true);
+                                selectedAreas1.add(areaDTO);
+                            }
+                        }
                         break;
                     }
                 }
-                areaList.add(data);
             }
-            adapter.setAreaList(areaList);
-        }*/
+
+            for (AreaDTO areaDTO : selectedAreas1) {
+                final Chip chip = new Chip(AddRunnerActivity.this);
+                chip.setText(areaDTO.getAreaName());
+                chip.setOnCloseIconClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                    }
+                });
+                chipGroup.addView(chip);
+            }
+
+        }
     }
 
     private void getExtra() {

@@ -187,7 +187,7 @@ public class ProductShareActivity extends BaseActivity implements ProductsShareA
         });
     }
 
-    private void shareIntent(String extra, String shareTitle, Uri uri) {
+    private void shareIntent(String extra, String shareTitle, Uri uri, String shareApp) {
         Intent sendIntent = new Intent();
         sendIntent.setAction(Intent.ACTION_SEND);
         sendIntent.putExtra(Intent.EXTRA_TEXT, extra);
@@ -196,13 +196,13 @@ public class ProductShareActivity extends BaseActivity implements ProductsShareA
             sendIntent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
         }
         sendIntent.setType("*/*");
-        sendIntent.setPackage("com.whatsapp");
+        sendIntent.setPackage(shareApp);
 
         Intent shareIntent = Intent.createChooser(sendIntent, shareTitle);
         startActivity(shareIntent);
     }
 
-    private boolean whatsappInstalledOrNot(String uri) {
+    private boolean appInstalledOrNot(String uri) {
         PackageManager pm = getPackageManager();
         boolean appInstalled = false;
         try {
@@ -248,16 +248,23 @@ public class ProductShareActivity extends BaseActivity implements ProductsShareA
 
     @Override
     public void shareOnInstagram(int position) {
-
+        if (!appInstalledOrNot("com.instagram.android")) {
+            Toast.makeText(ProductShareActivity.this, "Instagram not installed", Toast.LENGTH_SHORT).show();
+            return;
+        }
+        shareProduct(position, "com.instagram.android");
     }
 
     @Override
     public void shareOnWhatsapp(int position) {
-
-        if (!whatsappInstalledOrNot("com.whatsapp")) {
+        if (!appInstalledOrNot("com.whatsapp")) {
             Toast.makeText(this, "Whatsapp not installed", Toast.LENGTH_SHORT).show();
             return;
         }
+        shareProduct(position, "com.whatsapp");
+    }
+
+    private void shareProduct(int position, final String appUri) {
 
         final GetProductData productData = productsAdapter.getmData().get(position);
 
@@ -283,7 +290,7 @@ public class ProductShareActivity extends BaseActivity implements ProductsShareA
             builder.append(message1);
             builder.append(message2);
 
-            shareIntent(builder.toString(), "Share Product", null);
+            shareIntent(builder.toString(), "Share Product", null, appUri);
             return;
         }
 
@@ -325,7 +332,7 @@ public class ProductShareActivity extends BaseActivity implements ProductsShareA
                                 builder.append(message1);
                                 builder.append(message2);
 
-                                shareIntent(builder.toString(), "Share Product", uri);
+                                shareIntent(builder.toString(), "Share Product", uri, appUri);
 
                             }
                         }).start();
@@ -458,6 +465,10 @@ public class ProductShareActivity extends BaseActivity implements ProductsShareA
 
             Intent intent = ShareProductActivity.getStartIntent(this);
             intent.putExtra("url", productData.getImage());
+            if (productData.getVariants() != null && !productData.getVariants().isEmpty()) {
+                intent.putExtra("price", productData.getVariants().get(0).getMrpPrice());
+                intent.putExtra("finalPrice", productData.getVariants().get(0).getPrice());
+            }
             intent.putExtra("desc", builder.toString());
             intent.putExtra("title", productData.getTitle());
             intent.putExtra("creativeId", "0");

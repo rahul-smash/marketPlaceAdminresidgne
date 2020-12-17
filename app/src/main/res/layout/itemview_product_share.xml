@@ -28,7 +28,7 @@
                 android:id="@+id/iv_facebook"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:src="@drawable/fbicon" />
+                android:src="@drawable/fbsmallicon" />
 
             <ImageView
                 android:id="@+id/iv_instagram"
@@ -36,13 +36,13 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="12dp"
                 android:layout_marginEnd="12dp"
-                android:src="@drawable/whatsappicon" />
+                android:src="@drawable/instasmallicon" />
 
             <ImageView
                 android:id="@+id/iv_whatsapp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:src="@drawable/whatsappicon" />
+                android:src="@drawable/whatsappsmallicon" />
 
         </LinearLayout>
 
@@ -110,6 +110,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
             android:maxLines="1"
+            android:paddingEnd="16dp"
             android:text="244"
             app:layout_constraintStart_toStartOf="@+id/iv_product_image"
             app:layout_constraintTop_toBottomOf="@+id/iv_product_image" />
@@ -119,8 +120,6 @@
             style="@style/AppTheme.TextView.Small"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="16dp"
-            android:layout_marginLeft="16dp"
             android:layout_marginTop="8dp"
             android:maxLines="1"
             android:text="244"

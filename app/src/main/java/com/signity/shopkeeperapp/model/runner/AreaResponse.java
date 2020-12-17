@@ -18,6 +18,17 @@ public class AreaResponse implements Serializable {
     @SerializedName("country_id")
     private String countryId;
 
+    @SerializedName("city_id")
+    private String cityId;
+
+    public String getCityId() {
+        return cityId;
+    }
+
+    public void setCityId(String cityId) {
+        this.cityId = cityId;
+    }
+
     public String getId() {
         return id;
     }

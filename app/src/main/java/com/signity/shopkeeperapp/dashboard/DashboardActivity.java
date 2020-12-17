@@ -37,6 +37,7 @@ import androidx.fragment.app.FragmentTransaction;
 import com.facebook.login.LoginManager;
 import com.google.android.material.badge.BadgeDrawable;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.onesignal.OneSignal;
 import com.signity.shopkeeperapp.BuildConfig;
 import com.signity.shopkeeperapp.R;
 import com.signity.shopkeeperapp.SplashActivity;
@@ -49,6 +50,8 @@ import com.signity.shopkeeperapp.dashboard.account.AccountFragment;
 import com.signity.shopkeeperapp.dashboard.catalog.CatalogFragment;
 import com.signity.shopkeeperapp.dashboard.home.HomeFragment;
 import com.signity.shopkeeperapp.dashboard.orders.OrdersFragment;
+import com.signity.shopkeeperapp.faqs.FaqActivity;
+import com.signity.shopkeeperapp.helpMedia.YouTubeAPIActivity;
 import com.signity.shopkeeperapp.market.CreativeFragment;
 import com.signity.shopkeeperapp.market.ShareCreativeActivity;
 import com.signity.shopkeeperapp.model.LoginModel;
@@ -129,6 +132,16 @@ public class DashboardActivity extends BaseActivity implements BottomNavigationV
         }
 
         registerStore();
+        OneSignalTags();
+    }
+
+    private void OneSignalTags() {
+        OneSignal.sendTag("user_name", AppPreference.getInstance().getUserName());
+        OneSignal.sendTag("store_name", AppPreference.getInstance().getStoreName());
+        OneSignal.sendTag("is_fb_linked", AppPreference.getInstance().getFacebookPageId() != null ? "yes" : "no");
+//        OneSignal.sendTag("membership_type", AppPreferenceHelper.getInstance().getPackageType());
+//        OneSignal.sendTag("membership_type", AppPreferenceHelper.getInstance().getPackageType());
+        OneSignal.setExternalUserId(String.valueOf(AppPreference.getInstance().getStoreId()));
     }
 
     private void registerStore() {
@@ -394,6 +407,14 @@ public class DashboardActivity extends BaseActivity implements BottomNavigationV
                 break;
             case CONTACT_US:
                 startActivity(ContactUsActivity.getStartIntent(DashboardActivity.this));
+                AnimUtil.slideFromRightAnim(DashboardActivity.this);
+                break;
+            case HELP_MEDIA:
+                startActivity(YouTubeAPIActivity.getStartIntent(DashboardActivity.this));
+                AnimUtil.slideFromRightAnim(DashboardActivity.this);
+                break;
+            case FAQS:
+                startActivity(FaqActivity.getStartIntent(DashboardActivity.this));
                 AnimUtil.slideFromRightAnim(DashboardActivity.this);
                 break;
             case LOGOUT:
