@@ -131,7 +131,7 @@ public class RunnerAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
             @Override
             public void onClick(View view) {
                 if (listener != null) {
-                    listener.onDeleteRunner(runnerList.get(position).getFullName(),runnerList.get(position).getActieOrder(),id, runnerList.get(position).getActieOrder() == 0);
+                    listener.onDeleteRunner(runnerList.get(position).getFullName(),runnerList.get(position).getActiveOrder(),id, runnerList.get(position).getActiveOrder() == 0);
                 }
                 popupWindowOverView.dismiss();
             }
@@ -192,7 +192,7 @@ public class RunnerAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
 
             textViewCustomerName.setText(runnerDetail.getFullName());
             textViewCustomerNumber.setText(runnerDetail.getPhone());
-            textViewActiveCount.setText(String.valueOf(runnerDetail.getActieOrder()));
+            textViewActiveCount.setText(String.valueOf(runnerDetail.getActiveOrder()));
             textViewRunnerStatus.setText(runnerDetail.getStatus().equals("1") ? "Enabled" : "Disabled");
             switchRunner.setChecked(runnerDetail.getStatus().equals("1"));
 

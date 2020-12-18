@@ -21,6 +21,8 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.android.material.chip.Chip;
+import com.google.android.material.chip.ChipGroup;
 import com.signity.shopkeeperapp.R;
 import com.signity.shopkeeperapp.adapter.SpacesItemDecoration;
 import com.signity.shopkeeperapp.base.BaseActivity;
@@ -65,6 +67,9 @@ public class RunnerDetailActivity extends BaseActivity implements HomeOrdersAdap
     private DataResponse runnerData;
     private LinearLayout linearLayoutArea, linearLayoutEmail;
     private ImageView imageViewWhatsapp, imageViewPhoneCall, imageViewMessage;
+    private int filter = 0;
+    private ChipGroup chipGroup;
+    private Chip chipAll, chipPending, chipAccepted, chipRejected;
 
     public static Intent getStartIntent(Context context) {
         return new Intent(context, RunnerDetailActivity.class);
@@ -90,13 +95,12 @@ public class RunnerDetailActivity extends BaseActivity implements HomeOrdersAdap
     public void getRunnerDetail() {
         Map<String, Object> param = new HashMap<>();
         param.put("runner_id", runnerId);
+        param.put("runner_delivery_filter", filter);
 
-        ProgressDialogUtil.showProgressDialog(this);
         NetworkAdaper.getNetworkServices().getRunnerById(param, new Callback<RunnerDetailResponse>() {
             @Override
             public void success(RunnerDetailResponse customerDataResponse, Response response) {
 
-                ProgressDialogUtil.hideProgressDialog();
                 if (isDestroyed()) {
                     return;
                 }
@@ -114,7 +118,6 @@ public class RunnerDetailActivity extends BaseActivity implements HomeOrdersAdap
             @Override
             public void failure(RetrofitError error) {
                 error.printStackTrace();
-                ProgressDialogUtil.hideProgressDialog();
                 if (!isDestroyed()) {
                     Toast.makeText(RunnerDetailActivity.this, "Network is unreachable", Toast.LENGTH_SHORT).show();
                 }
@@ -137,7 +140,7 @@ public class RunnerDetailActivity extends BaseActivity implements HomeOrdersAdap
         }
 
         linearLayoutEmail.setVisibility(TextUtils.isEmpty(runnerData.getEmail()) ? View.GONE : View.VISIBLE);
-        textViewActiveCount.setText(String.valueOf(runnerData.getActieOrder()));
+        textViewActiveCount.setText(String.valueOf(runnerData.getActiveOrder()));
 
         if (runnerData.getOrders() != null && !runnerData.getOrders().isEmpty()) {
             Map<Integer, List<OrdersListModel>> model = new HashMap<>();
@@ -149,6 +152,11 @@ public class RunnerDetailActivity extends BaseActivity implements HomeOrdersAdap
             ordersAdapter.setShowLoading(false);
             textViewTotalOrders.setVisibility(View.GONE);
         }
+
+        chipAll.setText(String.format("%d | All", runnerData.getTotalOrders()));
+        chipPending.setText(String.format("%d | Pending", runnerData.getPendingOrders()));
+        chipAccepted.setText(String.format("%d | Accepted", runnerData.getActiveOrder()));
+        chipRejected.setText(String.format("%d | Rejected", runnerData.getRejectedOrders()));
     }
 
     private void getExtra() {
@@ -184,6 +192,35 @@ public class RunnerDetailActivity extends BaseActivity implements HomeOrdersAdap
 
         findViewById(R.id.iv_more).setVisibility(View.GONE);
         findViewById(R.id.ll_switch).setVisibility(View.GONE);
+
+        chipGroup = findViewById(R.id.chip_group);
+        chipAll = findViewById(R.id.chip_all);
+        chipAll.setChecked(true);
+        chipPending = findViewById(R.id.chip_pending);
+        chipAccepted = findViewById(R.id.chip_accepted);
+        chipRejected = findViewById(R.id.chip_rejected);
+
+        chipGroup.setOnCheckedChangeListener(new ChipGroup.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(ChipGroup group, int checkedId) {
+                switch (checkedId) {
+                    case R.id.chip_all:
+                        filter = 0;
+                        break;
+                    case R.id.chip_pending:
+                        filter = 0;
+                        break;
+                    case R.id.chip_accepted:
+                        filter = 1;
+                        break;
+                    case R.id.chip_rejected:
+                        filter = 2;
+                        break;
+                }
+                ordersAdapter.clearPageMap();
+                getRunnerDetail();
+            }
+        });
 
         imageViewWhatsapp.setOnClickListener(new View.OnClickListener() {
             @Override

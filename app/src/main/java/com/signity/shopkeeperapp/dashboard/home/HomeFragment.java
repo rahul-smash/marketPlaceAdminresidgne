@@ -198,6 +198,7 @@ public class HomeFragment extends Fragment implements HomeContentAdapter.HomeCon
                     homeOrdersAdapter.setPageOrdersMap(newMapData);
 
                 } else {
+                    homeOrdersAdapter.setShowLoading(false);
                     Toast.makeText(getContext(), ordersReponse.getMessage(), Toast.LENGTH_SHORT).show();
                 }
             }

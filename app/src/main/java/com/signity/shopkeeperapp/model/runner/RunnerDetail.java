@@ -28,8 +28,8 @@ public class RunnerDetail implements Serializable {
     @SerializedName("social_platform")
     private String socialPlatform;
 
-    @SerializedName("actie_order")
-    private int actieOrder;
+    @SerializedName("active_order")
+    private int activeOrder;
 
     @SerializedName("area")
     private List<AreaResponse> area;
@@ -96,12 +96,12 @@ public class RunnerDetail implements Serializable {
         this.socialPlatform = socialPlatform;
     }
 
-    public int getActieOrder() {
-        return actieOrder;
+    public int getActiveOrder() {
+        return activeOrder;
     }
 
-    public void setActieOrder(int actieOrder) {
-        this.actieOrder = actieOrder;
+    public void setActiveOrder(int activeOrder) {
+        this.activeOrder = activeOrder;
     }
 
     public String getProfileImage10080() {
@@ -139,7 +139,7 @@ public class RunnerDetail implements Serializable {
                         ",status = '" + status + '\'' +
                         ",profile_image = '" + profileImage + '\'' +
                         ",social_platform = '" + socialPlatform + '\'' +
-                        ",actie_order = '" + actieOrder + '\'' +
+                        ",actie_order = '" + activeOrder + '\'' +
                         ",profile_image_100_80 = '" + profileImage10080 + '\'' +
                         ",profile_image_300_200 = '" + profileImage300200 + '\'' +
                         "}";

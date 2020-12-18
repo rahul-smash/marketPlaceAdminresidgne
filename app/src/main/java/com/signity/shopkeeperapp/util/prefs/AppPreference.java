@@ -262,4 +262,20 @@ public class AppPreference {
     public void setOnBoardingShown(boolean value) {
         mPrefs.edit().putBoolean(PrefConstants.PREF_KEY_IS_ONBOARDING_SHOWN, value).apply();
     }
+
+    public String getNotificationRing() {
+        return mPrefs.getString(PrefConstants.PREF_KEY_NOTIFICATION_RING, null);
+    }
+
+    public void setNotificationRing(String ringUri) {
+        mPrefs.edit().putString(PrefConstants.PREF_KEY_NOTIFICATION_RING, ringUri).apply();
+    }
+
+    public int getChannelId() {
+        return mPrefs.getInt(PrefConstants.PREF_KEY_CHANNEL_ID, 0);
+    }
+
+    public void setChannelId(int channelId) {
+        mPrefs.edit().putInt(PrefConstants.PREF_KEY_CHANNEL_ID, channelId).apply();
+    }
 }

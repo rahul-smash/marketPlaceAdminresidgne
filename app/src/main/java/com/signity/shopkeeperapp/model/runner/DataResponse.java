@@ -38,14 +38,45 @@ public class DataResponse implements Serializable {
     @SerializedName("orders")
     private List<OrdersListModel> orders;
 
-    @SerializedName("actie_order")
-    private int actieOrder;
+    @SerializedName("active_order")
+    private int activeOrder;
 
+    @SerializedName("total_orders")
+    private int totalOrders;
+
+    @SerializedName("pending_orders")
+    private int pendingOrders;
+
+    @SerializedName("rejected_orders")
+    private int rejectedOrders;
     @SerializedName("profile_image_100_80")
     private String profileImage10080;
-
     @SerializedName("profile_image_300_200")
     private String profileImage300200;
+
+    public int getTotalOrders() {
+        return totalOrders;
+    }
+
+    public void setTotalOrders(int totalOrders) {
+        this.totalOrders = totalOrders;
+    }
+
+    public int getPendingOrders() {
+        return pendingOrders;
+    }
+
+    public void setPendingOrders(int pendingOrders) {
+        this.pendingOrders = pendingOrders;
+    }
+
+    public int getRejectedOrders() {
+        return rejectedOrders;
+    }
+
+    public void setRejectedOrders(int rejectedOrders) {
+        this.rejectedOrders = rejectedOrders;
+    }
 
     public String getId() {
         return id;
@@ -127,12 +158,12 @@ public class DataResponse implements Serializable {
         this.orders = orders;
     }
 
-    public int getActieOrder() {
-        return actieOrder;
+    public int getActiveOrder() {
+        return activeOrder;
     }
 
-    public void setActieOrder(int actieOrder) {
-        this.actieOrder = actieOrder;
+    public void setActiveOrder(int activeOrder) {
+        this.activeOrder = activeOrder;
     }
 
     public String getProfileImage10080() {
@@ -165,7 +196,7 @@ public class DataResponse implements Serializable {
                         ",created = '" + created + '\'' +
                         ",area = '" + area + '\'' +
                         ",orders = '" + orders + '\'' +
-                        ",actie_order = '" + actieOrder + '\'' +
+                        ",actie_order = '" + activeOrder + '\'' +
                         ",profile_image_100_80 = '" + profileImage10080 + '\'' +
                         ",profile_image_300_200 = '" + profileImage300200 + '\'' +
                         "}";

@@ -9,6 +9,7 @@ import android.os.Bundle;
 import android.os.Parcelable;
 import android.provider.MediaStore;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -203,6 +204,7 @@ public class AddRunnerActivity extends BaseActivity {
                             if (areaResponse.getId().equals(areaDTO.getAreaId())) {
                                 areaDTO.setChecked(true);
                                 selectedAreas1.add(areaDTO);
+                                Log.d(TAG, "populateData: " + areaDTO.getAreaName());
                             }
                         }
                         break;
@@ -213,14 +215,10 @@ public class AddRunnerActivity extends BaseActivity {
             for (AreaDTO areaDTO : selectedAreas1) {
                 final Chip chip = new Chip(AddRunnerActivity.this);
                 chip.setText(areaDTO.getAreaName());
-                chip.setOnCloseIconClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                    }
-                });
                 chipGroup.addView(chip);
             }
 
+            linearLayoutSelectedAreas.setVisibility(selectedAreas1.isEmpty() ? View.GONE : View.VISIBLE);
         }
     }
 

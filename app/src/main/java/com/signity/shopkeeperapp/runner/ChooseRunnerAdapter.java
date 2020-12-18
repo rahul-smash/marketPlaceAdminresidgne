@@ -132,7 +132,7 @@ public class ChooseRunnerAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
 
             textViewCustomerName.setText(customersResponse.getFullName());
             textViewCustomerNumber.setText(customersResponse.getPhone());
-            textViewActiveCount.setText(String.valueOf(customersResponse.getActieOrder()));
+            textViewActiveCount.setText(String.valueOf(customersResponse.getActiveOrder()));
 
             if (customersResponse.getArea() != null && !customersResponse.getArea().isEmpty()) {
                 textViewCustomerCity.setText(customersResponse.getArea().get(0).getName());

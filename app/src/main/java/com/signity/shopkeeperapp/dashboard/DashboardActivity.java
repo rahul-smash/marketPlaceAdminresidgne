@@ -39,6 +39,7 @@ import com.google.android.material.badge.BadgeDrawable;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.onesignal.OneSignal;
 import com.signity.shopkeeperapp.BuildConfig;
+import com.signity.shopkeeperapp.ManageVolume.ManageVolumeActivity;
 import com.signity.shopkeeperapp.R;
 import com.signity.shopkeeperapp.SplashActivity;
 import com.signity.shopkeeperapp.app.MyApplication;
@@ -52,6 +53,7 @@ import com.signity.shopkeeperapp.dashboard.home.HomeFragment;
 import com.signity.shopkeeperapp.dashboard.orders.OrdersFragment;
 import com.signity.shopkeeperapp.faqs.FaqActivity;
 import com.signity.shopkeeperapp.helpMedia.YouTubeAPIActivity;
+import com.signity.shopkeeperapp.home.MainActivity;
 import com.signity.shopkeeperapp.market.CreativeFragment;
 import com.signity.shopkeeperapp.market.ShareCreativeActivity;
 import com.signity.shopkeeperapp.model.LoginModel;
@@ -65,6 +67,7 @@ import com.signity.shopkeeperapp.model.market.industry.IndustryRegistration;
 import com.signity.shopkeeperapp.network.NetworkAdaper;
 import com.signity.shopkeeperapp.products.ImageBottomDialog;
 import com.signity.shopkeeperapp.runner.RunnerActivity;
+import com.signity.shopkeeperapp.setting.StoreSettingActivity;
 import com.signity.shopkeeperapp.stores.StoresActivity;
 import com.signity.shopkeeperapp.twilio.chat.CustomerSupportActivity;
 import com.signity.shopkeeperapp.twilio.chat.TwilioLogin;
@@ -346,7 +349,10 @@ public class DashboardActivity extends BaseActivity implements BottomNavigationV
 
     @Override
     public void onClickViewAllOrders() {
-        bottomNavigationView.setSelectedItemId(R.id.action_bottom_orders);
+        Intent intent = new Intent(this, StoreSettingActivity.class);
+        startActivity(intent);
+        AnimUtil.slideFromRightAnim(this);
+//        bottomNavigationView.setSelectedItemId(R.id.action_bottom_orders);
     }
 
     @Override

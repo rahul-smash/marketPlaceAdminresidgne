@@ -64,6 +64,7 @@ public class Constant {
     public static final String READ_SDCARD = Manifest.permission.READ_EXTERNAL_STORAGE;
     public static final String WRITE_SDCARD = Manifest.permission.WRITE_EXTERNAL_STORAGE;
     public static final String CALL = Manifest.permission.CALL_PHONE;
+    public static final String NOTIFICATION_CHANNEL = "ValueAppz_";
 
     public static void showToast(Context context, String message) {
         Toast.makeText(context, message, Toast.LENGTH_SHORT).show();

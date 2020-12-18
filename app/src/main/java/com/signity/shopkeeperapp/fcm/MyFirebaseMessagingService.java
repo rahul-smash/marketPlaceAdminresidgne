@@ -11,6 +11,7 @@ import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.BitmapFactory;
+import android.media.AudioAttributes;
 import android.media.RingtoneManager;
 import android.net.Uri;
 import android.os.Build;
@@ -25,9 +26,11 @@ import com.signity.shopkeeperapp.R;
 import com.signity.shopkeeperapp.SplashActivity;
 import com.signity.shopkeeperapp.app.DataAdapter;
 import com.signity.shopkeeperapp.notifications.NotificationActivity;
+import com.signity.shopkeeperapp.util.Constant;
 import com.signity.shopkeeperapp.util.PrefManager;
 import com.signity.shopkeeperapp.util.prefs.AppPreference;
 
+import java.util.Locale;
 import java.util.Random;
 
 
@@ -141,7 +144,9 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
         Intent intent = null;
         PendingIntent pendingIntent = null;
         DataAdapter.getInstance().setNotificationMessage(message);
-        String DEFAULCHANNEL = "default_channel_id";
+//        String DEFAULCHANNEL = "default_channel_id";
+        String DEFAULCHANNEL = String.format(Locale.getDefault(), "%s%d", Constant.NOTIFICATION_CHANNEL, AppPreference.getInstance().getChannelId());
+
         if (prefManager.getBoolean("applicationOnPause")) {
             intent = new Intent(this, SplashActivity.class);
 //            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
@@ -158,6 +163,13 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
         }
         pendingIntent = PendingIntent.getActivity(this, 0 /* Request code */, intent, PendingIntent.FLAG_ONE_SHOT);
         Uri defaultSoundUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
+        Log.d(TAG, "sendNotification: " + defaultSoundUri.toString());
+
+        if (AppPreference.getInstance().getNotificationRing() != null) {
+            defaultSoundUri = Uri.parse(AppPreference.getInstance().getNotificationRing());
+        }
+
+        Log.d(TAG, "sendNotification: " + defaultSoundUri.toString());
 
         final int NOTIFY_ID = new Random().nextInt(1000);
         int importance = NotificationManager.IMPORTANCE_HIGH;
@@ -165,13 +177,18 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
         NotificationManager notifManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            String name = "my_package_channel";
-            String description = "my_package_first_channel"; // The user-visible description of the channel.
-            NotificationChannel mChannel = notifManager.getNotificationChannel(DEFAULCHANNEL);
-            if (mChannel == null) {
-                mChannel = new NotificationChannel(DEFAULCHANNEL, name, importance);
+            String name = "ValueAppz Notification";
+            String description = "ValueAppz Notifications"; // The user-visible description of the channel.
+            AudioAttributes audioAttributes = new AudioAttributes.Builder()
+                    .setContentType(AudioAttributes.CONTENT_TYPE_SONIFICATION)
+                    .setUsage(AudioAttributes.USAGE_NOTIFICATION_COMMUNICATION_INSTANT)
+                    .build();
+
+            if (notifManager.getNotificationChannel(DEFAULCHANNEL) == null) {
+                NotificationChannel mChannel = new NotificationChannel(DEFAULCHANNEL, name, importance);
                 mChannel.setDescription(description);
                 mChannel.enableVibration(true);
+                mChannel.setSound(defaultSoundUri, audioAttributes);
                 notifManager.createNotificationChannel(mChannel);
             }
         }
@@ -181,10 +198,13 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
                 .setSmallIcon(R.drawable.ic_notification) // required
                 .setLargeIcon(BitmapFactory.decodeResource(this.getResources(), R.drawable.ic_notification))
                 .setAutoCancel(true)
-                .setSound(defaultSoundUri)
                 .setStyle(new NotificationCompat.BigTextStyle().bigText(message))
                 .setContentIntent(pendingIntent)
                 .setTicker(getResources().getString(R.string.app_name));
+
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.O) {
+            builder.setSound(defaultSoundUri);
+        }
 
         NotificationManagerCompat notificationManager = NotificationManagerCompat.from(this);
         Notification notificationOreo = builder.build();
