@@ -56,7 +56,7 @@ import java.io.File;
 /**
  * Created by Ketan Tetry on 20/1/20.
  */
-public class CustomFrameActivity extends BaseActivity implements ImageBottomDialog.ImageListener {
+public class CustomFrameActivity extends BaseActivity implements ImageBottomDialog.CustomerListener {
 
     private static final String TAG = "CustomFrameActivity";
     private static final int CAMERA_REQUEST = 0223;
@@ -67,6 +67,7 @@ public class CustomFrameActivity extends BaseActivity implements ImageBottomDial
     private static final int GALLERY_PERMISSION = 02100;
     private static final int TARGET_HEIGHT = 900;
     private static final int TARGET_WIDTH = 1200;
+    private static final int REQUEST_PRODUCT = 1212;
     private Toolbar toolbar;
     private CustomUCropView uCropView;
     private ImageView imageViewFrame;
@@ -411,6 +412,7 @@ public class CustomFrameActivity extends BaseActivity implements ImageBottomDial
                     updateNewImage(frameImageUri);
                     break;
                 case PICK_REQUEST:
+                case REQUEST_PRODUCT:
                     Uri uri = data.getData();
                     updateNewImage(uri);
                     break;
@@ -481,5 +483,10 @@ public class CustomFrameActivity extends BaseActivity implements ImageBottomDial
 
     public void onSaveFrame() {
         onSave();
+    }
+
+    @Override
+    public void onClickProduct() {
+        startActivityForResult(ProductGalleryActivity.getIntent(this), REQUEST_PRODUCT);
     }
 }

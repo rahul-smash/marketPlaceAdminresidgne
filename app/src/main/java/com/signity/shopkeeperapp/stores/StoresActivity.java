@@ -175,6 +175,7 @@ public class StoresActivity extends BaseActivity implements StoresAdapter.Stores
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         if (item.getItemId() == android.R.id.home) {
             finish();
+            AnimUtil.slideFromLeftAnim(this);
         }
         return super.onOptionsItemSelected(item);
     }

@@ -39,7 +39,6 @@ import com.google.android.material.badge.BadgeDrawable;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.onesignal.OneSignal;
 import com.signity.shopkeeperapp.BuildConfig;
-import com.signity.shopkeeperapp.ManageVolume.ManageVolumeActivity;
 import com.signity.shopkeeperapp.R;
 import com.signity.shopkeeperapp.SplashActivity;
 import com.signity.shopkeeperapp.app.MyApplication;
@@ -53,7 +52,6 @@ import com.signity.shopkeeperapp.dashboard.home.HomeFragment;
 import com.signity.shopkeeperapp.dashboard.orders.OrdersFragment;
 import com.signity.shopkeeperapp.faqs.FaqActivity;
 import com.signity.shopkeeperapp.helpMedia.YouTubeAPIActivity;
-import com.signity.shopkeeperapp.home.MainActivity;
 import com.signity.shopkeeperapp.market.CreativeFragment;
 import com.signity.shopkeeperapp.market.ShareCreativeActivity;
 import com.signity.shopkeeperapp.model.LoginModel;
@@ -61,13 +59,13 @@ import com.signity.shopkeeperapp.model.ModelForceUpdate;
 import com.signity.shopkeeperapp.model.ResponseForceUpdate;
 import com.signity.shopkeeperapp.model.dashboard.Data;
 import com.signity.shopkeeperapp.model.dashboard.InfoDialog;
+import com.signity.shopkeeperapp.model.dashboard.NotificationSoundDialog;
 import com.signity.shopkeeperapp.model.dashboard.StoreVersionDTO;
 import com.signity.shopkeeperapp.model.dashboard.WelcomeResponse;
 import com.signity.shopkeeperapp.model.market.industry.IndustryRegistration;
 import com.signity.shopkeeperapp.network.NetworkAdaper;
 import com.signity.shopkeeperapp.products.ImageBottomDialog;
 import com.signity.shopkeeperapp.runner.RunnerActivity;
-import com.signity.shopkeeperapp.setting.StoreSettingActivity;
 import com.signity.shopkeeperapp.stores.StoresActivity;
 import com.signity.shopkeeperapp.twilio.chat.CustomerSupportActivity;
 import com.signity.shopkeeperapp.twilio.chat.TwilioLogin;
@@ -303,6 +301,8 @@ public class DashboardActivity extends BaseActivity implements BottomNavigationV
 //                showFragment(CategoriesFragment.getInstance(null), CategoriesFragment.TAG);
                 break;
             case R.id.action_bottom_account:
+                navSelectedId = -1;
+                navDrawerAdapter.setSelectedId(navSelectedId);
                 textViewToolbarTitle.setText("Account");
                 showFragment(AccountFragment.getInstance(null), AccountFragment.TAG);
                 break;
@@ -349,10 +349,7 @@ public class DashboardActivity extends BaseActivity implements BottomNavigationV
 
     @Override
     public void onClickViewAllOrders() {
-        Intent intent = new Intent(this, StoreSettingActivity.class);
-        startActivity(intent);
-        AnimUtil.slideFromRightAnim(this);
-//        bottomNavigationView.setSelectedItemId(R.id.action_bottom_orders);
+        bottomNavigationView.setSelectedItemId(R.id.action_bottom_orders);
     }
 
     @Override
@@ -422,6 +419,18 @@ public class DashboardActivity extends BaseActivity implements BottomNavigationV
             case FAQS:
                 startActivity(FaqActivity.getStartIntent(DashboardActivity.this));
                 AnimUtil.slideFromRightAnim(DashboardActivity.this);
+                break;
+            case SOUND_SETTING:
+                if (getSupportFragmentManager().findFragmentByTag(NotificationSoundDialog.TAG) == null) {
+                    NotificationSoundDialog soundDialog = NotificationSoundDialog.getInstance(null);
+                    soundDialog.setListener(new NotificationSoundDialog.OnCloseListener() {
+                        @Override
+                        public void onClose() {
+                            navDrawerAdapter.setSelectedId(navSelectedId);
+                        }
+                    });
+                    soundDialog.show(getSupportFragmentManager(), NotificationSoundDialog.TAG);
+                }
                 break;
             case LOGOUT:
                 callLogOutApi();
@@ -648,7 +657,6 @@ public class DashboardActivity extends BaseActivity implements BottomNavigationV
         intent.setAction(Intent.ACTION_GET_CONTENT);
         startActivityForResult(Intent.createChooser(intent, "Select Picture"), PICK_REQUEST);
     }
-
 
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {

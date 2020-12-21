@@ -1,18 +1,13 @@
 package com.signity.shopkeeperapp.products;
 
 import android.app.Dialog;
-import android.graphics.Color;
-import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.Window;
-import android.widget.RelativeLayout;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.fragment.app.DialogFragment;
 
 import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
@@ -26,11 +21,17 @@ import com.signity.shopkeeperapp.R;
 public class ImageBottomDialog extends BottomSheetDialogFragment {
 
     public static final String TAG = "ImageBottomDialog";
-    private final ImageListener imageListener;
-    private MaterialCardView materialCardViewGallery, materialCardViewCamera;
+    private ImageListener imageListener;
+    private CustomerListener customerListener;
+    private boolean isProductSelection;
 
     public ImageBottomDialog(ImageListener imageListener) {
         this.imageListener = imageListener;
+    }
+
+    public ImageBottomDialog(CustomerListener listener) {
+        this.customerListener = listener;
+        isProductSelection = true;
     }
 
     @NonNull
@@ -52,14 +53,29 @@ public class ImageBottomDialog extends BottomSheetDialogFragment {
     }
 
     private void initView(View view) {
-        materialCardViewGallery = view.findViewById(R.id.cv_gallery);
-        materialCardViewCamera = view.findViewById(R.id.cv_camera);
+        MaterialCardView materialCardViewGallery = view.findViewById(R.id.cv_gallery);
+        MaterialCardView materialCardViewCamera = view.findViewById(R.id.cv_camera);
+        MaterialCardView materialCardViewProduct = view.findViewById(R.id.cv_product);
+
+        materialCardViewProduct.setVisibility(isProductSelection ? View.VISIBLE : View.GONE);
+        materialCardViewProduct.findViewById(R.id.cv_product).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                dismiss();
+                if (customerListener != null) {
+                    customerListener.onClickProduct();
+                }
+            }
+        });
 
         materialCardViewGallery.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 dismiss();
                 imageListener.onClickGallery();
+                if (customerListener != null) {
+                    customerListener.onClickGallery();
+                }
             }
         });
 
@@ -68,6 +84,9 @@ public class ImageBottomDialog extends BottomSheetDialogFragment {
             public void onClick(View v) {
                 dismiss();
                 imageListener.onClickCamera();
+                if (customerListener != null) {
+                    customerListener.onClickCamera();
+                }
             }
         });
     }
@@ -78,5 +97,9 @@ public class ImageBottomDialog extends BottomSheetDialogFragment {
 
         void onClickCamera();
 
+    }
+
+    public interface CustomerListener extends ImageListener {
+        void onClickProduct();
     }
 }

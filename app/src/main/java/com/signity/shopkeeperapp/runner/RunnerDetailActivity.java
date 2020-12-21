@@ -67,7 +67,7 @@ public class RunnerDetailActivity extends BaseActivity implements HomeOrdersAdap
     private DataResponse runnerData;
     private LinearLayout linearLayoutArea, linearLayoutEmail;
     private ImageView imageViewWhatsapp, imageViewPhoneCall, imageViewMessage;
-    private int filter = 0;
+    private String filter = "";
     private ChipGroup chipGroup;
     private Chip chipAll, chipPending, chipAccepted, chipRejected;
 
@@ -89,6 +89,7 @@ public class RunnerDetailActivity extends BaseActivity implements HomeOrdersAdap
         initViews();
         setUpToolbar();
         setUpAdapter();
+        ProgressDialogUtil.showProgressDialog(this);
         getRunnerDetail();
     }
 
@@ -105,6 +106,7 @@ public class RunnerDetailActivity extends BaseActivity implements HomeOrdersAdap
                     return;
                 }
 
+                ProgressDialogUtil.hideProgressDialog();
                 if (customerDataResponse.isSuccess()) {
                     if (customerDataResponse.getData() != null && !customerDataResponse.getData().isEmpty()) {
                         runnerData = customerDataResponse.getData().get(0);
@@ -117,8 +119,8 @@ public class RunnerDetailActivity extends BaseActivity implements HomeOrdersAdap
 
             @Override
             public void failure(RetrofitError error) {
-                error.printStackTrace();
                 if (!isDestroyed()) {
+                    ProgressDialogUtil.hideProgressDialog();
                     Toast.makeText(RunnerDetailActivity.this, "Network is unreachable", Toast.LENGTH_SHORT).show();
                 }
             }
@@ -205,16 +207,16 @@ public class RunnerDetailActivity extends BaseActivity implements HomeOrdersAdap
             public void onCheckedChanged(ChipGroup group, int checkedId) {
                 switch (checkedId) {
                     case R.id.chip_all:
-                        filter = 0;
+                        filter = "";
                         break;
                     case R.id.chip_pending:
-                        filter = 0;
+                        filter = "0";
                         break;
                     case R.id.chip_accepted:
-                        filter = 1;
+                        filter = "1";
                         break;
                     case R.id.chip_rejected:
-                        filter = 2;
+                        filter = "2";
                         break;
                 }
                 ordersAdapter.clearPageMap();

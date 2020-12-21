@@ -239,7 +239,7 @@ public class HomeFragment extends Fragment implements HomeContentAdapter.HomeCon
                     if (storeDashboardResponse.getData() == null) {
                         return;
                     }
-
+                    chipGroup.setVisibility(View.VISIBLE);
                     if (storeDashboardResponse.getData().getDashboardOrdersData() != null) {
                         chipAll.setText(String.format("%d | All", storeDashboardResponse.getData().getDashboardOrdersData().getTotalOrders()));
                         chipPending.setText(String.format("%d | Pending", storeDashboardResponse.getData().getDashboardOrdersData().getDueOrders()));

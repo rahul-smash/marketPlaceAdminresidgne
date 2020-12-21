@@ -17,6 +17,7 @@ import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.HorizontalScrollView;
 import android.widget.LinearLayout;
 import android.widget.PopupWindow;
 import android.widget.RadioButton;
@@ -73,6 +74,9 @@ public class OrdersFragment extends Fragment implements HomeOrdersAdapter.Orders
     private int pageSize = 10, currentPageNumber = 1, start, totalOrders;
     private boolean isLoading;
     private Chip chipAll, chipPending, chipAccepted, chipShipped, chipDelivered, chipRejected, chipCancelled;
+    private int pageNumberToRefresh;
+    private ChipGroup chipGroup;
+    private HorizontalScrollView horizontal;
     private RecyclerView.OnScrollListener recyclerViewOnScrollListener = new RecyclerView.OnScrollListener() {
         @Override
         public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
@@ -96,8 +100,6 @@ public class OrdersFragment extends Fragment implements HomeOrdersAdapter.Orders
             }
         }
     };
-    private int pageNumberToRefresh;
-    private ChipGroup chipGroup;
 
     public static OrdersFragment getInstance(Bundle bundle) {
         OrdersFragment fragment = new OrdersFragment();
@@ -173,6 +175,7 @@ public class OrdersFragment extends Fragment implements HomeOrdersAdapter.Orders
         recyclerViewOrders = rootView.findViewById(R.id.rv_orders);
         hiddenView = rootView.findViewById(R.id.view);
         chipGroup = rootView.findViewById(R.id.chip_group);
+        horizontal = rootView.findViewById(R.id.horizontal_scroll_chip);
 
         chipAll = rootView.findViewById(R.id.chip_all);
         chipAll.setChecked(true);
@@ -280,6 +283,7 @@ public class OrdersFragment extends Fragment implements HomeOrdersAdapter.Orders
                 }
                 isLoading = false;
                 if (getValues.isSuccess()) {
+                    horizontal.setVisibility(View.VISIBLE);
                     List<OrdersListModel> orderListModel = getValues.getData().getOrders();
                     totalOrders = getValues.getData().getOrdersTotal();
 
