@@ -43,7 +43,7 @@ public class FacebookManager {
         return new AccessToken(AppPreference.getInstance().getFacebookPageAccessToken(),
                 AccessToken.getCurrentAccessToken().getApplicationId(),
                 AccessToken.getCurrentAccessToken().getUserId(),
-                Arrays.asList("pages_show_list,pages_manage_posts,pages_read_engagement,pages_read_user_content"),
+                Arrays.asList("pages_show_list,pages_manage_posts,pages_read_engagement"),
                 null,
                 null,
                 AccessTokenSource.NONE,
@@ -63,7 +63,7 @@ public class FacebookManager {
     public void performFacebookLogin(FacebookCallback<LoginResult> callback) {
         callbackManager = CallbackManager.Factory.create();
         LoginManager.getInstance().registerCallback(callbackManager, callback);
-        LoginManager.getInstance().logInWithReadPermissions(activity, Arrays.asList("pages_show_list,pages_manage_posts,pages_read_engagement,pages_read_user_content"));
+        LoginManager.getInstance().logInWithReadPermissions(activity, Arrays.asList("pages_show_list,pages_manage_posts,pages_read_engagement"));
     }
 
     public CallbackManager getCallbackManager() {
