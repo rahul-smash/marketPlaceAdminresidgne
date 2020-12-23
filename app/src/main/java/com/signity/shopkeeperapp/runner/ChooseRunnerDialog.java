@@ -76,7 +76,7 @@ public class ChooseRunnerDialog extends BaseDialogFragment {
 
         Map<String, String> param = new HashMap<>();
         param.put("area_id", areaId);
-        param.put("runner_id", runnerId);
+//        param.put("runner_id", runnerId);
 
         NetworkAdaper.getNetworkServices().chooseRunner(param, new Callback<RunnersResponseDTO>() {
             @Override

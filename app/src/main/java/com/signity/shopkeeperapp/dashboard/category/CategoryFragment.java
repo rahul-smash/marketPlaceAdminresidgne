@@ -281,6 +281,7 @@ public class CategoryFragment extends Fragment implements CategoryAdapter.Catego
                     if (start < totalCategory) {
                         getAllOrdersMethod();
                     }
+                    publishOnline();
                 } else {
                     Toast.makeText(getContext(), deleteCategories.getMessage(), Toast.LENGTH_SHORT).show();
                 }
@@ -314,10 +315,10 @@ public class CategoryFragment extends Fragment implements CategoryAdapter.Catego
 
                 if (categoryStatus.getSuccess()) {
                     categoryAdapter.updateCategoryStatus(subCategoryId);
+                    publishOnline();
                 } else {
                     Toast.makeText(getContext(), categoryStatus.getMessage(), Toast.LENGTH_SHORT).show();
                 }
-                publishOnline();
             }
 
             @Override

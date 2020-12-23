@@ -584,11 +584,11 @@ public class ShareProductActivity extends BaseActivity implements FacebookPagesD
                             @Override
                             public void run() {
 
-                                File fileProduct = new File(getExternalFilesDir("ValueAppz"), "product_share.png");
+                                File fileProduct = new File(getExternalFilesDir("ValueAppz"), "product_share.jpg");
                                 try {
                                     fileProduct.createNewFile();
                                     FileOutputStream ostream = new FileOutputStream(fileProduct);
-                                    bitmap.compress(Bitmap.CompressFormat.PNG, 80, ostream);
+                                    bitmap.compress(Bitmap.CompressFormat.JPEG, 80, ostream);
                                     ostream.flush();
                                     ostream.close();
                                 } catch (IOException e) {
