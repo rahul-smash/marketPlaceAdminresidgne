@@ -34,6 +34,7 @@ import com.google.gson.reflect.TypeToken;
 import com.signity.shopkeeperapp.R;
 import com.signity.shopkeeperapp.base.BaseActivity;
 import com.signity.shopkeeperapp.model.Categories.SubCategory;
+import com.signity.shopkeeperapp.model.CategoryStatus.CategoryStatus;
 import com.signity.shopkeeperapp.model.category.AddCategoryResponse;
 import com.signity.shopkeeperapp.model.category.CategoryDetailResponse;
 import com.signity.shopkeeperapp.model.category.SubCategoryModel;
@@ -289,6 +290,7 @@ public class AddCategoryActivity extends BaseActivity implements SubCategoryAdap
                     }
                     ProgressDialogUtil.hideProgressDialog();
                     if (addCategoryResponse.isSuccess()) {
+                        publishOnline();
                         finish();
                     } else {
                         Toast.makeText(AddCategoryActivity.this, addCategoryResponse.getMessage(), Toast.LENGTH_SHORT).show();
@@ -338,6 +340,19 @@ public class AddCategoryActivity extends BaseActivity implements SubCategoryAdap
         });
     }
 
+    private void publishOnline() {
+        NetworkAdaper.getNetworkServices().publish(new Callback<CategoryStatus>() {
+            @Override
+            public void success(CategoryStatus categoryStatus, Response response) {
+                Toast.makeText(AddCategoryActivity.this, categoryStatus.getMessage(), Toast.LENGTH_SHORT).show();
+            }
+
+            @Override
+            public void failure(RetrofitError error) {
+            }
+        });
+    }
+
     private void getGalleryImage() {
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED) {
             openGallery();
@@ -363,7 +378,7 @@ public class AddCategoryActivity extends BaseActivity implements SubCategoryAdap
                 case CAMERA_REQUEST:
                     cropImage(cameraImageUri);
                     break;
-                case PICK_REQUEST:
+                case REQUEST_IMAGE_GET:
 
                     if (data == null || data.getData() == null) {
                         return;

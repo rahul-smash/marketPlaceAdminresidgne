@@ -131,7 +131,7 @@ public class DashboardActivity extends BaseActivity implements BottomNavigationV
             twilioLogin.performLoginCreatePrivateChannel();
         }*/
 
-        registerStore();
+//        registerStore();
         OneSignalTags();
     }
 
@@ -154,6 +154,7 @@ public class DashboardActivity extends BaseActivity implements BottomNavigationV
         param.put("country", "India");
         param.put("curreny", AppPreference.getInstance().getCurrency());
         param.put("phone_code", AppPreference.getInstance().getPhoneCode());
+        param.put("store_type", AppPreference.getInstance().getStoreType());
 
         NetworkAdaper.marketStore().registerStore(param, new Callback<IndustryRegistration>() {
             @Override
