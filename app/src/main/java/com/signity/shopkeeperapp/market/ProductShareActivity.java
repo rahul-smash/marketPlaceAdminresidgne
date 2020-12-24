@@ -1,11 +1,15 @@
 package com.signity.shopkeeperapp.market;
 
+import android.app.PendingIntent;
+import android.content.ClipData;
+import android.content.ClipboardManager;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.text.InputType;
 import android.text.TextUtils;
@@ -27,6 +31,7 @@ import com.facebook.GraphResponse;
 import com.facebook.login.LoginResult;
 import com.signity.shopkeeperapp.R;
 import com.signity.shopkeeperapp.base.BaseActivity;
+import com.signity.shopkeeperapp.classes.ApplicationSelectorReceiver;
 import com.signity.shopkeeperapp.classes.FacebookManager;
 import com.signity.shopkeeperapp.model.Product.GetProductData;
 import com.signity.shopkeeperapp.model.Product.GetProductResponse;
@@ -188,18 +193,36 @@ public class ProductShareActivity extends BaseActivity implements ProductsShareA
     }
 
     private void shareIntent(String extra, String shareTitle, Uri uri, String shareApp) {
-        Intent sendIntent = new Intent();
-        sendIntent.setAction(Intent.ACTION_SEND);
-        sendIntent.putExtra(Intent.EXTRA_TEXT, extra);
-        if (uri != null) {
-            sendIntent.putExtra(Intent.EXTRA_STREAM, uri);
-            sendIntent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
-        }
-        sendIntent.setType("*/*");
-        sendIntent.setPackage(shareApp);
 
-        Intent shareIntent = Intent.createChooser(sendIntent, shareTitle);
-        startActivity(shareIntent);
+        if (!TextUtils.isEmpty(extra)) {
+            ClipboardManager cm = (ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
+            cm.setPrimaryClip(ClipData.newPlainText(null, extra));
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    Toast.makeText(ProductShareActivity.this, "Product description copied", Toast.LENGTH_SHORT).show();
+                }
+            });
+        }
+
+        Intent receiver = new Intent(this, ApplicationSelectorReceiver.class);
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(this, 0, receiver, PendingIntent.FLAG_UPDATE_CURRENT);
+
+        Intent shareIntent = new Intent();
+        shareIntent.setAction(Intent.ACTION_SEND);
+        shareIntent.putExtra(Intent.EXTRA_TEXT, extra);
+        shareIntent.setType("image/*");
+        shareIntent.setPackage(shareApp);
+
+        if (uri != null) {
+            shareIntent.putExtra(Intent.EXTRA_STREAM, uri);
+            shareIntent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+        }
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP_MR1) {
+            startActivity(Intent.createChooser(shareIntent, shareTitle, pendingIntent.getIntentSender()));
+        } else {
+            startActivity(Intent.createChooser(shareIntent, shareTitle));
+        }
     }
 
     private boolean appInstalledOrNot(String uri) {

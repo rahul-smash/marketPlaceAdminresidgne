@@ -357,8 +357,8 @@ public class ShareCreativeActivity extends BaseActivity implements FacebookPages
         hasPermission = true;
 
         textViewFacebook.setText((isLogged || hasPage) ? "Share on Facebook" : "Login with Facebook");
-        constraintLayoutFacebook.setVisibility(hasPermission ? View.VISIBLE : View.GONE);
-        layoutBottomSheet.setVisibility(hasPermission ? View.VISIBLE : View.GONE);
+        constraintLayoutFacebook.setVisibility(View.GONE);
+        layoutBottomSheet.setVisibility(View.GONE);
     }
 
     private void openPagesDialog() {

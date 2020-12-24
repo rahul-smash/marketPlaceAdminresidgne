@@ -11,7 +11,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.signity.shopkeeperapp.R;
-import com.signity.shopkeeperapp.adapter.SpacesItemDecoration;
+import com.signity.shopkeeperapp.adapter.RunnerSpacesItemDecoration;
 import com.signity.shopkeeperapp.base.BaseDialogFragment;
 import com.signity.shopkeeperapp.model.runner.RunnerDetail;
 import com.signity.shopkeeperapp.model.runner.RunnersResponseDTO;
@@ -131,7 +131,7 @@ public class ChooseRunnerDialog extends BaseDialogFragment {
         chooseRunnerAdapter.setSelectedRunnerId(runnerId);
         recyclerView.setAdapter(chooseRunnerAdapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-        recyclerView.addItemDecoration(new SpacesItemDecoration((int) Util.pxFromDp(getContext(), 8)));
+        recyclerView.addItemDecoration(new RunnerSpacesItemDecoration((int) Util.pxFromDp(getContext(), 8)));
     }
 
     private void initViews(View view) {

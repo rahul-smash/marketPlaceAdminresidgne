@@ -1,3 +1,4 @@
+/*
 package com.signity.shopkeeperapp.twilio;
 
 import android.content.Context;
@@ -207,3 +208,4 @@ public class BasicChatClient extends CallbackListener<ChatClient> {
         public void onLogoutFinished();
     }
 }
+*/

@@ -1,3 +1,4 @@
+/*
 package com.signity.shopkeeperapp.twilio.chat;
 
 import com.twilio.chat.CallbackListener;
@@ -104,3 +105,4 @@ public class ChannelModel
         throw new IllegalStateException("Invalid state");
     }
 }
+*/

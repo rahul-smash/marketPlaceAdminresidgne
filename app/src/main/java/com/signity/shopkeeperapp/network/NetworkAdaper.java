@@ -64,7 +64,8 @@ public class NetworkAdaper {
     }
 
     public static ApiService marketStore() {
-        String url = "https://marketyourstorestaging.mydigisalon.com";
+//        String url = "https://marketyourstorestaging.mydigisalon.com"; // Stage
+        String url = "https://marketyourstore.mydigisalon.com"; // Production
 
         OkHttpClient client = new OkHttpClient();
         client.setConnectTimeout(1, TimeUnit.MINUTES);
