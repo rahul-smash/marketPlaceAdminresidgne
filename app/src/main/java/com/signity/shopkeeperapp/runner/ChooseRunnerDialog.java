@@ -87,7 +87,7 @@ public class ChooseRunnerDialog extends BaseDialogFragment {
                 }
 
                 if (responseDTO.isSuccess()) {
-                    if (responseDTO.getData() != null) {
+                    if (responseDTO.getData() != null && !responseDTO.getData().isEmpty()) {
                         List<RunnerDetail> runnerDetailList = new ArrayList<>();
                         for (RunnerDetail runnerDetail : responseDTO.getData()) {
                             if (runnerDetail.getStatus().equals("1")) {
@@ -98,11 +98,13 @@ public class ChooseRunnerDialog extends BaseDialogFragment {
                     } else {
                         Toast.makeText(getContext(), "Data not Found!", Toast.LENGTH_SHORT).show();
                         chooseRunnerAdapter.setShowLoading(false);
+                        dismiss();
                     }
 
                 } else {
                     Toast.makeText(getContext(), "Data not Found!", Toast.LENGTH_SHORT).show();
                     chooseRunnerAdapter.setShowLoading(false);
+                    dismiss();
                 }
             }
 
@@ -111,6 +113,7 @@ public class ChooseRunnerDialog extends BaseDialogFragment {
                 if (!isAdded()) {
                     Toast.makeText(getContext(), "Network is unreachable", Toast.LENGTH_SHORT).show();
                     chooseRunnerAdapter.setShowLoading(false);
+                    dismiss();
                 }
             }
         });
