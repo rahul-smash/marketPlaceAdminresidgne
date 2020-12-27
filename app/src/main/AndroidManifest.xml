@@ -252,11 +252,11 @@
             android:launchMode="singleTop"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustPan|stateHidden" />
-        <activity
+        <!--<activity
             android:name=".twilio.chat.CustomerSupportActivity"
             android:launchMode="singleTop"
             android:screenOrientation="portrait"
-            android:windowSoftInputMode="adjustPan|stateHidden" />
+            android:windowSoftInputMode="adjustPan|stateHidden" />-->
         <activity
             android:name=".runner.AddRunnerActivity"
             android:launchMode="singleTop"
@@ -336,9 +336,9 @@
                 <action android:name="com.onesignal.NotificationExtender" />
             </intent-filter>
         </service>
-        <service
+<!--        <service
             android:name=".twilio.chat.TwilioImageService"
-            android:exported="false" />
+            android:exported="false" />-->
     </application>
 
 </manifest>
