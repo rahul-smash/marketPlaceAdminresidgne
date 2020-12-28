@@ -47,7 +47,7 @@ public class CategoryFragment extends Fragment implements CategoryAdapter.Catego
     private RecyclerView recyclerViewCategories;
     private LinearLayoutManager layoutManager;
     private LinearLayout linearLayoutAddCategory;
-    private int pageSize = 10, currentPageNumber = 1, start, totalCategory;
+    private int pageSize = 1000, currentPageNumber = 1, start, totalCategory;
     private RecyclerView.OnScrollListener recyclerViewOnScrollListener = new RecyclerView.OnScrollListener() {
         @Override
         public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
@@ -281,6 +281,7 @@ public class CategoryFragment extends Fragment implements CategoryAdapter.Catego
                     if (start < totalCategory) {
                         getAllOrdersMethod();
                     }
+                    publishOnline();
                 } else {
                     Toast.makeText(getContext(), deleteCategories.getMessage(), Toast.LENGTH_SHORT).show();
                 }
@@ -314,10 +315,10 @@ public class CategoryFragment extends Fragment implements CategoryAdapter.Catego
 
                 if (categoryStatus.getSuccess()) {
                     categoryAdapter.updateCategoryStatus(subCategoryId);
+                    publishOnline();
                 } else {
                     Toast.makeText(getContext(), categoryStatus.getMessage(), Toast.LENGTH_SHORT).show();
                 }
-                publishOnline();
             }
 
             @Override

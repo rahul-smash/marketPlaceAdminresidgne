@@ -34,14 +34,12 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
-import com.facebook.login.LoginManager;
 import com.google.android.material.badge.BadgeDrawable;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.onesignal.OneSignal;
 import com.signity.shopkeeperapp.BuildConfig;
 import com.signity.shopkeeperapp.R;
 import com.signity.shopkeeperapp.SplashActivity;
-import com.signity.shopkeeperapp.app.MyApplication;
 import com.signity.shopkeeperapp.base.BaseActivity;
 import com.signity.shopkeeperapp.book.BookOrderActivity;
 import com.signity.shopkeeperapp.contactus.ContactUsActivity;
@@ -67,8 +65,6 @@ import com.signity.shopkeeperapp.network.NetworkAdaper;
 import com.signity.shopkeeperapp.products.ImageBottomDialog;
 import com.signity.shopkeeperapp.runner.RunnerActivity;
 import com.signity.shopkeeperapp.stores.StoresActivity;
-import com.signity.shopkeeperapp.twilio.chat.CustomerSupportActivity;
-import com.signity.shopkeeperapp.twilio.chat.TwilioLogin;
 import com.signity.shopkeeperapp.util.AnimUtil;
 import com.signity.shopkeeperapp.util.Constant;
 import com.signity.shopkeeperapp.util.DialogHandler;
@@ -86,6 +82,8 @@ import java.util.Map;
 import retrofit.Callback;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
+
+//import com.signity.shopkeeperapp.twilio.chat.CustomerSupportActivity;
 
 public class DashboardActivity extends BaseActivity implements BottomNavigationView.OnNavigationItemSelectedListener, HomeFragment.HomeFragmentListener, NavDrawerAdapter.NavigationListener {
 
@@ -127,12 +125,13 @@ public class DashboardActivity extends BaseActivity implements BottomNavigationV
         storeAppVersion();
         showWelcome();
 
-        if (!AppPreference.getInstance().isPrivateChannelCreated() && BuildConfig.DEBUG) {
+        // Twilio Chat
+/*        if (!AppPreference.getInstance().isPrivateChannelCreated() && BuildConfig.DEBUG) {
             TwilioLogin twilioLogin = new TwilioLogin(this);
             twilioLogin.performLoginCreatePrivateChannel();
-        }
+        }*/
 
-        registerStore();
+//        registerStore();
         OneSignalTags();
     }
 
@@ -152,8 +151,10 @@ public class DashboardActivity extends BaseActivity implements BottomNavigationV
         param.put("number", AppPreference.getInstance().getUserMobile());
         param.put("store_id", AppPreference.getInstance().getStoreId());
         param.put("store_title", AppPreference.getInstance().getStoreName());
-        // TODO - Defaut country selected to India
         param.put("country", "India");
+        param.put("curreny", AppPreference.getInstance().getCurrency());
+        param.put("phone_code", AppPreference.getInstance().getPhoneCode());
+        param.put("store_type", AppPreference.getInstance().getStoreType());
 
         NetworkAdaper.marketStore().registerStore(param, new Callback<IndustryRegistration>() {
             @Override
@@ -404,10 +405,10 @@ public class DashboardActivity extends BaseActivity implements BottomNavigationV
                 startActivity(StoresActivity.getStartIntent(DashboardActivity.this));
                 AnimUtil.slideFromRightAnim(DashboardActivity.this);
                 break;
-            case CUSTOMER_SUPPORT:
-                startActivity(CustomerSupportActivity.getStartIntent(DashboardActivity.this));
-                AnimUtil.slideFromRightAnim(DashboardActivity.this);
-                break;
+//            case CUSTOMER_SUPPORT:
+//                startActivity(CustomerSupportActivity.getStartIntent(DashboardActivity.this));
+//                AnimUtil.slideFromRightAnim(DashboardActivity.this);
+//                break;
             case CONTACT_US:
                 startActivity(ContactUsActivity.getStartIntent(DashboardActivity.this));
                 AnimUtil.slideFromRightAnim(DashboardActivity.this);
@@ -593,9 +594,9 @@ public class DashboardActivity extends BaseActivity implements BottomNavigationV
 
                 ProgressDialogUtil.hideProgressDialog();
                 AppPreference.getInstance().clearAll();
-                LoginManager.getInstance().logOut();
+//                LoginManager.getInstance().logOut();
                 NetworkAdaper.setupRetrofitClient(NetworkAdaper.setBaseUrl(""));
-                MyApplication.getInstance().getBasicChatClient().shutdown();
+//                MyApplication.getInstance().getBasicChatClient().shutdown();
                 startActivity(SplashActivity.getIntent(DashboardActivity.this));
                 AnimUtil.slideFromLeftAnim(DashboardActivity.this);
                 finish();

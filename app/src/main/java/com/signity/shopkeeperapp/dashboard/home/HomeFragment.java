@@ -51,6 +51,7 @@ import com.signity.shopkeeperapp.market.ProductShareActivity;
 import com.signity.shopkeeperapp.model.OrdersListModel;
 import com.signity.shopkeeperapp.model.SetOrdersModel;
 import com.signity.shopkeeperapp.model.dashboard.StoreDashboardResponse;
+import com.signity.shopkeeperapp.model.market.industry.IndustryRegistration;
 import com.signity.shopkeeperapp.model.orders.StoreOrdersReponse;
 import com.signity.shopkeeperapp.model.runner.CommonResponse;
 import com.signity.shopkeeperapp.network.NetworkAdaper;
@@ -160,6 +161,32 @@ public class HomeFragment extends Fragment implements HomeContentAdapter.HomeCon
         setUpBadge();
     }
 
+    private void registerStore() {
+
+        Map<String, String> param = new HashMap<>();
+        param.put("email", AppPreference.getInstance().getUserEmail());
+        param.put("number", AppPreference.getInstance().getUserMobile());
+        param.put("store_id", AppPreference.getInstance().getStoreId());
+        param.put("store_title", AppPreference.getInstance().getStoreName());
+        param.put("country", "India");
+        param.put("curreny", AppPreference.getInstance().getCurrency());
+        param.put("phone_code", AppPreference.getInstance().getPhoneCode());
+        param.put("store_type", AppPreference.getInstance().getStoreType());
+
+        NetworkAdaper.marketStore().registerStore(param, new Callback<IndustryRegistration>() {
+            @Override
+            public void success(IndustryRegistration response, Response response2) {
+
+            }
+
+            @Override
+            public void failure(RetrofitError error) {
+
+            }
+        });
+
+    }
+
     public void getOrders() {
 
         if (!Util.checkIntenetConnection(getContext())) {
@@ -249,6 +276,11 @@ public class HomeFragment extends Fragment implements HomeContentAdapter.HomeCon
                         chipRejected.setText(String.format("%d | Rejected", storeDashboardResponse.getData().getDashboardOrdersData().getRejectedOrders()));
                         chipCancelled.setText(String.format("%d | Cancelled", storeDashboardResponse.getData().getDashboardOrdersData().getCancelOrders()));
                     }
+
+                    if (storeDashboardResponse.getData().getStore() != null) {
+                        AppPreference.getInstance().setStoreType(storeDashboardResponse.getData().getStore().getType());
+                    }
+                    registerStore();
 
                     homeContentAdapter.setUpData(storeDashboardResponse.getData());
                     if (listener != null) {

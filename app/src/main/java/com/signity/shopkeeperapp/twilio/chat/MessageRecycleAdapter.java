@@ -1,3 +1,4 @@
+/*
 package com.signity.shopkeeperapp.twilio.chat;
 
 import android.content.Context;
@@ -26,9 +27,11 @@ import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
+*/
 /**
  * Created by Ketan Tetry on 1/11/19.
- */
+ *//*
+
 public class MessageRecycleAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     private static final String TAG = MessageRecycleAdapter.class.getSimpleName();
     private Context context;
@@ -210,4 +213,4 @@ public class MessageRecycleAdapter extends RecyclerView.Adapter<RecyclerView.Vie
             materialCardView.setLayoutParams(layoutParams);
         }
     }
-}
+}*/

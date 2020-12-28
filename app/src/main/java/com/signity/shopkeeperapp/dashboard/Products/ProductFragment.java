@@ -511,6 +511,7 @@ public class ProductFragment extends Fragment implements View.OnClickListener, P
                     if (start < totalOrders) {
                         getAllOrdersMethod();
                     }
+                    publishOnline();
                 } else {
                     Toast.makeText(getContext(), deleteCategories.getMessage(), Toast.LENGTH_SHORT).show();
                 }

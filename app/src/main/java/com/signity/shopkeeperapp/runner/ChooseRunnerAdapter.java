@@ -143,6 +143,15 @@ public class ChooseRunnerAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
             if (!TextUtils.isEmpty(selectedRunnerId))
                 radioButton.setChecked(customersResponse.getId().equals(selectedRunnerId));
 
+            radioButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    if (listener != null) {
+                        listener.onSelectRunner(customersResponse.getId());
+                    }
+                }
+            });
+
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {

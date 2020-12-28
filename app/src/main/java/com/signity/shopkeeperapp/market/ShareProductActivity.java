@@ -127,7 +127,7 @@ public class ShareProductActivity extends BaseActivity implements FacebookPagesD
     private int tagId;
     private ConstraintLayout constraintLayoutOutside;
     private TextView textViewPreview;
-    private ImageView imageViewInstagram, imageViewWhatsapp,imageViewFacebook;
+    private ImageView imageViewInstagram, imageViewWhatsapp, imageViewFacebook;
     private String price = "0", finalPrice = "0";
     private TextView textViewPrice, textViewFinalPrice;
 
@@ -595,8 +595,10 @@ public class ShareProductActivity extends BaseActivity implements FacebookPagesD
                                     e.printStackTrace();
                                 }
 
+                                String data = editTextAbout.getText().toString();
+
                                 Uri uri = FileProvider.getUriForFile(ShareProductActivity.this, getPackageName() + ".provider", fileProduct);
-                                shareIntent(desc, "Share Product", uri, shareApp);
+                                shareIntent(data, "Share Product", uri, shareApp);
 
                             }
                         }).start();
@@ -630,7 +632,7 @@ public class ShareProductActivity extends BaseActivity implements FacebookPagesD
                 openPagesDialog();
             }
         } else {
-            LoginManager.getInstance().logInWithReadPermissions(this, Arrays.asList("pages_show_list,pages_manage_posts,pages_read_engagement,pages_read_user_content"));
+            LoginManager.getInstance().logInWithReadPermissions(this, Arrays.asList("pages_show_list,pages_manage_posts,pages_read_engagement"));
         }
     }
 
@@ -704,18 +706,36 @@ public class ShareProductActivity extends BaseActivity implements FacebookPagesD
     }
 
     private void shareIntent(String extra, String shareTitle, Uri uri, String shareApp) {
-        Intent sendIntent = new Intent();
-        sendIntent.setAction(Intent.ACTION_SEND);
-        sendIntent.putExtra(Intent.EXTRA_TEXT, extra);
-        if (uri != null) {
-            sendIntent.putExtra(Intent.EXTRA_STREAM, uri);
-            sendIntent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
-        }
-        sendIntent.setType("*/*");
-        sendIntent.setPackage(shareApp);
 
-        Intent shareIntent = Intent.createChooser(sendIntent, shareTitle);
-        startActivity(shareIntent);
+        if (!TextUtils.isEmpty(extra)) {
+            ClipboardManager cm = (ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
+            cm.setPrimaryClip(ClipData.newPlainText(null, extra));
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    Toast.makeText(ShareProductActivity.this, "Product description copied", Toast.LENGTH_SHORT).show();
+                }
+            });
+        }
+
+        Intent receiver = new Intent(this, ApplicationSelectorReceiver.class);
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(this, 0, receiver, PendingIntent.FLAG_UPDATE_CURRENT);
+
+        Intent shareIntent = new Intent();
+        shareIntent.setAction(Intent.ACTION_SEND);
+        shareIntent.putExtra(Intent.EXTRA_TEXT, extra);
+        shareIntent.setType("image/*");
+        shareIntent.setPackage(shareApp);
+
+        if (uri != null) {
+            shareIntent.putExtra(Intent.EXTRA_STREAM, uri);
+            shareIntent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+        }
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP_MR1) {
+            startActivity(Intent.createChooser(shareIntent, shareTitle, pendingIntent.getIntentSender()));
+        } else {
+            startActivity(Intent.createChooser(shareIntent, shareTitle));
+        }
     }
 
     private void shareIntent(String text, Uri uri) {

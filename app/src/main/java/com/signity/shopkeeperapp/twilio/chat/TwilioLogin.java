@@ -1,3 +1,4 @@
+/*
 package com.signity.shopkeeperapp.twilio.chat;
 
 import android.content.Context;
@@ -124,3 +125,4 @@ public class TwilioLogin implements BasicChatClient.LoginListener {
         });
     }
 }
+*/

@@ -33,7 +33,7 @@
             android:name=".SplashActivity"
             android:label="@string/app_name"
             android:launchMode="singleTop"
-            android:screenOrientation="portrait">
+            android:theme="@style/Theme.Transparent">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
@@ -252,11 +252,11 @@
             android:launchMode="singleTop"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustPan|stateHidden" />
-        <activity
+        <!--<activity
             android:name=".twilio.chat.CustomerSupportActivity"
             android:launchMode="singleTop"
             android:screenOrientation="portrait"
-            android:windowSoftInputMode="adjustPan|stateHidden" />
+            android:windowSoftInputMode="adjustPan|stateHidden" />-->
         <activity
             android:name=".runner.AddRunnerActivity"
             android:launchMode="singleTop"
@@ -336,9 +336,9 @@
                 <action android:name="com.onesignal.NotificationExtender" />
             </intent-filter>
         </service>
-        <service
+<!--        <service
             android:name=".twilio.chat.TwilioImageService"
-            android:exported="false" />
+            android:exported="false" />-->
     </application>
 
 </manifest>

@@ -39,7 +39,6 @@
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textView4"
-        tools:itemCount="2"
         tools:listitem="@layout/itemview_choose_runner" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

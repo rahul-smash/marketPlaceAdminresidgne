@@ -93,6 +93,11 @@ public class NotificationSoundDialog extends BaseDialogFragment {
         seekbar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
             public void onProgressChanged(SeekBar seekBar, int i, boolean b) {
+
+                if (i<1){
+                    seekBar.setProgress(1);
+                    return;
+                }
                 audioManager.setStreamVolume(AudioManager.STREAM_RING, i, 0);
             }
 
@@ -163,11 +168,11 @@ public class NotificationSoundDialog extends BaseDialogFragment {
         switch (audioManager.getRingerMode()) {
             case AudioManager.RINGER_MODE_SILENT:
             case AudioManager.RINGER_MODE_VIBRATE:
-                Toast.makeText(getContext(), "Kindly Unmute your phone for the updates and set the sound to the maximum level." + currentVolume, Toast.LENGTH_SHORT).show();
+                Toast.makeText(getContext(), "Kindly Unmute your phone for the updates and set the sound to the maximum level.", Toast.LENGTH_SHORT).show();
                 break;
             case AudioManager.RINGER_MODE_NORMAL:
                 if (currentVolume < 7)
-                    Toast.makeText(getContext(), "Kindly set the volume to the maximum level to receive the Order Alerts." + currentVolume, Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getContext(), "Kindly set the volume to the maximum level to receive the Order Alerts.", Toast.LENGTH_SHORT).show();
                 break;
         }
     }

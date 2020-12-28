@@ -11,7 +11,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.signity.shopkeeperapp.R;
-import com.signity.shopkeeperapp.adapter.SpacesItemDecoration;
+import com.signity.shopkeeperapp.adapter.RunnerSpacesItemDecoration;
 import com.signity.shopkeeperapp.base.BaseDialogFragment;
 import com.signity.shopkeeperapp.model.runner.RunnerDetail;
 import com.signity.shopkeeperapp.model.runner.RunnersResponseDTO;
@@ -76,7 +76,7 @@ public class ChooseRunnerDialog extends BaseDialogFragment {
 
         Map<String, String> param = new HashMap<>();
         param.put("area_id", areaId);
-        param.put("runner_id", runnerId);
+//        param.put("runner_id", runnerId);
 
         NetworkAdaper.getNetworkServices().chooseRunner(param, new Callback<RunnersResponseDTO>() {
             @Override
@@ -87,7 +87,7 @@ public class ChooseRunnerDialog extends BaseDialogFragment {
                 }
 
                 if (responseDTO.isSuccess()) {
-                    if (responseDTO.getData() != null) {
+                    if (responseDTO.getData() != null && !responseDTO.getData().isEmpty()) {
                         List<RunnerDetail> runnerDetailList = new ArrayList<>();
                         for (RunnerDetail runnerDetail : responseDTO.getData()) {
                             if (runnerDetail.getStatus().equals("1")) {
@@ -98,11 +98,13 @@ public class ChooseRunnerDialog extends BaseDialogFragment {
                     } else {
                         Toast.makeText(getContext(), "Data not Found!", Toast.LENGTH_SHORT).show();
                         chooseRunnerAdapter.setShowLoading(false);
+                        dismiss();
                     }
 
                 } else {
                     Toast.makeText(getContext(), "Data not Found!", Toast.LENGTH_SHORT).show();
                     chooseRunnerAdapter.setShowLoading(false);
+                    dismiss();
                 }
             }
 
@@ -111,6 +113,7 @@ public class ChooseRunnerDialog extends BaseDialogFragment {
                 if (!isAdded()) {
                     Toast.makeText(getContext(), "Network is unreachable", Toast.LENGTH_SHORT).show();
                     chooseRunnerAdapter.setShowLoading(false);
+                    dismiss();
                 }
             }
         });
@@ -131,7 +134,7 @@ public class ChooseRunnerDialog extends BaseDialogFragment {
         chooseRunnerAdapter.setSelectedRunnerId(runnerId);
         recyclerView.setAdapter(chooseRunnerAdapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-        recyclerView.addItemDecoration(new SpacesItemDecoration((int) Util.pxFromDp(getContext(), 8)));
+        recyclerView.addItemDecoration(new RunnerSpacesItemDecoration((int) Util.pxFromDp(getContext(), 8)));
     }
 
     private void initViews(View view) {

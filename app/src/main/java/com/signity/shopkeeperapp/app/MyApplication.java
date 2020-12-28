@@ -16,7 +16,7 @@ import com.signity.shopkeeperapp.network.NetworkAdaper;
 import com.signity.shopkeeperapp.onesignal.MyNotificationOpenedHandler;
 import com.signity.shopkeeperapp.onesignal.MyNotificationReceivedHandler;
 import com.signity.shopkeeperapp.onesignal.OneSignalInAppMessaging;
-import com.signity.shopkeeperapp.twilio.BasicChatClient;
+//import com.signity.shopkeeperapp.twilio.BasicChatClient;
 import com.signity.shopkeeperapp.util.PrefManager;
 import com.signity.shopkeeperapp.util.prefs.AppPreference;
 
@@ -27,21 +27,21 @@ import com.signity.shopkeeperapp.util.prefs.AppPreference;
 public class MyApplication extends Application implements Application.ActivityLifecycleCallbacks {
     private static MyApplication instance;
     PrefManager prefManager;
-    private BasicChatClient basicChatClient;
+//    private BasicChatClient basicChatClient;
 
     public static MyApplication getInstance() {
         return instance;
     }
 
-    public BasicChatClient getBasicChatClient() {
-        return basicChatClient;
-    }
+//    public BasicChatClient getBasicChatClient() {
+//        return basicChatClient;
+//    }
 
     @Override
     public void onCreate() {
         super.onCreate();
         instance = this;
-        basicChatClient = new BasicChatClient(this);
+//        basicChatClient = new BasicChatClient(this);
         FirebaseApp.initializeApp(this);
         FacebookSdk.sdkInitialize(getApplicationContext());
         AppEventsLogger.activateApp(this);

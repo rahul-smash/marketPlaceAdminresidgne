@@ -1,3 +1,4 @@
+/*
 package com.signity.shopkeeperapp.twilio.chat;
 
 import android.Manifest;
@@ -55,11 +56,13 @@ import java.io.FileOutputStream;
 import java.util.ArrayList;
 import java.util.List;
 
+*/
 /**
  * StaffActivity
  *
  * @blame Android Team
- */
+ *//*
+
 public class CustomerSupportActivity extends BaseActivity implements SwipeRefreshLayout.OnRefreshListener, BasicChatClient.LoginListener, ChannelRecycleAdapter.ChannelListener, ChannelListener, ChatClientListener, MessageRecycleAdapter.MessageListener {
     private static final String TAG = CustomerSupportActivity.class.getSimpleName();
     private static final int REQUEST_READ_PERMISSION = 1002;
@@ -739,3 +742,4 @@ public class CustomerSupportActivity extends BaseActivity implements SwipeRefres
         });
     }
 }
+*/

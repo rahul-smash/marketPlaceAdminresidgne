@@ -200,8 +200,10 @@ public class ContactUsActivity extends BaseActivity {
         param.put("message", message);
         param.put("platform", Constant.PLATFORM);
         param.put("city", AppPreference.getInstance().getLocation());
-        if (!productImages1.isEmpty())
+        if (!productImages1.isEmpty()) {
             param.put("image", productImages1.get(0).getImage());
+            param.put("images", jsonArrayImage.toString());
+        }
 
         submitContactUs(param);
     }

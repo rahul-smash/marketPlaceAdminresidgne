@@ -194,6 +194,7 @@
                                 android:orientation="horizontal">
 
                                 <ImageView
+                                    android:visibility="gone"
                                     android:id="@+id/iv_facebook"
                                     android:layout_width="40dp"
                                     android:layout_height="40dp"
@@ -203,7 +204,6 @@
                                     android:id="@+id/iv_instagram"
                                     android:layout_width="40dp"
                                     android:layout_height="40dp"
-                                    android:layout_marginStart="16dp"
                                     android:layout_marginEnd="16dp"
                                     android:src="@drawable/instabigicon" />
 

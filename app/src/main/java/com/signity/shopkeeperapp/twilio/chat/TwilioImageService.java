@@ -1,3 +1,4 @@
+/*
 package com.signity.shopkeeperapp.twilio.chat;
 
 import android.app.IntentService;
@@ -163,3 +164,4 @@ public class TwilioImageService extends IntentService {
         return file;
     }
 }
+*/

@@ -84,6 +84,7 @@ public class CustomersActivity extends BaseActivity implements CustomersAdapter.
             }
         }
     };
+    private boolean isRefreshRequired;
 
     public static Intent getStartIntent(Context context) {
         return new Intent(context, CustomersActivity.class);
@@ -97,6 +98,18 @@ public class CustomersActivity extends BaseActivity implements CustomersAdapter.
         setUpToolbar();
         setUpAdapter();
         getCustomers();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if (isRefreshRequired) {
+            currentPageNumber = 1;
+            start = 0;
+            customersAdapter.clearData();
+            isRefreshRequired = false;
+            getCustomers();
+        }
     }
 
     public void getCustomers() {
@@ -276,6 +289,7 @@ public class CustomersActivity extends BaseActivity implements CustomersAdapter.
         }
 
         if (item.getItemId() == R.id.action_add_customer) {
+            isRefreshRequired = true;
             startActivity(AddCustomerActivity.getStartIntent(this));
             AnimUtil.slideFromRightAnim(this);
         }

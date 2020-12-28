@@ -1,3 +1,4 @@
+/*
 package com.signity.shopkeeperapp.twilio.chat;
 
 import com.twilio.chat.Members;
@@ -28,4 +29,4 @@ public class MessageItem {
         this.members = members;
     }
 
-}
+}*/

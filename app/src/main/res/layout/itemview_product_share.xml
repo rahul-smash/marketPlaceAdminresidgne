@@ -28,7 +28,8 @@
                 android:id="@+id/iv_facebook"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:src="@drawable/fbsmallicon" />
+                android:src="@drawable/fbsmallicon"
+                android:visibility="gone" />
 
             <ImageView
                 android:id="@+id/iv_instagram"

@@ -357,8 +357,8 @@ public class ShareCreativeActivity extends BaseActivity implements FacebookPages
         hasPermission = true;
 
         textViewFacebook.setText((isLogged || hasPage) ? "Share on Facebook" : "Login with Facebook");
-        constraintLayoutFacebook.setVisibility(hasPermission ? View.VISIBLE : View.GONE);
-        layoutBottomSheet.setVisibility(hasPermission ? View.VISIBLE : View.GONE);
+        constraintLayoutFacebook.setVisibility(View.GONE);
+        layoutBottomSheet.setVisibility(View.GONE);
     }
 
     private void openPagesDialog() {
@@ -522,7 +522,7 @@ public class ShareCreativeActivity extends BaseActivity implements FacebookPages
                 openPagesDialog();
             }
         } else {
-            LoginManager.getInstance().logInWithReadPermissions(this, Arrays.asList("pages_show_list,pages_manage_posts,pages_read_engagement,pages_read_user_content"));
+            LoginManager.getInstance().logInWithReadPermissions(this, Arrays.asList("pages_show_list,pages_manage_posts,pages_read_engagement"));
         }
     }
 

@@ -25,6 +25,7 @@ import com.google.firebase.messaging.RemoteMessage;
 import com.signity.shopkeeperapp.R;
 import com.signity.shopkeeperapp.SplashActivity;
 import com.signity.shopkeeperapp.app.DataAdapter;
+import com.signity.shopkeeperapp.dashboard.DashboardActivity;
 import com.signity.shopkeeperapp.notifications.NotificationActivity;
 import com.signity.shopkeeperapp.util.Constant;
 import com.signity.shopkeeperapp.util.PrefManager;
@@ -156,7 +157,7 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
 
 
         } else {
-            intent = new Intent(this, NotificationActivity.class);
+            intent = new Intent(this, DashboardActivity.class);
             pendingIntent = PendingIntent.getActivity(this, 0 /* Request code */, intent,
                     PendingIntent.FLAG_ONE_SHOT);
 

@@ -1,3 +1,4 @@
+/*
 package com.signity.shopkeeperapp.twilio.chat;
 
 import android.content.Context;
@@ -15,9 +16,11 @@ import com.signity.shopkeeperapp.R;
 import java.util.ArrayList;
 import java.util.List;
 
+*/
 /**
  * Created by Ketan Tetry on 1/11/19.
- */
+ *//*
+
 public class ChannelRecycleAdapter extends RecyclerView.Adapter<ChannelRecycleAdapter.ViewHolder> {
     private static final String TAG = ChannelRecycleAdapter.class.getSimpleName();
     private Context context;
@@ -74,4 +77,4 @@ public class ChannelRecycleAdapter extends RecyclerView.Adapter<ChannelRecycleAd
             textViewChannelName.setText(channelModel.getFriendlyName());
         }
     }
-}
+}*/
