@@ -401,10 +401,10 @@ public class DashboardActivity extends BaseActivity implements BottomNavigationV
                 startActivity(RunnerActivity.getStartIntent(DashboardActivity.this));
                 AnimUtil.slideFromRightAnim(DashboardActivity.this);
                 break;
-            case SWITCH_STORE:
-                startActivity(StoresActivity.getStartIntent(DashboardActivity.this));
-                AnimUtil.slideFromRightAnim(DashboardActivity.this);
-                break;
+//            case SWITCH_STORE:
+//                startActivity(StoresActivity.getStartIntent(DashboardActivity.this));
+//                AnimUtil.slideFromRightAnim(DashboardActivity.this);
+//                break;
 //            case CUSTOMER_SUPPORT:
 //                startActivity(CustomerSupportActivity.getStartIntent(DashboardActivity.this));
 //                AnimUtil.slideFromRightAnim(DashboardActivity.this);

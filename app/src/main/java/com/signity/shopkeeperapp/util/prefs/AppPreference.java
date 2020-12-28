@@ -278,4 +278,12 @@ public class AppPreference {
     public void setChannelId(int channelId) {
         mPrefs.edit().putInt(PrefConstants.PREF_KEY_CHANNEL_ID, channelId).apply();
     }
+
+    public boolean isRegisterMarketStore() {
+        return mPrefs.getBoolean(PrefConstants.PREF_KEY_MARKET_STORE_REGISTER, false);
+    }
+
+    public void setRegisterMarketStore(boolean value) {
+        mPrefs.edit().putBoolean(PrefConstants.PREF_KEY_MARKET_STORE_REGISTER, value).apply();
+    }
 }

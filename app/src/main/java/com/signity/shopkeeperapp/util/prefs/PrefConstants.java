@@ -39,4 +39,5 @@ public final class PrefConstants {
     public static final String PREF_KEY_IS_ONBOARDING_SHOWN = "PREF_KEY_IS_ONBOARDING_SHOWN";
     public static final String PREF_KEY_NOTIFICATION_RING = "PREF_KEY_NOTIFICATION_RING";
     public static final String PREF_KEY_CHANNEL_ID = "PREF_KEY_CHANNEL_ID";
+    public static final String PREF_KEY_MARKET_STORE_REGISTER = "PREF_KEY_MARKET_STORE_REGISTER";
 }

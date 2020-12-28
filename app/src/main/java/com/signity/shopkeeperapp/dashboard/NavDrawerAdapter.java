@@ -93,7 +93,7 @@ public class NavDrawerAdapter extends BaseAdapter {
         //        BOOK("Book Order", R.drawable.transactionicon),
 //        MARKET("Market Store", R.drawable.dashboardicon),
         RUNNER("Runner Management", R.drawable.runnermanagementicon),
-        SWITCH_STORE("Switch Store", R.drawable.switchstoreicon),
+//        SWITCH_STORE("Switch Store", R.drawable.switchstoreicon),
 //        CUSTOMER_SUPPORT("Customer Support", R.drawable.icon_1),
         CONTACT_US("Contact Us", R.drawable.icon_6),
         HELP_MEDIA("Help Media", R.drawable.icon_5),

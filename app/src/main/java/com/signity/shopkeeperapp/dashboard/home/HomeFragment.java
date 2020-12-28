@@ -155,7 +155,6 @@ public class HomeFragment extends Fragment implements HomeContentAdapter.HomeCon
     public void onResume() {
         super.onResume();
         setUpStoreData();
-        storeDashboard();
         getOrders();
         notificationCount = AppPreference.getInstance().getNotificationCount();
         setUpBadge();
@@ -176,7 +175,9 @@ public class HomeFragment extends Fragment implements HomeContentAdapter.HomeCon
         NetworkAdaper.marketStore().registerStore(param, new Callback<IndustryRegistration>() {
             @Override
             public void success(IndustryRegistration response, Response response2) {
-
+                if (response.isStatus()) {
+                    AppPreference.getInstance().setRegisterMarketStore(true);
+                }
             }
 
             @Override
@@ -280,7 +281,10 @@ public class HomeFragment extends Fragment implements HomeContentAdapter.HomeCon
                     if (storeDashboardResponse.getData().getStore() != null) {
                         AppPreference.getInstance().setStoreType(storeDashboardResponse.getData().getStore().getType());
                     }
-                    registerStore();
+
+                    if (!AppPreference.getInstance().isRegisterMarketStore()) {
+                        registerStore();
+                    }
 
                     homeContentAdapter.setUpData(storeDashboardResponse.getData());
                     if (listener != null) {
@@ -404,7 +408,6 @@ public class HomeFragment extends Fragment implements HomeContentAdapter.HomeCon
             @Override
             public void onRefresh() {
                 getOrders();
-                storeDashboard();
             }
         });
     }
