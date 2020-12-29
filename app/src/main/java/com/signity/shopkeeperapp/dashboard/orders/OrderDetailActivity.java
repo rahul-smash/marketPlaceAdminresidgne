@@ -418,9 +418,21 @@ public class OrderDetailActivity extends BaseActivity implements OrderDetailsAdp
     }
 
     @Override
+    public void onReadyToBePicked(int position, int pageNumber) {
+        OrdersListModel order = ordersAdapter.getOrdersListModels().get(position);
+        updateOrderStatus(HomeOrdersAdapter.OrderType.READY_TO_BE_PICKED, order.getOrderId(), pageNumber, "");
+    }
+
+    @Override
     public void onDeliverOrder(int position, int pageNumber) {
         OrdersListModel order = ordersAdapter.getOrdersListModels().get(position);
         updateOrderStatus(HomeOrdersAdapter.OrderType.DELIVERED, order.getOrderId(), position, "");
+    }
+
+    @Override
+    public void onTheWayOrder(int position, int pageNumber) {
+        OrdersListModel order = ordersAdapter.getOrdersListModels().get(position);
+        updateOrderStatus(HomeOrdersAdapter.OrderType.ON_THE_WAY, order.getOrderId(), pageNumber, "");
     }
 
     @Override

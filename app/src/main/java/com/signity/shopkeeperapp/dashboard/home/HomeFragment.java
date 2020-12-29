@@ -272,7 +272,7 @@ public class HomeFragment extends Fragment implements HomeContentAdapter.HomeCon
                         chipAll.setText(String.format("%d | All", storeDashboardResponse.getData().getDashboardOrdersData().getTotalOrders()));
                         chipPending.setText(String.format("%d | Pending", storeDashboardResponse.getData().getDashboardOrdersData().getDueOrders()));
                         chipAccepted.setText(String.format("%d | Accepted", storeDashboardResponse.getData().getDashboardOrdersData().getActiveOrders()));
-                        chipShipped.setText(String.format("%d | Shipped", storeDashboardResponse.getData().getDashboardOrdersData().getShippedOrders()));
+                        chipShipped.setText(String.format("%d | Ready to be Picked", storeDashboardResponse.getData().getDashboardOrdersData().getShippedOrders()));
                         chipDelivered.setText(String.format("%d | Delivered", storeDashboardResponse.getData().getDashboardOrdersData().getDeliveredOrders()));
                         chipRejected.setText(String.format("%d | Rejected", storeDashboardResponse.getData().getDashboardOrdersData().getRejectedOrders()));
                         chipCancelled.setText(String.format("%d | Cancelled", storeDashboardResponse.getData().getDashboardOrdersData().getCancelOrders()));
@@ -283,7 +283,8 @@ public class HomeFragment extends Fragment implements HomeContentAdapter.HomeCon
                     }
 
                     if (!AppPreference.getInstance().isRegisterMarketStore()) {
-                        registerStore();
+                        //TODO - Register Digi Store Commented
+//                        registerStore();
                     }
 
                     homeContentAdapter.setUpData(storeDashboardResponse.getData());
@@ -330,7 +331,7 @@ public class HomeFragment extends Fragment implements HomeContentAdapter.HomeCon
 
         chipPending = view.findViewById(R.id.chip_pending);
         chipAccepted = view.findViewById(R.id.chip_accepted);
-        chipShipped = view.findViewById(R.id.chip_shipped);
+        chipShipped = view.findViewById(R.id.chip_ready);
         chipDelivered = view.findViewById(R.id.chip_delivered);
         chipRejected = view.findViewById(R.id.chip_rejected);
         chipCancelled = view.findViewById(R.id.chip_canceled);
@@ -362,8 +363,11 @@ public class HomeFragment extends Fragment implements HomeContentAdapter.HomeCon
                     case R.id.chip_accepted:
                         orderType = HomeOrdersAdapter.OrderType.ACCEPTED;
                         break;
-                    case R.id.chip_shipped:
-                        orderType = HomeOrdersAdapter.OrderType.SHIPPED;
+                    case R.id.chip_ready:
+                        orderType = HomeOrdersAdapter.OrderType.READY_TO_BE_PICKED;
+                        break;
+                    case R.id.chip_on_the_way:
+                        orderType = HomeOrdersAdapter.OrderType.ON_THE_WAY;
                         break;
                     case R.id.chip_delivered:
                         orderType = HomeOrdersAdapter.OrderType.DELIVERED;
@@ -757,9 +761,21 @@ public class HomeFragment extends Fragment implements HomeContentAdapter.HomeCon
     }
 
     @Override
+    public void onReadyToBePicked(int position, int pageNumber) {
+        OrdersListModel order = ordersListModels.get(position);
+        updateOrderStatus(HomeOrdersAdapter.OrderType.READY_TO_BE_PICKED, order.getOrderId(), pageNumber, "");
+    }
+
+    @Override
     public void onDeliverOrder(int position, int pageNumber) {
         OrdersListModel order = ordersListModels.get(position);
         updateOrderStatus(HomeOrdersAdapter.OrderType.DELIVERED, order.getOrderId(), position, "");
+    }
+
+    @Override
+    public void onTheWayOrder(int position, int pageNumber) {
+        OrdersListModel order = ordersListModels.get(position);
+        updateOrderStatus(HomeOrdersAdapter.OrderType.ON_THE_WAY, order.getOrderId(), pageNumber, "");
     }
 
     @Override

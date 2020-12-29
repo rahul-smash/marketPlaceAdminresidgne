@@ -105,18 +105,17 @@
             android:id="@+id/ll_status"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
+            android:layout_marginEnd="4dp"
             android:gravity="center_vertical"
             android:orientation="horizontal"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/tv_order_price">
+            app:layout_constraintEnd_toStartOf="@+id/chipGroup"
+            app:layout_constraintTop_toTopOf="@+id/chipGroup">
 
             <ImageView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:src="@drawable/deliveredicon"
-                app:tint="@color/colorPrimary" />
+                android:src="@drawable/shippedicon" />
 
             <TextView
                 android:id="@+id/tv_order_status"
@@ -125,10 +124,31 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="4dp"
                 android:layout_marginLeft="4dp"
-                android:text="Delivered"
-                android:textColor="@color/colorPrimary" />
+                android:text="Ready to be Picked"
+                android:textColor="@color/color_delivered_orange" />
 
         </LinearLayout>
+
+        <com.google.android.material.chip.ChipGroup
+            android:id="@+id/chipGroup"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:chipSpacingHorizontal="4dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/tv_order_price">
+
+            <com.google.android.material.chip.Chip
+                android:id="@+id/chip_deliver"
+                style="@style/AppTheme.Chip.Small.Deliver"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Delivered"
+                android:visibility="gone"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/tv_order_date_time"
+                app:rippleColor="@android:color/transparent" />
+
+        </com.google.android.material.chip.ChipGroup>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

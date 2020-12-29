@@ -166,6 +166,18 @@
         <item name="chipIcon">@drawable/shippedicon</item>
     </style>
 
+    <style name="AppTheme.Chip.Small.Ready" parent="AppTheme.Chip.Small">
+        <item name="android:textColor">@color/colorWhite</item>
+        <item name="chipBackgroundColor">@color/color_processing</item>
+        <item name="chipIcon">@drawable/shippedicon</item>
+    </style>
+
+    <style name="AppTheme.Chip.Small.Way" parent="AppTheme.Chip.Small">
+        <item name="android:textColor">@color/colorWhite</item>
+        <item name="chipBackgroundColor">@color/color_delivered_orange</item>
+        <item name="chipIcon">@drawable/shippedicon</item>
+    </style>
+
     <style name="AppTheme.Chip.Small.Deliver" parent="AppTheme.Chip.Small">
         <item name="android:textColor">@color/colorWhite</item>
         <item name="chipBackgroundColor">@color/colorPrimary</item>

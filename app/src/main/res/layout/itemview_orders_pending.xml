@@ -252,7 +252,7 @@
                 style="@style/AppTheme.TextView.Mini"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Vicky Sharma"
+                android:text=""
                 android:textColor="@color/colorTextDark"
                 android:textStyle="bold" />
 

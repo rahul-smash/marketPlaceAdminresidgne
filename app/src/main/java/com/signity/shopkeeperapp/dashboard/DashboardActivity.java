@@ -397,10 +397,10 @@ public class DashboardActivity extends BaseActivity implements BottomNavigationV
                 startActivity(BookOrderActivity.getIntent(DashboardActivity.this));
                 AnimUtil.slideFromRightAnim(DashboardActivity.this);
                 break;*/
-            case RUNNER:
-                startActivity(RunnerActivity.getStartIntent(DashboardActivity.this));
-                AnimUtil.slideFromRightAnim(DashboardActivity.this);
-                break;
+//            case RUNNER:
+//                startActivity(RunnerActivity.getStartIntent(DashboardActivity.this));
+//                AnimUtil.slideFromRightAnim(DashboardActivity.this);
+//                break;
 //            case SWITCH_STORE:
 //                startActivity(StoresActivity.getStartIntent(DashboardActivity.this));
 //                AnimUtil.slideFromRightAnim(DashboardActivity.this);
@@ -413,14 +413,14 @@ public class DashboardActivity extends BaseActivity implements BottomNavigationV
                 startActivity(ContactUsActivity.getStartIntent(DashboardActivity.this));
                 AnimUtil.slideFromRightAnim(DashboardActivity.this);
                 break;
-            case HELP_MEDIA:
-                startActivity(YouTubeAPIActivity.getStartIntent(DashboardActivity.this));
-                AnimUtil.slideFromRightAnim(DashboardActivity.this);
-                break;
-            case FAQS:
-                startActivity(FaqActivity.getStartIntent(DashboardActivity.this));
-                AnimUtil.slideFromRightAnim(DashboardActivity.this);
-                break;
+//            case HELP_MEDIA:
+//                startActivity(YouTubeAPIActivity.getStartIntent(DashboardActivity.this));
+//                AnimUtil.slideFromRightAnim(DashboardActivity.this);
+//                break;
+//            case FAQS:
+//                startActivity(FaqActivity.getStartIntent(DashboardActivity.this));
+//                AnimUtil.slideFromRightAnim(DashboardActivity.this);
+//                break;
             case SOUND_SETTING:
                 if (getSupportFragmentManager().findFragmentByTag(NotificationSoundDialog.TAG) == null) {
                     NotificationSoundDialog soundDialog = NotificationSoundDialog.getInstance(null);

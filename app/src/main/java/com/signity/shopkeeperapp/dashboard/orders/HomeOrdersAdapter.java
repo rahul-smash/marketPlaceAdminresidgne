@@ -60,6 +60,12 @@ public class HomeOrdersAdapter extends RecyclerView.Adapter<HomeOrdersAdapter.Vi
             case 4:
                 viewHolder = new ViewHolderShipped(LayoutInflater.from(context).inflate(R.layout.itemview_orders_shipped, parent, false));
                 break;
+            case 8:
+                viewHolder = new ViewHolderReadyToPick(LayoutInflater.from(context).inflate(R.layout.itemview_orders_ready_to_pick, parent, false));
+                break;
+            case 7:
+                viewHolder = new ViewHolderOnTheWay(LayoutInflater.from(context).inflate(R.layout.itemview_orders_on_the_way, parent, false));
+                break;
             case 5:
                 viewHolder = new ViewHolderDelivered(LayoutInflater.from(context).inflate(R.layout.itemview_orders_delivered, parent, false));
                 break;
@@ -162,7 +168,15 @@ public class HomeOrdersAdapter extends RecyclerView.Adapter<HomeOrdersAdapter.Vi
     }
 
     public enum OrderType {
-        ALL(9, "all"), PENDING(0, "pending"), ACCEPTED(1, "active"), SHIPPED(4, "shipped"), DELIVERED(5, "delivered"), REJECTED(2, "rejected"), CANCELED(6, "cancel");
+        ALL(9, "all"),
+        PENDING(0, "pending"),
+        ACCEPTED(1, "active"),
+        SHIPPED(4, "shipped"),
+        DELIVERED(5, "delivered"),
+        REJECTED(2, "rejected"),
+        CANCELED(6, "cancel"),
+        READY_TO_BE_PICKED(8, "ready_to_be_picked"),
+        ON_THE_WAY(7, "on_the_way");
 
         private int statusId;
         private String slug;
@@ -190,7 +204,11 @@ public class HomeOrdersAdapter extends RecyclerView.Adapter<HomeOrdersAdapter.Vi
 
         void onShipOrder(int position, int pageNumber);
 
+        void onReadyToBePicked(int position, int pageNumber);
+
         void onDeliverOrder(int position, int pageNumber);
+
+        void onTheWayOrder(int position, int pageNumber);
 
         void onWhatsappMessage(int position);
 
@@ -232,12 +250,15 @@ public class HomeOrdersAdapter extends RecyclerView.Adapter<HomeOrdersAdapter.Vi
             imageViewWhatsapp.setVisibility(hideNameIcon ? View.GONE : View.VISIBLE);
             imageViewPhoneCall.setVisibility(hideNameIcon ? View.GONE : View.VISIBLE);
 
+            linearLayoutAssignRunner.setVisibility(View.GONE);
+            linearLayoutAssigned.setVisibility(ordersModel.getRunnerId().equals("0") ? View.GONE : View.VISIBLE);
+            linearLayoutAssigned.setClickable(false);
+
             if (ordersModel.getRunnerDetail() != null) {
                 textViewRunnerName.setText(ordersModel.getRunnerDetail().getFullName());
+            } else {
+                linearLayoutAssigned.setVisibility(View.GONE);
             }
-
-            linearLayoutAssignRunner.setVisibility(ordersModel.getRunnerId().equals("0") ? View.VISIBLE : View.GONE);
-            linearLayoutAssigned.setVisibility(ordersModel.getRunnerId().equals("0") ? View.GONE : View.VISIBLE);
 
             if (!ordersModel.getOrderFacility().equalsIgnoreCase("delivery")) {
                 linearLayoutAssigned.setVisibility(View.GONE);
@@ -287,7 +308,7 @@ public class HomeOrdersAdapter extends RecyclerView.Adapter<HomeOrdersAdapter.Vi
                 @Override
                 public void onClick(View view) {
                     if (listener != null) {
-                        listener.onAssignRunner(ordersModel.getRunnerId(), ordersModel.getPageNumber(), ordersModel.getOrderId(),ordersModel.getAreaId());
+                        listener.onAssignRunner(ordersModel.getRunnerId(), ordersModel.getPageNumber(), ordersModel.getOrderId(), ordersModel.getAreaId());
                     }
                 }
             });
@@ -302,7 +323,7 @@ public class HomeOrdersAdapter extends RecyclerView.Adapter<HomeOrdersAdapter.Vi
                         }
 
                         if (ordersModel.getRunnerAccepted().equals("0")) {
-                            listener.onAssignRunner(ordersModel.getRunnerId(), ordersModel.getPageNumber(), ordersModel.getOrderId(),ordersModel.getAreaId());
+                            listener.onAssignRunner(ordersModel.getRunnerId(), ordersModel.getPageNumber(), ordersModel.getOrderId(), ordersModel.getAreaId());
                         } else {
                             Toast.makeText(context, "Runner has accepted order delivery!", Toast.LENGTH_SHORT).show();
                         }
@@ -345,23 +366,24 @@ public class HomeOrdersAdapter extends RecyclerView.Adapter<HomeOrdersAdapter.Vi
     }
 
     class ViewHolderAccepted extends ViewHolder {
-        Chip chipShip;
+        Chip chipReady;
         Chip chipReject;
 
         public ViewHolderAccepted(final View convertView) {
             super(convertView);
-            chipShip = convertView.findViewById(R.id.chip_ship);
+            chipReady = convertView.findViewById(R.id.chip_ready_to_pick);
             chipReject = convertView.findViewById(R.id.chip_reject);
+            chipReject.setVisibility(View.GONE);
         }
 
         @Override
         public void bind(final int position) {
             super.bind(position);
-            chipShip.setOnClickListener(new View.OnClickListener() {
+            chipReady.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     if (listener != null) {
-                        listener.onShipOrder(getAdapterPosition(), ordersListModels.get(position).getPageNumber());
+                        listener.onReadyToBePicked(getAdapterPosition(), ordersListModels.get(position).getPageNumber());
                     }
                 }
             });
@@ -402,6 +424,52 @@ public class HomeOrdersAdapter extends RecyclerView.Adapter<HomeOrdersAdapter.Vi
                 public void onClick(View v) {
                     if (listener != null) {
                         listener.onRejectOrder(getAdapterPosition(), ordersListModels.get(position).getPageNumber());
+                    }
+                }
+            });
+        }
+    }
+
+    class ViewHolderOnTheWay extends ViewHolder {
+        View convertView;
+        Chip chipDeliver;
+
+        public ViewHolderOnTheWay(final View convertView) {
+            super(convertView);
+            this.convertView = convertView;
+        }
+
+        @Override
+        public void bind(int position) {
+            super.bind(position);
+        }
+    }
+
+    class ViewHolderReadyToPick extends ViewHolder {
+        View convertView;
+        Chip chipDeliver;
+
+        public ViewHolderReadyToPick(final View convertView) {
+            super(convertView);
+            this.convertView = convertView;
+            chipDeliver = convertView.findViewById(R.id.chip_deliver);
+        }
+
+        @Override
+        public void bind(final int position) {
+            super.bind(position);
+
+            if (!ordersListModels.get(position).getOrderFacility().equalsIgnoreCase("delivery")) {
+                chipDeliver.setVisibility(View.VISIBLE);
+            } else {
+                chipDeliver.setVisibility(View.GONE);
+            }
+
+            chipDeliver.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (listener != null) {
+                        listener.onDeliverOrder(getAdapterPosition(), ordersListModels.get(position).getPageNumber());
                     }
                 }
             });

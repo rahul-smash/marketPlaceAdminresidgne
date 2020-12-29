@@ -129,7 +129,7 @@ public class OrdersFragment extends Fragment implements HomeOrdersAdapter.Orders
                         chipAll.setText(String.format("%d | All", storeDashboardResponse.getData().getDashboardOrdersData().getTotalOrders()));
                         chipPending.setText(String.format("%d | Pending", storeDashboardResponse.getData().getDashboardOrdersData().getDueOrders()));
                         chipAccepted.setText(String.format("%d | Accepted", storeDashboardResponse.getData().getDashboardOrdersData().getActiveOrders()));
-                        chipShipped.setText(String.format("%d | Shipped", storeDashboardResponse.getData().getDashboardOrdersData().getShippedOrders()));
+                        chipShipped.setText(String.format("%d | Ready to be Picked", storeDashboardResponse.getData().getDashboardOrdersData().getShippedOrders()));
                         chipDelivered.setText(String.format("%d | Delivered", storeDashboardResponse.getData().getDashboardOrdersData().getDeliveredOrders()));
                         chipRejected.setText(String.format("%d | Rejected", storeDashboardResponse.getData().getDashboardOrdersData().getRejectedOrders()));
                         chipCancelled.setText(String.format("%d | Cancelled", storeDashboardResponse.getData().getDashboardOrdersData().getCancelOrders()));
@@ -182,7 +182,7 @@ public class OrdersFragment extends Fragment implements HomeOrdersAdapter.Orders
 
         chipPending = rootView.findViewById(R.id.chip_pending);
         chipAccepted = rootView.findViewById(R.id.chip_accepted);
-        chipShipped = rootView.findViewById(R.id.chip_shipped);
+        chipShipped = rootView.findViewById(R.id.chip_ready);
         chipDelivered = rootView.findViewById(R.id.chip_delivered);
         chipRejected = rootView.findViewById(R.id.chip_rejected);
         chipCancelled = rootView.findViewById(R.id.chip_canceled);
@@ -199,8 +199,11 @@ public class OrdersFragment extends Fragment implements HomeOrdersAdapter.Orders
                     case R.id.chip_accepted:
                         orderTypeFilter = HomeOrdersAdapter.OrderType.ACCEPTED;
                         break;
-                    case R.id.chip_shipped:
-                        orderTypeFilter = HomeOrdersAdapter.OrderType.SHIPPED;
+                    case R.id.chip_ready:
+                        orderTypeFilter = HomeOrdersAdapter.OrderType.READY_TO_BE_PICKED;
+                        break;
+                    case R.id.chip_on_the_way:
+                        orderTypeFilter = HomeOrdersAdapter.OrderType.ON_THE_WAY;
                         break;
                     case R.id.chip_delivered:
                         orderTypeFilter = HomeOrdersAdapter.OrderType.DELIVERED;
@@ -549,9 +552,21 @@ public class OrdersFragment extends Fragment implements HomeOrdersAdapter.Orders
     }
 
     @Override
+    public void onReadyToBePicked(int position, int pageNumber) {
+        OrdersListModel order = ordersAdapter.getOrdersListModels().get(position);
+        updateOrderStatus(HomeOrdersAdapter.OrderType.READY_TO_BE_PICKED, order.getOrderId(), pageNumber, "");
+    }
+
+    @Override
     public void onDeliverOrder(int position, int pageNumber) {
         OrdersListModel order = ordersAdapter.getOrdersListModels().get(position);
         updateOrderStatus(HomeOrdersAdapter.OrderType.DELIVERED, order.getOrderId(), pageNumber, "");
+    }
+
+    @Override
+    public void onTheWayOrder(int position, int pageNumber) {
+        OrdersListModel order = ordersAdapter.getOrdersListModels().get(position);
+        updateOrderStatus(HomeOrdersAdapter.OrderType.ON_THE_WAY, order.getOrderId(), pageNumber, "");
     }
 
     @Override

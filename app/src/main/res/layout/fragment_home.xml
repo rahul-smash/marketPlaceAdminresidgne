@@ -387,11 +387,20 @@
                                 app:layout_constraintTop_toBottomOf="@+id/textView51" />
 
                             <com.google.android.material.chip.Chip
-                                android:id="@+id/chip_shipped"
+                                android:id="@+id/chip_ready"
                                 style="@style/AppTheme.Chip.Normal"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="Shipped"
+                                android:text="Ready to be Picked"
+                                app:layout_constraintStart_toStartOf="parent"
+                                app:layout_constraintTop_toBottomOf="@+id/textView51" />
+
+                            <com.google.android.material.chip.Chip
+                                android:id="@+id/chip_on_the_way"
+                                style="@style/AppTheme.Chip.Normal"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="On the Way"
                                 app:layout_constraintStart_toStartOf="parent"
                                 app:layout_constraintTop_toBottomOf="@+id/textView51" />
 

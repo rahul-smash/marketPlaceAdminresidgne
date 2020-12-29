@@ -115,8 +115,7 @@
             <ImageView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:src="@drawable/deliveredicon"
-                app:tint="@color/colorPrimary" />
+                android:src="@drawable/shippedicon" />
 
             <TextView
                 android:id="@+id/tv_order_status"
@@ -125,8 +124,8 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="4dp"
                 android:layout_marginLeft="4dp"
-                android:text="Delivered"
-                android:textColor="@color/colorPrimary" />
+                android:text="On the Way"
+                android:textColor="@color/color_delivered_orange" />
 
         </LinearLayout>
 

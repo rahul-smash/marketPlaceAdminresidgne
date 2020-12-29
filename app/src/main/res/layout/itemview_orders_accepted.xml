@@ -110,11 +110,11 @@
             app:layout_constraintTop_toBottomOf="@+id/tv_order_price">
 
             <com.google.android.material.chip.Chip
-                android:id="@+id/chip_ship"
-                style="@style/AppTheme.Chip.Small.Ship"
+                android:id="@+id/chip_ready_to_pick"
+                style="@style/AppTheme.Chip.Small.Ready"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Shipped"
+                android:text="Ready to be Picked"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/tv_order_date_time"
                 app:rippleColor="@android:color/transparent" />
@@ -252,7 +252,7 @@
                 style="@style/AppTheme.TextView.Mini"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Vicky Sharma"
+                android:text=""
                 android:textColor="@color/colorTextDark"
                 android:textStyle="bold" />
 
