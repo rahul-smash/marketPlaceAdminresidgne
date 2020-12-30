@@ -54,7 +54,7 @@ public class CreativeFragment extends Fragment implements CreativeRecycleAdapter
     private SwipeRefreshLayout swipeRefreshLayout;
 
     private CreativeRecycleAdapter creativeRecycleAdapter;
-    private List<CreativeModel> creativeModelsFilter;
+    private List<CreativeModel> creativeModelsFilter = new ArrayList<>();
     private ArrayList<String> choosenList;
     private int mainPosition, childPosition;
     private boolean isFiltering;

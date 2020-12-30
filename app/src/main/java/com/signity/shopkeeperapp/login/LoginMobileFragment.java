@@ -132,6 +132,11 @@ public class LoginMobileFragment extends Fragment {
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
+
+                if (getContext() == null) {
+                    return;
+                }
+
                 HintRequest hintRequest = new HintRequest.Builder().setPhoneNumberIdentifierSupported(true).build();
                 PendingIntent intent = Credentials.getClient(getContext()).getHintPickerIntent(hintRequest);
                 try {

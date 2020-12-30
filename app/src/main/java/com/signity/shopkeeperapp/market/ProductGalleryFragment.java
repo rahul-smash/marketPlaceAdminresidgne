@@ -245,6 +245,7 @@ public class ProductGalleryFragment extends Fragment implements OrderCartListene
     public void onProductSelected(GetProductData productData) {
 
         if (TextUtils.isEmpty(productData.getImage())) {
+            Toast.makeText(getContext(), "Image not available", Toast.LENGTH_SHORT).show();
             return;
         }
 
@@ -254,44 +255,39 @@ public class ProductGalleryFragment extends Fragment implements OrderCartListene
                 .into(new Target() {
                     @Override
                     public void onBitmapLoaded(final Bitmap bitmap, Picasso.LoadedFrom from) {
+                        if (getContext() == null) {
+                            return;
+                        }
                         ProgressDialogUtil.hideProgressDialog();
-                        new Thread(new Runnable() {
-                            @Override
-                            public void run() {
 
-                                if (getContext() == null) {
-                                    return;
-                                }
+                        File fileProduct = new File(getContext().getExternalFilesDir("ValueAppz"), "product_share.png");
+                        try {
+                            fileProduct.createNewFile();
+                            FileOutputStream ostream = new FileOutputStream(fileProduct);
+                            bitmap.compress(Bitmap.CompressFormat.PNG, 80, ostream);
+                            ostream.flush();
+                            ostream.close();
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
 
-                                File fileProduct = new File(getContext().getExternalFilesDir("ValueAppz"), "product_share.png");
-                                try {
-                                    fileProduct.createNewFile();
-                                    FileOutputStream ostream = new FileOutputStream(fileProduct);
-                                    bitmap.compress(Bitmap.CompressFormat.PNG, 80, ostream);
-                                    ostream.flush();
-                                    ostream.close();
-                                } catch (IOException e) {
-                                    e.printStackTrace();
-                                }
-
-                                Uri uri = FileProvider.getUriForFile(getContext(), getContext().getPackageName() + ".provider", fileProduct);
-                                Intent intent = new Intent();
-                                intent.setData(uri);
-                                getActivity().setResult(Activity.RESULT_OK, intent);
-                                getActivity().finish();
-                            }
-                        }).start();
-
+                        Uri uri = FileProvider.getUriForFile(getContext(), getContext().getPackageName() + ".provider", fileProduct);
+                        Intent intent = new Intent();
+                        intent.setData(uri);
+                        getActivity().setResult(Activity.RESULT_OK, intent);
+                        getActivity().finish();
                     }
 
                     @Override
                     public void onBitmapFailed(Drawable errorDrawable) {
+                        if (getContext() == null) {
+                            return;
+                        }
                         ProgressDialogUtil.hideProgressDialog();
                     }
 
                     @Override
                     public void onPrepareLoad(Drawable placeHolderDrawable) {
-                        ProgressDialogUtil.hideProgressDialog();
                     }
                 });
     }

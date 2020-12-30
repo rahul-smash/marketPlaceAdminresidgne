@@ -574,40 +574,46 @@ public class ShareProductActivity extends BaseActivity implements FacebookPagesD
 
     public void onClickWhatsapp(final String shareApp) {
 
+        if (TextUtils.isEmpty(url)) {
+            Toast.makeText(this, "Image not available", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        ProgressDialogUtil.showProgressDialog(this);
         Picasso.with(this)
                 .load(url)
                 .into(new com.squareup.picasso.Target() {
                     @Override
                     public void onBitmapLoaded(final Bitmap bitmap, Picasso.LoadedFrom from) {
-                        new Thread(new Runnable() {
 
-                            @Override
-                            public void run() {
+                        if (isDestroyed()) {
+                            return;
+                        }
+                        ProgressDialogUtil.hideProgressDialog();
 
-                                File fileProduct = new File(getExternalFilesDir("ValueAppz"), "product_share.png");
-                                try {
-                                    fileProduct.createNewFile();
-                                    FileOutputStream ostream = new FileOutputStream(fileProduct);
-                                    bitmap.compress(Bitmap.CompressFormat.PNG, 80, ostream);
-                                    ostream.flush();
-                                    ostream.close();
-                                } catch (IOException e) {
-                                    e.printStackTrace();
-                                }
+                        File fileProduct = new File(getExternalFilesDir("ValueAppz"), "product_share.png");
+                        try {
+                            fileProduct.createNewFile();
+                            FileOutputStream ostream = new FileOutputStream(fileProduct);
+                            bitmap.compress(Bitmap.CompressFormat.PNG, 80, ostream);
+                            ostream.flush();
+                            ostream.close();
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
 
-                                String data = editTextAbout.getText().toString();
+                        String data = editTextAbout.getText().toString();
 
-                                Uri uri = FileProvider.getUriForFile(ShareProductActivity.this, getPackageName() + ".provider", fileProduct);
-                                shareIntent(data, "Share Product", uri, shareApp);
-
-                            }
-                        }).start();
-
+                        Uri uri = FileProvider.getUriForFile(ShareProductActivity.this, getPackageName() + ".provider", fileProduct);
+                        shareIntent(data, "Share Product", uri, shareApp);
                     }
 
                     @Override
                     public void onBitmapFailed(Drawable errorDrawable) {
-
+                        if (isDestroyed()) {
+                            return;
+                        }
+                        ProgressDialogUtil.hideProgressDialog();
                     }
 
                     @Override

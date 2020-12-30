@@ -317,54 +317,55 @@ public class ProductShareActivity extends BaseActivity implements ProductsShareA
             return;
         }
 
+        ProgressDialogUtil.showProgressDialog(this);
         Picasso.with(this)
                 .load(productData.getImage300200())
                 .into(new Target() {
                     @Override
                     public void onBitmapLoaded(final Bitmap bitmap, Picasso.LoadedFrom from) {
-                        new Thread(new Runnable() {
 
-                            @Override
-                            public void run() {
+                        if (isDestroyed()) {
+                            return;
+                        }
+                        ProgressDialogUtil.hideProgressDialog();
 
-                                File fileProduct = new File(getExternalFilesDir("ValueAppz"), "product_share.png");
-                                try {
-                                    fileProduct.createNewFile();
-                                    FileOutputStream ostream = new FileOutputStream(fileProduct);
-                                    bitmap.compress(Bitmap.CompressFormat.PNG, 80, ostream);
-                                    ostream.flush();
-                                    ostream.close();
-                                } catch (IOException e) {
-                                    e.printStackTrace();
-                                }
+                        File fileProduct = new File(getExternalFilesDir("ValueAppz"), "product_share.png");
+                        try {
+                            fileProduct.createNewFile();
+                            FileOutputStream ostream = new FileOutputStream(fileProduct);
+                            bitmap.compress(Bitmap.CompressFormat.PNG, 80, ostream);
+                            ostream.flush();
+                            ostream.close();
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
 
-                                Uri uri = FileProvider.getUriForFile(ProductShareActivity.this, getPackageName() + ".provider", fileProduct);
-                                String price = "";
-                                if (productData.getVariants() != null && productData.getVariants().size() > 0) {
-                                    price = productData.getVariants().get(0).getPrice();
-                                }
-                                if (!TextUtils.isEmpty(price)) {
-                                    price = Util.getPriceWithCurrency(Double.parseDouble(price), AppPreference.getInstance().getCurrency());
-                                }
-                                String message = String.format("Item Name: %s\nPrice:%s\n", productData.getTitle(), price);
-                                String message1 = String.format("Place your order here %s/product/%s. ", storeUrl, productData.getId());
-                                String message2 = String.format("Feel free to call us on %s if you need any help with ordering online. Thank you.", mobile);
+                        Uri uri = FileProvider.getUriForFile(ProductShareActivity.this, getPackageName() + ".provider", fileProduct);
+                        String price = "";
+                        if (productData.getVariants() != null && productData.getVariants().size() > 0) {
+                            price = productData.getVariants().get(0).getPrice();
+                        }
+                        if (!TextUtils.isEmpty(price)) {
+                            price = Util.getPriceWithCurrency(Double.parseDouble(price), AppPreference.getInstance().getCurrency());
+                        }
+                        String message = String.format("Item Name: %s\nPrice:%s\n", productData.getTitle(), price);
+                        String message1 = String.format("Place your order here %s/product/%s. ", storeUrl, productData.getId());
+                        String message2 = String.format("Feel free to call us on %s if you need any help with ordering online. Thank you.", mobile);
 
-                                StringBuilder builder = new StringBuilder();
-                                builder.append(message);
-                                builder.append(message1);
-                                builder.append(message2);
+                        StringBuilder builder = new StringBuilder();
+                        builder.append(message);
+                        builder.append(message1);
+                        builder.append(message2);
 
-                                shareIntent(builder.toString(), "Share Product", uri, appUri);
-
-                            }
-                        }).start();
-
+                        shareIntent(builder.toString(), "Share Product", uri, appUri);
                     }
 
                     @Override
                     public void onBitmapFailed(Drawable errorDrawable) {
-
+                        if (isDestroyed()) {
+                            return;
+                        }
+                        ProgressDialogUtil.hideProgressDialog();
                     }
 
                     @Override
