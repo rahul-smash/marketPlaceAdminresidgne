@@ -1,6 +1,7 @@
 package com.signity.shopkeeperapp.book;
 
 import android.content.Context;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -83,7 +84,11 @@ public class CouponsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
 
             String discount = response.getDiscount().concat("%");
             discount = discount.concat(" OFF ");
-            if (Integer.parseInt(response.getDiscount()) == 0) {
+            if (!TextUtils.isEmpty(response.getDiscount())) {
+                if (Integer.parseInt(response.getDiscount()) == 0) {
+                    discount = "";
+                }
+            } else {
                 discount = "";
             }
 

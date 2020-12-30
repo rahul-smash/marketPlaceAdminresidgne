@@ -108,6 +108,8 @@ public class StoreResponse implements Parcelable {
     private String storeUrl;
     @SerializedName("phonecode")
     private String phoneCode;
+    @SerializedName("brand_id")
+    private String brandId;
 
     public StoreResponse() {
     }
@@ -158,6 +160,15 @@ public class StoreResponse implements Parcelable {
         this.modified = in.readString();
         this.storeUrl = in.readString();
         this.phoneCode = in.readString();
+        this.brandId = in.readString();
+    }
+
+    public String getBrandId() {
+        return brandId;
+    }
+
+    public void setBrandId(String brandId) {
+        this.brandId = brandId;
     }
 
     public String getPhoneCode() {
@@ -621,5 +632,6 @@ public class StoreResponse implements Parcelable {
         dest.writeString(this.modified);
         dest.writeString(this.storeUrl);
         dest.writeString(this.phoneCode);
+        dest.writeString(this.brandId);
     }
 }

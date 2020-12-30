@@ -27,6 +27,28 @@ public class DashboardOrdersData implements Serializable {
     @SerializedName("delivered_orders")
     private int deliveredOrders;
 
+    @SerializedName("ready_to_be_picked_orders")
+    private int readyToBePickedOrders;
+
+    @SerializedName("on_the_way_orders")
+    private int onTheWayOrders;
+
+    public int getReadyToBePickedOrders() {
+        return readyToBePickedOrders;
+    }
+
+    public void setReadyToBePickedOrders(int readyToBePickedOrders) {
+        this.readyToBePickedOrders = readyToBePickedOrders;
+    }
+
+    public int getOnTheWayOrders() {
+        return onTheWayOrders;
+    }
+
+    public void setOnTheWayOrders(int onTheWayOrders) {
+        this.onTheWayOrders = onTheWayOrders;
+    }
+
     public int getTotalOrders() {
         return totalOrders;
     }

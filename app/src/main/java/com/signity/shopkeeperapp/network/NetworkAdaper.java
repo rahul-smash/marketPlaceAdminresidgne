@@ -49,7 +49,8 @@ public class NetworkAdaper {
     }
 
     public static ApiService orderNetworkServices(String store_id) {
-        String url = NetworkConstant.BASE + "/" + store_id + NetworkConstant.APISTORE_ORDER;
+        String brandId = AppPreference.getInstance().getBrandId();
+        String url = NetworkConstant.BASE + "/" + brandId + NetworkConstant.APISTORE_ORDER + "/" + store_id;
 
         OkHttpClient client = new OkHttpClient();
         client.setConnectTimeout(1, TimeUnit.MINUTES);

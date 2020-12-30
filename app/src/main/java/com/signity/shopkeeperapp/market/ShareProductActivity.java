@@ -449,12 +449,14 @@ public class ShareProductActivity extends BaseActivity implements FacebookPagesD
     private void setUpData() {
 
         if (!TextUtils.isEmpty(url)) {
+            ProgressDialogUtil.showProgressDialog(this);
             Glide.with(this)
                     .asBitmap()
                     .load(url)
                     .listener(new RequestListener<Bitmap>() {
                         @Override
                         public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Bitmap> target, boolean isFirstResource) {
+                            ProgressDialogUtil.hideProgressDialog();
                             return false;
                         }
 
@@ -463,6 +465,7 @@ public class ShareProductActivity extends BaseActivity implements FacebookPagesD
                             runOnUiThread(new Runnable() {
                                 @Override
                                 public void run() {
+                                    ProgressDialogUtil.hideProgressDialog();
                                     processImage(resource);
                                 }
                             });
@@ -579,7 +582,6 @@ public class ShareProductActivity extends BaseActivity implements FacebookPagesD
             return;
         }
 
-        ProgressDialogUtil.showProgressDialog(this);
         Picasso.with(this)
                 .load(url)
                 .into(new com.squareup.picasso.Target() {
@@ -589,7 +591,6 @@ public class ShareProductActivity extends BaseActivity implements FacebookPagesD
                         if (isDestroyed()) {
                             return;
                         }
-                        ProgressDialogUtil.hideProgressDialog();
 
                         File fileProduct = new File(getExternalFilesDir("ValueAppz"), "product_share.png");
                         try {
@@ -610,10 +611,6 @@ public class ShareProductActivity extends BaseActivity implements FacebookPagesD
 
                     @Override
                     public void onBitmapFailed(Drawable errorDrawable) {
-                        if (isDestroyed()) {
-                            return;
-                        }
-                        ProgressDialogUtil.hideProgressDialog();
                     }
 
                     @Override

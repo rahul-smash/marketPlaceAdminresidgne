@@ -135,9 +135,15 @@ public class CustomersActivity extends BaseActivity implements CustomersAdapter.
                     start += pageSize;
                     totalCustomers = customerDataResponse.getData().getCustomersCount();
                     if (customerDataResponse.getData() != null) {
-                        customersAdapter.addCustomersList(customerDataResponse.getData().getCustomers(), totalCustomers);
+                        if (customerDataResponse.getData().getCustomers() != null && !customerDataResponse.getData().getCustomers().isEmpty()) {
+                            customersAdapter.addCustomersList(customerDataResponse.getData().getCustomers(), totalCustomers);
+                        } else {
+                            Toast.makeText(CustomersActivity.this, "Data not Found!", Toast.LENGTH_SHORT).show();
+                            customersAdapter.setShowLoading(false);
+                        }
                     } else {
                         Toast.makeText(CustomersActivity.this, "Data not Found!", Toast.LENGTH_SHORT).show();
+                        customersAdapter.setShowLoading(false);
                     }
 
                 } else {

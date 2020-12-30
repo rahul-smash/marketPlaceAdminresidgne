@@ -280,15 +280,15 @@ public interface ApiService {
     @POST("/getCustomerByPhone")
     void checkNumber(@FieldMap Map<String, Object> param, Callback<CustomerData> response);
 
-    @GET("/storeOffers")
+    @GET("/coupons/offersList")
     void getCoupons(Callback<StoreOffersResponse> response);
 
     @FormUrlEncoded
-    @POST("/getLoyalityPoints")
+    @POST("/coupons/getLoyalityPoints")
     void getLoyalityPoints(@FieldMap Map<String, String> param, Callback<LoyaltyPointsResponse> response);
 
     @FormUrlEncoded
-    @POST("/multiple_tax_calculation_new")
+    @POST("/tax_calculation")
     void calculateOrder(@FieldMap Map<String, Object> param, Callback<OrderCalculationResponse> response);
 
     @FormUrlEncoded
@@ -296,15 +296,15 @@ public interface ApiService {
     void addAddressForDelivery(@FieldMap Map<String, Object> param, Callback<AddAddressModel> response);
 
     @FormUrlEncoded
-    @POST("/placeOrder")
+    @POST("/orders/placeOrder")
     void placeOrder(@FieldMap Map<String, Object> param, Callback<AddAddressModel> response);
 
     @FormUrlEncoded
-    @POST("/pickupPlaceOrder")
+    @POST("/orders/pickupPlaceOrder")
     void placeOrderPickDine(@FieldMap Map<String, Object> param, Callback<AddAddressModel> response);
 
     @FormUrlEncoded
-    @POST("/validateAllCoupons")
+    @POST("/coupons/validateCoupon")
     void applyCoupon(@FieldMap Map<String, Object> param, Callback<ApplyCouponDTO> response);
 
     @FormUrlEncoded

@@ -105,6 +105,7 @@ public class AppPreference {
         setStoreType(storeResponse.getType());
         setStoreUrl(storeResponse.getStoreUrl());
         setPhoneCode(storeResponse.getPhoneCode());
+        setBrandId(storeResponse.getBrandId());
     }
 
     public String getCurrency() {
@@ -169,6 +170,14 @@ public class AppPreference {
 
     public void setStoreId(String id) {
         mPrefs.edit().putString(PrefConstants.PREF_KEY_STORE_ID, id).apply();
+    }
+
+    public String getBrandId() {
+        return mPrefs.getString(PrefConstants.PREF_KEY_BRAND_ID, "");
+    }
+
+    public void setBrandId(String id) {
+        mPrefs.edit().putString(PrefConstants.PREF_KEY_BRAND_ID, id).apply();
     }
 
     public String getStoreType() {

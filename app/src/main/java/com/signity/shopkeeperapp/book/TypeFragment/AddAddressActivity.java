@@ -158,7 +158,7 @@ public class AddAddressActivity extends AppCompatActivity {
             public void onClick(View v) {
 
                 if (TextUtils.isEmpty(customerId)) {
-                    if (TextUtils.isEmpty(editAddress.getText().toString()) || TextUtils.isEmpty(areaName) ||
+                    if (TextUtils.isEmpty(editAddress.getText().toString()) || TextUtils.isEmpty(area_id) ||
                             TextUtils.isEmpty(editCity.getText().toString()) || TextUtils.isEmpty(editState.getText().toString())
                             || TextUtils.isEmpty(editZipcode.getText().toString())) {
                         Constant.showToast(AddAddressActivity.this, "Please enter the empty fields.");

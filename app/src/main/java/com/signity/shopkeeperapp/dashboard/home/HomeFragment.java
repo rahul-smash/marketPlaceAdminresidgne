@@ -99,7 +99,7 @@ public class HomeFragment extends Fragment implements HomeContentAdapter.HomeCon
     private HomeOrdersAdapter.OrderType orderType = HomeOrdersAdapter.OrderType.ALL;
     private Constant.StoreDashboard typeofDay = Constant.StoreDashboard.TODAY;
     private Uri cameraImageUri;
-    private Chip chipAll, chipPending, chipAccepted, chipShipped, chipDelivered, chipRejected, chipCancelled;
+    private Chip chipAll, chipPending, chipAccepted, chipOnReady, chipDelivered, chipRejected, chipCancelled, chipOnTheWay;
 
     public static HomeFragment getInstance(Bundle bundle) {
         HomeFragment fragment = new HomeFragment();
@@ -272,7 +272,8 @@ public class HomeFragment extends Fragment implements HomeContentAdapter.HomeCon
                         chipAll.setText(String.format("%d | All", storeDashboardResponse.getData().getDashboardOrdersData().getTotalOrders()));
                         chipPending.setText(String.format("%d | Pending", storeDashboardResponse.getData().getDashboardOrdersData().getDueOrders()));
                         chipAccepted.setText(String.format("%d | Accepted", storeDashboardResponse.getData().getDashboardOrdersData().getActiveOrders()));
-                        chipShipped.setText(String.format("%d | Ready to be Picked", storeDashboardResponse.getData().getDashboardOrdersData().getShippedOrders()));
+                        chipOnReady.setText(String.format("%d | Ready to be Picked", storeDashboardResponse.getData().getDashboardOrdersData().getReadyToBePickedOrders()));
+                        chipOnTheWay.setText(String.format("%d | On the Way", storeDashboardResponse.getData().getDashboardOrdersData().getOnTheWayOrders()));
                         chipDelivered.setText(String.format("%d | Delivered", storeDashboardResponse.getData().getDashboardOrdersData().getDeliveredOrders()));
                         chipRejected.setText(String.format("%d | Rejected", storeDashboardResponse.getData().getDashboardOrdersData().getRejectedOrders()));
                         chipCancelled.setText(String.format("%d | Cancelled", storeDashboardResponse.getData().getDashboardOrdersData().getCancelOrders()));
@@ -331,7 +332,8 @@ public class HomeFragment extends Fragment implements HomeContentAdapter.HomeCon
 
         chipPending = view.findViewById(R.id.chip_pending);
         chipAccepted = view.findViewById(R.id.chip_accepted);
-        chipShipped = view.findViewById(R.id.chip_ready);
+        chipOnReady = view.findViewById(R.id.chip_ready);
+        chipOnTheWay = view.findViewById(R.id.chip_on_the_way);
         chipDelivered = view.findViewById(R.id.chip_delivered);
         chipRejected = view.findViewById(R.id.chip_rejected);
         chipCancelled = view.findViewById(R.id.chip_canceled);
