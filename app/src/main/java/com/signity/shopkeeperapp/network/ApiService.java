@@ -291,7 +291,7 @@ public interface ApiService {
     void calculateOrder(@FieldMap Map<String, Object> param, Callback<OrderCalculationResponse> response);
 
     @FormUrlEncoded
-    @POST("/delivery_zones/deliveryAddress")
+    @POST("/deliveryAddress")
     void addAddressForDelivery(@FieldMap Map<String, Object> param, Callback<AddAddressModel> response);
 
     @FormUrlEncoded

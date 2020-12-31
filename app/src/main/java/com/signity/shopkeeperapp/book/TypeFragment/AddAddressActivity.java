@@ -56,7 +56,7 @@ public class AddAddressActivity extends AppCompatActivity {
         initViews();
         setUpToolbar();
         setUpSpinner();
-        getAreaCodes();
+//        getAreaCodes();
         getExtras();
     }
 
@@ -229,7 +229,7 @@ public class AddAddressActivity extends AppCompatActivity {
         param.put("address_id", addressId);
 
         ProgressDialogUtil.showProgressDialog(this);
-        NetworkAdaper.withoutStoreId().addAddressForDelivery(param, new Callback<AddAddressModel>() {
+        NetworkAdaper.getNetworkServices().addAddressForDelivery(param, new Callback<AddAddressModel>() {
             @Override
             public void success(AddAddressModel responseBody, Response response) {
                 ProgressDialogUtil.hideProgressDialog();

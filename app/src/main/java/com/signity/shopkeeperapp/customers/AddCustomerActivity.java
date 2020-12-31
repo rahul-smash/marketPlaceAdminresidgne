@@ -58,7 +58,7 @@ public class AddCustomerActivity extends BaseActivity {
         initViews();
         setUpToolbar();
         setUpSpinner();
-        getAreaCodes();
+//        getAreaCodes();
     }
 
     private void getAreaCodes() {
