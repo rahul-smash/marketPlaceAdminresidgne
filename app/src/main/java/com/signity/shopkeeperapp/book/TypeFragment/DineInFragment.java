@@ -64,7 +64,10 @@ public class DineInFragment extends Fragment {
     }
 
     private void getStoreAddress() {
-        NetworkAdaper.orderNetworkServices(AppPreference.getInstance().getStoreId()).getStoreAddress(new Callback<StoreAddressDTO>() {
+        Map<String, Object> param = new HashMap<>();
+        param.put("store_id", AppPreference.getInstance().getStoreId());
+
+        NetworkAdaper.withoutStoreId().getStoreAddress(param, new Callback<StoreAddressDTO>() {
             @Override
             public void success(StoreAddressDTO addressDTO, Response response) {
 

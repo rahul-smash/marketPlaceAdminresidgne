@@ -474,7 +474,7 @@ public class VerifyOtpFragment extends Fragment {
                         } else {
                             AppPreference.getInstance().setLoggedIn(Constant.Mode.LOGGED_IN);
                             AppPreference.getInstance().saveStore(otpVerifyResponse.getStore().get(0));
-                            NetworkAdaper.setupRetrofitClient(NetworkAdaper.setBaseUrl(AppPreference.getInstance().getStoreId()));
+                            NetworkAdaper.setupRetrofitClient(NetworkAdaper.setBaseUrl(AppPreference.getInstance().getStoreId(), AppPreference.getInstance().getBrandId()));
                             listener.onOtpVerified(false);
                         }
                     }

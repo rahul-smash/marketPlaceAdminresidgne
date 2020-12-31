@@ -158,9 +158,9 @@ public class AddAddressActivity extends AppCompatActivity {
             public void onClick(View v) {
 
                 if (TextUtils.isEmpty(customerId)) {
-                    if (TextUtils.isEmpty(editAddress.getText().toString()) || TextUtils.isEmpty(area_id) ||
-                            TextUtils.isEmpty(editCity.getText().toString()) || TextUtils.isEmpty(editState.getText().toString())
-                            || TextUtils.isEmpty(editZipcode.getText().toString())) {
+                    if (TextUtils.isEmpty(editAddress.getText().toString()) ||
+                            TextUtils.isEmpty(editCity.getText().toString()) ||
+                            TextUtils.isEmpty(editState.getText().toString())) {
                         Constant.showToast(AddAddressActivity.this, "Please enter the empty fields.");
                         return;
                     }
@@ -229,7 +229,7 @@ public class AddAddressActivity extends AppCompatActivity {
         param.put("address_id", addressId);
 
         ProgressDialogUtil.showProgressDialog(this);
-        NetworkAdaper.getNetworkServices().addAddressForDelivery(param, new Callback<AddAddressModel>() {
+        NetworkAdaper.withoutStoreId().addAddressForDelivery(param, new Callback<AddAddressModel>() {
             @Override
             public void success(AddAddressModel responseBody, Response response) {
                 ProgressDialogUtil.hideProgressDialog();

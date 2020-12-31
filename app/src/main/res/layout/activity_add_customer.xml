@@ -117,7 +117,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
-                android:hint="Address Line1/House/Flat no."
+                android:hint="Address Line1/House/Flat no.*"
                 app:hintTextColor="@color/colorTextGrey">
 
                 <com.google.android.material.textfield.TextInputEditText
@@ -140,6 +140,7 @@
                 android:layout_marginLeft="4dp"
                 android:layout_marginTop="8dp"
                 android:text="Area/Society Name"
+                android:visibility="gone"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
@@ -149,18 +150,38 @@
                 android:layout_width="match_parent"
                 android:layout_height="42dp"
                 android:dropDownWidth="match_parent"
-                android:spinnerMode="dialog" />
+                android:spinnerMode="dialog"
+                android:visibility="gone" />
 
             <com.google.android.material.textfield.TextInputLayout
                 style="@style/Widget.Design.TextInputLayout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
-                android:hint="Town/City"
+                android:hint="Town/City*"
                 app:hintTextColor="@color/colorTextGrey">
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/edt_customer_city"
+                    style="@style/AppTheme.TextView.Medium"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:imeOptions="actionNext"
+                    android:inputType="textCapWords"
+                    android:maxLines="1" />
+
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.textfield.TextInputLayout
+                style="@style/Widget.Design.TextInputLayout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:hint="State*"
+                app:hintTextColor="@color/colorTextGrey">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/edt_customer_state"
                     style="@style/AppTheme.TextView.Medium"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"

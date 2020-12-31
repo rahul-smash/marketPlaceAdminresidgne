@@ -1,6 +1,7 @@
 package com.signity.shopkeeperapp.network;
 
 import com.signity.shopkeeperapp.model.AddAddressModel;
+import com.signity.shopkeeperapp.model.CalculateShippingResponse;
 import com.signity.shopkeeperapp.model.Categories.GetCategoryResponse;
 import com.signity.shopkeeperapp.model.CategoryStatus.CategoryStatus;
 import com.signity.shopkeeperapp.model.CustomersModel;
@@ -32,10 +33,8 @@ import com.signity.shopkeeperapp.model.customers.detail.CustomerDetailResponse;
 import com.signity.shopkeeperapp.model.dashboard.StoreDashboardResponse;
 import com.signity.shopkeeperapp.model.dashboard.StoreVersionDTO;
 import com.signity.shopkeeperapp.model.dashboard.WelcomeResponse;
-import com.signity.shopkeeperapp.model.faq.FaqModel;
 import com.signity.shopkeeperapp.model.faq.FaqResponse;
 import com.signity.shopkeeperapp.model.helpMediaModel.HelpVideoResponse;
-import com.signity.shopkeeperapp.model.helpMediaModel.HelpVideos;
 import com.signity.shopkeeperapp.model.image.ImageUploadResponse;
 import com.signity.shopkeeperapp.model.market.facebookPost.FacebookPostResponse;
 import com.signity.shopkeeperapp.model.market.industry.IndustryRegistration;
@@ -292,7 +291,7 @@ public interface ApiService {
     void calculateOrder(@FieldMap Map<String, Object> param, Callback<OrderCalculationResponse> response);
 
     @FormUrlEncoded
-    @POST("/deliveryAddress")
+    @POST("/delivery_zones/deliveryAddress")
     void addAddressForDelivery(@FieldMap Map<String, Object> param, Callback<AddAddressModel> response);
 
     @FormUrlEncoded
@@ -311,11 +310,13 @@ public interface ApiService {
     @POST("/storeappversions")
     void storeAppVersion(@FieldMap Map<String, Object> param, Callback<StoreVersionDTO> response);
 
-    @GET("/storePickupAddress")
-    void getStoreAddress(Callback<StoreAddressDTO> response);
+    @FormUrlEncoded
+    @POST("/delivery_zones/storePickupAddress")
+    void getStoreAddress(@FieldMap Map<String, Object> param, Callback<StoreAddressDTO> response);
 
-    @GET("/deliveryTimeSlot")
-    void getDeliverySlots(Callback<DeliverySlotDTO> response);
+    @FormUrlEncoded
+    @POST("/delivery_zones/deliveryTimeSlot")
+    void getDeliverySlots(@FieldMap Map<String, Object> param, Callback<DeliverySlotDTO> response);
 
     @GET("/tags")
     void getCreatives(@Query("brand") long brandId, @Query("package") int packageId, @Query("valueapp_store_id") String valueappStoreId, Callback<List<CreativeModel>> response);
@@ -423,4 +424,8 @@ public interface ApiService {
 
     @GET("/get_helpvideos")
     void getHelpVideos(Callback<HelpVideoResponse> responseCallback);
+
+    @FormUrlEncoded
+    @POST("/calculateShippingCharges")
+    void calculateShipping(@FieldMap Map<String, String> param, Callback<CalculateShippingResponse> responseCallback);
 }

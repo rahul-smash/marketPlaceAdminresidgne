@@ -30,6 +30,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.google.android.material.textfield.TextInputEditText;
 import com.signity.shopkeeperapp.R;
 import com.signity.shopkeeperapp.book.BookOrderCheckoutActivity;
+import com.signity.shopkeeperapp.model.CalculateShippingResponse;
 import com.signity.shopkeeperapp.model.customers.addCustomer.AddCustomerResponse;
 import com.signity.shopkeeperapp.model.customers.addCustomer.DataResponse;
 import com.signity.shopkeeperapp.model.customers.detail.CustomerAddressResponse;
@@ -581,7 +582,9 @@ public class DeliveryFragment extends Fragment {
                 ProgressDialogUtil.hideProgressDialog();
                 if (customerData.isSuccess()) {
                     if (customerData.getData() != null) {
-                        openCheckout(customerData.getData());
+                        if (customerData.getData().getCustomerAddress() != null && !customerData.getData().getCustomerAddress().isEmpty()) {
+                            calculateShipping(customerData.getData(), customerData.getData().getCustomerAddress().get(0).getLat(), customerData.getData().getCustomerAddress().get(0).getLng());
+                        }
                     }
                 } else {
                     addCustomer();
@@ -595,6 +598,60 @@ public class DeliveryFragment extends Fragment {
                     return;
                 }
                 ProgressDialogUtil.hideProgressDialog();
+            }
+        });
+    }
+
+    private void calculateShipping(final DataResponse data) {
+
+        Map<String, String> param = new HashMap<>();
+        param.put("storeLat", AppPreference.getInstance().getLatitude());
+        param.put("storeLng", AppPreference.getInstance().getLongitude());
+        param.put("userLat", data.getAddress().getLat());
+        param.put("userlng", data.getAddress().getLng());
+        NetworkAdaper.getNetworkServices().calculateShipping(param, new Callback<CalculateShippingResponse>() {
+            @Override
+            public void success(CalculateShippingResponse response, Response response2) {
+
+                if (response.isSuccess()) {
+                    addressCharges = response.getShipping();
+                    openCheckout(data);
+                } else {
+                    Toast.makeText(getContext(), response.getMessage(), Toast.LENGTH_SHORT).show();
+                }
+
+            }
+
+            @Override
+            public void failure(RetrofitError error) {
+
+            }
+        });
+    }
+
+    private void calculateShipping(final Data data, String lat, String lon) {
+
+        Map<String, String> param = new HashMap<>();
+        param.put("storeLat", AppPreference.getInstance().getLatitude());
+        param.put("storeLng", AppPreference.getInstance().getLongitude());
+        param.put("userLat", lat);
+        param.put("userlng", lon);
+        NetworkAdaper.getNetworkServices().calculateShipping(param, new Callback<CalculateShippingResponse>() {
+            @Override
+            public void success(CalculateShippingResponse response, Response response2) {
+
+                if (response.isSuccess()) {
+                    addressCharges = response.getShipping();
+                    openCheckout(data);
+                } else {
+                    Toast.makeText(getContext(), response.getMessage(), Toast.LENGTH_SHORT).show();
+                }
+
+            }
+
+            @Override
+            public void failure(RetrofitError error) {
+
             }
         });
     }
@@ -614,6 +671,12 @@ public class DeliveryFragment extends Fragment {
             Toast.makeText(getContext(), "Name can't be empty", Toast.LENGTH_SHORT).show();
             return;
         }
+
+        if (!TextUtils.isEmpty(email) && !Util.checkValidEmail(email)) {
+            Toast.makeText(getContext(), "Email is not valid", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
         if (TextUtils.isEmpty(customerAddress)) {
             Toast.makeText(getContext(), "Area can't be empty", Toast.LENGTH_SHORT).show();
             return;
@@ -640,8 +703,8 @@ public class DeliveryFragment extends Fragment {
                 }
                 ProgressDialogUtil.hideProgressDialog();
                 if (addCategoryResponse.isSuccess()) {
-                    if (addCategoryResponse.getData() != null) {
-                        openCheckout(addCategoryResponse.getData());
+                    if (addCategoryResponse.getData() != null && addCategoryResponse.getData().getAddress() != null) {
+                        calculateShipping(addCategoryResponse.getData());
                     }
                 } else {
                     Toast.makeText(getActivity(), addCategoryResponse.getMessage(), Toast.LENGTH_SHORT).show();
@@ -661,7 +724,7 @@ public class DeliveryFragment extends Fragment {
     private void openCheckout(Data data) {
 
         try {
-            if (!TextUtils.isEmpty(addressCharges)) {
+            if (!TextUtils.isEmpty(addressCharges) && !TextUtils.isEmpty(minAmount)) {
                 double min = Double.parseDouble(minAmount);
                 if (total >= min) {
                     addressCharges = "0";
@@ -672,6 +735,7 @@ public class DeliveryFragment extends Fragment {
                 }
             }
         } catch (NumberFormatException e) {
+            addressCharges = "0";
             e.printStackTrace();
         }
 
@@ -694,7 +758,7 @@ public class DeliveryFragment extends Fragment {
     private void openCheckout(DataResponse data) {
 
         try {
-            if (!TextUtils.isEmpty(addressCharges)) {
+            if (!TextUtils.isEmpty(addressCharges) && !TextUtils.isEmpty(minAmount)) {
                 double min = Double.parseDouble(minAmount);
                 if (total >= min) {
                     addressCharges = "0";
@@ -705,13 +769,14 @@ public class DeliveryFragment extends Fragment {
                 }
             }
         } catch (NumberFormatException e) {
+            addressCharges = "0";
             e.printStackTrace();
         }
 
         Bundle bundle = new Bundle();
         bundle.putString(BookOrderCheckoutActivity.CUSTOMER_ID, data.getStoreUser().getUserId());
-        bundle.putString(BookOrderCheckoutActivity.CUSTOMER_ADDRESS, data.getAddress().getUserAddress().getAddress());
-        bundle.putString(BookOrderCheckoutActivity.CUSTOMER_ADDRESS_ID, data.getAddress().getUserAddress().getId());
+        bundle.putString(BookOrderCheckoutActivity.CUSTOMER_ADDRESS, data.getAddress().getAddress());
+        bundle.putString(BookOrderCheckoutActivity.CUSTOMER_ADDRESS_ID, data.getAddress().getId());
         bundle.putString(BookOrderCheckoutActivity.CHARGES, addressCharges);
         bundle.putString(BookOrderCheckoutActivity.ORDER_TYPE, "Delivery");
         bundle.putString(BookOrderCheckoutActivity.DELIVERY_SLOT, deliverySlot);
@@ -758,8 +823,12 @@ public class DeliveryFragment extends Fragment {
     }
 
     private void getDeliverSlots() {
-        NetworkAdaper.orderNetworkServices(AppPreference.getInstance().getStoreId())
-                .getDeliverySlots(new Callback<DeliverySlotDTO>() {
+
+        Map<String, Object> param = new HashMap<>();
+        param.put("store_id", AppPreference.getInstance().getStoreId());
+
+        NetworkAdaper.withoutStoreId()
+                .getDeliverySlots(param, new Callback<DeliverySlotDTO>() {
                     @Override
                     public void success(DeliverySlotDTO slotDTO, Response response) {
 

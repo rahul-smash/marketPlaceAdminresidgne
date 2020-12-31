@@ -62,6 +62,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="4dp"
                 android:layout_marginLeft="4dp"
+                android:visibility="gone"
                 android:text="Area/Society Name"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
@@ -71,6 +72,7 @@
                 style="@style/Widget.AppCompat.Spinner.DropDown"
                 android:layout_width="match_parent"
                 android:layout_height="42dp"
+                android:visibility="gone"
                 android:dropDownWidth="match_parent"
                 android:spinnerMode="dialog" />
 
@@ -78,8 +80,7 @@
                 style="@style/Widget.Design.TextInputLayout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
-                android:hint="Address Line1/House/Flat no."
+                android:hint="Address Line1/House/Flat no.*"
                 app:hintTextColor="@color/colorTextGrey">
 
                 <com.google.android.material.textfield.TextInputEditText
@@ -98,7 +99,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
-                android:hint="Town/City"
+                android:hint="Town/City*"
                 app:hintTextColor="@color/colorTextGrey">
 
                 <com.google.android.material.textfield.TextInputEditText
@@ -117,7 +118,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
-                android:hint="State"
+                android:hint="State*"
                 app:hintTextColor="@color/colorTextGrey">
 
                 <com.google.android.material.textfield.TextInputEditText

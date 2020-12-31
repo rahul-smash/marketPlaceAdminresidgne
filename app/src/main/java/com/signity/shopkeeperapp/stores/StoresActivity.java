@@ -156,7 +156,7 @@ public class StoresActivity extends BaseActivity implements StoresAdapter.Stores
 
         AppPreference.getInstance().setLoggedIn(Constant.Mode.LOGGED_IN);
         AppPreference.getInstance().saveStore(store);
-        NetworkAdaper.setupRetrofitClient(NetworkAdaper.setBaseUrl(AppPreference.getInstance().getStoreId()));
+        NetworkAdaper.setupRetrofitClient(NetworkAdaper.setBaseUrl(AppPreference.getInstance().getStoreId(), AppPreference.getInstance().getBrandId()));
         startActivity(DashboardActivity.getStartIntent(this));
         runAnimation();
     }

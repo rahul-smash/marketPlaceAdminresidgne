@@ -40,7 +40,7 @@ public class AddCustomerActivity extends BaseActivity {
     private static final String TAG = "AddCustomerActivity";
     private Toolbar toolbar;
     private Spinner spinner;
-    private TextInputEditText textInputEditTextMobile, textInputEditTextName, textInputEditTextEmail, textInputEditTextAddress, textInputEditTextCity, textInputEditTextZip;
+    private TextInputEditText textInputEditTextState, textInputEditTextMobile, textInputEditTextName, textInputEditTextEmail, textInputEditTextAddress, textInputEditTextCity, textInputEditTextZip;
     private String areaId;
     private List<String> areaList = new ArrayList<>();
     private ArrayAdapter<String> stringArrayAdapter;
@@ -119,6 +119,7 @@ public class AddCustomerActivity extends BaseActivity {
         textInputEditTextEmail = findViewById(R.id.edt_customer_email);
         textInputEditTextAddress = findViewById(R.id.edt_customer_address);
         textInputEditTextCity = findViewById(R.id.edt_customer_city);
+        textInputEditTextState = findViewById(R.id.edt_customer_state);
         textInputEditTextZip = findViewById(R.id.edt_customer_zip);
         spinner = findViewById(R.id.spinner_area);
 
@@ -137,6 +138,7 @@ public class AddCustomerActivity extends BaseActivity {
         String email = textInputEditTextEmail.getText().toString().trim();
         String address = textInputEditTextAddress.getText().toString().trim();
         String city = textInputEditTextCity.getText().toString().trim();
+        String state = textInputEditTextState.getText().toString().trim();
         String zip = textInputEditTextZip.getText().toString().trim();
 
         if (TextUtils.isEmpty(mobile)) {
@@ -157,15 +159,34 @@ public class AddCustomerActivity extends BaseActivity {
             return;
         }
 
+        if (TextUtils.isEmpty(address)) {
+            textInputEditTextAddress.setError("Enter Address");
+            textInputEditTextAddress.requestFocus();
+            return;
+        }
+
+        if (TextUtils.isEmpty(city)) {
+            textInputEditTextCity.setError("Enter City");
+            textInputEditTextCity.requestFocus();
+            return;
+        }
+
+        if (TextUtils.isEmpty(state)) {
+            textInputEditTextCity.setError("Enter State");
+            textInputEditTextCity.requestFocus();
+            return;
+        }
+
+
         Map<String, Object> param = new HashMap<>();
         param.put("mobile", mobile);
         param.put("name", name);
         param.put("email", email);
         param.put("address", address);
-        param.put("area_id", areaId);
-        param.put("area_name", areaName);
+//        param.put("area_id", areaId);
+//        param.put("area_name", areaName);
         param.put("city", city);
-        param.put("state", "");
+        param.put("state", state);
         param.put("zipcode", zip);
 
         ProgressDialogUtil.showProgressDialog(this);

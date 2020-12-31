@@ -26,7 +26,8 @@ public class NetworkAdaper {
         if (instance == null) {
             instance = new NetworkAdaper();
             String store_id = AppPreference.getInstance().getStoreId();
-            String url = setBaseUrl(store_id);
+            String brandId = AppPreference.getInstance().getBrandId();
+            String url = setBaseUrl(store_id, brandId);
             setupRetrofitClient(url);
         }
     }
@@ -64,9 +65,25 @@ public class NetworkAdaper {
         return restAdapter.create(ApiService.class);
     }
 
+    public static ApiService withoutStoreId() {
+        String brandId = AppPreference.getInstance().getBrandId();
+        String url = NetworkConstant.BASE + "/" + brandId + NetworkConstant.APISTORE_ORDER;
+
+        OkHttpClient client = new OkHttpClient();
+        client.setConnectTimeout(1, TimeUnit.MINUTES);
+        client.setReadTimeout(1, TimeUnit.MINUTES);
+
+        RestAdapter restAdapter = new RestAdapter.Builder()
+                .setClient(new OkClient(client))
+                .setEndpoint(url)
+                .setLogLevel(RestAdapter.LogLevel.FULL)
+                .build();
+        return restAdapter.create(ApiService.class);
+    }
+
     public static ApiService marketStore() {
-//        String url = "https://marketyourstorestaging.mydigisalon.com"; // Stage
-        String url = "https://marketyourstore.mydigisalon.com"; // Production
+        String url = "https://marketyourstorestaging.mydigisalon.com"; // Stage
+//        String url = "https://marketyourstore.mydigisalon.com"; // Production
 
         OkHttpClient client = new OkHttpClient();
         client.setConnectTimeout(1, TimeUnit.MINUTES);
@@ -111,12 +128,12 @@ public class NetworkAdaper {
         return restAdapter.create(ApiService.class);
     }
 
-    public static String setBaseUrl(String store_id) {
+    public static String setBaseUrl(String store_id, String brandId) {
         String url = "";
         if (store_id.equalsIgnoreCase("")) {
             url = NetworkConstant.BASE + NetworkConstant.APISTORE;
         } else {
-            url = NetworkConstant.BASE + "/" + store_id + NetworkConstant.APISTORE;
+            url = NetworkConstant.BASE + "/" + brandId + NetworkConstant.APISTORE + "/" + store_id;
         }
         return url;
     }

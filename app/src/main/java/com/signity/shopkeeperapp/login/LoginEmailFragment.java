@@ -176,7 +176,7 @@ public class LoginEmailFragment extends Fragment {
                         AppPreference.getInstance().setLoggedIn(Constant.Mode.LOGGED_IN);
                         AppPreference.getInstance().saveUser(otpVerifyResponse.getUser());
                         AppPreference.getInstance().saveStore(otpVerifyResponse.getStore().get(0));
-                        NetworkAdaper.setupRetrofitClient(NetworkAdaper.setBaseUrl(AppPreference.getInstance().getStoreId()));
+                        NetworkAdaper.setupRetrofitClient(NetworkAdaper.setBaseUrl(AppPreference.getInstance().getStoreId(), AppPreference.getInstance().getBrandId()));
                         listener.onEmailVerified(false);
                     }
                 } else {

@@ -591,7 +591,7 @@ public class DashboardActivity extends BaseActivity implements BottomNavigationV
                 ProgressDialogUtil.hideProgressDialog();
                 AppPreference.getInstance().clearAll();
 //                LoginManager.getInstance().logOut();
-                NetworkAdaper.setupRetrofitClient(NetworkAdaper.setBaseUrl(""));
+                NetworkAdaper.setupRetrofitClient(NetworkAdaper.setBaseUrl("", ""));
 //                MyApplication.getInstance().getBasicChatClient().shutdown();
                 startActivity(SplashActivity.getIntent(DashboardActivity.this));
                 AnimUtil.slideFromLeftAnim(DashboardActivity.this);

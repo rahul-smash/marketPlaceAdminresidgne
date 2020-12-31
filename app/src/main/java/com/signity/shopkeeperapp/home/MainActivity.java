@@ -634,7 +634,7 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
         Util.savePreferenceValue(this, Constant.LOGIN_CHECK, "");
         Util.savePreferenceValue(this, Constant.PHONE, "");
 
-        NetworkAdaper.getInstance().setupRetrofitClient(NetworkAdaper.getInstance().setBaseUrl(""));
+        NetworkAdaper.getInstance().setupRetrofitClient(NetworkAdaper.getInstance().setBaseUrl("", ""));
         Intent intent_home = new Intent(com.signity.shopkeeperapp.home.MainActivity.this, LogInOptionsActivity.class);
         intent_home.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         startActivity(intent_home);
