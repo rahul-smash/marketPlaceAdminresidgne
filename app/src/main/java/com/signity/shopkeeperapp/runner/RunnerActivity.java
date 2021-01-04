@@ -11,6 +11,8 @@ import android.text.TextUtils;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -47,6 +49,7 @@ public class RunnerActivity extends BaseActivity implements RunnerAdapter.Runner
     private Toolbar toolbar;
     private RunnerAdapter runnerAdapter;
     private RecyclerView recyclerView;
+    private LinearLayout linearLayoutRunner;
 
     public static Intent getStartIntent(Context context) {
         return new Intent(context, RunnerActivity.class);
@@ -79,6 +82,7 @@ public class RunnerActivity extends BaseActivity implements RunnerAdapter.Runner
                 if (responseDTO.isSuccess()) {
                     if (responseDTO.getData() != null) {
                         runnerAdapter.setRunnerList(responseDTO.getData());
+                        linearLayoutRunner.setVisibility(responseDTO.getData().isEmpty() ? View.VISIBLE : View.GONE);
                     } else {
                         Toast.makeText(RunnerActivity.this, "Data not Found!", Toast.LENGTH_SHORT).show();
                         runnerAdapter.setShowLoading(false);
@@ -111,6 +115,15 @@ public class RunnerActivity extends BaseActivity implements RunnerAdapter.Runner
     private void initViews() {
         toolbar = findViewById(R.id.toolbar);
         recyclerView = findViewById(R.id.rv_runner);
+        linearLayoutRunner = findViewById(R.id.ll_add_runner);
+
+        linearLayoutRunner.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                startActivity(AddRunnerActivity.getStartIntent(RunnerActivity.this));
+                AnimUtil.slideFromRightAnim(RunnerActivity.this);
+            }
+        });
     }
 
     private void setUpToolbar() {

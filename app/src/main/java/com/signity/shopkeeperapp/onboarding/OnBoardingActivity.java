@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.TextView;
 
 import androidx.annotation.Nullable;
 import androidx.viewpager.widget.ViewPager;
@@ -28,6 +29,7 @@ public class OnBoardingActivity extends BaseActivity {
     private ViewPager viewPager;
     private PageIndicator pageIndicator;
     private int pagePosition;
+    private TextView textView;
 
     public static Intent getStartIntent(Context context) {
         return new Intent(context, OnBoardingActivity.class);
@@ -45,6 +47,7 @@ public class OnBoardingActivity extends BaseActivity {
     private void initViews() {
         pageIndicator = findViewById(R.id.indicator_on_boarding);
         viewPager = findViewById(R.id.vp_on_boarding);
+        textView = findViewById(R.id.tv_skip_on_boarding);
 
         findViewById(R.id.tv_skip_on_boarding).setOnClickListener(new View.OnClickListener() {
             @Override
@@ -97,6 +100,7 @@ public class OnBoardingActivity extends BaseActivity {
             public void onPageSelected(int position) {
                 pagePosition = position;
                 pageIndicator.setActiveDot(pagePosition);
+                textView.setText(position != OnBoardingScreen.OnBoarding.values().length - 1 ? "Skip" : "Done");
             }
 
             @Override

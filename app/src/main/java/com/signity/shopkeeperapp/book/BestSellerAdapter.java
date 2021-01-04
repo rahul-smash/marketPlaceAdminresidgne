@@ -67,7 +67,7 @@ public class BestSellerAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
     public class ViewHolder extends RecyclerView.ViewHolder {
 
         ImageView imageViewProduct;
-        TextView textViewProductName, textViewProductPrice;
+        TextView textViewProductName, textViewProductPrice, textViewProductVariantData;
         TextView textViewCount;
         LinearLayout linearLayoutAdd, linearLayoutMinus, linearLayoutCountMinus, linearLayoutOutStock;
         Spinner spinnerOrders;
@@ -83,6 +83,7 @@ public class BestSellerAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
             linearLayoutCountMinus = itemView.findViewById(R.id.ll_count_minus);
             linearLayoutOutStock = itemView.findViewById(R.id.ll_out_stock);
             spinnerOrders = itemView.findViewById(R.id.spinner_orders);
+            textViewProductVariantData = itemView.findViewById(R.id.tv_product_detail);
         }
 
         public void onBind(int position) {
@@ -96,11 +97,17 @@ public class BestSellerAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
             }
 
             List<String> variantList = new ArrayList<>();
-            for (Variant variant : getProductData.getVariants()) {
-                variantList.add(String.format("%s %s", variant.getWeight(), variant.getUnitType()));
+            if (getProductData.getVariants() != null) {
+                for (Variant variant : getProductData.getVariants()) {
+                    variantList.add(String.format("%s %s", variant.getWeight(), variant.getUnitType()));
+                }
             }
 
-            final ArrayAdapter<String> stringArrayAdapter = new ArrayAdapter<String>(context, R.layout.spinner_text, variantList);
+            if (getProductData.getVariants() != null) {
+                spinnerOrders.setVisibility(getProductData.getVariants().size() > 1 ? View.VISIBLE : View.GONE);
+            }
+
+            final ArrayAdapter<String> stringArrayAdapter = new ArrayAdapter<String>(context, android.R.layout.simple_list_item_1, variantList);
             spinnerOrders.setAdapter(stringArrayAdapter);
             spinnerOrders.setSelection(getProductData.getSelectedVariantIndex());
             spinnerOrders.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
@@ -136,6 +143,7 @@ public class BestSellerAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                 }
             }
 
+            textViewProductVariantData.setText(String.format("%s %s", variantData.getWeight(), variantData.getUnitType()));
             linearLayoutOutStock.setVisibility(showOutOfStock ? View.VISIBLE : View.GONE);
             textViewProductPrice.setText(Util.getPriceWithCurrency(Double.parseDouble(!TextUtils.isEmpty(variantData.getPrice()) ? variantData.getPrice() : "0"), AppPreference.getInstance().getCurrency()));
 

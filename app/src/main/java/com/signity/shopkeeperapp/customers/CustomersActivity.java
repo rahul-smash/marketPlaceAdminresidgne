@@ -53,6 +53,7 @@ public class CustomersActivity extends BaseActivity implements CustomersAdapter.
     private static final String TAG = "CustomersActivity";
     private Toolbar toolbar;
     private CustomersAdapter customersAdapter;
+    private LinearLayout linearLayoutAddCustomer;
     private RecyclerView recyclerView;
     private int pageSize = 10, currentPageNumber = 1, start, totalCustomers;
     private LinearLayoutManager layoutManager;
@@ -136,8 +137,10 @@ public class CustomersActivity extends BaseActivity implements CustomersAdapter.
                     totalCustomers = customerDataResponse.getData().getCustomersCount();
                     if (customerDataResponse.getData() != null) {
                         if (customerDataResponse.getData().getCustomers() != null && !customerDataResponse.getData().getCustomers().isEmpty()) {
+                            linearLayoutAddCustomer.setVisibility(View.GONE);
                             customersAdapter.addCustomersList(customerDataResponse.getData().getCustomers(), totalCustomers);
                         } else {
+                            linearLayoutAddCustomer.setVisibility(View.VISIBLE);
                             Toast.makeText(CustomersActivity.this, "Data not Found!", Toast.LENGTH_SHORT).show();
                             customersAdapter.setShowLoading(false);
                         }
@@ -177,6 +180,16 @@ public class CustomersActivity extends BaseActivity implements CustomersAdapter.
         toolbar = findViewById(R.id.toolbar);
         recyclerView = findViewById(R.id.rv_customers);
         hiddenView = findViewById(R.id.view);
+        linearLayoutAddCustomer = findViewById(R.id.ll_add_customer);
+
+        linearLayoutAddCustomer.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                isRefreshRequired = true;
+                startActivity(AddCustomerActivity.getStartIntent(CustomersActivity.this));
+                AnimUtil.slideFromRightAnim(CustomersActivity.this);
+            }
+        });
     }
 
     private void setUpToolbar() {
