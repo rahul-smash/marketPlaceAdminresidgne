@@ -179,7 +179,6 @@
             android:name=".book.BookOrderActivity"
             android:launchMode="singleTop"
             android:screenOrientation="portrait"
-            android:taskAffinity="com.signity.shopkeeperapp.bookorder"
             android:windowSoftInputMode="adjustPan|stateHidden" />
         <activity
             android:name=".book.BookOrderTypeActivity"
@@ -336,9 +335,9 @@
                 <action android:name="com.onesignal.NotificationExtender" />
             </intent-filter>
         </service>
-<!--        <service
-            android:name=".twilio.chat.TwilioImageService"
-            android:exported="false" />-->
+        <!--        <service
+                    android:name=".twilio.chat.TwilioImageService"
+                    android:exported="false" />-->
     </application>
 
 </manifest>

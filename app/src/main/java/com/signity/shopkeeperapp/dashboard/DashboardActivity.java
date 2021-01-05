@@ -2,6 +2,7 @@ package com.signity.shopkeeperapp.dashboard;
 
 import android.Manifest;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
@@ -24,6 +25,7 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBarDrawerToggle;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
@@ -83,6 +85,7 @@ import retrofit.client.Response;
 
 public class DashboardActivity extends BaseActivity implements BottomNavigationView.OnNavigationItemSelectedListener, HomeFragment.HomeFragmentListener, NavDrawerAdapter.NavigationListener {
 
+    public static final String SHOW_WELCOME = "SHOW_WELCOME";
     private static final String TAG = "DashboardActivity";
     private static final int MY_REQUEST_CODE = 1001;
     private static final int CAMERA_REQUEST = 100;
@@ -104,15 +107,23 @@ public class DashboardActivity extends BaseActivity implements BottomNavigationV
     private TextView textViewLogout;
     private ImageView imageViewGenerateOrder;
     private Uri cameraImageUri;
+    private boolean shouldShowWelcome = true;
 
     public static Intent getStartIntent(Context context) {
         return new Intent(context, DashboardActivity.class);
+    }
+
+    public static Intent getStartIntent(Context context, Bundle bundle) {
+        Intent intent = getStartIntent(context);
+        intent.putExtras(bundle);
+        return intent;
     }
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_dashboard);
+        getExtra();
         initViews();
         setUpToolbar();
         setUpNavigationAdapter();
@@ -129,6 +140,16 @@ public class DashboardActivity extends BaseActivity implements BottomNavigationV
 
 //        registerStore();
         OneSignalTags();
+    }
+
+
+    private void getExtra() {
+
+        Bundle bundle = getIntent().getExtras();
+        if (bundle != null) {
+            shouldShowWelcome = bundle.getBoolean(SHOW_WELCOME);
+        }
+
     }
 
     private void OneSignalTags() {
@@ -430,10 +451,29 @@ public class DashboardActivity extends BaseActivity implements BottomNavigationV
                 }
                 break;
             case LOGOUT:
-                callLogOutApi();
+                logoutDialog();
                 break;
         }
         toggleDrawer();
+    }
+
+    private void logoutDialog() {
+        final AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("Are you sure?");
+        builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                navDrawerAdapter.setSelectedId(navSelectedId);
+            }
+        });
+        builder.setPositiveButton("Logout", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                navDrawerAdapter.setSelectedId(navSelectedId);
+                callLogOutApi();
+            }
+        });
+        builder.show();
     }
 
     private void checkForceDownload() {
@@ -733,7 +773,8 @@ public class DashboardActivity extends BaseActivity implements BottomNavigationV
                 }
 
                 if (welcomeResponse.isStatus()) {
-                    showWelcomeDialog(welcomeResponse.getData());
+                    if (shouldShowWelcome)
+                        showWelcomeDialog(welcomeResponse.getData());
                 }
             }
 

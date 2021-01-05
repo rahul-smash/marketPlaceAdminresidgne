@@ -26,6 +26,7 @@ import com.google.gson.reflect.TypeToken;
 import com.signity.shopkeeperapp.R;
 import com.signity.shopkeeperapp.adapter.SpacesItemDecoration;
 import com.signity.shopkeeperapp.base.BaseActivity;
+import com.signity.shopkeeperapp.dashboard.DashboardActivity;
 import com.signity.shopkeeperapp.model.AddAddressModel;
 import com.signity.shopkeeperapp.model.Product.GetProductData;
 import com.signity.shopkeeperapp.model.Product.Variant;
@@ -501,6 +502,9 @@ public class BookOrderCheckoutActivity extends BaseActivity {
         if (s.isSuccess()) {
             OrderCart.clearOrderCartMap();
             finishAffinity();
+            Bundle bundle = new Bundle();
+            bundle.putBoolean(DashboardActivity.SHOW_WELCOME, false);
+            startActivity(DashboardActivity.getStartIntent(this, bundle));
             AnimUtil.slideFromLeftAnim(BookOrderCheckoutActivity.this);
         } else {
             Toast.makeText(BookOrderCheckoutActivity.this, s.getMessage(), Toast.LENGTH_SHORT).show();
