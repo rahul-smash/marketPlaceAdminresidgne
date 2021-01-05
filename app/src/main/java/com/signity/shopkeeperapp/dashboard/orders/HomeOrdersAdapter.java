@@ -254,15 +254,15 @@ public class HomeOrdersAdapter extends RecyclerView.Adapter<HomeOrdersAdapter.Vi
             linearLayoutAssigned.setVisibility(ordersModel.getRunnerId().equals("0") ? View.GONE : View.VISIBLE);
             linearLayoutAssigned.setClickable(false);
 
+            if (!ordersModel.getOrderFacility().equalsIgnoreCase("delivery")) {
+                linearLayoutAssigned.setVisibility(View.GONE);
+                linearLayoutAssignRunner.setVisibility(View.GONE);
+            }
+
             if (ordersModel.getRunnerDetail() != null) {
                 textViewRunnerName.setText(ordersModel.getRunnerDetail().getFullName());
             } else {
                 linearLayoutAssigned.setVisibility(View.GONE);
-            }
-
-            if (!ordersModel.getOrderFacility().equalsIgnoreCase("delivery")) {
-                linearLayoutAssigned.setVisibility(View.GONE);
-                linearLayoutAssignRunner.setVisibility(View.GONE);
             }
 
             String platform = ordersModel.getPlatform();

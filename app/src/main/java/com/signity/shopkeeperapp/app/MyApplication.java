@@ -44,7 +44,7 @@ public class MyApplication extends Application implements Application.ActivityLi
 //        basicChatClient = new BasicChatClient(this);
         FirebaseApp.initializeApp(this);
 //        FacebookSdk.sdkInitialize(getApplicationContext());
-        AppEventsLogger.activateApp(this);
+//        AppEventsLogger.activateApp(this);
         prefManager = new PrefManager(this);
         initSingletons();
         saveDeviceToken();
