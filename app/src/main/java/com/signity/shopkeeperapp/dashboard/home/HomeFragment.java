@@ -730,7 +730,12 @@ public class HomeFragment extends Fragment implements HomeContentAdapter.HomeCon
 
     @Override
     public void onClickOrder(int position, int pageNumber) {
-        OrdersListModel ordersListModel = ordersListModels.get(position);
+
+        if (homeOrdersAdapter.getOrdersListModels().isEmpty()) {
+            return;
+        }
+
+        OrdersListModel ordersListModel = homeOrdersAdapter.getOrdersListModels().get(position);
         Bundle bundle = new Bundle();
         bundle.putSerializable(OrderDetailActivity.ORDER_OBJECT, ordersListModel);
         startActivity(OrderDetailActivity.getStartIntent(getContext(), bundle));
@@ -743,7 +748,10 @@ public class HomeFragment extends Fragment implements HomeContentAdapter.HomeCon
         rejectOrderDialog.setListener(new RejectOrderDialog.DialogListener() {
             @Override
             public void onSubmit(String message) {
-                OrdersListModel order = ordersListModels.get(position);
+                if (homeOrdersAdapter.getOrdersListModels().isEmpty()) {
+                    return;
+                }
+                OrdersListModel order = homeOrdersAdapter.getOrdersListModels().get(position);
                 updateOrderStatus(HomeOrdersAdapter.OrderType.REJECTED, order.getOrderId(), pageNumber, message);
             }
         });
@@ -752,37 +760,55 @@ public class HomeFragment extends Fragment implements HomeContentAdapter.HomeCon
 
     @Override
     public void onAcceptOrder(int position, int pageNumber) {
-        OrdersListModel order = ordersListModels.get(position);
+        if (homeOrdersAdapter.getOrdersListModels().isEmpty()) {
+            return;
+        }
+        OrdersListModel order = homeOrdersAdapter.getOrdersListModels().get(position);
         updateOrderStatus(HomeOrdersAdapter.OrderType.ACCEPTED, order.getOrderId(), position, "");
     }
 
     @Override
     public void onShipOrder(int position, int pageNumber) {
-        OrdersListModel order = ordersListModels.get(position);
+        if (homeOrdersAdapter.getOrdersListModels().isEmpty()) {
+            return;
+        }
+        OrdersListModel order = homeOrdersAdapter.getOrdersListModels().get(position);
         updateOrderStatus(HomeOrdersAdapter.OrderType.SHIPPED, order.getOrderId(), position, "");
     }
 
     @Override
     public void onReadyToBePicked(int position, int pageNumber) {
-        OrdersListModel order = ordersListModels.get(position);
+        if (homeOrdersAdapter.getOrdersListModels().isEmpty()) {
+            return;
+        }
+        OrdersListModel order = homeOrdersAdapter.getOrdersListModels().get(position);
         updateOrderStatus(HomeOrdersAdapter.OrderType.READY_TO_BE_PICKED, order.getOrderId(), pageNumber, "");
     }
 
     @Override
     public void onDeliverOrder(int position, int pageNumber) {
-        OrdersListModel order = ordersListModels.get(position);
+        if (homeOrdersAdapter.getOrdersListModels().isEmpty()) {
+            return;
+        }
+        OrdersListModel order = homeOrdersAdapter.getOrdersListModels().get(position);
         updateOrderStatus(HomeOrdersAdapter.OrderType.DELIVERED, order.getOrderId(), position, "");
     }
 
     @Override
     public void onTheWayOrder(int position, int pageNumber) {
-        OrdersListModel order = ordersListModels.get(position);
+        if (homeOrdersAdapter.getOrdersListModels().isEmpty()) {
+            return;
+        }
+        OrdersListModel order = homeOrdersAdapter.getOrdersListModels().get(position);
         updateOrderStatus(HomeOrdersAdapter.OrderType.ON_THE_WAY, order.getOrderId(), pageNumber, "");
     }
 
     @Override
     public void onWhatsappMessage(int position) {
-        OrdersListModel order = ordersListModels.get(position);
+        if (homeOrdersAdapter.getOrdersListModels().isEmpty()) {
+            return;
+        }
+        OrdersListModel order = homeOrdersAdapter.getOrdersListModels().get(position);
         String phone = order.getPhone();
 
         if (TextUtils.isEmpty(phone)) {
@@ -828,7 +854,10 @@ public class HomeFragment extends Fragment implements HomeContentAdapter.HomeCon
 
     @Override
     public void onCallCustomer(int position) {
-        OrdersListModel order = ordersListModels.get(position);
+        if (homeOrdersAdapter.getOrdersListModels().isEmpty()) {
+            return;
+        }
+        OrdersListModel order = homeOrdersAdapter.getOrdersListModels().get(position);
         String phone = order.getPhone();
 
         if (TextUtils.isEmpty(phone)) {
