@@ -646,7 +646,7 @@ public class ProductFragment extends Fragment implements View.OnClickListener, P
         final GetProductData productData = productsAdapter.getmData().get(position);
 
         final String storeUrl = AppPreference.getInstance().getStoreUrl();
-        final String mobile = AppPreference.getInstance().getUserMobile();
+        final String mobile = AppPreference.getInstance().getStoreMobile();
 
         if (TextUtils.isEmpty(productData.getImage300200())) {
             String price = "";

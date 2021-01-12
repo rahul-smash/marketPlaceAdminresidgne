@@ -164,8 +164,8 @@ public class DashboardActivity extends BaseActivity implements BottomNavigationV
     private void registerStore() {
 
         Map<String, String> param = new HashMap<>();
-        param.put("email", AppPreference.getInstance().getUserEmail());
-        param.put("number", AppPreference.getInstance().getUserMobile());
+        param.put("email", AppPreference.getInstance().getStoreEmail());
+        param.put("number", AppPreference.getInstance().getStoreMobile());
         param.put("store_id", AppPreference.getInstance().getStoreId());
         param.put("store_title", AppPreference.getInstance().getStoreName());
         param.put("country", "India");

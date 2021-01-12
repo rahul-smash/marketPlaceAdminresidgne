@@ -163,8 +163,8 @@ public class HomeFragment extends Fragment implements HomeContentAdapter.HomeCon
     private void registerStore() {
 
         Map<String, String> param = new HashMap<>();
-        param.put("email", AppPreference.getInstance().getUserEmail());
-        param.put("number", AppPreference.getInstance().getUserMobile());
+        param.put("email", AppPreference.getInstance().getStoreEmail());
+        param.put("number", AppPreference.getInstance().getStoreMobile());
         param.put("store_id", AppPreference.getInstance().getStoreId());
         param.put("store_title", AppPreference.getInstance().getStoreName());
         param.put("country", "India");
@@ -281,6 +281,8 @@ public class HomeFragment extends Fragment implements HomeContentAdapter.HomeCon
 
                     if (storeDashboardResponse.getData().getStore() != null) {
                         AppPreference.getInstance().setStoreType(storeDashboardResponse.getData().getStore().getType());
+                        AppPreference.getInstance().setStoreEmail(storeDashboardResponse.getData().getStore().getContactEmail());
+                        AppPreference.getInstance().setStoreMobile(storeDashboardResponse.getData().getStore().getContactNumber());
                     }
 
                     if (!AppPreference.getInstance().isRegisterMarketStore()) {
@@ -505,8 +507,8 @@ public class HomeFragment extends Fragment implements HomeContentAdapter.HomeCon
         String text = String.format("Hello! You can enjoy your purchase of groceries and house hold products from %s using %s. Contact us on %s or whatsapp %s if you need help with your online order. Order now!",
                 AppPreference.getInstance().getStoreName(),
                 website,
-                AppPreference.getInstance().getUserMobile(),
-                AppPreference.getInstance().getUserMobile());
+                AppPreference.getInstance().getStoreMobile(),
+                AppPreference.getInstance().getStoreMobile());
         shareIntent(text, "Share website");
     }
 
@@ -691,10 +693,10 @@ public class HomeFragment extends Fragment implements HomeContentAdapter.HomeCon
         }
     }
 
-    private void updateOrderStatus(HomeOrdersAdapter.OrderType orderStatus, String orderId, final int position, String message) {
+    private void updateOrderStatus(HomeOrdersAdapter.OrderType orderStatus, String orderId, final int position, String message, String customerId) {
         ProgressDialogUtil.showProgressDialog(getActivity());
         Map<String, String> param = new HashMap<String, String>();
-        param.put("user_id", AppPreference.getInstance().getUserId());
+        param.put("user_id", customerId);
         param.put("order_status", String.valueOf(orderStatus.getStatusId()));
         param.put("order_ids", orderId);
         if (!TextUtils.isEmpty(message)) {
@@ -752,7 +754,7 @@ public class HomeFragment extends Fragment implements HomeContentAdapter.HomeCon
                     return;
                 }
                 OrdersListModel order = homeOrdersAdapter.getOrdersListModels().get(position);
-                updateOrderStatus(HomeOrdersAdapter.OrderType.REJECTED, order.getOrderId(), pageNumber, message);
+                updateOrderStatus(HomeOrdersAdapter.OrderType.REJECTED, order.getOrderId(), pageNumber, message, order.getUserId());
             }
         });
         rejectOrderDialog.show(getChildFragmentManager(), NotificationDialog.TAG);
@@ -764,7 +766,7 @@ public class HomeFragment extends Fragment implements HomeContentAdapter.HomeCon
             return;
         }
         OrdersListModel order = homeOrdersAdapter.getOrdersListModels().get(position);
-        updateOrderStatus(HomeOrdersAdapter.OrderType.ACCEPTED, order.getOrderId(), position, "");
+        updateOrderStatus(HomeOrdersAdapter.OrderType.ACCEPTED, order.getOrderId(), position, "",order.getUserId());
     }
 
     @Override
@@ -773,7 +775,7 @@ public class HomeFragment extends Fragment implements HomeContentAdapter.HomeCon
             return;
         }
         OrdersListModel order = homeOrdersAdapter.getOrdersListModels().get(position);
-        updateOrderStatus(HomeOrdersAdapter.OrderType.SHIPPED, order.getOrderId(), position, "");
+        updateOrderStatus(HomeOrdersAdapter.OrderType.SHIPPED, order.getOrderId(), position, "", order.getUserId());
     }
 
     @Override
@@ -782,7 +784,7 @@ public class HomeFragment extends Fragment implements HomeContentAdapter.HomeCon
             return;
         }
         OrdersListModel order = homeOrdersAdapter.getOrdersListModels().get(position);
-        updateOrderStatus(HomeOrdersAdapter.OrderType.READY_TO_BE_PICKED, order.getOrderId(), pageNumber, "");
+        updateOrderStatus(HomeOrdersAdapter.OrderType.READY_TO_BE_PICKED, order.getOrderId(), pageNumber, "",order.getUserId());
     }
 
     @Override
@@ -791,7 +793,7 @@ public class HomeFragment extends Fragment implements HomeContentAdapter.HomeCon
             return;
         }
         OrdersListModel order = homeOrdersAdapter.getOrdersListModels().get(position);
-        updateOrderStatus(HomeOrdersAdapter.OrderType.DELIVERED, order.getOrderId(), position, "");
+        updateOrderStatus(HomeOrdersAdapter.OrderType.DELIVERED, order.getOrderId(), position, "", order.getUserId());
     }
 
     @Override
@@ -800,7 +802,7 @@ public class HomeFragment extends Fragment implements HomeContentAdapter.HomeCon
             return;
         }
         OrdersListModel order = homeOrdersAdapter.getOrdersListModels().get(position);
-        updateOrderStatus(HomeOrdersAdapter.OrderType.ON_THE_WAY, order.getOrderId(), pageNumber, "");
+        updateOrderStatus(HomeOrdersAdapter.OrderType.ON_THE_WAY, order.getOrderId(), pageNumber, "",order.getUserId());
     }
 
     @Override

@@ -615,7 +615,6 @@ public class ShareProductActivity extends BaseActivity implements FacebookPagesD
 
                     @Override
                     public void onPrepareLoad(Drawable placeHolderDrawable) {
-
                     }
                 });
     }
@@ -708,14 +707,14 @@ public class ShareProductActivity extends BaseActivity implements FacebookPagesD
         }
     }
 
-    private void shareIntent(String extra, String shareTitle, Uri uri, String shareApp) {
+    private void shareIntent(final String extra, String shareTitle, Uri uri, String shareApp) {
 
         if (!TextUtils.isEmpty(extra)) {
-            ClipboardManager cm = (ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
-            cm.setPrimaryClip(ClipData.newPlainText(null, extra));
             runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
+                    ClipboardManager cm = (ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
+                    cm.setPrimaryClip(ClipData.newPlainText(null, extra));
                     Toast.makeText(ShareProductActivity.this, "Product description copied", Toast.LENGTH_SHORT).show();
                 }
             });

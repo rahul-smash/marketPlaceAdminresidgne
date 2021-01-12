@@ -51,8 +51,8 @@ public class AccountFragment extends Fragment {
 
     private void setUpData() {
         textInputEditTextName.setText(AppPreference.getInstance().getUserName());
-        textInputEditTextEmail.setText(AppPreference.getInstance().getUserEmail());
-        textInputEditTextNumber.setText(AppPreference.getInstance().getUserMobile());
+        textInputEditTextEmail.setText(AppPreference.getInstance().getStoreEmail());
+        textInputEditTextNumber.setText(AppPreference.getInstance().getStoreMobile());
     }
 
     @Nullable

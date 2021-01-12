@@ -501,11 +501,11 @@ public class BookOrderCheckoutActivity extends BaseActivity {
     private void handleResponse(AddAddressModel s) {
         if (s.isSuccess()) {
             OrderCart.clearOrderCartMap();
-            finishAffinity();
             Bundle bundle = new Bundle();
             bundle.putBoolean(DashboardActivity.SHOW_WELCOME, false);
             startActivity(DashboardActivity.getStartIntent(this, bundle));
             AnimUtil.slideFromLeftAnim(BookOrderCheckoutActivity.this);
+            finish();
         } else {
             Toast.makeText(BookOrderCheckoutActivity.this, s.getMessage(), Toast.LENGTH_SHORT).show();
         }

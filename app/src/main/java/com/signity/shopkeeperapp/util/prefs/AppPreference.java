@@ -54,6 +54,22 @@ public class AppPreference {
         setUserMobile(userResponse.getPhone());
     }
 
+    public String getStoreMobile() {
+        return mPrefs.getString(PrefConstants.PREF_KEY_STORE_MOBILE_NUMBER, "");
+    }
+
+    public void setStoreMobile(String phone) {
+        mPrefs.edit().putString(PrefConstants.PREF_KEY_STORE_MOBILE_NUMBER, phone).apply();
+    }
+
+    public String getStoreEmail() {
+        return mPrefs.getString(PrefConstants.PREF_KEY_STORE_EMAIL_ID, "");
+    }
+
+    public void setStoreEmail(String email) {
+        mPrefs.edit().putString(PrefConstants.PREF_KEY_STORE_EMAIL_ID, email).apply();
+    }
+
     public String getUserMobile() {
         return mPrefs.getString(PrefConstants.PREF_KEY_LOGIN_USER_MOBILE_NUMBER, "");
     }
@@ -106,6 +122,8 @@ public class AppPreference {
         setStoreUrl(storeResponse.getStoreUrl());
         setPhoneCode(storeResponse.getPhoneCode());
         setBrandId(storeResponse.getBrandId());
+        setStoreEmail(storeResponse.getContactEmail());
+        setStoreMobile(storeResponse.getContactNumber());
     }
 
     public String getCurrency() {

@@ -293,13 +293,17 @@ public class AddProductActivity extends BaseActivity implements SubCategoryDialo
     }
 
     private void setVariantFragment(Map<String, String> map) {
-        FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
-        Bundle bundle = new Bundle();
-        bundle.putParcelableArrayList(VariantFragment.DYNAMIC_LIST, (ArrayList<? extends Parcelable>) dynamicFieldList);
-        variantFragment = VariantFragment.getInstance(bundle);
-        variantFragment.setVariantMap(map);
-        fragmentTransaction.replace(R.id.variant_frame, variantFragment, VariantFragment.TAG);
-        fragmentTransaction.commit();
+        try {
+            FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
+            Bundle bundle = new Bundle();
+            bundle.putParcelableArrayList(VariantFragment.DYNAMIC_LIST, (ArrayList<? extends Parcelable>) dynamicFieldList);
+            variantFragment = VariantFragment.getInstance(bundle);
+            variantFragment.setVariantMap(map);
+            fragmentTransaction.replace(R.id.variant_frame, variantFragment, VariantFragment.TAG);
+            fragmentTransaction.commit();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     private void setUpSpinner() {

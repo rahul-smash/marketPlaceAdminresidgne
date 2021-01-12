@@ -41,4 +41,6 @@ public final class PrefConstants {
     public static final String PREF_KEY_CHANNEL_ID = "PREF_KEY_CHANNEL_ID";
     public static final String PREF_KEY_MARKET_STORE_REGISTER = "PREF_KEY_MARKET_STORE_REGISTER";
     public static final String PREF_KEY_BRAND_ID = "PREF_KEY_BRAND_ID";
+    public static final String PREF_KEY_STORE_MOBILE_NUMBER = "PREF_KEY_STORE_MOBILE_NUMBER";
+    public static final String PREF_KEY_STORE_EMAIL_ID = "PREF_KEY_STORE_EMAIL_ID";
 }

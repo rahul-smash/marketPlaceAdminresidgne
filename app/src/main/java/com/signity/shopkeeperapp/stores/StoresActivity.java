@@ -14,6 +14,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.signity.shopkeeperapp.R;
+import com.signity.shopkeeperapp.adapter.RvGridSpacesItemDecoration;
 import com.signity.shopkeeperapp.base.BaseActivity;
 import com.signity.shopkeeperapp.dashboard.DashboardActivity;
 import com.signity.shopkeeperapp.model.stores.StoresResponse;
@@ -22,6 +23,7 @@ import com.signity.shopkeeperapp.network.NetworkAdaper;
 import com.signity.shopkeeperapp.util.AnimUtil;
 import com.signity.shopkeeperapp.util.Constant;
 import com.signity.shopkeeperapp.util.ProgressDialogUtil;
+import com.signity.shopkeeperapp.util.Util;
 import com.signity.shopkeeperapp.util.prefs.AppPreference;
 
 import java.util.ArrayList;
@@ -77,6 +79,7 @@ public class StoresActivity extends BaseActivity implements StoresAdapter.Stores
         storesAdapter.setStoreResponseList(storeResponseList);
         recyclerView.setAdapter(storesAdapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
+        recyclerView.addItemDecoration(new RvGridSpacesItemDecoration((int) Util.pxFromDp(this, 16)));
     }
 
     private void initViews() {

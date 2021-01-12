@@ -80,15 +80,19 @@ public class RunnerActivity extends BaseActivity implements RunnerAdapter.Runner
                 }
 
                 if (responseDTO.isSuccess()) {
-                    if (responseDTO.getData() != null) {
+                    if (responseDTO.getData() != null && !responseDTO.getData().isEmpty()) {
                         runnerAdapter.setRunnerList(responseDTO.getData());
-                        linearLayoutRunner.setVisibility(responseDTO.getData().isEmpty() ? View.VISIBLE : View.GONE);
+                        linearLayoutRunner.setVisibility(View.GONE);
                     } else {
+                        runnerAdapter.clearData();
+                        linearLayoutRunner.setVisibility(View.VISIBLE);
                         Toast.makeText(RunnerActivity.this, "Data not Found!", Toast.LENGTH_SHORT).show();
                         runnerAdapter.setShowLoading(false);
                     }
 
                 } else {
+                    runnerAdapter.clearData();
+                    linearLayoutRunner.setVisibility(View.VISIBLE);
                     Toast.makeText(RunnerActivity.this, "Data not Found!", Toast.LENGTH_SHORT).show();
                     runnerAdapter.setShowLoading(false);
                 }

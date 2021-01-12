@@ -399,7 +399,7 @@ public class OrderDetailActivity extends BaseActivity implements OrderDetailsAdp
             @Override
             public void onSubmit(String message) {
                 OrdersListModel order = ordersAdapter.getOrdersListModels().get(position);
-                updateOrderStatus(HomeOrdersAdapter.OrderType.REJECTED, order.getOrderId(), pageNumber, message);
+                updateOrderStatus(HomeOrdersAdapter.OrderType.REJECTED, order.getOrderId(), pageNumber, message,order.getUserId());
             }
         });
         rejectOrderDialog.show(getSupportFragmentManager(), NotificationDialog.TAG);
@@ -408,31 +408,31 @@ public class OrderDetailActivity extends BaseActivity implements OrderDetailsAdp
     @Override
     public void onAcceptOrder(int position, int pageNumber) {
         OrdersListModel order = ordersAdapter.getOrdersListModels().get(position);
-        updateOrderStatus(HomeOrdersAdapter.OrderType.ACCEPTED, order.getOrderId(), position, "");
+        updateOrderStatus(HomeOrdersAdapter.OrderType.ACCEPTED, order.getOrderId(), position, "", order.getUserId());
     }
 
     @Override
     public void onShipOrder(int position, int pageNumber) {
         OrdersListModel order = ordersAdapter.getOrdersListModels().get(position);
-        updateOrderStatus(HomeOrdersAdapter.OrderType.SHIPPED, order.getOrderId(), position, "");
+        updateOrderStatus(HomeOrdersAdapter.OrderType.SHIPPED, order.getOrderId(), position, "",order.getUserId());
     }
 
     @Override
     public void onReadyToBePicked(int position, int pageNumber) {
         OrdersListModel order = ordersAdapter.getOrdersListModels().get(position);
-        updateOrderStatus(HomeOrdersAdapter.OrderType.READY_TO_BE_PICKED, order.getOrderId(), pageNumber, "");
+        updateOrderStatus(HomeOrdersAdapter.OrderType.READY_TO_BE_PICKED, order.getOrderId(), pageNumber, "",order.getUserId());
     }
 
     @Override
     public void onDeliverOrder(int position, int pageNumber) {
         OrdersListModel order = ordersAdapter.getOrdersListModels().get(position);
-        updateOrderStatus(HomeOrdersAdapter.OrderType.DELIVERED, order.getOrderId(), position, "");
+        updateOrderStatus(HomeOrdersAdapter.OrderType.DELIVERED, order.getOrderId(), position, "",order.getUserId());
     }
 
     @Override
     public void onTheWayOrder(int position, int pageNumber) {
         OrdersListModel order = ordersAdapter.getOrdersListModels().get(position);
-        updateOrderStatus(HomeOrdersAdapter.OrderType.ON_THE_WAY, order.getOrderId(), pageNumber, "");
+        updateOrderStatus(HomeOrdersAdapter.OrderType.ON_THE_WAY, order.getOrderId(), pageNumber, "",order.getUserId());
     }
 
     @Override
@@ -535,10 +535,10 @@ public class OrderDetailActivity extends BaseActivity implements OrderDetailsAdp
         });
     }
 
-    private void updateOrderStatus(HomeOrdersAdapter.OrderType orderStatus, String orderId, final int position, String message) {
+    private void updateOrderStatus(HomeOrdersAdapter.OrderType orderStatus, String orderId, final int position, String message, String customerId) {
         ProgressDialogUtil.showProgressDialog(this);
         Map<String, String> param = new HashMap<String, String>();
-        param.put("user_id", AppPreference.getInstance().getUserId());
+        param.put("user_id", customerId);
         param.put("order_status", String.valueOf(orderStatus.getStatusId()));
         param.put("order_ids", orderId);
         if (!TextUtils.isEmpty(message)) {

@@ -395,7 +395,7 @@ public class ShareCreativeActivity extends BaseActivity implements FacebookPages
             file = new File(filePath);
             Bitmap bitmap = BitmapFactory.decodeFile(file.getAbsolutePath());
             if (userCreative) {
-                processedBitMap(BitmapFactory.decodeFile(filePath), AppPreference.getInstance().getStoreName(), AppPreference.getInstance().getLocation(), AppPreference.getInstance().getUserMobile());
+                processedBitMap(BitmapFactory.decodeFile(filePath), AppPreference.getInstance().getStoreName(), AppPreference.getInstance().getLocation(), AppPreference.getInstance().getStoreMobile());
             } else {
                 imageView.setImageBitmap(BitmapFactory.decodeFile(filePath));
                 imageView.setScaleType(ImageView.ScaleType.FIT_CENTER);
@@ -429,7 +429,7 @@ public class ShareCreativeActivity extends BaseActivity implements FacebookPages
                             runOnUiThread(new Runnable() {
                                 @Override
                                 public void run() {
-                                    processedBitMap(resource, AppPreference.getInstance().getStoreName(), AppPreference.getInstance().getLocation(), AppPreference.getInstance().getUserMobile());
+                                    processedBitMap(resource, AppPreference.getInstance().getStoreName(), AppPreference.getInstance().getLocation(), AppPreference.getInstance().getStoreMobile());
                                 }
                             });
                             return false;
@@ -444,7 +444,7 @@ public class ShareCreativeActivity extends BaseActivity implements FacebookPages
             }
 
             if (file != null) {
-                processedBitMap(BitmapFactory.decodeFile(file.getAbsolutePath()), AppPreference.getInstance().getStoreName(), AppPreference.getInstance().getLocation(), AppPreference.getInstance().getUserMobile());
+                processedBitMap(BitmapFactory.decodeFile(file.getAbsolutePath()), AppPreference.getInstance().getStoreName(), AppPreference.getInstance().getLocation(), AppPreference.getInstance().getStoreMobile());
             }
         }
 

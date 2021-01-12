@@ -192,14 +192,14 @@ public class ProductShareActivity extends BaseActivity implements ProductsShareA
         });
     }
 
-    private void shareIntent(String extra, String shareTitle, Uri uri, String shareApp) {
+    private void shareIntent(final String extra, String shareTitle, Uri uri, String shareApp) {
 
         if (!TextUtils.isEmpty(extra)) {
-            ClipboardManager cm = (ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
-            cm.setPrimaryClip(ClipData.newPlainText(null, extra));
             runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
+                    ClipboardManager cm = (ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
+                    cm.setPrimaryClip(ClipData.newPlainText(null, extra));
                     Toast.makeText(ProductShareActivity.this, "Product description copied", Toast.LENGTH_SHORT).show();
                 }
             });
@@ -292,7 +292,7 @@ public class ProductShareActivity extends BaseActivity implements ProductsShareA
         final GetProductData productData = productsAdapter.getmData().get(position);
 
         final String storeUrl = AppPreference.getInstance().getStoreUrl();
-        final String mobile = AppPreference.getInstance().getUserMobile();
+        final String mobile = AppPreference.getInstance().getStoreMobile();
 
         if (TextUtils.isEmpty(productData.getImage300200())) {
             String price = "";
@@ -399,7 +399,7 @@ public class ProductShareActivity extends BaseActivity implements ProductsShareA
         final GetProductData productData = productsAdapter.getmData().get(position);
 
         final String storeUrl = AppPreference.getInstance().getStoreUrl();
-        final String mobile = AppPreference.getInstance().getUserMobile();
+        final String mobile = AppPreference.getInstance().getStoreMobile();
 
         if (!TextUtils.isEmpty(productData.getImage())) {
             String price = "";
@@ -466,7 +466,7 @@ public class ProductShareActivity extends BaseActivity implements ProductsShareA
     public void onClickProduct(GetProductData productData) {
 
         final String storeUrl = AppPreference.getInstance().getStoreUrl();
-        final String mobile = AppPreference.getInstance().getUserMobile();
+        final String mobile = AppPreference.getInstance().getStoreMobile();
 
         if (!TextUtils.isEmpty(productData.getImage())) {
             String price = "";

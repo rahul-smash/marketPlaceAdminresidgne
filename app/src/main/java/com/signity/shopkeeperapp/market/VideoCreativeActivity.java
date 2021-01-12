@@ -421,7 +421,7 @@ public class VideoCreativeActivity extends BaseActivity implements FacebookPages
                             runOnUiThread(new Runnable() {
                                 @Override
                                 public void run() {
-                                    processedBitMap(resource, AppPreference.getInstance().getStoreName(), AppPreference.getInstance().getLocation(), AppPreference.getInstance().getUserMobile());
+                                    processedBitMap(resource, AppPreference.getInstance().getStoreName(), AppPreference.getInstance().getLocation(), AppPreference.getInstance().getStoreMobile());
                                 }
                             });
                             return false;

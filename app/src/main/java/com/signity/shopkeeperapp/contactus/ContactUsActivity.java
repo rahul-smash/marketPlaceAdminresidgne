@@ -102,8 +102,8 @@ public class ContactUsActivity extends BaseActivity {
 
     private void populateData() {
         textInputEditTextName.setText(AppPreference.getInstance().getUserName());
-        textInputEditTextMobile.setText(AppPreference.getInstance().getUserMobile());
-        textInputEditTextEmail.setText(AppPreference.getInstance().getUserEmail());
+        textInputEditTextMobile.setText(AppPreference.getInstance().getStoreMobile());
+        textInputEditTextEmail.setText(AppPreference.getInstance().getStoreEmail());
     }
 
     private void setUpSpinner() {

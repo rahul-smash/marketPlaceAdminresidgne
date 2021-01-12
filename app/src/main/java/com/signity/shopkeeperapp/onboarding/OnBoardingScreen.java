@@ -15,6 +15,8 @@ import androidx.core.content.res.ResourcesCompat;
 import androidx.fragment.app.Fragment;
 
 import com.signity.shopkeeperapp.R;
+import com.signity.shopkeeperapp.util.Util;
+import com.squareup.picasso.Picasso;
 
 /**
  * OnBoardingScreen
@@ -65,8 +67,10 @@ public class OnBoardingScreen extends Fragment {
     private void setUp() {
         OnBoarding type = OnBoarding.values()[id];
 
-        imageViewBackground.setImageDrawable(ResourcesCompat.getDrawable(getContext().getResources(), type.getBackground(), null));
-        imageViewTop.setImageDrawable(ResourcesCompat.getDrawable(getContext().getResources(), type.getMainImage(), null));
+        imageViewBackground.setImageBitmap(Util.decodeSampledBitmapFromResource(getContext().getResources(),type.getBackground(),500,1000,false));
+        imageViewTop.setImageBitmap(Util.decodeSampledBitmapFromResource(getContext().getResources(),type.getMainImage(),500,500,false));
+//        imageViewBackground.setImageDrawable(ResourcesCompat.getDrawable(getContext().getResources(), type.getBackground(), null));
+//        imageViewTop.setImageDrawable(ResourcesCompat.getDrawable(getContext().getResources(), type.getMainImage(), null));
 
         textViewTitle.setText(type.getTitle());
         textViewSuburb.setText(type.getSuburb());

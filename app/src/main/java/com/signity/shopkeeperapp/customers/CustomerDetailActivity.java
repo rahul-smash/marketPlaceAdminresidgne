@@ -510,7 +510,7 @@ public class CustomerDetailActivity extends BaseActivity implements HomeOrdersAd
     private void updateOrderStatus(HomeOrdersAdapter.OrderType orderStatus, String orderId, final int pageNumber, String message) {
         ProgressDialogUtil.showProgressDialog(this);
         Map<String, String> param = new HashMap<String, String>();
-        param.put("user_id", AppPreference.getInstance().getUserId());
+        param.put("user_id", customerId);
         param.put("order_status", String.valueOf(orderStatus.getStatusId()));
         param.put("order_ids", orderId);
         if (!TextUtils.isEmpty(message)) {
