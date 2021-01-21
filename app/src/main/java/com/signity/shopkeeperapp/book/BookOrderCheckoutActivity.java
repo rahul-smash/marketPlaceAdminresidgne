@@ -505,7 +505,7 @@ public class BookOrderCheckoutActivity extends BaseActivity {
             bundle.putBoolean(DashboardActivity.SHOW_WELCOME, false);
             startActivity(DashboardActivity.getStartIntent(this, bundle));
             AnimUtil.slideFromLeftAnim(BookOrderCheckoutActivity.this);
-            finish();
+//            finish();
         } else {
             Toast.makeText(BookOrderCheckoutActivity.this, s.getMessage(), Toast.LENGTH_SHORT).show();
         }

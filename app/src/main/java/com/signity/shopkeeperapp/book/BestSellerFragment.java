@@ -171,9 +171,9 @@ public class BestSellerFragment extends Fragment implements OrderCartListener {
     @Override
     public void onResume() {
         super.onResume();
-        if (OrderCart.isCartEmpty()) {
-            onCloseSearch();
-        }
+//        if (OrderCart.isCartEmpty()) {
+//            onCloseSearch();
+//        }
     }
 
     @Nullable

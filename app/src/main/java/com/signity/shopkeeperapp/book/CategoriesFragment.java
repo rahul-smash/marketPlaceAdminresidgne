@@ -63,9 +63,9 @@ public class CategoriesFragment extends Fragment implements ExpandableCategories
     @Override
     public void onResume() {
         super.onResume();
-        if (OrderCart.isCartEmpty()) {
-            onCloseSearch();
-        }
+//        if (OrderCart.isCartEmpty()) {
+//            onCloseSearch();
+//        }
     }
 
     private void initView(View view) {
