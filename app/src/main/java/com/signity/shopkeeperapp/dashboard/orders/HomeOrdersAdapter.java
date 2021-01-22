@@ -270,7 +270,7 @@ public class HomeOrdersAdapter extends RecyclerView.Adapter<HomeOrdersAdapter.Vi
                 textViewOrderPlatform.setVisibility(View.VISIBLE);
                 if (platform.equalsIgnoreCase("admin_android")) {
                     platform = "Admin App Order";
-                } else if (platform.equalsIgnoreCase("web")) {
+                } else if (platform.equalsIgnoreCase("web") || platform.equalsIgnoreCase("pwa")) {
                     platform = "Web Order";
                 } else {
                     platform = "Customer App Order";
