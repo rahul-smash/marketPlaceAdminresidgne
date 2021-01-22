@@ -288,6 +288,7 @@ public class DashboardActivity extends BaseActivity implements BottomNavigationV
     protected void onResume() {
         super.onResume();
         navDrawerAdapter.setSelectedId(navSelectedId);
+        bottomNavigationView.setSelectedItemId(bottomNavigationView.getSelectedItemId());
         checkForceDownload();
         setUpStoreData();
     }

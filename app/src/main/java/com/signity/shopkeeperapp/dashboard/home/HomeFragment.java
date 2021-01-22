@@ -504,12 +504,16 @@ public class HomeFragment extends Fragment implements HomeContentAdapter.HomeCon
             Toast.makeText(getContext(), "Url not available", Toast.LENGTH_SHORT).show();
             return;
         }
-        String text = String.format("Hello! You can enjoy your purchase of groceries and house hold products from %s using %s. Contact us on %s or whatsapp %s if you need help with your online order. Order now!",
-                AppPreference.getInstance().getStoreName(),
-                website,
-                AppPreference.getInstance().getStoreMobile(),
-                AppPreference.getInstance().getStoreMobile());
-        shareIntent(text, "Share website");
+        String line1 = "";
+
+        if (AppPreference.getInstance().getStoreType().equalsIgnoreCase("restaurant")) {
+            line1 = String.format("Hello! You can enjoy your food at home from %s using %s. ", AppPreference.getInstance().getStoreName(), website);
+        } else {
+            line1 = String.format("Hello! You can enjoy your purchase of groceries from %s using %s. ", AppPreference.getInstance().getStoreName(), website);
+        }
+        String line2 = String.format("Contact us on %s or whatsapp %s if you need help with your online order. Order now!", AppPreference.getInstance().getStoreMobile(), AppPreference.getInstance().getStoreMobile());
+
+        shareIntent(line1.concat(line2), "Share website");
     }
 
     private void openMapShare() {
