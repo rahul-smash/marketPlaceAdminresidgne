@@ -212,6 +212,19 @@ public class AddProductActivity extends BaseActivity implements SubCategoryDialo
         editTextTag.setText(productData.getTags());
         editTextTax.setText(productData.getGstTaxRate());
         switchInEx.setChecked(!productData.getGstTaxType().equalsIgnoreCase("inclusive"));
+
+        if (!TextUtils.isEmpty(productData.getNutrient())) {
+            checkBoxDisplayVegNonVeg.setChecked(true);
+            if (productData.getNutrient().equalsIgnoreCase("non-veg")) {
+                foodType = "non-veg";
+                radioGroupVegNonVeg.check(R.id.mrb_non_veg);
+            } else {
+                foodType = "veg";
+                radioGroupVegNonVeg.check(R.id.mrb_veg);
+            }
+        } else {
+            foodType = "";
+        }
     }
 
     private void setCategorySubCategory() {
@@ -428,6 +441,9 @@ public class AddProductActivity extends BaseActivity implements SubCategoryDialo
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 radioGroupVegNonVeg.setVisibility(isChecked ? View.VISIBLE : View.GONE);
+                if (!isChecked) {
+                    foodType = "";
+                }
             }
         });
 

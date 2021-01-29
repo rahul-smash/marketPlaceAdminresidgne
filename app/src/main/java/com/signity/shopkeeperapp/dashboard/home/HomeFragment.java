@@ -277,6 +277,10 @@ public class HomeFragment extends Fragment implements HomeContentAdapter.HomeCon
                         chipDelivered.setText(String.format("%d | Delivered", storeDashboardResponse.getData().getDashboardOrdersData().getDeliveredOrders()));
                         chipRejected.setText(String.format("%d | Rejected", storeDashboardResponse.getData().getDashboardOrdersData().getRejectedOrders()));
                         chipCancelled.setText(String.format("%d | Cancelled", storeDashboardResponse.getData().getDashboardOrdersData().getCancelOrders()));
+
+                        if (listener != null) {
+                            listener.onUpdateOrdersCount(storeDashboardResponse.getData().getDashboardOrdersData().getDueOrders());
+                        }
                     }
 
                     if (storeDashboardResponse.getData().getStore() != null) {
@@ -291,9 +295,6 @@ public class HomeFragment extends Fragment implements HomeContentAdapter.HomeCon
                     }
 
                     homeContentAdapter.setUpData(storeDashboardResponse.getData());
-                    if (listener != null) {
-                        listener.onUpdateOrdersCount(storeDashboardResponse.getData().getActiveOrders());
-                    }
                 } else {
                     Toast.makeText(getContext(), storeDashboardResponse.getMessage(), Toast.LENGTH_SHORT).show();
                 }
