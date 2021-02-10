@@ -258,11 +258,16 @@ public class VariantFragment extends Fragment {
     }
 
     private void calculatePrice(String mrp, String discount) {
-        double doubleMrp = Double.parseDouble(mrp);
-        double doubleDiscount = Double.parseDouble(discount);
+        try {
+            double doubleMrp = Double.parseDouble(mrp);
+            double doubleDiscount = Double.parseDouble(discount);
 
-        double price = doubleMrp - (doubleMrp * doubleDiscount / 100);
-        updatePriceField(price);
+            double price = doubleMrp - (doubleMrp * doubleDiscount / 100);
+            updatePriceField(price);
+        } catch (NumberFormatException e) {
+            Toast.makeText(getContext(), "Invalid", Toast.LENGTH_SHORT).show();
+            e.printStackTrace();
+        }
     }
 
     private void updatePriceField(double price) {

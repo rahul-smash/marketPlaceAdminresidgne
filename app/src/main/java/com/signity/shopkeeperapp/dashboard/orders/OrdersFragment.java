@@ -35,6 +35,8 @@ import com.google.android.material.chip.Chip;
 import com.google.android.material.chip.ChipGroup;
 import com.signity.shopkeeperapp.R;
 import com.signity.shopkeeperapp.adapter.SpacesItemDecoration;
+import com.signity.shopkeeperapp.dashboard.DashboardActivity;
+import com.signity.shopkeeperapp.dashboard.home.HomeFragment;
 import com.signity.shopkeeperapp.model.OrdersListModel;
 import com.signity.shopkeeperapp.model.SetOrdersModel;
 import com.signity.shopkeeperapp.model.dashboard.StoreDashboardResponse;
@@ -77,6 +79,7 @@ public class OrdersFragment extends Fragment implements HomeOrdersAdapter.Orders
     private int pageNumberToRefresh;
     private ChipGroup chipGroup;
     private HorizontalScrollView horizontal;
+    private HomeFragment.HomeFragmentListener listener;
     private RecyclerView.OnScrollListener recyclerViewOnScrollListener = new RecyclerView.OnScrollListener() {
         @Override
         public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
@@ -107,6 +110,14 @@ public class OrdersFragment extends Fragment implements HomeOrdersAdapter.Orders
         return fragment;
     }
 
+    @Override
+    public void onAttach(@NonNull Context context) {
+        super.onAttach(context);
+        if (context instanceof DashboardActivity) {
+            listener = (HomeFragment.HomeFragmentListener) context;
+        }
+    }
+
     public void storeDashboard() {
         Map<String, Integer> param = new HashMap<>();
         param.put("days_filder", 1);
@@ -134,6 +145,10 @@ public class OrdersFragment extends Fragment implements HomeOrdersAdapter.Orders
                         chipDelivered.setText(String.format("%d | Delivered", storeDashboardResponse.getData().getDashboardOrdersData().getDeliveredOrders()));
                         chipRejected.setText(String.format("%d | Rejected", storeDashboardResponse.getData().getDashboardOrdersData().getRejectedOrders()));
                         chipCancelled.setText(String.format("%d | Cancelled", storeDashboardResponse.getData().getDashboardOrdersData().getCancelOrders()));
+
+                        if (listener != null) {
+                            listener.onUpdateOrdersCount(storeDashboardResponse.getData().getDashboardOrdersData().getDueOrders());
+                        }
                     }
                 } else {
                     Toast.makeText(getContext(), storeDashboardResponse.getMessage(), Toast.LENGTH_SHORT).show();
@@ -538,7 +553,7 @@ public class OrdersFragment extends Fragment implements HomeOrdersAdapter.Orders
             @Override
             public void onSubmit(String message) {
                 OrdersListModel order = ordersAdapter.getOrdersListModels().get(position);
-                updateOrderStatus(HomeOrdersAdapter.OrderType.REJECTED, order.getOrderId(), pageNumber, message,order.getUserId());
+                updateOrderStatus(HomeOrdersAdapter.OrderType.REJECTED, order.getOrderId(), pageNumber, message, order.getUserId());
             }
         });
         rejectOrderDialog.show(getChildFragmentManager(), NotificationDialog.TAG);
@@ -568,7 +583,7 @@ public class OrdersFragment extends Fragment implements HomeOrdersAdapter.Orders
             return;
         }
         OrdersListModel order = ordersAdapter.getOrdersListModels().get(position);
-        updateOrderStatus(HomeOrdersAdapter.OrderType.READY_TO_BE_PICKED, order.getOrderId(), pageNumber, "",order.getUserId());
+        updateOrderStatus(HomeOrdersAdapter.OrderType.READY_TO_BE_PICKED, order.getOrderId(), pageNumber, "", order.getUserId());
     }
 
     @Override
@@ -577,7 +592,7 @@ public class OrdersFragment extends Fragment implements HomeOrdersAdapter.Orders
             return;
         }
         OrdersListModel order = ordersAdapter.getOrdersListModels().get(position);
-        updateOrderStatus(HomeOrdersAdapter.OrderType.DELIVERED, order.getOrderId(), pageNumber, "",order.getUserId());
+        updateOrderStatus(HomeOrdersAdapter.OrderType.DELIVERED, order.getOrderId(), pageNumber, "", order.getUserId());
     }
 
     @Override
@@ -586,7 +601,7 @@ public class OrdersFragment extends Fragment implements HomeOrdersAdapter.Orders
             return;
         }
         OrdersListModel order = ordersAdapter.getOrdersListModels().get(position);
-        updateOrderStatus(HomeOrdersAdapter.OrderType.ON_THE_WAY, order.getOrderId(), pageNumber, "",order.getUserId());
+        updateOrderStatus(HomeOrdersAdapter.OrderType.ON_THE_WAY, order.getOrderId(), pageNumber, "", order.getUserId());
     }
 
     @Override

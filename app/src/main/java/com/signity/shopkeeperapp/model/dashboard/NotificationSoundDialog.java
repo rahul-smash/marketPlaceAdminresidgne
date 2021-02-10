@@ -93,12 +93,15 @@ public class NotificationSoundDialog extends BaseDialogFragment {
         seekbar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
             public void onProgressChanged(SeekBar seekBar, int i, boolean b) {
-
-                if (i<1){
-                    seekBar.setProgress(1);
-                    return;
+                try {
+                    if (i<1){
+                        seekBar.setProgress(1);
+                        return;
+                    }
+                    audioManager.setStreamVolume(AudioManager.STREAM_RING, i, 0);
+                }catch (Exception e){
+                    e.printStackTrace();
                 }
-                audioManager.setStreamVolume(AudioManager.STREAM_RING, i, 0);
             }
 
             @Override

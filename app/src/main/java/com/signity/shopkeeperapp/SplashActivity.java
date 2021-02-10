@@ -7,6 +7,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.view.View;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -79,8 +80,7 @@ public class SplashActivity extends AppCompatActivity {
         }
 
         if (!Util.checkIntenetConnection(this)) {
-            internetDialog();
-            return;
+            Toast.makeText(this, "No Internet Connection", Toast.LENGTH_SHORT).show();
         }
 
         if (AppPreference.getInstance().isLoggedIn() == Constant.Mode.LOGGED_IN) {

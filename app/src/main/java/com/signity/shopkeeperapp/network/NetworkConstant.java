@@ -12,7 +12,8 @@ public class NetworkConstant {
     public static final String APISTORE_ORDER = "/v1";
 
 
-   public static final String BASE = "http://devmarketplace.restroapp.com";     // staging Url
+//   public static final String BASE = "http://devmarketplace.restroapp.com";     // staging Url
+   public static final String BASE = "https://marketplace.restroapp.com";     // live Url
 
 
 
