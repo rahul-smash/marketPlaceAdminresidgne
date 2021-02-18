@@ -460,7 +460,7 @@ public class DeliveryFragment extends Fragment {
             CustomerAddressResponse response = data.getCustomerAddress().get(0);
 
             textViewCustomerState.setText(String.format("%s, %s", response.getCity(), response.getState()));
-            textViewCustomerAddress.setText(String.format("%s, %s", response.getAddress(), response.getAreaName()));
+            textViewCustomerAddress.setText(String.format("%s", response.getAddress()));
             textViewCustomerPincode.setText(response.getZipcode());
 
             if (TextUtils.isEmpty(response.getCity()) && TextUtils.isEmpty(response.getState())) {
@@ -536,7 +536,7 @@ public class DeliveryFragment extends Fragment {
                         linearLayoutDeliveryAddress.setVisibility(View.VISIBLE);
 
                         textViewCustomerState.setText(String.format("%s, %s", customerCity, customerState));
-                        textViewCustomerAddress.setText(String.format("%s, %s", customerAddress, customerAreaName));
+                        textViewCustomerAddress.setText(String.format("%s", customerAddress));
                         textViewCustomerPincode.setText(customerZipcode);
 
                         if (TextUtils.isEmpty(customerCity) && TextUtils.isEmpty(customerState)) {
