@@ -299,6 +299,12 @@ public class CustomerDetailActivity extends BaseActivity implements HomeOrdersAd
     }
 
     @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        AnimUtil.slideFromLeftAnim(this);
+    }
+
+    @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         return super.onCreateOptionsMenu(menu);
     }

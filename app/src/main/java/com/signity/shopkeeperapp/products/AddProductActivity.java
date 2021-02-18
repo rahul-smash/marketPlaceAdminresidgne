@@ -514,7 +514,7 @@ public class AddProductActivity extends BaseActivity implements SubCategoryDialo
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED) {
             openGallery();
         } else {
-            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.READ_EXTERNAL_STORAGE}, REQUEST_PERMISSION);
+            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.READ_EXTERNAL_STORAGE}, GALLERY_PERMISSION);
         }
     }
 
@@ -900,7 +900,9 @@ public class AddProductActivity extends BaseActivity implements SubCategoryDialo
                     break;
                 case UCrop.REQUEST_CROP:
                     final Uri resultUri = UCrop.getOutput(data);
-                    uploadImage(FileUtils.getPath(this, resultUri));
+                    if (resultUri != null) {
+                        uploadImage(FileUtils.getPath(this, resultUri));
+                    }
                     break;
                 default:
                     if (data.getExtras() == null) {

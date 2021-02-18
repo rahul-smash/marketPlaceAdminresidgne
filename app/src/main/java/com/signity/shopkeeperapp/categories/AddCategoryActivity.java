@@ -357,7 +357,7 @@ public class AddCategoryActivity extends BaseActivity implements SubCategoryAdap
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED) {
             openGallery();
         } else {
-            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.READ_EXTERNAL_STORAGE}, REQUEST_PERMISSION);
+            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.READ_EXTERNAL_STORAGE}, GALLERY_PERMISSION);
         }
     }
 
@@ -394,7 +394,9 @@ public class AddCategoryActivity extends BaseActivity implements SubCategoryAdap
                     }
 
                     final Uri resultUri = UCrop.getOutput(data);
-                    uploadImage(FileUtils.getPath(this, resultUri));
+                    if (resultUri != null) {
+                        uploadImage(FileUtils.getPath(this, resultUri));
+                    }
                     break;
             }
         }

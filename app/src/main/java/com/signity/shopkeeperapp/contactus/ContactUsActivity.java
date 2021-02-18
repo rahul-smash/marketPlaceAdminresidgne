@@ -46,6 +46,7 @@ import com.signity.shopkeeperapp.util.Constant;
 import com.signity.shopkeeperapp.util.ProgressDialogUtil;
 import com.signity.shopkeeperapp.util.Util;
 import com.signity.shopkeeperapp.util.prefs.AppPreference;
+import com.yalantis.ucrop.UCrop;
 import com.yalantis.ucrop.util.FileUtils;
 
 import java.io.File;
@@ -289,7 +290,7 @@ public class ContactUsActivity extends BaseActivity {
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED) {
             openGallery();
         } else {
-            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.READ_EXTERNAL_STORAGE}, REQUEST_PERMISSION);
+            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.READ_EXTERNAL_STORAGE}, GALLERY_PERMISSION);
         }
     }
 
@@ -376,14 +377,32 @@ public class ContactUsActivity extends BaseActivity {
         if (resultCode == RESULT_OK) {
             switch (requestCode) {
                 case CAMERA_REQUEST:
-                    uploadImage(FileUtils.getPath(this, cameraImageUri));
+                    // Crash Fixed
+//                    uploadImage(FileUtils.getPath(this, cameraImageUri));
+                    cropImage(cameraImageUri);
                     break;
                 case PICK_REQUEST:
                     Uri uri = data.getData();
-                    uploadImage(FileUtils.getPath(this, uri));
+                    if (uri != null) {
+                        cropImage(uri);
+                    }
+                    break;
+                case UCrop.REQUEST_CROP:
+                    final Uri resultUri = UCrop.getOutput(data);
+                    if (resultUri != null)
+                        uploadImage(FileUtils.getPath(this, resultUri));
                     break;
             }
         }
+    }
+
+    private void cropImage(Uri uri) {
+        File fileCamera = new File(getExternalFilesDir("VauleAppz"), CONTACT_US.concat("out.jpg"));
+        Uri outCamera = Uri.fromFile(fileCamera);
+        UCrop.of(uri, outCamera)
+                .useSourceImageAspectRatio()
+                .withMaxResultSize(500, 500)
+                .start(this);
     }
 
     @Override
