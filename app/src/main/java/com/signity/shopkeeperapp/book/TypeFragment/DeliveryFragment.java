@@ -832,6 +832,10 @@ public class DeliveryFragment extends Fragment {
                     @Override
                     public void success(DeliverySlotDTO slotDTO, Response response) {
 
+                        if (!isAdded()) {
+                            return;
+                        }
+
                         if (slotDTO.isSuccess()) {
                             boolean isSlotSelected = false;
 
@@ -856,9 +860,15 @@ public class DeliveryFragment extends Fragment {
 
                                 deliveryTimeAdapter.setTimeList(slotDTO.getData().getDateTimeCollection().get(selectedDateSlot).getTimeslot());
                                 deliveryTimeAdapter.setSelectedIndex(selectedTimeSlot);
+
+                                if (slotDTO.getData() != null) {
+                                    if (linearLayoutDeliverySlot != null)
+                                        linearLayoutDeliverySlot.setVisibility(slotDTO.getData().getIs24x7Open().equals("1") ? View.GONE : View.VISIBLE);
+                                }
                             }
                         } else {
-                            linearLayoutDeliverySlot.setVisibility(View.GONE);
+                            if (linearLayoutDeliverySlot != null)
+                                linearLayoutDeliverySlot.setVisibility(View.GONE);
                         }
                     }
 
