@@ -7,7 +7,7 @@
     <ImageView
         android:id="@+id/imageView4"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="160dp"
         android:scaleType="centerCrop"
         android:src="@drawable/companynamebg"
         app:layout_constraintEnd_toEndOf="parent"
@@ -46,6 +46,13 @@
             android:layout_height="wrap_content"
             android:text=""
             android:textColor="@color/colorBackgroundGrey" />
+
+        <com.google.android.material.switchmaterial.SwitchMaterial
+            android:id="@+id/switch_store"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:thumbTint="@color/switch_selector_dashboard"
+            app:useMaterialThemeColors="true" />
 
     </LinearLayout>
 
