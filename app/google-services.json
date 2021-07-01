@@ -7,9 +7,199 @@
   "client": [
     {
       "client_info": {
+        "mobilesdk_app_id": "1:810385916032:android:c8aa9a68c7208a9a5c2665",
+        "android_client_info": {
+          "package_name": "com.aagyo"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "810385916032-b508ei225ppl672jrb82fttlbcgfa3js.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAZBy1iClctbxpJ4QM_oC9M9JtVrZC7oqU"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "810385916032-b508ei225ppl672jrb82fttlbcgfa3js.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:810385916032:android:41694e6f3a6d66805c2665",
+        "android_client_info": {
+          "package_name": "com.guzty.marketplace"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "810385916032-jg9vfbr5esjm4lf38kg49m5ic2ud1ff3.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.guzty.marketplace",
+            "certificate_hash": "27867ed4396aa35f8112256906c05ec41af0a07e"
+          }
+        },
+        {
+          "client_id": "810385916032-b508ei225ppl672jrb82fttlbcgfa3js.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAZBy1iClctbxpJ4QM_oC9M9JtVrZC7oqU"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "810385916032-b508ei225ppl672jrb82fttlbcgfa3js.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:810385916032:android:f7944460187421325c2665",
+        "android_client_info": {
+          "package_name": "com.namastekisan.marketplaceAdmin"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "810385916032-b508ei225ppl672jrb82fttlbcgfa3js.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAZBy1iClctbxpJ4QM_oC9M9JtVrZC7oqU"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "810385916032-b508ei225ppl672jrb82fttlbcgfa3js.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:810385916032:android:49070ce260c18ca35c2665",
+        "android_client_info": {
+          "package_name": "com.signity.localstarmarketplace"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "810385916032-b508ei225ppl672jrb82fttlbcgfa3js.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAZBy1iClctbxpJ4QM_oC9M9JtVrZC7oqU"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "810385916032-b508ei225ppl672jrb82fttlbcgfa3js.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
         "mobilesdk_app_id": "1:810385916032:android:24020276166c86bc5c2665",
         "android_client_info": {
           "package_name": "com.signity.marketplaceadmin"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "810385916032-f9o653sitsc0sc7jaisqao1s5qvboj8b.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.signity.marketplaceadmin",
+            "certificate_hash": "c2106968e57610b4221ef9aa153407a0ad894064"
+          }
+        },
+        {
+          "client_id": "810385916032-b508ei225ppl672jrb82fttlbcgfa3js.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAZBy1iClctbxpJ4QM_oC9M9JtVrZC7oqU"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "810385916032-b508ei225ppl672jrb82fttlbcgfa3js.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:810385916032:android:50b650646a0af7c45c2665",
+        "android_client_info": {
+          "package_name": "com.signity.samvruthaadmin"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "810385916032-b508ei225ppl672jrb82fttlbcgfa3js.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAZBy1iClctbxpJ4QM_oC9M9JtVrZC7oqU"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "810385916032-b508ei225ppl672jrb82fttlbcgfa3js.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:810385916032:android:7548ad14059a169d5c2665",
+        "android_client_info": {
+          "package_name": "com.valueappz.brandmarketplaceRunner"
         }
       },
       "oauth_client": [
