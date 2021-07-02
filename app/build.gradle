@@ -20,7 +20,7 @@ android {
     defaultConfig {
         // applicationId 'com.signity.valueappz'
         // applicationId 'com.signity.valueadminrestro'//Changes as per sachin mittal
-        applicationId 'com.aagyo'
+        applicationId 'com.aagyo_admin'
         minSdkVersion 19
         targetSdkVersion 29
         versionCode 1

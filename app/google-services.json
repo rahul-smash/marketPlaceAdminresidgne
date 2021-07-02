@@ -1,34 +1,305 @@
 {
   "project_info": {
-    "project_number": "810385916032",
-    "project_id": "marketplace-admin-764d3",
-    "storage_bucket": "marketplace-admin-764d3.appspot.com"
+    "project_number": "1057884711320",
+    "project_id": "flutter-valueappz-8",
+    "storage_bucket": "flutter-valueappz-8.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:810385916032:android:c8aa9a68c7208a9a5c2665",
+        "mobilesdk_app_id": "1:1057884711320:android:9a5b1ff9d2df08452463ed",
+        "android_client_info": {
+          "package_name": "com.FoodCity"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1057884711320-4nr4r5297r4us1goufkqaf8lgij2mk1j.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.FoodCity",
+            "certificate_hash": "e3746660b1a422503eedaec25e29fb5bb450ff42"
+          }
+        },
+        {
+          "client_id": "1057884711320-cb1dj0f0gglcigtidtk4i0s3opknrsp6.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDsYG8YVz0bNX_e94P5AY9xqJUu_q30jeg"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1057884711320-cb1dj0f0gglcigtidtk4i0s3opknrsp6.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "1057884711320-7dk2g2rb9i44cfhrdmie383pvjt4d1jo.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.eight.supermarkets"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1057884711320:android:89d7b57049aba0792463ed",
+        "android_client_info": {
+          "package_name": "com.Foodbazar"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1057884711320-3rlk4h7eo4k9rv15e3maf9mggkl0o1tp.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.Foodbazar",
+            "certificate_hash": "e3746660b1a422503eedaec25e29fb5bb450ff42"
+          }
+        },
+        {
+          "client_id": "1057884711320-cb1dj0f0gglcigtidtk4i0s3opknrsp6.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDsYG8YVz0bNX_e94P5AY9xqJUu_q30jeg"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1057884711320-cb1dj0f0gglcigtidtk4i0s3opknrsp6.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "1057884711320-7dk2g2rb9i44cfhrdmie383pvjt4d1jo.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.eight.supermarkets"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1057884711320:android:41164e5bae0d350d2463ed",
+        "android_client_info": {
+          "package_name": "com.Foodmania"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1057884711320-7m3ajaanu62528vc5k18boll2je4nrkf.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.Foodmania",
+            "certificate_hash": "e3746660b1a422503eedaec25e29fb5bb450ff42"
+          }
+        },
+        {
+          "client_id": "1057884711320-cb1dj0f0gglcigtidtk4i0s3opknrsp6.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDsYG8YVz0bNX_e94P5AY9xqJUu_q30jeg"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1057884711320-cb1dj0f0gglcigtidtk4i0s3opknrsp6.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "1057884711320-7dk2g2rb9i44cfhrdmie383pvjt4d1jo.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.eight.supermarkets"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1057884711320:android:12bfda6384715e5e2463ed",
+        "android_client_info": {
+          "package_name": "com.Jitters"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1057884711320-tsmfa1l8ke579997fi3qjdmjbmh4380a.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.Jitters",
+            "certificate_hash": "e3746660b1a422503eedaec25e29fb5bb450ff42"
+          }
+        },
+        {
+          "client_id": "1057884711320-cb1dj0f0gglcigtidtk4i0s3opknrsp6.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDsYG8YVz0bNX_e94P5AY9xqJUu_q30jeg"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1057884711320-cb1dj0f0gglcigtidtk4i0s3opknrsp6.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "1057884711320-7dk2g2rb9i44cfhrdmie383pvjt4d1jo.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.eight.supermarkets"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1057884711320:android:80c3863f473f44c02463ed",
+        "android_client_info": {
+          "package_name": "com.XSpresso"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1057884711320-gqf7arvdiuc8u7irmhekfa553mbp57dj.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.XSpresso",
+            "certificate_hash": "e3746660b1a422503eedaec25e29fb5bb450ff42"
+          }
+        },
+        {
+          "client_id": "1057884711320-cb1dj0f0gglcigtidtk4i0s3opknrsp6.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDsYG8YVz0bNX_e94P5AY9xqJUu_q30jeg"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1057884711320-cb1dj0f0gglcigtidtk4i0s3opknrsp6.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "1057884711320-7dk2g2rb9i44cfhrdmie383pvjt4d1jo.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.eight.supermarkets"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1057884711320:android:425228b7c9295e1d2463ed",
+        "android_client_info": {
+          "package_name": "com.XpressGourmet"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1057884711320-lue3rkj1bbl9pp42ua889uprmclrd7qc.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.XpressGourmet",
+            "certificate_hash": "e3746660b1a422503eedaec25e29fb5bb450ff42"
+          }
+        },
+        {
+          "client_id": "1057884711320-cb1dj0f0gglcigtidtk4i0s3opknrsp6.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDsYG8YVz0bNX_e94P5AY9xqJUu_q30jeg"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1057884711320-cb1dj0f0gglcigtidtk4i0s3opknrsp6.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "1057884711320-7dk2g2rb9i44cfhrdmie383pvjt4d1jo.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.eight.supermarkets"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1057884711320:android:e9112377e3713e622463ed",
         "android_client_info": {
           "package_name": "com.aagyo"
         }
       },
       "oauth_client": [
         {
-          "client_id": "810385916032-b508ei225ppl672jrb82fttlbcgfa3js.apps.googleusercontent.com",
+          "client_id": "1057884711320-cb1dj0f0gglcigtidtk4i0s3opknrsp6.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyAZBy1iClctbxpJ4QM_oC9M9JtVrZC7oqU"
+          "current_key": "AIzaSyDsYG8YVz0bNX_e94P5AY9xqJUu_q30jeg"
         }
       ],
       "services": {
         "appinvite_service": {
           "other_platform_oauth_client": [
             {
-              "client_id": "810385916032-b508ei225ppl672jrb82fttlbcgfa3js.apps.googleusercontent.com",
+              "client_id": "1057884711320-cb1dj0f0gglcigtidtk4i0s3opknrsp6.apps.googleusercontent.com",
               "client_type": 3
+            },
+            {
+              "client_id": "1057884711320-7dk2g2rb9i44cfhrdmie383pvjt4d1jo.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.eight.supermarkets"
+              }
             }
           ]
         }
@@ -36,36 +307,115 @@
     },
     {
       "client_info": {
-        "mobilesdk_app_id": "1:810385916032:android:41694e6f3a6d66805c2665",
+        "mobilesdk_app_id": "1:1057884711320:android:8ccf5f5cefcd55782463ed",
         "android_client_info": {
-          "package_name": "com.guzty.marketplace"
+          "package_name": "com.aagyo_admin"
         }
       },
       "oauth_client": [
         {
-          "client_id": "810385916032-jg9vfbr5esjm4lf38kg49m5ic2ud1ff3.apps.googleusercontent.com",
+          "client_id": "1057884711320-cb1dj0f0gglcigtidtk4i0s3opknrsp6.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDsYG8YVz0bNX_e94P5AY9xqJUu_q30jeg"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1057884711320-cb1dj0f0gglcigtidtk4i0s3opknrsp6.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "1057884711320-7dk2g2rb9i44cfhrdmie383pvjt4d1jo.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.eight.supermarkets"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1057884711320:android:5f918e3e9886bb3a2463ed",
+        "android_client_info": {
+          "package_name": "com.aagyo_runner"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1057884711320-cb1dj0f0gglcigtidtk4i0s3opknrsp6.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDsYG8YVz0bNX_e94P5AY9xqJUu_q30jeg"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1057884711320-cb1dj0f0gglcigtidtk4i0s3opknrsp6.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "1057884711320-7dk2g2rb9i44cfhrdmie383pvjt4d1jo.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.eight.supermarkets"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1057884711320:android:d54f40adf841174c2463ed",
+        "android_client_info": {
+          "package_name": "com.eight.supermarkets"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1057884711320-fn01apu1slifq1ulaboc8bv22ite85eb.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
-            "package_name": "com.guzty.marketplace",
-            "certificate_hash": "27867ed4396aa35f8112256906c05ec41af0a07e"
+            "package_name": "com.eight.supermarkets",
+            "certificate_hash": "e3746660b1a422503eedaec25e29fb5bb450ff42"
           }
         },
         {
-          "client_id": "810385916032-b508ei225ppl672jrb82fttlbcgfa3js.apps.googleusercontent.com",
+          "client_id": "1057884711320-cb1dj0f0gglcigtidtk4i0s3opknrsp6.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyAZBy1iClctbxpJ4QM_oC9M9JtVrZC7oqU"
+          "current_key": "AIzaSyDsYG8YVz0bNX_e94P5AY9xqJUu_q30jeg"
         }
       ],
       "services": {
         "appinvite_service": {
           "other_platform_oauth_client": [
             {
-              "client_id": "810385916032-b508ei225ppl672jrb82fttlbcgfa3js.apps.googleusercontent.com",
+              "client_id": "1057884711320-cb1dj0f0gglcigtidtk4i0s3opknrsp6.apps.googleusercontent.com",
               "client_type": 3
+            },
+            {
+              "client_id": "1057884711320-7dk2g2rb9i44cfhrdmie383pvjt4d1jo.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.eight.supermarkets"
+              }
             }
           ]
         }
@@ -73,94 +423,43 @@
     },
     {
       "client_info": {
-        "mobilesdk_app_id": "1:810385916032:android:f7944460187421325c2665",
+        "mobilesdk_app_id": "1:1057884711320:android:65d2b8a4a68f9e822463ed",
         "android_client_info": {
-          "package_name": "com.namastekisan.marketplaceAdmin"
+          "package_name": "com.npot"
         }
       },
       "oauth_client": [
         {
-          "client_id": "810385916032-b508ei225ppl672jrb82fttlbcgfa3js.apps.googleusercontent.com",
-          "client_type": 3
-        }
-      ],
-      "api_key": [
-        {
-          "current_key": "AIzaSyAZBy1iClctbxpJ4QM_oC9M9JtVrZC7oqU"
-        }
-      ],
-      "services": {
-        "appinvite_service": {
-          "other_platform_oauth_client": [
-            {
-              "client_id": "810385916032-b508ei225ppl672jrb82fttlbcgfa3js.apps.googleusercontent.com",
-              "client_type": 3
-            }
-          ]
-        }
-      }
-    },
-    {
-      "client_info": {
-        "mobilesdk_app_id": "1:810385916032:android:49070ce260c18ca35c2665",
-        "android_client_info": {
-          "package_name": "com.signity.localstarmarketplace"
-        }
-      },
-      "oauth_client": [
-        {
-          "client_id": "810385916032-b508ei225ppl672jrb82fttlbcgfa3js.apps.googleusercontent.com",
-          "client_type": 3
-        }
-      ],
-      "api_key": [
-        {
-          "current_key": "AIzaSyAZBy1iClctbxpJ4QM_oC9M9JtVrZC7oqU"
-        }
-      ],
-      "services": {
-        "appinvite_service": {
-          "other_platform_oauth_client": [
-            {
-              "client_id": "810385916032-b508ei225ppl672jrb82fttlbcgfa3js.apps.googleusercontent.com",
-              "client_type": 3
-            }
-          ]
-        }
-      }
-    },
-    {
-      "client_info": {
-        "mobilesdk_app_id": "1:810385916032:android:24020276166c86bc5c2665",
-        "android_client_info": {
-          "package_name": "com.signity.marketplaceadmin"
-        }
-      },
-      "oauth_client": [
-        {
-          "client_id": "810385916032-f9o653sitsc0sc7jaisqao1s5qvboj8b.apps.googleusercontent.com",
+          "client_id": "1057884711320-2jg27b8ft98mm3nt18g1gos613r8boba.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
-            "package_name": "com.signity.marketplaceadmin",
-            "certificate_hash": "c2106968e57610b4221ef9aa153407a0ad894064"
+            "package_name": "com.npot",
+            "certificate_hash": "e3746660b1a422503eedaec25e29fb5bb450ff42"
           }
         },
         {
-          "client_id": "810385916032-b508ei225ppl672jrb82fttlbcgfa3js.apps.googleusercontent.com",
+          "client_id": "1057884711320-cb1dj0f0gglcigtidtk4i0s3opknrsp6.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyAZBy1iClctbxpJ4QM_oC9M9JtVrZC7oqU"
+          "current_key": "AIzaSyDsYG8YVz0bNX_e94P5AY9xqJUu_q30jeg"
         }
       ],
       "services": {
         "appinvite_service": {
           "other_platform_oauth_client": [
             {
-              "client_id": "810385916032-b508ei225ppl672jrb82fttlbcgfa3js.apps.googleusercontent.com",
+              "client_id": "1057884711320-cb1dj0f0gglcigtidtk4i0s3opknrsp6.apps.googleusercontent.com",
               "client_type": 3
+            },
+            {
+              "client_id": "1057884711320-7dk2g2rb9i44cfhrdmie383pvjt4d1jo.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.eight.supermarkets"
+              }
             }
           ]
         }
@@ -168,28 +467,43 @@
     },
     {
       "client_info": {
-        "mobilesdk_app_id": "1:810385916032:android:50b650646a0af7c45c2665",
+        "mobilesdk_app_id": "1:1057884711320:android:ccbf439cab0413912463ed",
         "android_client_info": {
-          "package_name": "com.signity.samvruthaadmin"
+          "package_name": "com.premiumnatureuae"
         }
       },
       "oauth_client": [
         {
-          "client_id": "810385916032-b508ei225ppl672jrb82fttlbcgfa3js.apps.googleusercontent.com",
+          "client_id": "1057884711320-gk4donfg0jn8ft26ssupd00kbpbovg5b.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.premiumnatureuae",
+            "certificate_hash": "e3746660b1a422503eedaec25e29fb5bb450ff42"
+          }
+        },
+        {
+          "client_id": "1057884711320-cb1dj0f0gglcigtidtk4i0s3opknrsp6.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyAZBy1iClctbxpJ4QM_oC9M9JtVrZC7oqU"
+          "current_key": "AIzaSyDsYG8YVz0bNX_e94P5AY9xqJUu_q30jeg"
         }
       ],
       "services": {
         "appinvite_service": {
           "other_platform_oauth_client": [
             {
-              "client_id": "810385916032-b508ei225ppl672jrb82fttlbcgfa3js.apps.googleusercontent.com",
+              "client_id": "1057884711320-cb1dj0f0gglcigtidtk4i0s3opknrsp6.apps.googleusercontent.com",
               "client_type": 3
+            },
+            {
+              "client_id": "1057884711320-7dk2g2rb9i44cfhrdmie383pvjt4d1jo.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.eight.supermarkets"
+              }
             }
           ]
         }
@@ -197,28 +511,131 @@
     },
     {
       "client_info": {
-        "mobilesdk_app_id": "1:810385916032:android:7548ad14059a169d5c2665",
+        "mobilesdk_app_id": "1:1057884711320:android:843266b12aa200292463ed",
         "android_client_info": {
-          "package_name": "com.valueappz.brandmarketplaceRunner"
+          "package_name": "com.theolives"
         }
       },
       "oauth_client": [
         {
-          "client_id": "810385916032-b508ei225ppl672jrb82fttlbcgfa3js.apps.googleusercontent.com",
+          "client_id": "1057884711320-oragaq5ki1ek68g7272l5geef26vp9dq.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.theolives",
+            "certificate_hash": "e3746660b1a422503eedaec25e29fb5bb450ff42"
+          }
+        },
+        {
+          "client_id": "1057884711320-cb1dj0f0gglcigtidtk4i0s3opknrsp6.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyAZBy1iClctbxpJ4QM_oC9M9JtVrZC7oqU"
+          "current_key": "AIzaSyDsYG8YVz0bNX_e94P5AY9xqJUu_q30jeg"
         }
       ],
       "services": {
         "appinvite_service": {
           "other_platform_oauth_client": [
             {
-              "client_id": "810385916032-b508ei225ppl672jrb82fttlbcgfa3js.apps.googleusercontent.com",
+              "client_id": "1057884711320-cb1dj0f0gglcigtidtk4i0s3opknrsp6.apps.googleusercontent.com",
               "client_type": 3
+            },
+            {
+              "client_id": "1057884711320-7dk2g2rb9i44cfhrdmie383pvjt4d1jo.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.eight.supermarkets"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1057884711320:android:78cf965101df91c02463ed",
+        "android_client_info": {
+          "package_name": "com.valueappz.dharuheraagrofarm"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1057884711320-bed54a8556s8qtf10clqp2alfhs8ukfl.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.valueappz.dharuheraagrofarm",
+            "certificate_hash": "e3746660b1a422503eedaec25e29fb5bb450ff42"
+          }
+        },
+        {
+          "client_id": "1057884711320-cb1dj0f0gglcigtidtk4i0s3opknrsp6.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDsYG8YVz0bNX_e94P5AY9xqJUu_q30jeg"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1057884711320-cb1dj0f0gglcigtidtk4i0s3opknrsp6.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "1057884711320-7dk2g2rb9i44cfhrdmie383pvjt4d1jo.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.eight.supermarkets"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1057884711320:android:fb41f19eb1581ce62463ed",
+        "android_client_info": {
+          "package_name": "com.valueappz.theolives"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1057884711320-djov6idbjg7u5l168fraqoiiij5i3kbq.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.valueappz.theolives",
+            "certificate_hash": "e3746660b1a422503eedaec25e29fb5bb450ff42"
+          }
+        },
+        {
+          "client_id": "1057884711320-cb1dj0f0gglcigtidtk4i0s3opknrsp6.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDsYG8YVz0bNX_e94P5AY9xqJUu_q30jeg"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1057884711320-cb1dj0f0gglcigtidtk4i0s3opknrsp6.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "1057884711320-7dk2g2rb9i44cfhrdmie383pvjt4d1jo.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.eight.supermarkets"
+              }
             }
           ]
         }
