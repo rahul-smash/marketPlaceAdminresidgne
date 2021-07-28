@@ -29,6 +29,8 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
+import java.io.OutputStreamWriter;
+
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Currency;
@@ -522,5 +524,24 @@ public class Util {
         canvas.drawBitmap(bitmap, m, new Paint());
 
         return output;
+    }
+    public static void writeToFile(String data, Context context) {
+        Log.e(TAG, "writeToFile: "+data );
+        try {
+            String fileName = "config" + System.currentTimeMillis() + ".txt";
+            File file = new File(Environment.getExternalStorageDirectory().getAbsoluteFile(), fileName);
+            if (!file.exists())
+                file.createNewFile();
+            FileOutputStream fOut = new FileOutputStream(file);
+            OutputStreamWriter myOutWriter = new OutputStreamWriter(fOut);
+            myOutWriter.append(data);
+
+            myOutWriter.close();
+
+            fOut.flush();
+            fOut.close();
+        } catch (Exception e) {
+            Log.e("Exception", "File write failed: " + e.toString());
+        }
     }
 }

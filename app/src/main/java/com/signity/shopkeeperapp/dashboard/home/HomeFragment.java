@@ -1,5 +1,17 @@
 package com.signity.shopkeeperapp.dashboard.home;
+import android.Manifest;
+import android.os.Build;
+import com.signity.shopkeeperapp.util.AutoStartHelper;
+import com.signity.shopkeeperapp.util.PrefManager;
 
+import android.provider.Settings;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
+import android.media.AudioAttributes;
+import android.media.AudioManager;
+import android.media.RingtoneManager;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -100,6 +112,7 @@ public class HomeFragment extends Fragment implements HomeContentAdapter.HomeCon
     private Constant.StoreDashboard typeofDay = Constant.StoreDashboard.TODAY;
     private Uri cameraImageUri;
     private Chip chipAll, chipPending, chipAccepted, chipOnReady, chipDelivered, chipRejected, chipCancelled, chipOnTheWay;
+    private PrefManager prefManager;
 
     public static HomeFragment getInstance(Bundle bundle) {
         HomeFragment fragment = new HomeFragment();
@@ -419,6 +432,24 @@ public class HomeFragment extends Fragment implements HomeContentAdapter.HomeCon
                 getOrders();
             }
         });
+        prefManager = new PrefManager(getActivity());
+        if (!prefManager.getBoolean(prefManager.PREF_KEY_APP_AUTO_START))
+            AutoStartHelper.getInstance().getAutoStartPermission(getActivity());
+//        if (!checkIfAlreadyhavePermission())
+//            ActivityCompat.requestPermissions(getActivity(),
+//                    new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},
+//                    1);
+//        else
+//            Util.writeToFile(prefManager.getSharedValue(Constant.DEVICE_TOKEN), getActivity());
+    }
+
+    private boolean checkIfAlreadyhavePermission() {
+        int result = ContextCompat.checkSelfPermission(getContext(), Manifest.permission.WRITE_EXTERNAL_STORAGE);
+        if (result == PackageManager.PERMISSION_GRANTED) {
+            return true;
+        } else {
+            return false;
+        }
     }
 
     private void openShareSheet() {

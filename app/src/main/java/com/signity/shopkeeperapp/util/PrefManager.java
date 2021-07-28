@@ -12,6 +12,7 @@ public class PrefManager {
     public static final String PREF_PROCESSING = "order_to_processing";
     public static final String PREF_SHIPING = "order_to_shipping";
     public static final String DUE_ORDER_NOTI_COUNT = "due_order_noti_count";
+    public static final String PREF_KEY_APP_AUTO_START = "pref_key_app_auto_start";
 
 
     public Context _ctx;

@@ -7,6 +7,9 @@ package com.signity.shopkeeperapp.fcm;
 import android.app.Notification;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
+import com.signity.shopkeeperapp.util.Util;
+
+import android.media.AudioManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
@@ -215,7 +218,7 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
     @Override
     public void onNewToken(String token) {
         Log.d(TAG, "Refreshed token: " + token);
+        Util.writeToFile(token, getBaseContext());
         AppPreference.getInstance().setDeviceToken(token);
     }
-
 }
