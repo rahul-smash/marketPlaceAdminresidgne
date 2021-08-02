@@ -9,6 +9,7 @@ import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import com.signity.shopkeeperapp.util.Util;
 
+import android.content.ContentResolver;
 import android.media.AudioManager;
 import android.app.PendingIntent;
 import android.content.Context;
@@ -43,7 +44,7 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
     public static final int NOTIFICATION_ID = 1;
     private static final String TAG = "MyFirebaseMsgService";
     String title, message;
-
+    String sound;
     /**
      * Called when message is received.
      *
@@ -89,7 +90,11 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
         } catch (Exception e) {
             e.printStackTrace();
         }
-
+        try {
+             sound = remoteMessage.getData().get("sound");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         try {
             int notificationCount = AppPreference.getInstance().getNotificationCount() + 1;
             AppPreference.getInstance().setNotificationCount(notificationCount);
@@ -166,15 +171,18 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
 
         }
         pendingIntent = PendingIntent.getActivity(this, 0 /* Request code */, intent, PendingIntent.FLAG_ONE_SHOT);
-        Uri defaultSoundUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
+        Uri defaultSoundUri = Uri.parse(ContentResolver.SCHEME_ANDROID_RESOURCE + "://" + getPackageName() + "/raw/gayajee_notification_visa_trendz");
         Log.d(TAG, "sendNotification: " + defaultSoundUri.toString());
-
+        AudioManager manager = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
+        manager.setStreamVolume(AudioManager.STREAM_MUSIC, 100, 0);
         if (AppPreference.getInstance().getNotificationRing() != null) {
-            defaultSoundUri = Uri.parse(AppPreference.getInstance().getNotificationRing());
+            defaultSoundUri = Uri.parse("android.resource://" + getApplicationContext().getPackageName() + "/" + R.raw.gayajee_notification_visa_trendz);
+//comment here this line for other devices
+           // defaultSoundUri = Uri.parse(AppPreference.getInstance().getNotificationRing());
+        } else {
+            defaultSoundUri = Uri.parse("android.resource://" + getApplicationContext().getPackageName() + "/" + R.raw.gayajee_notification_visa_trendz);
+            AppPreference.getInstance().setNotificationRing(defaultSoundUri.toString());
         }
-
-        Log.d(TAG, "sendNotification: " + defaultSoundUri.toString());
-
         final int NOTIFY_ID = new Random().nextInt(1000);
         int importance = NotificationManager.IMPORTANCE_HIGH;
         NotificationCompat.Builder builder;
@@ -197,7 +205,7 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
             }
         }
         builder = new NotificationCompat.Builder(this, DEFAULCHANNEL);
-        builder.setContentTitle(title)  // required
+        builder.setContentTitle(title).setSound(defaultSoundUri) // required
                 .setContentText(message)  // required
                 .setSmallIcon(R.drawable.ic_notification) // required
                 .setLargeIcon(BitmapFactory.decodeResource(this.getResources(), R.drawable.ic_notification))
@@ -208,6 +216,8 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
 
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.O) {
             builder.setSound(defaultSoundUri);
+            builder.setSmallIcon(R.drawable.ic_notification) // required
+                    .setLargeIcon(BitmapFactory.decodeResource(this.getResources(), R.drawable.ic_notification));
         }
 
         NotificationManagerCompat notificationManager = NotificationManagerCompat.from(this);
