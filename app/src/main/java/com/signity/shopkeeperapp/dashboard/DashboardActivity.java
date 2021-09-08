@@ -38,6 +38,7 @@ import androidx.fragment.app.FragmentTransaction;
 
 import com.google.android.material.badge.BadgeDrawable;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.android.material.switchmaterial.SwitchMaterial;
 import com.onesignal.OneSignal;
 import com.signity.shopkeeperapp.BuildConfig;
 import com.signity.shopkeeperapp.R;
@@ -61,6 +62,7 @@ import com.signity.shopkeeperapp.model.dashboard.NotificationSoundDialog;
 import com.signity.shopkeeperapp.model.dashboard.StoreVersionDTO;
 import com.signity.shopkeeperapp.model.dashboard.WelcomeResponse;
 import com.signity.shopkeeperapp.model.market.industry.IndustryRegistration;
+import com.signity.shopkeeperapp.model.storeStatus.StoreStatusResponse;
 import com.signity.shopkeeperapp.network.NetworkAdaper;
 import com.signity.shopkeeperapp.products.ImageBottomDialog;
 import com.signity.shopkeeperapp.util.AnimUtil;
@@ -108,6 +110,7 @@ public class DashboardActivity extends BaseActivity implements BottomNavigationV
     private ImageView imageViewGenerateOrder;
     private Uri cameraImageUri;
     private boolean shouldShowWelcome = true;
+    private SwitchMaterial switchMaterial;
 
     public static Intent getStartIntent(Context context) {
         return new Intent(context, DashboardActivity.class);
@@ -209,6 +212,7 @@ public class DashboardActivity extends BaseActivity implements BottomNavigationV
         textViewAppVersion = findViewById(R.id.tv_app_version);
         textViewLogout = findViewById(R.id.tv_logout_title);
         imageViewGenerateOrder = findViewById(R.id.float_action);
+        switchMaterial = findViewById(R.id.switch_store);
 
         imageViewGenerateOrder.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -224,6 +228,51 @@ public class DashboardActivity extends BaseActivity implements BottomNavigationV
 //                callLogOutApi();
             }
         });
+
+        switchMaterial.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                getSetStoreStatus(StoreStatus.SET);
+            }
+        });
+    }
+
+    private void getSetStoreStatus(StoreStatus status) {
+
+        Map<String, String> param = new HashMap<>();
+        param.put("operation", status.name().toLowerCase());
+        if (status == StoreStatus.SET) {
+            param.put("store_status", switchMaterial.isChecked() ? "1" : "0");
+            param.put("store_msg", "Store is closed for today");
+        }
+
+        NetworkAdaper.getNetworkServices().getSetStoreStatus(param, new Callback<StoreStatusResponse>() {
+            @Override
+            public void success(StoreStatusResponse responseBody, Response response) {
+
+                if (isDestroyed()) {
+                    return;
+                }
+
+                if (responseBody.isSuccess()) {
+
+                    if (responseBody.getData() != null && switchMaterial != null) {
+                        switchMaterial.setChecked(responseBody.getData().getStoreStatus().equals("1"));
+                    }
+
+                    if (responseBody.getMessage() != null) {
+                        Toast.makeText(DashboardActivity.this, responseBody.getMessage(), Toast.LENGTH_SHORT).show();
+                    }
+                }
+
+            }
+
+            @Override
+            public void failure(RetrofitError error) {
+
+            }
+        });
+
     }
 
     private void createOrdersBadge(int count) {
@@ -291,6 +340,7 @@ public class DashboardActivity extends BaseActivity implements BottomNavigationV
         bottomNavigationView.setSelectedItemId(bottomNavigationView.getSelectedItemId());
         checkForceDownload();
         setUpStoreData();
+        getSetStoreStatus(StoreStatus.GET);
     }
 
     @Override
@@ -646,7 +696,6 @@ public class DashboardActivity extends BaseActivity implements BottomNavigationV
         });
     }
 
-
     private void openImageChooser() {
         if (getSupportFragmentManager().findFragmentByTag(ImageBottomDialog.TAG) == null) {
             ImageBottomDialog imageBottomDialog = new ImageBottomDialog(new ImageBottomDialog.ImageListener() {
@@ -663,7 +712,6 @@ public class DashboardActivity extends BaseActivity implements BottomNavigationV
             imageBottomDialog.show(getSupportFragmentManager(), ImageBottomDialog.TAG);
         }
     }
-
 
     public void openCamera() {
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED) {
@@ -799,6 +847,10 @@ public class DashboardActivity extends BaseActivity implements BottomNavigationV
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    enum StoreStatus {
+        GET, SET
     }
 
 }

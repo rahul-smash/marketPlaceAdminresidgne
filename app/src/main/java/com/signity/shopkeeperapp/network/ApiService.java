@@ -54,6 +54,7 @@ import com.signity.shopkeeperapp.model.runner.CommonResponse;
 import com.signity.shopkeeperapp.model.runner.RunnerDetailResponse;
 import com.signity.shopkeeperapp.model.runner.RunnersResponseDTO;
 import com.signity.shopkeeperapp.model.runner.areas.CityAreaDTO;
+import com.signity.shopkeeperapp.model.storeStatus.StoreStatusResponse;
 import com.signity.shopkeeperapp.model.stores.StoresResponse;
 import com.signity.shopkeeperapp.model.verify.EmailVerifyResponse;
 import com.signity.shopkeeperapp.model.verify.MobileOtpReponse;
@@ -63,6 +64,7 @@ import java.util.List;
 import java.util.Map;
 
 import okhttp3.MultipartBody;
+import okhttp3.ResponseBody;
 import retrofit.Callback;
 import retrofit.http.FieldMap;
 import retrofit.http.FormUrlEncoded;
@@ -428,4 +430,8 @@ public interface ApiService {
     @FormUrlEncoded
     @POST("/calculateShippingCharges")
     void calculateShipping(@FieldMap Map<String, String> param, Callback<CalculateShippingResponse> responseCallback);
+
+    @FormUrlEncoded
+    @POST("/getSetStoreStatus")
+    void getSetStoreStatus(@FieldMap Map<String, String> param, Callback<StoreStatusResponse> responseCallback);
 }
