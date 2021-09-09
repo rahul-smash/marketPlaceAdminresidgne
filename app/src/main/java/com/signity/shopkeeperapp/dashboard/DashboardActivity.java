@@ -141,7 +141,7 @@ public class DashboardActivity extends BaseActivity implements BottomNavigationV
         }*/
 
 //        registerStore();
-      //  OneSignalTags();
+        //  OneSignalTags();
     }
 
 
@@ -248,7 +248,7 @@ public class DashboardActivity extends BaseActivity implements BottomNavigationV
         NetworkAdaper.getNetworkServices().getSetStoreStatus(param, new Callback<StoreStatusResponse>() {
             @Override
             public void success(StoreStatusResponse responseBody, Response response) {
-Log.i("@@---storeStatus",""+response.toString());
+                Log.i("@@---storeStatus", "" + response.toString());
                 if (isDestroyed()) {
                     return;
                 }
