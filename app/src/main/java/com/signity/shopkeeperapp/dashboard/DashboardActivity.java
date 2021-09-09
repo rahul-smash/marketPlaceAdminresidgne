@@ -39,7 +39,6 @@ import androidx.fragment.app.FragmentTransaction;
 import com.google.android.material.badge.BadgeDrawable;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.switchmaterial.SwitchMaterial;
-import com.onesignal.OneSignal;
 import com.signity.shopkeeperapp.BuildConfig;
 import com.signity.shopkeeperapp.R;
 import com.signity.shopkeeperapp.SplashActivity;
@@ -142,7 +141,7 @@ public class DashboardActivity extends BaseActivity implements BottomNavigationV
         }*/
 
 //        registerStore();
-        OneSignalTags();
+      //  OneSignalTags();
     }
 
 
@@ -156,12 +155,12 @@ public class DashboardActivity extends BaseActivity implements BottomNavigationV
     }
 
     private void OneSignalTags() {
-        OneSignal.sendTag("user_name", AppPreference.getInstance().getUserName());
+      /*  OneSignal.sendTag("user_name", AppPreference.getInstance().getUserName());
         OneSignal.sendTag("store_name", AppPreference.getInstance().getStoreName());
         OneSignal.sendTag("is_fb_linked", AppPreference.getInstance().getFacebookPageId() != null ? "yes" : "no");
 //        OneSignal.sendTag("membership_type", AppPreferenceHelper.getInstance().getPackageType());
 //        OneSignal.sendTag("membership_type", AppPreferenceHelper.getInstance().getPackageType());
-        OneSignal.setExternalUserId(String.valueOf(AppPreference.getInstance().getStoreId()));
+        OneSignal.setExternalUserId(String.valueOf(AppPreference.getInstance().getStoreId()));*/
     }
 
     private void registerStore() {
@@ -249,7 +248,7 @@ public class DashboardActivity extends BaseActivity implements BottomNavigationV
         NetworkAdaper.getNetworkServices().getSetStoreStatus(param, new Callback<StoreStatusResponse>() {
             @Override
             public void success(StoreStatusResponse responseBody, Response response) {
-
+Log.i("@@---storeStatus",""+response.toString());
                 if (isDestroyed()) {
                     return;
                 }
