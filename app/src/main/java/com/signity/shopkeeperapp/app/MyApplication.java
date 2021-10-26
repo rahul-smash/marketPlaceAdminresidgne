@@ -21,7 +21,6 @@ import com.signity.shopkeeperapp.util.PrefManager;
 import com.signity.shopkeeperapp.util.prefs.AppPreference;
 import com.signity.shopkeeperapp.util.Util;
 
-
 /**
  * Created by Rajinder on 5/10/15.
  */

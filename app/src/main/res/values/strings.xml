@@ -34,5 +34,28 @@
     <string name="blurb3">Add Products &amp; Categories\nAccording to your Store</string>
     <string name="heading4">Share and Social Media\nMarketing</string>
     <string name="blurb4">Drive Engagement to your SM\nChannels with our Creatives and Videos</string>
+    <string name="label_item_name">Item Name</string>
+    <string name="label_abn">ABN:</string>
+    <string name="contact_no">Contact No:</string>
+    <string name="label_tax_invoice">TAX INVOICE 26/05/2121 08:24:51</string>
+    <string name="payment">Payment</string>
+    <string name="item_price">Price</string>
+
+    <string name="tax_amp_charges"><![CDATA[Tax & Charges]]></string>
+    <string name="delivery_charges">Delivery Charges</string>
+    <string name="checkout_amount">Checkout Amount</string>
+    <string name="discount">Discount</string>
+    <string name="invoice_no">Invoice No.</string>
+    <string name="tax_invoice">TAX INVOICE</string>
+    <string name="coupon_discount">Coupon Discount</string>
+    <string name="thanks_visit_again">Thanks visit again.</string>
+    <string name="total_amount">Amount</string>
+
+    <string name="label_print_footer">Our Business Hours\n10:00am to 10:00am\nEmail: info@golgappa.com.au</string>
+
+    <string name="prices_are_inclusive_of_all_taxes">*Prices are inclusive of all taxes.</string>
+    <string name="notification_msg">Click here to open app.</string>
+    <string name="notification_title">Orders Reminder Enabled</string>
+
 
 </resources>

@@ -2,6 +2,7 @@ package com.signity.shopkeeperapp.util;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.app.ActivityManager;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.res.Resources;
@@ -27,10 +28,9 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
-import java.io.OutputStreamWriter;
-
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Currency;
@@ -49,6 +49,46 @@ public class Util {
 
     private static final String TAG = "Util";
     static Context currentContext;
+
+    public static String toTitleCase(String string) {
+
+        // Check if String is null
+        if (string == null) {
+
+            return null;
+        }
+
+        boolean whiteSpace = true;
+
+        StringBuilder builder = new StringBuilder(string); // String builder to store string
+        final int builderLength = builder.length();
+
+        // Loop through builder
+        for (int i = 0; i < builderLength; ++i) {
+
+            char c = builder.charAt(i); // Get character at builders position
+
+            if (whiteSpace) {
+
+                // Check if character is not white space
+                if (!Character.isWhitespace(c)) {
+
+                    // Convert to title case and leave whitespace mode.
+                    builder.setCharAt(i, Character.toTitleCase(c));
+                    whiteSpace = false;
+                }
+            } else if (Character.isWhitespace(c)) {
+
+                whiteSpace = true; // Set character is white space
+
+            } else {
+
+                builder.setCharAt(i, Character.toLowerCase(c)); // Set character to lowercase
+            }
+        }
+
+        return builder.toString(); // Return builders text
+    }
 
     public static String ReadFromfile(String fileName, Context context) {
         StringBuilder returnString = new StringBuilder();
@@ -543,5 +583,15 @@ public class Util {
         } catch (Exception e) {
             Log.e("Exception", "File write failed: " + e.toString());
         }
+    }
+
+    public static boolean isMyServiceRunning(Class<?> serviceClass,Context context) {
+        ActivityManager manager = (ActivityManager) context.getSystemService(Context.ACTIVITY_SERVICE);
+        for (ActivityManager.RunningServiceInfo service : manager.getRunningServices(Integer.MAX_VALUE)) {
+            if (serviceClass.getName().equals(service.service.getClassName())) {
+                return true;
+            }
+        }
+        return false;
     }
 }

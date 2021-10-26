@@ -1,5 +1,6 @@
 package com.signity.shopkeeperapp.network;
 
+import com.signity.shopkeeperapp.dashboard.orders.printSetting.PrintSettingResponse;
 import com.signity.shopkeeperapp.model.AddAddressModel;
 import com.signity.shopkeeperapp.model.CalculateShippingResponse;
 import com.signity.shopkeeperapp.model.Categories.GetCategoryResponse;
@@ -59,6 +60,7 @@ import com.signity.shopkeeperapp.model.stores.StoresResponse;
 import com.signity.shopkeeperapp.model.verify.EmailVerifyResponse;
 import com.signity.shopkeeperapp.model.verify.MobileOtpReponse;
 import com.signity.shopkeeperapp.model.verify.OtpVerifyResponse;
+import com.signity.shopkeeperapp.model.orderCount.OrderCountResponse;
 
 import java.util.List;
 import java.util.Map;
@@ -430,6 +432,11 @@ public interface ApiService {
     @FormUrlEncoded
     @POST("/calculateShippingCharges")
     void calculateShipping(@FieldMap Map<String, String> param, Callback<CalculateShippingResponse> responseCallback);
+    @GET("/getPrintSettings")
+    void getPrintDetails(Callback<PrintSettingResponse> response);
+
+    @GET("/orderCount")
+    void runnerOrderCount(Callback<OrderCountResponse> response);
 
     @FormUrlEncoded
     @POST("/getSetStoreStatus")

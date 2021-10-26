@@ -74,7 +74,8 @@ public class OrderDetailsAdpater extends RecyclerView.Adapter<OrderDetailsAdpate
             holder.textViewItemComment.setText(String.format("Comment: %s", itemListModel.getComment()));
         }
 
-        holder.switchItem.setEnabled(canChange);
+        // restrict user to cancel the item
+        holder.switchItem.setEnabled(false);
 
         if (!TextUtils.isEmpty(itemListModel.getImageSmall())) {
             Picasso.with(context)

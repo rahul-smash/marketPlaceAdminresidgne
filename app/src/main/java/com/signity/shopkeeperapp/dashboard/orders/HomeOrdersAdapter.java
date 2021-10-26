@@ -1,6 +1,7 @@
 package com.signity.shopkeeperapp.dashboard.orders;
 
 import android.content.Context;
+import android.content.Intent;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -16,6 +17,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.google.android.material.chip.Chip;
 import com.signity.shopkeeperapp.R;
 import com.signity.shopkeeperapp.model.OrdersListModel;
+import com.signity.shopkeeperapp.orderTracker.OrderTrackerBroadcast;
 import com.signity.shopkeeperapp.util.Util;
 import com.signity.shopkeeperapp.util.prefs.AppPreference;
 
@@ -349,6 +351,8 @@ public class HomeOrdersAdapter extends RecyclerView.Adapter<HomeOrdersAdapter.Vi
             chipAccept.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
+                    context.sendBroadcast(new Intent(context, OrderTrackerBroadcast.class)
+                            .setAction(OrderTrackerBroadcast.INTENT_ACTION_DISMISS_SOUND));
                     if (listener != null) {
                         listener.onAcceptOrder(getAdapterPosition(), ordersListModels.get(position).getPageNumber());
                     }
@@ -357,6 +361,8 @@ public class HomeOrdersAdapter extends RecyclerView.Adapter<HomeOrdersAdapter.Vi
             chipReject.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
+                   context.sendBroadcast(new Intent(context, OrderTrackerBroadcast.class)
+                            .setAction(OrderTrackerBroadcast.INTENT_ACTION_DISMISS_SOUND));
                     if (listener != null) {
                         listener.onRejectOrder(getAdapterPosition(), ordersListModels.get(position).getPageNumber());
                     }

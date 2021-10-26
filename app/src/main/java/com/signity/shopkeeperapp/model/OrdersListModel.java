@@ -91,6 +91,16 @@ public class OrdersListModel implements Serializable {
     @SerializedName("delivery_time_slot")
     @Expose
     private String deliveryTimeSlot;
+    @SerializedName("served_by_waiter")
+    @Expose
+    private String servedByWaiter;
+    @SerializedName("table_number")
+    @Expose
+    private String tableNumber;
+    @SerializedName("number_of_people")
+    @Expose
+    private String numberOfPeople;
+
     @Expose(serialize = false)
     private int pageNumber;
 
@@ -200,6 +210,30 @@ public class OrdersListModel implements Serializable {
 
     public void setDisplay_order_id(String display_order_id) {
         this.display_order_id = display_order_id;
+    }
+
+    public String getServedByWaiter() {
+        return servedByWaiter;
+    }
+
+    public void setServedByWaiter(String servedByWaiter) {
+        this.servedByWaiter = servedByWaiter;
+    }
+
+    public String getTableNumber() {
+        return tableNumber;
+    }
+
+    public void setTableNumber(String tableNumber) {
+        this.tableNumber = tableNumber;
+    }
+
+    public String getNumberOfPeople() {
+        return numberOfPeople;
+    }
+
+    public void setNumberOfPeople(String numberOfPeople) {
+        this.numberOfPeople = numberOfPeople;
     }
 
     /**

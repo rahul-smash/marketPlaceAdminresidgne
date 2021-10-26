@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@drawable/item_background_rounded">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/constraintLayout6"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingLeft="16dp"
+        android:paddingTop="2dp"
+        android:paddingRight="16dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <TextView
+            android:id="@+id/tv_product_name"
+            style="@style/AppTheme.TextView.Medium"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="Coconut Cookies"
+            android:layout_marginEnd="8dp"
+            android:textStyle="bold"
+            android:textColor="@color/colorBlack"
+            app:layout_constraintEnd_toStartOf="@+id/tv_product_total"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            android:layout_marginRight="8dp" />
+
+        <TextView
+            android:id="@+id/tv_product_weight"
+            style="@style/AppTheme.TextView.Mini"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="Weight: 200 gm"
+            android:textStyle="bold"
+            android:textColor="@color/colorBlack"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/tv_product_name" />
+
+        <TextView
+            android:id="@+id/tv_product_total"
+            style="@style/AppTheme.TextView.Small"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Rs.900"
+            android:textStyle="bold"
+            android:textColor="@color/colorBlack"
+            app:layout_constraintBottom_toBottomOf="@+id/tv_product_name"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_chainStyle="spread_inside"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <LinearLayout
+            android:id="@+id/ll_type"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            app:layout_constraintStart_toStartOf="@+id/tv_product_weight"
+            app:layout_constraintTop_toBottomOf="@+id/tv_product_weight">
+
+            <TextView
+                android:id="@+id/tv_product_quantity"
+                style="@style/AppTheme.TextView.Mini"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="1"
+                android:textStyle="bold"
+                android:textColor="@color/colorBlack" />
+
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/tv_product_price"
+            style="@style/AppTheme.TextView.Mini"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text=" x 90.0"
+            android:textStyle="bold"
+            android:textColor="@color/colorBlack"
+            app:layout_constraintBottom_toBottomOf="@+id/ll_type"
+            app:layout_constraintStart_toEndOf="@+id/ll_type"
+            app:layout_constraintTop_toTopOf="@+id/ll_type" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

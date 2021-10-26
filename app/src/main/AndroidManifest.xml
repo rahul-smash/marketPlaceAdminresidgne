@@ -10,6 +10,7 @@
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.ACCESS_NOTIFICATION_POLICY"/>
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
 
     <!--<permission
         android:name="com.signity.shopkeeperapp.permission.C2D_MESSAGE"
@@ -217,9 +218,9 @@
                 android:resource="@xml/provider_paths" />
         </provider>
 
-<!--        <meta-data
-            android:name="com.facebook.sdk.ApplicationId"
-            android:value="@string/facebook_app_id" />
+        <!--        <meta-data
+                    android:name="com.facebook.sdk.ApplicationId"
+                    android:value="@string/facebook_app_id" />
 
         <activity
             android:name="com.facebook.FacebookActivity"
@@ -327,6 +328,7 @@
             android:launchMode="singleTop"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustPan|stateHidden" />
+        <activity android:name=".orders.OrderPrintKOTActivity" />
 
         <service
             android:name=".onesignal.MyNotificationExtenderService"
@@ -339,6 +341,21 @@
         <!--        <service
                     android:name=".twilio.chat.TwilioImageService"
                     android:exported="false" />-->
+        <receiver android:name=".orderTracker.OrderTrackerBroadcast">
+            <intent-filter>
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
+            </intent-filter>
+        </receiver>
+
+        <receiver android:name=".orderTracker.OrderTrackingService$OrderServiceBroadcast"/>
+
+
+
+        <service
+            android:name=".orderTracker.OrderTrackingService"
+            android:enabled="true"
+            android:exported="true"
+            android:stopWithTask="false" />
     </application>
 
 </manifest>

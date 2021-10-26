@@ -22,11 +22,18 @@ public class NetworkAdaper {
         return instance;
     }
 
+    public static NetworkAdaper getInstance(Context context) {
+        if (instance == null){
+            initInstance(context);
+        }
+        return instance;
+    }
+
     public static void initInstance(Context ctx) {
         if (instance == null) {
             instance = new NetworkAdaper();
-            String store_id = AppPreference.getInstance().getStoreId();
-            String brandId = AppPreference.getInstance().getBrandId();
+            String store_id = AppPreference.getInstance(ctx).getStoreId();
+            String brandId = AppPreference.getInstance(ctx).getBrandId();
             String url = setBaseUrl(store_id, brandId);
             setupRetrofitClient(url);
         }

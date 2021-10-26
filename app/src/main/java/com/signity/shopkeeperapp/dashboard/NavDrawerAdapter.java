@@ -13,6 +13,9 @@ import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.content.res.ResourcesCompat;
 
 import com.signity.shopkeeperapp.R;
+import com.signity.shopkeeperapp.orderTracker.OrderTrackingService;
+import com.signity.shopkeeperapp.util.Util;
+import com.signity.shopkeeperapp.util.prefs.AppPreference;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -63,7 +66,7 @@ public class NavDrawerAdapter extends BaseAdapter {
         ConstraintLayout constraintLayoutNavItem = convertView.findViewById(R.id.const_nav_item);
         View view = convertView.findViewById(R.id.view_nav);
 
-        textViewNavTitle.setText(items.getTitle());
+        textViewNavTitle.setText(items == NavigationItems.REMINDER_SETTING ? (AppPreference.getInstance().getReminderStatus() && isServiceRunning(context) ? "Stop Reminder" : "Start Reminder") : items.getTitle());
         imageViewNav.setImageDrawable(ResourcesCompat.getDrawable(context.getResources(), items.getDrawableIcon(), null));
 
         boolean isSelected = position == selectedId;
@@ -85,6 +88,10 @@ public class NavDrawerAdapter extends BaseAdapter {
         return convertView;
     }
 
+    boolean isServiceRunning(Context context) {
+        return Util.isMyServiceRunning(OrderTrackingService.class, context);
+    }
+
     public enum NavigationItems {
         DASHBOARD("Dashboard", R.drawable.dashboardicon),
         ORDERS("Orders", R.drawable.ordersicon),
@@ -96,9 +103,10 @@ public class NavDrawerAdapter extends BaseAdapter {
 //        SWITCH_STORE("Switch Store", R.drawable.switchstoreicon),
 //        CUSTOMER_SUPPORT("Customer Support", R.drawable.icon_1),
         CONTACT_US("Contact Us", R.drawable.icon_6),
-//        HELP_MEDIA("Help Media", R.drawable.icon_5),
+        //        HELP_MEDIA("Help Media", R.drawable.icon_5),
 //        FAQS("FAQs", R.drawable.icon_4),
         SOUND_SETTING("Sound Setting", R.drawable.icon_3),
+        REMINDER_SETTING("Reminder", R.drawable.switchstoreicon),
         LOGOUT("Logout", R.drawable.logouticon);
 
         private String title;

@@ -39,6 +39,7 @@ import androidx.fragment.app.FragmentTransaction;
 import com.google.android.material.badge.BadgeDrawable;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.switchmaterial.SwitchMaterial;
+import com.onesignal.OneSignal;
 import com.signity.shopkeeperapp.BuildConfig;
 import com.signity.shopkeeperapp.R;
 import com.signity.shopkeeperapp.SplashActivity;
@@ -63,6 +64,8 @@ import com.signity.shopkeeperapp.model.dashboard.WelcomeResponse;
 import com.signity.shopkeeperapp.model.market.industry.IndustryRegistration;
 import com.signity.shopkeeperapp.model.storeStatus.StoreStatusResponse;
 import com.signity.shopkeeperapp.network.NetworkAdaper;
+import com.signity.shopkeeperapp.orderTracker.OrderTrackerBroadcast;
+import com.signity.shopkeeperapp.orderTracker.OrderTrackingService;
 import com.signity.shopkeeperapp.products.ImageBottomDialog;
 import com.signity.shopkeeperapp.util.AnimUtil;
 import com.signity.shopkeeperapp.util.Constant;
@@ -141,9 +144,38 @@ public class DashboardActivity extends BaseActivity implements BottomNavigationV
         }*/
 
 //        registerStore();
-        //  OneSignalTags();
+        OneSignalTags();
+
+        boolean isReminderActiveFirstTime = AppPreference.getInstance().getReminderStatusFirstTime();
+        if (!isReminderActiveFirstTime) {
+            startService();
+        } else {
+            sendBroadcast(new Intent(this, OrderTrackerBroadcast.class)
+                    .setAction(OrderTrackerBroadcast.INTENT_ACTION_DISMISS_SOUND));
+        }
     }
 
+
+    void startService() {
+        AppPreference.getInstance().saveReminderStatusFirstTime(true);
+        AppPreference.getInstance().saveReminderStatus(true);
+        navDrawerAdapter.notifyDataSetChanged();
+        if (!Util.isMyServiceRunning(OrderTrackingService.class, DashboardActivity.this)) {
+            Intent serviceIntent = new Intent(this, OrderTrackingService.class);
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                startForegroundService(serviceIntent);
+            } else {
+                startService(serviceIntent);
+            }
+        }
+    }
+
+    @Override
+    protected void onNewIntent(Intent intent) {
+        super.onNewIntent(intent);
+        sendBroadcast(new Intent(this, OrderTrackerBroadcast.class)
+                .setAction(OrderTrackerBroadcast.INTENT_ACTION_DISMISS_SOUND));
+    }
 
     private void getExtra() {
 
@@ -155,12 +187,12 @@ public class DashboardActivity extends BaseActivity implements BottomNavigationV
     }
 
     private void OneSignalTags() {
-      /*  OneSignal.sendTag("user_name", AppPreference.getInstance().getUserName());
+        OneSignal.sendTag("user_name", AppPreference.getInstance().getUserName());
         OneSignal.sendTag("store_name", AppPreference.getInstance().getStoreName());
         OneSignal.sendTag("is_fb_linked", AppPreference.getInstance().getFacebookPageId() != null ? "yes" : "no");
 //        OneSignal.sendTag("membership_type", AppPreferenceHelper.getInstance().getPackageType());
 //        OneSignal.sendTag("membership_type", AppPreferenceHelper.getInstance().getPackageType());
-        OneSignal.setExternalUserId(String.valueOf(AppPreference.getInstance().getStoreId()));*/
+        OneSignal.setExternalUserId(String.valueOf(AppPreference.getInstance().getStoreId()));
     }
 
     private void registerStore() {
@@ -248,7 +280,7 @@ public class DashboardActivity extends BaseActivity implements BottomNavigationV
         NetworkAdaper.getNetworkServices().getSetStoreStatus(param, new Callback<StoreStatusResponse>() {
             @Override
             public void success(StoreStatusResponse responseBody, Response response) {
-                Log.i("@@---storeStatus", "" + response.toString());
+
                 if (isDestroyed()) {
                     return;
                 }
@@ -500,6 +532,19 @@ public class DashboardActivity extends BaseActivity implements BottomNavigationV
                     soundDialog.show(getSupportFragmentManager(), NotificationSoundDialog.TAG);
                 }
                 break;
+            case REMINDER_SETTING:
+                boolean isReminderActive = AppPreference.getInstance().getReminderStatus();
+                Log.e("Reminder", "On tap ReminderStatus is" + isReminderActive);
+                if (isReminderActive) {
+                    sendBroadcast(new Intent(DashboardActivity.this, OrderTrackerBroadcast.class).setAction(OrderTrackerBroadcast.INTENT_ACTION_STOP_SERVICE));
+                    AppPreference.getInstance().saveReminderStatus(false);
+                    Toast.makeText(DashboardActivity.this, "Reminder Deactivated", Toast.LENGTH_SHORT).show();
+                } else {
+                    sendBroadcast(new Intent(DashboardActivity.this, OrderTrackerBroadcast.class).setAction(OrderTrackerBroadcast.INTENT_ACTION_START_ALARM));
+                    AppPreference.getInstance().saveReminderStatus(true);
+                    Toast.makeText(DashboardActivity.this, "Reminder Activated", Toast.LENGTH_SHORT).show();
+                }
+                break;
             case LOGOUT:
                 logoutDialog();
                 break;
@@ -677,6 +722,7 @@ public class DashboardActivity extends BaseActivity implements BottomNavigationV
                 if (isDestroyed()) {
                     return;
                 }
+                sendBroadcast(new Intent(DashboardActivity.this, OrderTrackerBroadcast.class).setAction(OrderTrackerBroadcast.INTENT_ACTION_STOP_SERVICE));
 
                 ProgressDialogUtil.hideProgressDialog();
                 AppPreference.getInstance().clearAll();
@@ -744,7 +790,8 @@ public class DashboardActivity extends BaseActivity implements BottomNavigationV
     }
 
     @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
+                                           @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
             switch (requestCode) {

@@ -4,6 +4,7 @@ package com.signity.shopkeeperapp.util.prefs;
  * Created by Ketan Tetry on 18/10/19.
  */
 public final class PrefConstants {
+    public static final String PREF_KEY_STORE_ADDRESS = "PREF_KEY_STORE_ADDRESS";
 
     public static final String PREF_NAME = "shopkeeper_pref";
     public static final String PREF_KEY_STORE_ID = "store_id";
@@ -43,4 +44,6 @@ public final class PrefConstants {
     public static final String PREF_KEY_BRAND_ID = "PREF_KEY_BRAND_ID";
     public static final String PREF_KEY_STORE_MOBILE_NUMBER = "PREF_KEY_STORE_MOBILE_NUMBER";
     public static final String PREF_KEY_STORE_EMAIL_ID = "PREF_KEY_STORE_EMAIL_ID";
+    public static final String PREF_KEY_REMINDER_STATUS = "PREF_KEY_REMINDER_STAUTS";
+    public static final String PREF_KEY_REMINDER_STATUS_FIRST_TIME = "PREF_KEY_REMINDER_STAUTS_FIRST_TIME";
 }

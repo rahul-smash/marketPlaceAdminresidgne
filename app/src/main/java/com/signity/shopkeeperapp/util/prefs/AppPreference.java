@@ -26,6 +26,13 @@ public class AppPreference {
         return instance;
     }
 
+    public static AppPreference getInstance(Context context) {
+        if (instance == null) {
+            instance = new AppPreference(context);
+        }
+        return instance;
+    }
+
     public static void createInstance(Context context) {
         if (instance == null) {
             instance = new AppPreference(context);
@@ -312,5 +319,29 @@ public class AppPreference {
 
     public void setRegisterMarketStore(boolean value) {
         mPrefs.edit().putBoolean(PrefConstants.PREF_KEY_MARKET_STORE_REGISTER, value).apply();
+    }
+
+    public void setStoreAddress(String storeLogo) {
+        mPrefs.edit().putString(PrefConstants.PREF_KEY_STORE_ADDRESS, storeLogo).apply();
+    }
+
+    public String getStoreAddress() {
+        return mPrefs.getString(PrefConstants.PREF_KEY_STORE_ADDRESS, "");
+    }
+
+    public void saveReminderStatus(boolean isReminderActive) {
+        mPrefs.edit().putBoolean(PrefConstants.PREF_KEY_REMINDER_STATUS, isReminderActive).apply();
+    }
+
+    public boolean getReminderStatus() {
+        return mPrefs.getBoolean(PrefConstants.PREF_KEY_REMINDER_STATUS, false);
+    }
+
+    public void saveReminderStatusFirstTime(boolean isReminderActive) {
+        mPrefs.edit().putBoolean(PrefConstants.PREF_KEY_REMINDER_STATUS_FIRST_TIME, isReminderActive).apply();
+    }
+
+    public boolean getReminderStatusFirstTime() {
+        return mPrefs.getBoolean(PrefConstants.PREF_KEY_REMINDER_STATUS_FIRST_TIME, false);
     }
 }

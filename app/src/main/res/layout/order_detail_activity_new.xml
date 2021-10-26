@@ -34,7 +34,15 @@
                 android:layout_gravity="center_horizontal"
                 android:text="Order Details"
                 android:textColor="@color/colorWhite" />
-
+            <TextView
+                android:id="@+id/tv_toolbar_print"
+                style="@style/AppTheme.TextView.MediumBold"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="right"
+                android:layout_marginEnd="16dp"
+                android:text="Print"
+                android:textColor="@color/colorWhite" />
         </androidx.appcompat.widget.Toolbar>
     </com.google.android.material.appbar.AppBarLayout>
 

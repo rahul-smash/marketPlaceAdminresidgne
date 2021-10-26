@@ -12,6 +12,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.LinearLayout;
+import android.widget.PopupMenu;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -31,6 +32,8 @@ import com.signity.shopkeeperapp.model.orders.StoreOrdersReponse;
 import com.signity.shopkeeperapp.model.runner.CommonResponse;
 import com.signity.shopkeeperapp.network.NetworkAdaper;
 import com.signity.shopkeeperapp.notifications.NotificationDialog;
+import com.signity.shopkeeperapp.orders.OrderPrintKOTActivity;
+import com.signity.shopkeeperapp.orders.OrderPrintV2Activity;
 import com.signity.shopkeeperapp.runner.ChooseRunnerDialog;
 import com.signity.shopkeeperapp.util.AnimUtil;
 import com.signity.shopkeeperapp.util.Constant;
@@ -73,6 +76,7 @@ public class OrderDetailActivity extends BaseActivity implements OrderDetailsAdp
     private LinearLayout linearLayoutDiscountCoupon;
     private LinearLayout linearLayoutNote;
     private TextView textViewDeliveryDateSlot;
+    private TextView tvToolViewPrint;
 
     public static Intent getStartIntent(Context context) {
         return new Intent(context, OrderDetailActivity.class);
@@ -261,6 +265,40 @@ public class OrderDetailActivity extends BaseActivity implements OrderDetailsAdp
                 openMap();
             }
         });
+        tvToolViewPrint = findViewById(R.id.tv_toolbar_print);
+        tvToolViewPrint.setVisibility(ordersListModel.getStatus().equals("2") ? View.GONE : View.VISIBLE);
+        tvToolViewPrint.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //Creating the instance of PopupMenu
+                PopupMenu popup = new PopupMenu(OrderDetailActivity.this, v);
+                //Inflating the Popup using xml file
+                popup.getMenuInflater()
+                        .inflate(R.menu.menu_orders_detail_new, popup.getMenu());
+
+                //registering popup with OnMenuItemClickListener
+                popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+                    public boolean onMenuItemClick(MenuItem item) {
+                        if (item.getItemId() == R.id.action_receipt_kot) {
+                            Bundle bundle = new Bundle();
+                            bundle.putString(OrderPrintKOTActivity.ORDER_ID, ordersListModel.getOrderId());
+                            startActivity(OrderPrintKOTActivity.getStartIntent(OrderDetailActivity.this, bundle));
+                            AnimUtil.slideFromRightAnim(OrderDetailActivity.this);
+                        }
+
+                        if (item.getItemId() == R.id.action_receipt) {
+                            if (ordersListModel != null) {
+                                _openPrintReceiptScreen(ordersListModel);
+                            }
+                        }
+                        return true;
+                    }
+                });
+
+                popup.show(); //showing popup menu
+            }
+        });
+
     }
 
     private void openMap() {
@@ -410,7 +448,12 @@ public class OrderDetailActivity extends BaseActivity implements OrderDetailsAdp
         OrdersListModel order = ordersAdapter.getOrdersListModels().get(position);
         updateOrderStatus(HomeOrdersAdapter.OrderType.ACCEPTED, order.getOrderId(), position, "", order.getUserId());
     }
-
+    private void _openPrintReceiptScreen(OrdersListModel order) {
+        Bundle bundle = new Bundle();
+        bundle.putString(OrderPrintV2Activity.ORDER_ID, order.getOrderId());
+        startActivity(OrderPrintV2Activity.getStartIntent(this, bundle));
+        AnimUtil.slideFromRightAnim(this);
+    }
     @Override
     public void onShipOrder(int position, int pageNumber) {
         OrdersListModel order = ordersAdapter.getOrdersListModels().get(position);

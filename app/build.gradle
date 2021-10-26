@@ -15,20 +15,24 @@ apply plugin: 'com.android.application'
 apply plugin: 'com.google.gms.google-services'
 
 android {
-    compileSdkVersion 29
+    compileSdkVersion 30
 
     defaultConfig {
         // applicationId 'com.signity.valueappz'
         // applicationId 'com.signity.valueadminrestro'//Changes as per sachin mittal
         applicationId 'com.aagyo_admin'
-        minSdkVersion 19
-        targetSdkVersion 29
-        versionCode 3
-        versionName "3.0"
+        minSdkVersion 21
+        targetSdkVersion 30
+        versionCode 6
+        versionName "5.1"
         multiDexEnabled true
         testInstrumentationRunner 'androidx.test.runner.AndroidJUnitRunner'
         manifestPlaceholders = [onesignal_app_id               : "a870bf39-65df-4b4c-984b-48c5767321eb",
                                 onesignal_google_project_number: "REMOTE"]
+    }
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
     }
     buildTypes {
         debug {
@@ -53,7 +57,12 @@ android {
 
     productFlavors {
     }
-
+    android {
+        compileOptions {
+            sourceCompatibility JavaVersion.VERSION_1_8
+            targetCompatibility JavaVersion.VERSION_1_8
+        }
+    }
 }
 ext {
     supportLibVersion = '28.0.0'
@@ -104,5 +113,9 @@ dependencies {
     implementation 'com.google.android.exoplayer:exoplayer:2.7.2'
 
     implementation 'com.pierfrancescosoffritti.androidyoutubeplayer:core:10.0.5'
+    implementation 'com.github.Gkemon:XML-to-PDF-generator:2.5'
+    configurations {
+        implementation.exclude group: 'com.google.zxing'
+    }
 }
 apply plugin: 'com.google.firebase.crashlytics'
