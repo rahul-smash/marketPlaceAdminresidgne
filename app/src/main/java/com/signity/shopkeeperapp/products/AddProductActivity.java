@@ -641,10 +641,10 @@ public class AddProductActivity extends BaseActivity implements SubCategoryDialo
         Map<String, String> variantfieldMap = variantFragment != null ? variantFragment.getVariantMap() : new HashMap<String, String>();
 
         // get images and check validation
-        if (productImages.isEmpty()) {
+       /* if (productImages.isEmpty()) {
             Toast.makeText(this, "Please add atleast one product image", Toast.LENGTH_SHORT).show();
             return;
-        }
+        }*/
 
         // Validate category
         if (TextUtils.isEmpty(selectedCategoryId)) {
@@ -737,9 +737,14 @@ public class AddProductActivity extends BaseActivity implements SubCategoryDialo
         productData.put("description", productDescription);
         productData.put("nutrient", foodType);
         productData.put("tags", productTag);
-        productData.put("image", productImages1.get(0).getImage());
+        if (!productImages1.isEmpty()) {
+            productData.put("image", productImages1.get(0).getImage());
+            productData.put("images", jsonArrayImage.toString());
+
+
+        }
         productData.put("Variants", jsonArray.toString());
-        productData.put("images", jsonArrayImage.toString());
+
         if (!TextUtils.isEmpty(productTax)) {
             productData.put("gst_tax_type", inclusiveExclusive);
             productData.put("gst_tax_rate", productTax);
