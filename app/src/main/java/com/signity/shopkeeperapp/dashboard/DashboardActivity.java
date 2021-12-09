@@ -485,9 +485,9 @@ public class DashboardActivity extends BaseActivity implements BottomNavigationV
             case PRODUCTS:
                 bottomNavigationView.setSelectedItemId(R.id.action_bottom_catalog);
                 break;
-            case CUSTOMERS:
+         /*   case CUSTOMERS:
                 onClickViewCustomers();
-                break;
+                break;*/
             /*case MARKET:
                 startActivity(new Intent(this, MarketActivity.class));
                 AnimUtil.slideFromRightAnim(DashboardActivity.this);

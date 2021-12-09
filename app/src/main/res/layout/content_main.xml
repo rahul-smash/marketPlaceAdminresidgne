@@ -51,9 +51,19 @@
             android:layout_width="70dp"
             android:layout_height="70dp"
             android:elevation="8dp"
-            android:src="@drawable/generateordericon" />
+            android:src="@drawable/generateordericon"
+            android:visibility="gone" />
+
+        <ImageView
+            android:id="@+id/float_action_remove"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:elevation="8dp"
+            android:src="@mipmap/ic_launcher_round"
+            android:visibility="visible" />
 
         <TextView
+            android:visibility="gone"
             style="@style/AppTheme.TextView.Tiny"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

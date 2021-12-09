@@ -96,7 +96,7 @@ public class NavDrawerAdapter extends BaseAdapter {
         DASHBOARD("Dashboard", R.drawable.dashboardicon),
         ORDERS("Orders", R.drawable.ordersicon),
         PRODUCTS("Products", R.drawable.producticon),
-        CUSTOMERS("Customers", R.drawable.customersicon),
+       // CUSTOMERS("Customers", R.drawable.customersicon),
         //        BOOK("Book Order", R.drawable.transactionicon),
 //        MARKET("Market Store", R.drawable.dashboardicon),
 //        RUNNER("Runner Management", R.drawable.runnermanagementicon),
