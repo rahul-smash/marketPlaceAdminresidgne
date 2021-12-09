@@ -23,8 +23,8 @@ android {
         applicationId 'com.aagyo_admin'
         minSdkVersion 21
         targetSdkVersion 30
-        versionCode 6
-        versionName "5.1"
+        versionCode 7
+        versionName "6.1"
         multiDexEnabled true
         testInstrumentationRunner 'androidx.test.runner.AndroidJUnitRunner'
         manifestPlaceholders = [onesignal_app_id               : "a870bf39-65df-4b4c-984b-48c5767321eb",
