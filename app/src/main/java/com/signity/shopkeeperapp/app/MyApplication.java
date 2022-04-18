@@ -49,13 +49,13 @@ public class MyApplication extends Application implements Application.ActivityLi
         initSingletons();
         saveDeviceToken();
         registerActivityLifecycleCallbacks(this);
-        OneSignal.setLogLevel(OneSignal.LOG_LEVEL.VERBOSE, OneSignal.LOG_LEVEL.NONE);
-        OneSignal.startInit(this)
-                .inFocusDisplaying(OneSignal.OSInFocusDisplayOption.Notification)
-                .setNotificationOpenedHandler(new MyNotificationOpenedHandler())
-                .setNotificationReceivedHandler(new MyNotificationReceivedHandler())
-                .setInAppMessageClickHandler(new OneSignalInAppMessaging())
-                .init();
+//        OneSignal.setLogLevel(OneSignal.LOG_LEVEL.VERBOSE, OneSignal.LOG_LEVEL.NONE);
+//        OneSignal.startInit(this)
+//                .inFocusDisplaying(OneSignal.OSInFocusDisplayOption.Notification)
+//                .setNotificationOpenedHandler(new MyNotificationOpenedHandler())
+//                .setNotificationReceivedHandler(new MyNotificationReceivedHandler())
+//                .setInAppMessageClickHandler(new OneSignalInAppMessaging())
+//                .init();
 
     }
 

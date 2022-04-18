@@ -759,24 +759,24 @@ public class VideoCreativeActivity extends BaseActivity implements FacebookPages
 
     private void setTagCount() {
 
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                OneSignal.getTags(new OneSignal.GetTagsHandler() {
-                    @Override
-                    public void tagsAvailable(JSONObject tags) {
-                        try {
-                            String videoCount = tags.optString("video_share");
-                            OneSignal.sendTag("video_share", String.valueOf(TextUtils.isEmpty(videoCount) ? 0 : Integer.parseInt(videoCount) + 1));
-
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                        }
-                    }
-
-                });
-            }
-        }).start();
+//        new Thread(new Runnable() {
+//            @Override
+//            public void run() {
+//                OneSignal.getTags(new OneSignal.GetTagsHandler() {
+//                    @Override
+//                    public void tagsAvailable(JSONObject tags) {
+//                        try {
+//                            String videoCount = tags.optString("video_share");
+//                            OneSignal.sendTag("video_share", String.valueOf(TextUtils.isEmpty(videoCount) ? 0 : Integer.parseInt(videoCount) + 1));
+//
+//                        } catch (Exception e) {
+//                            e.printStackTrace();
+//                        }
+//                    }
+//
+//                });
+//            }
+//        }).start();
 
     }
 

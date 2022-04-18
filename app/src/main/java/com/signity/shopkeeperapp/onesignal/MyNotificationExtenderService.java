@@ -1,20 +1,23 @@
+/*
 package com.signity.shopkeeperapp.onesignal;
 
 import android.util.Log;
 
 import androidx.core.app.NotificationCompat;
 
-import com.onesignal.NotificationExtenderService;
-import com.onesignal.OSNotificationDisplayedResult;
-import com.onesignal.OSNotificationReceivedResult;
+//import com.onesignal.NotificationExtenderService;
+//import com.onesignal.OSNotificationDisplayedResult;
+//import com.onesignal.OSNotificationReceivedResult;
 
 import java.math.BigInteger;
 
+*/
 /**
  * MyNotificationExtenderService
  *
  * @blame Android Team
- */
+ *//*
+
 public class MyNotificationExtenderService extends NotificationExtenderService {
     @Override
     protected boolean onNotificationProcessing(OSNotificationReceivedResult receivedResult) {
@@ -32,3 +35,4 @@ public class MyNotificationExtenderService extends NotificationExtenderService {
         return true;
     }
 }
+*/

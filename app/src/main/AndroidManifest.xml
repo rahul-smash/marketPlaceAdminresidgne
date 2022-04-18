@@ -333,14 +333,14 @@
             android:windowSoftInputMode="adjustPan|stateHidden" />
         <activity android:name=".orders.OrderPrintKOTActivity" />
 
-        <service
+<!--        <service
             android:name=".onesignal.MyNotificationExtenderService"
             android:exported="false"
             android:permission="android.permission.BIND_JOB_SERVICE">
             <intent-filter>
                 <action android:name="com.onesignal.NotificationExtender" />
             </intent-filter>
-        </service>
+        </service>-->
         <!--        <service
                     android:name=".twilio.chat.TwilioImageService"
                     android:exported="false" />-->

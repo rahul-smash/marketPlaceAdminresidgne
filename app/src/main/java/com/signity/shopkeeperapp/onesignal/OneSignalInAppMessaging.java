@@ -12,16 +12,16 @@ import com.signity.shopkeeperapp.util.prefs.AppPreference;
 
 import static com.facebook.FacebookSdk.getApplicationContext;
 
-public class OneSignalInAppMessaging implements OneSignal.InAppMessageClickHandler {
+public class OneSignalInAppMessaging implements OneSignal.OSInAppMessageClickHandler {
 
     @Override
     public void inAppMessageClicked(OSInAppMessageAction result) {
 
-        if (result == null || result.clickName == null) {
+        if (result == null || result.getClickName() == null) {
             return;
         }
 
-        Class myClass = getActivityClass(getApplicationContext(), result.clickName);
+        Class myClass = getActivityClass(getApplicationContext(), result.getClickName());
 
         if (myClass == null) {
             return;
