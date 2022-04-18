@@ -344,15 +344,17 @@
         <!--        <service
                     android:name=".twilio.chat.TwilioImageService"
                     android:exported="false" />-->
-        <receiver android:name=".orderTracker.OrderTrackerBroadcast">
+        <receiver
+            android:name=".orderTracker.OrderTrackerBroadcast"
+            android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.BOOT_COMPLETED" />
             </intent-filter>
         </receiver>
 
-        <receiver android:name=".orderTracker.OrderTrackingService$OrderServiceBroadcast"/>
-
-
+        <receiver
+            android:name=".orderTracker.OrderTrackingService$OrderServiceBroadcast"
+            android:exported="true" />
 
         <service
             android:name=".orderTracker.OrderTrackingService"
