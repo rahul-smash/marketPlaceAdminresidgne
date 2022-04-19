@@ -10,11 +10,9 @@ import android.graphics.drawable.ColorDrawable;
 import android.media.AudioManager;
 import android.media.RingtoneManager;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
-import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentActivity;
-import androidx.slidingpanelayout.widget.SlidingPaneLayout;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
@@ -35,6 +33,11 @@ import android.widget.PopupWindow;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentActivity;
+import androidx.slidingpanelayout.widget.SlidingPaneLayout;
+
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.signity.shopkeeperapp.LogInModule.ChangePasswordActivity;
@@ -60,11 +63,13 @@ import com.signity.shopkeeperapp.util.FontUtil;
 import com.signity.shopkeeperapp.util.PrefManager;
 import com.signity.shopkeeperapp.util.ProgressDialogUtil;
 import com.signity.shopkeeperapp.util.Util;
+
 import java.lang.reflect.Type;
 import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
 import retrofit.Callback;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
@@ -73,13 +78,10 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
 
     private static final int REQUEST_SELECT_RINGTONE = 328;
     private static final int REQUEST_SELECT_AUDIO = 329;
-
+    public static String fragmentName = "";
     SlidingPaneLayout mSlidingPanel;
-
     String[] title = {"Dashboard", "Delivered Orders", "Active Orders", "Rejected Orders", "Cancelled Orders", "Customers", "Enquiries", "Manage Stores", "Categories"};
     String shareContent = "";
-
-    public static String fragmentName = "";
     Button btnMenu, btnMenuRight;
     TextView textTitle, txtShopName, txtShopKeeperName;
 
@@ -548,7 +550,7 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
 
                 textTitle.setText(title[8]);
                 fragmentName = title[8];
-            //    replace(CategoriesFragment.newInstance(this));
+                //    replace(CategoriesFragment.newInstance(this));
                 toggleSlidingMenu();
 
                 break;
@@ -917,7 +919,11 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
         Intent intent = new Intent(this, LocalNotifyReceiver.class);
         intent.putExtra("type", Constant.LOCAL_TYPE_TWO);
         PendingIntent pendingIntent;
-        pendingIntent = PendingIntent.getBroadcast(this, Constant.LOCAL_NOTIFY_FOR_8_PM, intent, 0);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            pendingIntent = PendingIntent.getBroadcast(this, Constant.LOCAL_NOTIFY_FOR_8_PM, intent, PendingIntent.FLAG_IMMUTABLE);
+        } else {
+            pendingIntent = PendingIntent.getBroadcast(this, Constant.LOCAL_NOTIFY_FOR_8_PM, intent, 0);
+        }
         // In reality, you would want to have a static variable for the request code instead of 192837
         // Get the AlarmManager service
         AlarmManager am = (AlarmManager) getSystemService(ALARM_SERVICE);

@@ -1,6 +1,5 @@
 package com.signity.shopkeeperapp.orderTracker;
 
-import android.app.AlarmManager;
 import android.app.Notification;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
@@ -22,8 +21,8 @@ import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 import androidx.core.app.NotificationCompat;
 
-import com.signity.shopkeeperapp.dashboard.DashboardActivity;
 import com.signity.shopkeeperapp.R;
+import com.signity.shopkeeperapp.dashboard.DashboardActivity;
 import com.signity.shopkeeperapp.model.orderCount.OrderCountResponse;
 import com.signity.shopkeeperapp.network.NetworkAdaper;
 import com.signity.shopkeeperapp.util.prefs.AppPreference;
@@ -33,16 +32,12 @@ import retrofit.RetrofitError;
 import retrofit.client.Response;
 
 public class OrderTrackingService extends Service {
+    public static CountDownTimer timer;
     static MediaPlayer mediaPlayer;
     static Vibrator vibrator;
     static int notificationId = 13;
     static String channelId = "Channel_002";
     static String channelName = "Background Service Channel";
-
-    @Override
-    public void onCreate() {
-        super.onCreate();
-    }
 
     static void initPlayer(Context context) {
         mediaPlayer = MediaPlayer.create(context, R.raw.order_recieved);
@@ -81,52 +76,18 @@ public class OrderTrackingService extends Service {
         vibrator = null;
     }
 
-    @RequiresApi(api = Build.VERSION_CODES.M)
-    @Override
-    public int onStartCommand(Intent intent, int flags, int startId) {
-        NotificationManager manager = getSystemService(NotificationManager.class);
-
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            NotificationChannel serviceChannel = new NotificationChannel(
-                    channelId,
-                    channelName,
-                    NotificationManager.IMPORTANCE_LOW
-            );
-            manager.createNotificationChannel(serviceChannel);
-        }
-        startForeground(notificationId, getNotification(getBaseContext()));
-        boolean isReminderActive = AppPreference.getInstance().getReminderStatus();
-        if (isReminderActive) {
-            Log.e("Reminder", "onStartCommand: ");
-            sendBroadcast(new Intent(getBaseContext(), OrderServiceBroadcast.class)
-                    .setAction(OrderTrackerBroadcast.INTENT_ACTION_START_ALARM));
-        }
-        return START_STICKY;
-    }
-
-    @Override
-    public boolean stopService(Intent name) {
-        return super.stopService(name);
-    }
-
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
-        stopPlayer();
-//        unregisterReceiver();
-    }
-
-    @Nullable
-    @Override
-    public IBinder onBind(Intent intent) {
-        return null;
-    }
-
     private static Notification getNotification(Context context) {
         Intent notificationIntent = new Intent(context, DashboardActivity.class);
-        PendingIntent pendingIntent = PendingIntent.getActivity(context,
-                2,
-                notificationIntent, 0);
+        PendingIntent pendingIntent;
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.M) {
+            pendingIntent = PendingIntent.getActivity(context,
+                    2,
+                    notificationIntent, PendingIntent.FLAG_IMMUTABLE);
+        } else {
+            pendingIntent = PendingIntent.getActivity(context,
+                    2,
+                    notificationIntent, 0);
+        }
         notificationIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
 
         Notification notification = new NotificationCompat.Builder(context, channelId)
@@ -184,8 +145,14 @@ public class OrderTrackingService extends Service {
 
         Intent dismissIntent = new Intent(context, OrderTrackerBroadcast.class);
         dismissIntent.setAction(OrderTrackerBroadcast.INTENT_ACTION_DISMISS_SOUND);
-        PendingIntent dismissPendingIntent =
-                PendingIntent.getBroadcast(context, 0, dismissIntent, 0);
+        PendingIntent dismissPendingIntent;
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            dismissPendingIntent =
+                    PendingIntent.getBroadcast(context, 0, dismissIntent, PendingIntent.FLAG_IMMUTABLE);
+        } else {
+            dismissPendingIntent =
+                    PendingIntent.getBroadcast(context, 0, dismissIntent, 0);
+        }
 
         Notification notification = new NotificationCompat.Builder(context, channelId)
                 .setContentTitle("Order")
@@ -201,26 +168,6 @@ public class OrderTrackingService extends Service {
                 .build();
 
         return notification;
-    }
-
-    public static class OrderServiceBroadcast extends BroadcastReceiver {
-
-        @Override
-        public void onReceive(Context context, Intent intent) {
-            Log.e("Reminder", "On OrderServiceBroadcast onReceive ReminderStatus is " + intent.getAction());
-            if (intent.getAction().equalsIgnoreCase(OrderTrackerBroadcast.INTENT_ACTION_DISMISS_SOUND)) {
-                stopPlayer();
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                    updateBasicNotification(context);
-                }
-            } else if (intent.getAction().equalsIgnoreCase(OrderTrackerBroadcast.INTENT_ACTION_START_SOUND)) {
-                hitRunnerOrderCountService(context);
-            } else if (intent.getAction().equalsIgnoreCase(OrderTrackerBroadcast.INTENT_ACTION_START_ALARM)) {
-                setAlarm(context);
-            } else if (intent.getAction().equalsIgnoreCase(OrderTrackerBroadcast.INTENT_ACTION_CANCEL_ALARM)) {
-                cancelAlarm(context);
-            }
-        }
     }
 
     static void hitRunnerOrderCountService(final Context context) {
@@ -250,8 +197,6 @@ public class OrderTrackingService extends Service {
             }
         });
     }
-
-    public static CountDownTimer timer;
 
     public static void setAlarm(Context context) {
         startCountDownTimer(context);
@@ -296,5 +241,71 @@ public class OrderTrackingService extends Service {
 //        Log.e("Reminder", "On cancelAlarm ReminderStatus is" + AppPreference.getInstance(context).getReminderStatus());
         cancelCountDownTimer();
         stopPlayer();
+    }
+
+    @Override
+    public void onCreate() {
+        super.onCreate();
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.M)
+    @Override
+    public int onStartCommand(Intent intent, int flags, int startId) {
+        NotificationManager manager = getSystemService(NotificationManager.class);
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            NotificationChannel serviceChannel = new NotificationChannel(
+                    channelId,
+                    channelName,
+                    NotificationManager.IMPORTANCE_LOW
+            );
+            manager.createNotificationChannel(serviceChannel);
+        }
+        startForeground(notificationId, getNotification(getBaseContext()));
+        boolean isReminderActive = AppPreference.getInstance().getReminderStatus();
+        if (isReminderActive) {
+            Log.e("Reminder", "onStartCommand: ");
+            sendBroadcast(new Intent(getBaseContext(), OrderServiceBroadcast.class)
+                    .setAction(OrderTrackerBroadcast.INTENT_ACTION_START_ALARM));
+        }
+        return START_STICKY;
+    }
+
+    @Override
+    public boolean stopService(Intent name) {
+        return super.stopService(name);
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        stopPlayer();
+//        unregisterReceiver();
+    }
+
+    @Nullable
+    @Override
+    public IBinder onBind(Intent intent) {
+        return null;
+    }
+
+    public static class OrderServiceBroadcast extends BroadcastReceiver {
+
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            Log.e("Reminder", "On OrderServiceBroadcast onReceive ReminderStatus is " + intent.getAction());
+            if (intent.getAction().equalsIgnoreCase(OrderTrackerBroadcast.INTENT_ACTION_DISMISS_SOUND)) {
+                stopPlayer();
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                    updateBasicNotification(context);
+                }
+            } else if (intent.getAction().equalsIgnoreCase(OrderTrackerBroadcast.INTENT_ACTION_START_SOUND)) {
+                hitRunnerOrderCountService(context);
+            } else if (intent.getAction().equalsIgnoreCase(OrderTrackerBroadcast.INTENT_ACTION_START_ALARM)) {
+                setAlarm(context);
+            } else if (intent.getAction().equalsIgnoreCase(OrderTrackerBroadcast.INTENT_ACTION_CANCEL_ALARM)) {
+                cancelAlarm(context);
+            }
+        }
     }
 }

@@ -9,9 +9,11 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
-import androidx.core.app.NotificationCompat;
 import android.util.Log;
+
+import androidx.core.app.NotificationCompat;
 
 import com.signity.shopkeeperapp.R;
 import com.signity.shopkeeperapp.SplashActivity;
@@ -166,7 +168,12 @@ public class LocalNotifyReceiver extends BroadcastReceiver {
         AlarmManager am = (AlarmManager) context.getSystemService(Activity.ALARM_SERVICE);
         Intent intents = new Intent(context, LocalNotifyReceiver.class);
         PendingIntent pendingIntent;
-        pendingIntent = PendingIntent.getBroadcast(context, Constant.LOCAL_NOTIFY_FOR_DUE_ORDER, intents, 0);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            pendingIntent = PendingIntent.getBroadcast(context, Constant.LOCAL_NOTIFY_FOR_DUE_ORDER, intents, PendingIntent.FLAG_IMMUTABLE);
+        } else {
+            pendingIntent = PendingIntent.getBroadcast(context, Constant.LOCAL_NOTIFY_FOR_DUE_ORDER, intents, 0);
+        }
+
         am.cancel(pendingIntent);
         prefManager.setDueOrderLocalNotiCount(0);
     }
@@ -179,11 +186,15 @@ public class LocalNotifyReceiver extends BroadcastReceiver {
         } else {
             intent = new Intent(context, SplashActivity.class);
         }
-
+        PendingIntent pendingIntent;
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
-        PendingIntent pendingIntent = PendingIntent.getActivity(context, 0 /* Request code */, intent,
-                PendingIntent.FLAG_ONE_SHOT);
-
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.M) {
+            pendingIntent = PendingIntent.getActivity(context, 0 /* Request code */, intent,
+                    PendingIntent.FLAG_IMMUTABLE);
+        } else {
+            pendingIntent = PendingIntent.getActivity(context, 0 /* Request code */, intent,
+                    PendingIntent.FLAG_ONE_SHOT);
+        }
         int icon = R.mipmap.ic_launcher;
         String uriString = prefManager.getAppNotificationUri();
         Uri defaultSoundUri = Uri.parse(uriString);

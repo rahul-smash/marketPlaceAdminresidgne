@@ -7,16 +7,13 @@ package com.signity.shopkeeperapp.fcm;
 import android.app.Notification;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
-import com.signity.shopkeeperapp.util.Util;
-
-import android.content.ContentResolver;
-import android.media.AudioManager;
 import android.app.PendingIntent;
+import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.BitmapFactory;
 import android.media.AudioAttributes;
-import android.media.RingtoneManager;
+import android.media.AudioManager;
 import android.net.Uri;
 import android.os.Build;
 import android.util.Log;
@@ -30,9 +27,9 @@ import com.signity.shopkeeperapp.R;
 import com.signity.shopkeeperapp.SplashActivity;
 import com.signity.shopkeeperapp.app.DataAdapter;
 import com.signity.shopkeeperapp.dashboard.DashboardActivity;
-import com.signity.shopkeeperapp.notifications.NotificationActivity;
 import com.signity.shopkeeperapp.util.Constant;
 import com.signity.shopkeeperapp.util.PrefManager;
+import com.signity.shopkeeperapp.util.Util;
 import com.signity.shopkeeperapp.util.prefs.AppPreference;
 
 import java.util.Locale;
@@ -45,6 +42,7 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
     private static final String TAG = "MyFirebaseMsgService";
     String title, message;
     String sound;
+
     /**
      * Called when message is received.
      *
@@ -91,7 +89,7 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
             e.printStackTrace();
         }
         try {
-             sound = remoteMessage.getData().get("sound");
+            sound = remoteMessage.getData().get("sound");
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -170,7 +168,11 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
                     PendingIntent.FLAG_ONE_SHOT);
 
         }
-        pendingIntent = PendingIntent.getActivity(this, 0 /* Request code */, intent, PendingIntent.FLAG_ONE_SHOT);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            pendingIntent = PendingIntent.getActivity(this, 0 /* Request code */, intent, PendingIntent.FLAG_IMMUTABLE);
+        } else {
+            pendingIntent = PendingIntent.getActivity(this, 0 /* Request code */, intent, PendingIntent.FLAG_ONE_SHOT);
+        }
         Uri defaultSoundUri = Uri.parse(ContentResolver.SCHEME_ANDROID_RESOURCE + "://" + getPackageName() + "/raw/gayajee_notification_visa_trendz");
         Log.d(TAG, "sendNotification: " + defaultSoundUri.toString());
         AudioManager manager = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
@@ -178,7 +180,7 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
         if (AppPreference.getInstance().getNotificationRing() != null) {
             defaultSoundUri = Uri.parse("android.resource://" + getApplicationContext().getPackageName() + "/" + R.raw.gayajee_notification_visa_trendz);
 //comment here this line for other devices
-           // defaultSoundUri = Uri.parse(AppPreference.getInstance().getNotificationRing());
+            // defaultSoundUri = Uri.parse(AppPreference.getInstance().getNotificationRing());
         } else {
             defaultSoundUri = Uri.parse("android.resource://" + getApplicationContext().getPackageName() + "/" + R.raw.gayajee_notification_visa_trendz);
             AppPreference.getInstance().setNotificationRing(defaultSoundUri.toString());
