@@ -75,7 +75,7 @@ public class OrderDetailsAdpater extends RecyclerView.Adapter<OrderDetailsAdpate
         }
 
         // restrict user to cancel the item
-        holder.switchItem.setEnabled(false);
+        holder.switchItem.setEnabled(true);
 
         if (!TextUtils.isEmpty(itemListModel.getImageSmall())) {
             Picasso.with(context)
